@@ -1,0 +1,35 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: bitnami
+  namespace: flux-system
+spec:
+  interval: 30m
+  url: https://charts.bitnami.com/bitnami
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: gitea-charts
+  namespace: flux-system
+spec:
+  interval: 30m
+  url: https://dl.gitea.io/charts
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kong
+  namespace: flux-system
+spec:
+  interval: 30m
+  url: https://charts.konghq.com
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kuma
+  namespace: flux-system
+spec:
+  interval: 30m
+  url: https://kumahq.github.io/charts

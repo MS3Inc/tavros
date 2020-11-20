@@ -1,0 +1,37 @@
+---
+# todo: doing this manually for now, there's a permissions issue
+# - name: Install boto3 and botocore with pip3 module
+#   pip:
+#     name:
+#       - boto3
+#       - botocore
+#     executable: pip-3
+
+# todo: need to add variables for AWS credentials
+- name: Create S3 cluster state bucket
+  amazon.aws.s3_bucket:
+    name: troubadour
+    state: present
+
+# todo: separate into create and update to enable idempotency
+- name: Create cluster
+  shell: |
+    kops create cluster \
+      --name="{{ cluster_name }}.{{ cluster_domain }}" \
+      --cloud=aws \
+      --state="s3://troubadour/{{ cluster_name }}-cluster-state" \
+      --master-count={{ master_count }} \
+      --master-size={{ master_size }} \
+      --node-count={{ node_count }} \
+      --node-size={{ node_size }} \
+      --topology private \
+      --networking weave \
+      --dns-zone={{ cluster_domain }} \
+      --zones={{ zones }} \
+      --bastion \
+      --authorization RBAC \
+      --yes
+
+- name: Wait for cluster
+  shell: |
+    kops validate cluster --wait 1h --state s3://troubadour/{{ cluster_name }}-cluster-state

@@ -1,0 +1,29 @@
+- name: Create directory
+  file:
+    path: ./{{ cluster_domain }}/platform/flux-system/
+    state: directory
+
+- name: Generate Flux manifests
+  shell: |
+    flux install --version=latest \
+      --arch=amd64 \
+      --export > ./{{ cluster_domain }}/platform/flux-system/gotk-components.yaml
+
+- name: Apply Flux manifests
+  shell: |
+    kubectl apply -f ./{{ cluster_domain }}/platform/flux-system/gotk-components.yaml
+
+# todo: is there a --wait flag? if not we may want a manual shell loop
+- name: Verify Flux start
+  shell: |
+    flux check
+
+# todo: add single source in each role instead of all at once
+- name: Copy sources
+  copy:
+    src: sources.yaml
+    dest: ./{{ cluster_domain }}/platform/flux-system/sources.yaml
+
+- name: Apply Flux Source manifests
+  shell: |
+    kubectl create -f ./{{ cluster_domain }}/platform/flux-system/sources.yaml
