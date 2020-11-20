@@ -1,0 +1,27 @@
+---
+- name: Create directory
+  file:
+    path: ./{{ cluster_domain }}/platform/kuma-system/mesh
+    state: directory
+
+- name: Process mesh template
+  with_list: '{{ mesh_names }}'
+  template:
+    src: mesh.j2
+    dest: ./{{ cluster_domain }}/platform/kuma-system/mesh/{{ item }}.yaml
+
+- name: Copy kuma kustomization
+  copy:
+    src: kustomization.yaml
+    dest: ./{{ cluster_domain }}/platform/kuma-system/kustomization.yaml
+
+- name: Apply manifests
+  shell: |
+    kustomize build ./{{ cluster_domain }}/platform/kuma-system/ | kubectl apply -f -
+
+# todo: see if we can use something like shown here
+# https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
+- name: Wait for kuma
+  shell: |
+    kubectl -n kuma-system wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
+    kubectl -n kuma-system wait --for=condition=ready --timeout=120s pods --all
