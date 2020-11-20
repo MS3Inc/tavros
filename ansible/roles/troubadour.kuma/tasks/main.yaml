@@ -1,14 +1,14 @@
 ---
 - name: Create directory
   file:
-    path: ./{{ cluster_domain }}/platform/kuma-system/mesh
+    path: ./{{ cluster_domain }}/platform/kuma-system/meshes/
     state: directory
 
 - name: Process mesh template
-  with_list: '{{ mesh_names }}'
+  with_list: '{{ meshes }}'
   template:
     src: mesh.j2
-    dest: ./{{ cluster_domain }}/platform/kuma-system/mesh/{{ item }}.yaml
+    dest: ./{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.mesh_name }}.yaml
 
 - name: Copy kuma kustomization
   copy:

@@ -3,4 +3,4 @@ kind: Kustomization
 namespace: kuma-system
 resources:
   - ../../../troubadour-base/kuma/
-  - mesh/
+  - meshes/
