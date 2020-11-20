@@ -1,0 +1,10 @@
+---
+- name: Create directory
+  file:
+    path: ./{{ cluster_domain }}/{{ ns_name }}/
+    state: directory
+
+- name: Create namespace
+  template:
+    src: ns.j2
+    dest: ./{{ cluster_domain }}/{{ ns_name }}/ns.yaml
