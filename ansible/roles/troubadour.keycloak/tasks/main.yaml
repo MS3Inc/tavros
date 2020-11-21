@@ -1,0 +1,37 @@
+---
+- name: Create directory
+  file:
+    path: ./{{ cluster_domain }}/platform/keycloak
+    state: directory
+
+- name: Process keycloak-db-secret template
+  template:
+    src: keycloak-db-secret.j2
+    dest: ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml
+
+- name: Copy keycloak kustomization
+  copy:
+    src: kustomization.yaml
+    dest: ./{{ cluster_domain }}/platform/keycloak/kustomization.yaml
+
+- name: Apply operator manifests
+  shell: |
+    kustomize build ./troubadour-base/keycloak/operator | kubectl apply -f -
+
+# todo: see if we can use something like shown here
+# https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
+- name: Wait for keycloak operator
+  shell: |
+    kubectl -n keycloak wait --for=condition=available --timeout=120s deployments --all
+    kubectl -n keycloak wait --for=condition=ready --timeout=120s pods --all
+
+- name: Apply keycloak manifests
+  shell: |
+    kustomize build ./{{ cluster_domain }}/platform/keycloak/ | kubectl apply -f -
+
+# todo: see if we can use something like shown here
+# https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
+- name: Wait for keycloak
+  shell: |
+    kubectl -n keycloak wait --for=condition=available --timeout=120s deployments --all
+    kubectl -n keycloak wait --for=condition=ready --timeout=120s pods --all

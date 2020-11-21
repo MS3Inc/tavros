@@ -1,0 +1,26 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: keycloak
+  labels:
+    app: sso
+spec:
+  instances: 1
+  externalDatabase:
+    enabled: true
+  externalAccess:
+    enabled: false
+  podDisruptionBudget:
+    enabled: True
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-http
+spec:
+  selector:
+    app: keycloak
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

@@ -9,6 +9,11 @@
     src: config-secret.j2
     dest: ./{{ cluster_domain }}/platform/postgresql/config-secret.yaml
 
+- name: Copy setup.sql
+  copy:
+    src: setup.sql
+    dest: ./{{ cluster_domain }}/platform/postgresql/setup.sql
+
 - name: Copy postgresql kustomization
   copy:
     src: kustomization.yaml
@@ -16,7 +21,7 @@
 
 - name: Apply manifests
   shell: |
-    kustomize build ./{{ cluster_domain }}/platform/postgresql/ | kubectl apply -f
+    kustomize build ./{{ cluster_domain }}/platform/postgresql/ | kubectl apply -f -
 
 # todo: see if we can use something like shown here
 # https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples

@@ -4,3 +4,10 @@ namespace: postgresql
 resources:
   - ../../../troubadour-base/postgresql/
   - config-secret.yaml
+configMapGenerator:
+  - name: setup-config
+    namespace: postgresql
+    files:
+      - setup.sql=setup.sql
+generatorOptions:
+  disableNameSuffixHash: true

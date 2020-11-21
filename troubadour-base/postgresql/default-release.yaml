@@ -22,3 +22,5 @@ spec:
   values:
     postgresqlDatabase: postgres
     existingSecret: config-secret
+    initdbScriptsSecret: config-secret
+    initdbScriptsConfigMap: setup-config
