@@ -3,4 +3,6 @@ kind: Kustomization
 namespace: kuma-system
 resources:
   - ../../../troubadour-base/kuma/
-  - meshes/
+{% for item in meshes %}
+  - meshes/{{ item.mesh_name }}.yaml
+{% endfor %}

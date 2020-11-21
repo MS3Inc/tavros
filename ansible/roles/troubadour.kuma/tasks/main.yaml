@@ -10,9 +10,9 @@
     src: mesh.j2
     dest: ./{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.mesh_name }}.yaml
 
-- name: Copy kuma kustomization
-  copy:
-    src: kustomization.yaml
+- name: Process kuma kustomization template
+  template:
+    src: kustomization.j2
     dest: ./{{ cluster_domain }}/platform/kuma-system/kustomization.yaml
 
 - name: Apply manifests
