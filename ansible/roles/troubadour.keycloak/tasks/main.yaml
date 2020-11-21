@@ -21,7 +21,7 @@
 
 - name: Apply operator manifests
   shell: |
-    kustomize build ./troubadour-base/keycloak/operator | kubectl apply -f -
+    kustomize build ./troubadour-base/keycloak/operator/11.0.3/ | kubectl apply -f -
 
 - name: Wait for keycloak operator
   shell: |
