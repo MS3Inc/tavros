@@ -1,0 +1,19 @@
+---
+- name: Create directory
+  file:
+    path: ./{{ cluster_domain }}/platform/kubeseal
+    state: directory
+
+- name: Copy kubeseal kustomization
+  copy:
+    src: kustomization.yaml
+    dest: ./{{ cluster_domain }}/platform/kubeseal/kustomization.yaml
+
+- name: Apply kubeseal manifests
+  shell: |
+    kustomize build ./{{ cluster_domain }}/platform/kubeseal/ | kubectl apply -f -
+
+- name: Wait for kubeseal
+  shell: |
+    kubectl -n kube-system wait --for=condition=available --timeout=120s deployments --all
+    kubectl -n kube-system wait --for=condition=ready --timeout=120s pods --all

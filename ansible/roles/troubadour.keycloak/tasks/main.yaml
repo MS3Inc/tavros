@@ -9,6 +9,11 @@
     src: keycloak-db-secret.j2
     dest: ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml
 
+- name: Convert keycloak-db-secret to SealedSecret
+  shell: |
+    kubeseal --format=yaml <./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml >./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.tmp
+    mv ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.tmp ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml
+
 - name: Copy keycloak kustomization
   copy:
     src: kustomization.yaml
@@ -18,8 +23,6 @@
   shell: |
     kustomize build ./troubadour-base/keycloak/operator | kubectl apply -f -
 
-# todo: see if we can use something like shown here
-# https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
 - name: Wait for keycloak operator
   shell: |
     kubectl -n keycloak wait --for=condition=available --timeout=120s deployments --all
@@ -29,8 +32,6 @@
   shell: |
     kustomize build ./{{ cluster_domain }}/platform/keycloak/ | kubectl apply -f -
 
-# todo: see if we can use something like shown here
-# https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
 - name: Wait for keycloak
   shell: |
     kubectl -n keycloak wait --for=condition=available --timeout=120s deployments --all

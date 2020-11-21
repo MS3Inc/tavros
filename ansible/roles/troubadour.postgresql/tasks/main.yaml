@@ -9,6 +9,11 @@
     src: config-secret.j2
     dest: ./{{ cluster_domain }}/platform/postgresql/config-secret.yaml
 
+- name: Convert config-secret to SealedSecret
+  shell: |
+    kubeseal --format=yaml <./{{ cluster_domain }}/platform/postgresql/config-secret.yaml >./{{ cluster_domain }}/platform/postgresql/config-secret.tmp
+    mv ./{{ cluster_domain }}/platform/postgresql/config-secret.tmp ./{{ cluster_domain }}/platform/postgresql/config-secret.yaml
+
 - name: Copy setup.sql
   copy:
     src: setup.sql
