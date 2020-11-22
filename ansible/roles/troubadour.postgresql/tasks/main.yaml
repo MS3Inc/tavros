@@ -4,6 +4,14 @@
     path: ./{{ cluster_domain }}/platform/postgresql/
     state: directory
 
+- name: Set postgresql password
+  set_fact:
+    postgresql_password: lookup('password', '/dev/null length=12 chars=ascii_letters') | string
+
+- name: Set postgresql postgres password
+  set_fact:
+    postgresql_postgres_password: lookup('password', '/dev/null length=12 chars=ascii_letters') | string
+
 - name: Process config-secret template
   template:
     src: config-secret.j2
