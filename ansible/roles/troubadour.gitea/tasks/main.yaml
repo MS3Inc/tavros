@@ -1,0 +1,29 @@
+---
+- name: Create directory
+  file:
+    path: ./{{ cluster_domain }}/platform/gitea
+    state: directory
+
+- name: Process values template
+  template:
+    src: values.j2
+    dest: ./{{ cluster_domain }}/platform/gitea/values.yaml
+
+- name: Copy Gitea HelmChart patch
+  copy:
+    src: patch.json
+    dest: ./{{ cluster_domain }}/platform/gitea/patch.json
+
+- name: Copy gitea kustomization
+  copy:
+    src: kustomization.yaml
+    dest: ./{{ cluster_domain }}/platform/gitea/kustomization.yaml
+
+- name: Apply gitea manifests
+  shell: |
+    kustomize build ./{{ cluster_domain }}/platform/gitea/ | kubectl apply -f -
+
+- name: Wait for gitea
+  shell: |
+    kubectl -n gitea wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
+    kubectl -n gitea wait --for=condition=ready --timeout=120s pods --all

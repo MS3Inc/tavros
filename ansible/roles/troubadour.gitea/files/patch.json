@@ -1,0 +1,11 @@
+[
+    {
+        "op": "add",
+        "path": "/spec/valuesFrom/-", 
+        "value": {
+            "kind": "ConfigMap",
+            "name": "overlay-values-config",
+            "valuesKey": "values.yaml"
+        }
+    }
+]

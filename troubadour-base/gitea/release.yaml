@@ -1,0 +1,28 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: gitea
+  namespace: gitea
+spec:
+  targetNamespace: gitea
+  interval: 10m
+  chart:
+    spec:
+      #https://docs.gitea.io/en-us/config-cheat-sheet/
+      #https://artifacthub.io/packages/helm/gitea/gitea
+      chart: gitea
+      version: 2.0.2
+      sourceRef:
+        kind: HelmRepository
+        name: gitea
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  valuesFrom:
+    - kind: ConfigMap
+      name: values-config
+      valuesKey: values.yaml
