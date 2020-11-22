@@ -1,0 +1,46 @@
+# warning: missing teardown, to be tested manually
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars:
+    cluster_name: test
+    cluster_domain: troubadour.ms3-inc.com
+  tasks:
+  - name: Assert binaries are available
+    shell: |
+      kubectl version
+      kustomize version
+      flux --version
+      kubeseal --version
+    changed_when: false
+  - name: Install dependencies with pip3 module
+    pip:
+      name:
+        # amazon.aws
+        - boto3
+        - botocore
+      executable: pip-3
+      extra_args: --user
+  - import_role:
+      name: troubadour.kubernetes-cluster
+  - import_role:
+      name: troubadour.fluxtoolkit
+  - import_role:
+      name: troubadour.kubeseal
+  - import_role:
+      name: troubadour.postgresql
+  - include_role:
+      name: troubadour.namespace
+    vars:
+      namespaces:
+      - ns_name: test
+        mesh_name: non-prod
+      - ns_name: prod
+        mesh_name: prod
+  - include_role:
+      name: troubadour.kuma
+    vars:
+      meshes:
+      - mesh_name: prod
+      - mesh_name: non-prod
