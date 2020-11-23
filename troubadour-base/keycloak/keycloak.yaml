@@ -1,9 +1,10 @@
 apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
-  name: keycloak
+  name: troubadour-keycloak
+  namespace: keycloak
   labels:
-    app: sso
+    app.troubadour/component: auth
 spec:
   instances: 1
   externalDatabase:
@@ -11,16 +12,4 @@ spec:
   externalAccess:
     enabled: false
   podDisruptionBudget:
-    enabled: True
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: keycloak-http
-spec:
-  selector:
-    app: keycloak
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 8080
+    enabled: true

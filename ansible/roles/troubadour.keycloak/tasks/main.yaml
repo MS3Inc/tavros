@@ -14,6 +14,11 @@
     kubeseal --format=yaml <./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml >./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.tmp
     mv ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.tmp ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml
 
+- name: Process ingress template
+  template:
+    src: ingress.j2
+    dest: ./{{ cluster_domain }}/platform/keycloak/ingress.yaml
+
 - name: Copy keycloak kustomization
   copy:
     src: kustomization.yaml

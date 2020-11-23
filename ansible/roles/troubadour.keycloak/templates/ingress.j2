@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: keycloak
+  namespace: keycloak
+  annotations:
+    kubernetes.io/ingress.class: kong
+    konghq.com/strip-path: 'true'
+    konghq.com/protocols: https
+    konghq.com/https-redirect-status-code: '302'
+spec:
+  rules:
+  - host: auth.{{ cluster_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: keycloak-discovery
+          servicePort: 8080

@@ -4,3 +4,4 @@ namespace: keycloak
 resources:
   - ../../../troubadour-base/keycloak/
   - keycloak-db-secret.yaml
+  - ingress.yaml
