@@ -44,3 +44,5 @@
       meshes:
       - mesh_name: prod
       - mesh_name: non-prod
+  - include_role:
+      name: troubadour.keycloak
