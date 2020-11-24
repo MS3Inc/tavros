@@ -14,35 +14,82 @@
       flux --version
       kubeseal --version
     changed_when: false
+
   - name: Install dependencies with pip3 module
     pip:
       name:
         # amazon.aws
         - boto3
         - botocore
+        # community.kubernetes
+        - openshift
+        # community.aws
+        - boto
       executable: pip-3
       extra_args: --user
+
   - import_role:
       name: troubadour.kubernetes-cluster
+
   - import_role:
       name: troubadour.fluxtoolkit
+
   - import_role:
       name: troubadour.kubeseal
+
   - import_role:
       name: troubadour.postgresql
+
   - include_role:
       name: troubadour.namespace
     vars:
       namespaces:
+      - ns_name: dev
+        mesh_name: sandbox
       - ns_name: test
-        mesh_name: non-prod
+        mesh_name: sandbox
       - ns_name: prod
         mesh_name: prod
+
   - include_role:
       name: troubadour.kuma
     vars:
       meshes:
       - mesh_name: prod
-      - mesh_name: non-prod
+        mtls_enabled: true
+      - mesh_name: sandbox
+        mtls_enabled: true
+
   - include_role:
       name: troubadour.keycloak
+
+  - include_role:
+      name: troubadour.kong
+    vars:
+      kong_name: prod-kong
+      mesh_name: prod
+
+  # - include_role:
+  #     name: troubadour.kong
+  #   vars:
+  #     kong_name: sandbox-kong
+
+  - name: Set DNS for keycloak
+    community.aws.route53:
+      state: present
+      zone: {{ cluster_domain }}
+      type: CNAME
+      record: auth.{{ cluster_name }}.{{ cluster_domain }}
+      value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-prod-kong-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
+      overwrite: true
+      wait: yes
+
+  - name: Set wildcard DNS for apps
+    community.aws.route53:
+      state: present
+      zone: {{ cluster_domain }}
+      type: CNAME
+      record: "*.apps.{{ cluster_name }}.{{ cluster_domain }}"
+      value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-prod-kong-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
+      overwrite: true
+      wait: yes
