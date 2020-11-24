@@ -10,3 +10,8 @@
   template:
     src: ns.j2
     dest: ./{{ cluster_domain }}/{{ item.ns_name }}/ns.yaml
+
+- name: Apply manifests
+  with_list: '{{ namespaces }}'
+  shell: |
+    kubectl apply -f ./{{ cluster_domain }}/{{ item.ns_name }}/ns.yaml
