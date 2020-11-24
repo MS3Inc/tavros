@@ -10,7 +10,7 @@ metadata:
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: auth.{{ cluster_domain }}
+  - host: auth.{{ cluster_name}}.{{ cluster_domain }}
     http:
       paths:
       - path: /
