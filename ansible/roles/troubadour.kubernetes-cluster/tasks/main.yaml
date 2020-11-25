@@ -1,37 +1,59 @@
 ---
-# todo: doing this manually for now, there's a permissions issue
-# - name: Install boto3 and botocore with pip3 module
-#   pip:
-#     name:
-#       - boto3
-#       - botocore
-#     executable: pip-3
-
 # todo: need to add variables for AWS credentials
-- name: Create S3 cluster state bucket
+- name: create cluster state S3 bucket
+  when: cluster_state == 'present'
   amazon.aws.s3_bucket:
     name: troubadour
     state: present
 
-# todo: separate into create and update to enable idempotency
-- name: Create cluster
+- name: create cluster
+  when: cluster_state == 'present'
+  register: result
+  changed_when: result.rc == 101
+  failed_when: (result.rc != 100) and (result.rc != 101)
   shell: |
-    kops create cluster \
-      --name="{{ cluster_name }}.{{ cluster_domain }}" \
-      --cloud=aws \
-      --state="s3://troubadour/{{ cluster_name }}-cluster-state" \
-      --master-count={{ master_count }} \
-      --master-size={{ master_size }} \
-      --node-count={{ node_count }} \
-      --node-size={{ node_size }} \
-      --topology private \
-      --networking weave \
-      --dns-zone={{ cluster_domain }} \
-      --zones={{ zones }} \
-      --bastion \
-      --authorization RBAC \
-      --yes
+    if [[ ! $(kops get cluster --name "{{ cluster_name }}" --state "s3://troubadour/{{ cluster_name }}-cluster-state") ]]; then
+      kops create cluster \
+        --name="{{ cluster_name }}.{{ cluster_domain }}" \
+        --cloud=aws \
+        --state="s3://troubadour/{{ cluster_name }}-cluster-state" \
+        --master-count={{ master_count }} \
+        --master-size={{ master_size }} \
+        --node-count={{ node_count }} \
+        --node-size={{ node_size }} \
+        --topology private \
+        --networking weave \
+        --dns-zone={{ cluster_domain }} \
+        --zones={{ zones }} \
+        --bastion \
+        --authorization RBAC \
+        --yes
+      kops validate cluster --wait 1h --state s3://troubadour/{{ cluster_name }}-cluster-state
+      # signal change
+      exit 101
+    fi
+    # signal no change
+    exit 100
 
-- name: Wait for cluster
+- name: remove cluster
+  when: cluster_state == 'absent'
+  register: result
+  changed_when: result.rc == 101
+  failed_when: (result.rc != 100) and (result.rc != 101)
   shell: |
-    kops validate cluster --wait 1h --state s3://troubadour/{{ cluster_name }}-cluster-state
+    if [[ $(kops get cluster --name "{{ cluster_name }}" --state "s3://troubadour/{{ cluster_name }}-cluster-state") ]]; then
+      kops delete cluster \
+        --name="{{ cluster_name }}.{{ cluster_domain }}" \
+        --state="s3://troubadour/{{ cluster_name }}-cluster-state" \
+        --yes
+      # signal change
+      exit 101
+    fi
+    # signal no change
+    exit 100
+
+- name: remove cluster state S3 bucket
+  when: cluster_state == 'absent'
+  amazon.aws.s3_bucket:
+    name: troubadour
+    state: absent

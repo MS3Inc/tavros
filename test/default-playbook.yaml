@@ -1,4 +1,3 @@
-# warning: missing teardown, to be tested manually
 ---
 - hosts: localhost
   connection: local
@@ -30,6 +29,8 @@
 
   - import_role:
       name: troubadour.kubernetes-cluster
+    vars:
+      cluster_state: present
 
   - import_role:
       name: troubadour.fluxtoolkit
@@ -93,3 +94,30 @@
       value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-prod-kong-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
       overwrite: true
       wait: yes
+
+
+## teardown
+  - name: Set DNS for keycloak
+    community.aws.route53:
+      state: absent
+      zone: {{ cluster_domain }}
+      type: CNAME
+      record: auth.{{ cluster_name }}.{{ cluster_domain }}
+      value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-prod-kong-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
+      overwrite: true
+      wait: yes
+
+  - name: Set wildcard DNS for apps
+    community.aws.route53:
+      state: absent
+      zone: {{ cluster_domain }}
+      type: CNAME
+      record: "*.apps.{{ cluster_name }}.{{ cluster_domain }}"
+      value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-prod-kong-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
+      overwrite: true
+      wait: yes
+
+  - import_role:
+      name: troubadour.kubernetes-cluster
+    vars:
+      cluster_state: absent
