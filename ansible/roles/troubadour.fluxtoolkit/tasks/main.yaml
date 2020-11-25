@@ -18,9 +18,9 @@
   shell: |
     kubectl apply -f ./{{ cluster_domain }}/platform/flux-system/gotk-components.yaml
 
-- name: Verify Flux start
+- name: Wait for Flux Deployment
   shell: |
-    kubectl -n flux-system wait --for=condition=ready --timeout=120s pods --all
+    kubectl -n flux-system wait --for=condition=available --timeout=120s deployments --all
 
 # todo: add single source in each role instead of all at once
 - name: Copy sources

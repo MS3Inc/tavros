@@ -28,18 +28,24 @@
   shell: |
     kustomize build ./troubadour-base/keycloak/operator/11.0.3/ | kubectl apply -f -
 
-- name: Wait for keycloak operator
+- name: Wait for Keycloak Operator Deployment
   shell: |
     kubectl -n keycloak wait --for=condition=available --timeout=120s deployments --all
-    kubectl -n keycloak wait --for=condition=ready --timeout=120s pods --all
 
 - name: Apply keycloak manifests
   shell: |
     kustomize build ./{{ cluster_domain }}/platform/keycloak/ | kubectl apply -f -
 
-- name: Wait for keycloak
+- name: Wait for Keycloak CRD to be Ready
   shell: |
-    kubectl -n keycloak wait --for=condition=available --timeout=120s deployments --all
+    kubectl get keycloaks -n keycloak -o json | jq -r '.items[0].status | .phase'
+  register: keycloak_ready
+  until: keycloak_ready.stdout == "initialising"
+  retries: 12
+  delay: 10
+
+- name: Wait for Keycloak Pods
+  shell: |
     kubectl -n keycloak wait --for=condition=ready --timeout=120s pods --all
 
 - name: Process flux-kustomization template

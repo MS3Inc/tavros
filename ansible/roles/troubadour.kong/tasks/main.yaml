@@ -42,10 +42,10 @@
 
 # todo: see if we can use something like shown here
 # https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
-- name: Wait for kong
+- name: Wait for Kong Helmrelase, and Deployment
   shell: |
     kubectl -n kong wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
-    kubectl -n kong wait --for=condition=ready --timeout=120s pods --all
+    kubectl -n kong wait --for=condition=available --timeout=120s deployments --all
 
 - name: Process flux-kustomization template
   template:

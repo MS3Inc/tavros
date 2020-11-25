@@ -37,9 +37,10 @@
   shell: |
     kustomize build ./{{ cluster_domain }}/platform/gitea/ | kubectl apply -f -
 
-- name: Wait for gitea
+- name: Wait for Gitea Helmrealse, Deployment, and Pods
   shell: |
     kubectl -n gitea wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
+    kubectl -n gitea wait --for=condition=available --timeout=120s deployments --all
     kubectl -n gitea wait --for=condition=ready --timeout=120s pods --all
 
 - name: Process flux-kustomization template

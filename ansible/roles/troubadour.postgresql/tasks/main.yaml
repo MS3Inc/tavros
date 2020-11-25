@@ -38,7 +38,7 @@
 
 # todo: see if we can use something like shown here
 # https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
-- name: Wait for postgresql
+- name: Wait for Postgresql HelmRelease, and Pods
   shell: |
     kubectl -n postgresql wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
     kubectl -n postgresql wait --for=condition=ready --timeout=120s pods --all

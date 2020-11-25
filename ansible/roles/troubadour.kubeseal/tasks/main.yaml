@@ -13,10 +13,9 @@
   shell: |
     kustomize build ./{{ cluster_domain }}/platform/kubeseal/ | kubectl apply -f -
 
-- name: Wait for kubeseal
+- name: Wait for Kubeseal Deployment
   shell: |
-    kubectl -n kube-system wait --for=condition=available --timeout=120s deployments --all
-    kubectl -n kube-system wait --for=condition=ready --timeout=120s pods --all
+    kubectl -n kube-system wait --for=condition=available --timeout=120s deployment.apps/sealed-secrets-controller
 
 - name: Process flux-kustomization template
   template:
