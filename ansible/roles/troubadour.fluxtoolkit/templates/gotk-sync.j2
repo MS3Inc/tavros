@@ -9,7 +9,7 @@ spec:
   ref:
     branch: main
   secretRef:
-    name: flux-system
+    name: flux-repo-secret
   url: 'http://gitea-http.gitea.svc.cluster.local:3000/flux/troubadour'
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
@@ -19,7 +19,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  path: ./{{ cluster_domain }}
+  path: ./{{ cluster_domain }}/platform/flux-system
   prune: true
   sourceRef:
     kind: GitRepository

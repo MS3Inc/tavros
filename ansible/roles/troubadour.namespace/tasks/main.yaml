@@ -15,3 +15,9 @@
   with_list: '{{ namespaces }}'
   shell: |
     kubectl apply -f ./{{ cluster_domain }}/{{ item.ns_name }}/ns.yaml
+    
+- name: Process flux-kustomization template
+  with_list: '{{ namespaces }}'
+  template:
+    src: flux-kustomization.j2
+    dest: ./{{ cluster_domain }}/platform/flux-system/watches/{{ item.ns_name }}.yaml

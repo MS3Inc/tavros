@@ -34,3 +34,8 @@
 - name: Wait for kuma
   shell: |
     kubectl -n kuma-system wait --for=condition=ready --timeout=120s pods --all
+
+- name: Process flux-kustomization template
+  template:
+    src: flux-kustomization.j2
+    dest: ./{{ cluster_domain }}/platform/flux-system/watches/kuma-system.yaml

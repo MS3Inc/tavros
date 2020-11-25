@@ -4,10 +4,24 @@
     path: ./{{ cluster_domain }}/platform/gitea
     state: directory
 
+- name: Set gitea_admin_pass
+  set_fact:
+    gitea_admin_pass: "{{ lookup('password', '/dev/null') }}"
+
 - name: Process values template
   template:
     src: values.j2
-    dest: ./{{ cluster_domain }}/platform/gitea/values.yaml
+    dest: ./{{ cluster_domain }}/platform/gitea/overlay-values.yaml
+
+- name: Convert overlay-values to Secret
+  shell: |
+    kubectl create secret generic overlay-values-secret --dry-run=client --from-file=values.yaml=./{{ cluster_domain }}/platform/gitea/overlay-values.yaml -n gitea -o yaml >./{{ cluster_domain }}/platform/gitea/overlay-values-secret.yaml
+    rm ./{{ cluster_domain }}/platform/gitea/overlay-values.yaml
+
+- name: Convert overlay-values-secret to SealedSecret
+  shell: |
+    kubeseal --format=yaml <./{{ cluster_domain }}/platform/gitea/overlay-values-secret.yaml >./{{ cluster_domain }}/platform/gitea/overlay-values-secret.tmp
+    mv ./{{ cluster_domain }}/platform/gitea/overlay-values-secret.tmp ./{{ cluster_domain }}/platform/gitea/overlay-values-secret.yaml
 
 - name: Copy Gitea HelmChart patch
   copy:
@@ -27,3 +41,8 @@
   shell: |
     kubectl -n gitea wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
     kubectl -n gitea wait --for=condition=ready --timeout=120s pods --all
+
+- name: Process flux-kustomization template
+  template:
+    src: flux-kustomization.j2
+    dest: ./{{ cluster_domain }}/platform/flux-system/watches/gitea.yaml

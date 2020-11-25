@@ -14,11 +14,6 @@
     src: gotk-sync.j2
     dest: ./{{ cluster_domain }}/platform/flux-system/gotk-sync.yaml
 
-- name: Copy kustomization
-  copy:
-    src: kustomization.yaml
-    dest: ./{{ cluster_domain }}/platform/flux-system/kustomization.yaml
-
 - name: Apply Flux manifests
   shell: |
     kubectl apply -f ./{{ cluster_domain }}/platform/flux-system/gotk-components.yaml

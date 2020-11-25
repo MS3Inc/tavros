@@ -46,3 +46,9 @@
   shell: |
     kubectl -n kong wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
     kubectl -n kong wait --for=condition=ready --timeout=120s pods --all
+
+- name: Process flux-kustomization template
+  template:
+    src: flux-kustomization.j2
+    dest: ./{{ cluster_domain }}/platform/flux-system/watches/kong.yaml
+    force: false

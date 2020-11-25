@@ -1,0 +1,54 @@
+
+- name: Create gitea_flux_pass
+  set_fact:
+    gitea_flux_pass: "{{ lookup('password', '/dev/null') }}"
+
+- name: Create flux-repo-secret SealedSecret for Flux Gitea Creds
+  shell: |
+    kubectl create secret generic flux-repo-secret --dry-run=client -n flux-system \
+    --from-literal=username=flux \
+    --from-literal=password="{{ gitea_flux_pass }}" \
+    -o yaml >./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
+
+    kubeseal --format=yaml <./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml >./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.tmp
+    mv ./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.tmp ./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
+
+- name: Create Gitea Access Token
+  shell: |
+    kubectl exec pods/gitea-0 -n gitea \
+      -- curl -s -X POST "http://gitea_admin:{{ gitea_admin_pass }}@localhost:3000/api/v1/users/gitea_admin/tokens" \
+        -H  "accept: application/json" \
+        -H "Content-Type: application/json" \
+        -d '{"name":"token"}' | jq -r '.sha1'
+  register: gitea_token
+
+- name: Create Flux User
+  shell: |
+    kubectl exec pods/gitea-0 -n gitea \
+      -- curl -X POST "http://localhost:3000/api/v1/admin/users" \
+        -H  "accept: application/json" \
+        -H "Content-Type: application/json" \
+        -H "Authorization: token {{ gitea_token.stdout }}" \
+        -d '{"email":"flux@example.com","full_name":"flux","login_name":"flux","must_change_password":false,"password":"{{ gitea_flux_pass }}","send_notify":false,"source_id":0,"username":"flux"}'
+
+- name: Create Flux Repo
+  shell: |
+    kubectl exec pods/gitea-0 -n gitea \
+      -- curl -X POST "http://localhost:3000/api/v1/user/repos" \
+        -H  "accept: application/json" \
+        -H "Content-Type: application/json" \
+        -H "Authorization: token {{ gitea_token.stdout }}" \
+        -H "Sudo: flux" \
+        -d '{"auto_init":true,"default_branch":"main","description":"Flux Troubadour Repo","gitignores":null,"issue_labels":null,"license":null,"name":"troubadour","private":true,"readme":null,"template":false,"trust_model":"default"}'
+
+- name: Copy to Gitea Pod, and Add/Commit/Push to the Troubadour Flux Repo
+  shell: |
+    kubectl cp ./ gitea/gitea-0:~/../tmp/troubadour/
+    kubectl exec pods/gitea-0 -c gitea -n gitea -- git -C /tmp/troubadour/ add .
+    kubectl exec pods/gitea-0 -c gitea -n gitea -- git -C /tmp/troubadour/ commit -m "Commiting Custer Configuration State"
+    kubectl exec pods/gitea-0 -n gitea -- git -C /tmp/troubadour/ push http://flux:{{ gitea_flux_pass }}@localhost:3000/flux/troubadour.git --force
+
+- name: Apply Remaining Flux manifests to activate Repo Sync
+  shell: |
+    kubectl apply -f ./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
+    kubectl apply -f ./{{ cluster_domain }}/platform/flux-system/gotk-sync.yaml

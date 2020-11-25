@@ -41,3 +41,8 @@
   shell: |
     kubectl -n keycloak wait --for=condition=available --timeout=120s deployments --all
     kubectl -n keycloak wait --for=condition=ready --timeout=120s pods --all
+
+- name: Process flux-kustomization template
+  template:
+    src: flux-kustomization.j2
+    dest: ./{{ cluster_domain }}/platform/flux-system/watches/keycloak.yaml

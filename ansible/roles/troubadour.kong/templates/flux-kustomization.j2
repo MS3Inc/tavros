@@ -1,0 +1,14 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
+kind: Kustomization
+metadata:
+  name: kong
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  path: ./{{ cluster_domain }}/platform/kong
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  validation: client
+  prune: true
+  timeout: 5m0s

@@ -102,8 +102,8 @@ gitea:
   #  server:
   #    SSH_PORT: 22
   #
-  #  security:
-  #    PASSWORD_COMPLEXITY: spec
+    security:
+      PASSWORD_COMPLEXITY: "off"
 
   podAnnotations: {}
 

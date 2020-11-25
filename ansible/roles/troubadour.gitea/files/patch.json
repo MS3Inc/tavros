@@ -3,8 +3,8 @@
         "op": "add",
         "path": "/spec/valuesFrom/-", 
         "value": {
-            "kind": "ConfigMap",
-            "name": "overlay-values-config",
+            "kind": "Secret",
+            "name": "overlay-values-secret",
             "valuesKey": "values.yaml"
         }
     }
