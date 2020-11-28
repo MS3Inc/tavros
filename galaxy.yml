@@ -1,0 +1,16 @@
+namespace: ms3_inc
+name: troubadour
+version: 0.1.0
+readme: README.md
+authors:
+- Randy McCright <rmccright@ms3-inc.com>
+- Jose Montoya <jmontoya@ms3-inc.com>
+description: A collection to provision MS3's Troubadour Platform
+dependencies:
+  amazon.aws: '>=1.2.1'
+  community.aws: '>=1.2.1'
+  community.kubernetes: '>=1.1.1'
+repository: https://github.com/MS3Inc/troubadour
+documentation: https://github.com/MS3Inc/troubadour
+homepage: https://github.com/MS3Inc/troubadour
+issues: https://github.com/MS3Inc/troubadour/issues
