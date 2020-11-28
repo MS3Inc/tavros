@@ -13,9 +13,10 @@
 
 - name: Apply manifests
   with_list: '{{ namespaces }}'
+    when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl apply -f ./{{ cluster_domain }}/{{ item.ns_name }}/ns.yaml
-    
+
 - name: Process flux-kustomization template
   with_list: '{{ namespaces }}'
   template:

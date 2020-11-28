@@ -16,15 +16,18 @@
     dest: ./{{ cluster_domain }}/platform/kuma-system/kustomization.yaml
 
 - name: Apply Kuma release
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kustomize build ./troubadour-base/kuma/ | kubectl apply -f -
 
 - name: Wait for Kuma HelmRelease, and Deployment
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl -n kuma-system wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
     kubectl -n kuma-system wait --for=condition=available --timeout=120s deployments --all
 
 - name: Apply Kuma Mehses
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kustomize build ./{{ cluster_domain }}/platform/kuma-system/ | kubectl apply -f -
 
@@ -35,5 +38,6 @@
 
 # Todo Resolve Restart Issue on Kuma Pod
 - name: Wait for Kuma Pod
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl -n kuma-system wait --for=condition=ready --timeout=120s pods --all
