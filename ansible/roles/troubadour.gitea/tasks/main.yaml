@@ -14,11 +14,13 @@
     dest: ./{{ cluster_domain }}/platform/gitea/overlay-values.yaml
 
 - name: Convert overlay-values to Secret
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl create secret generic overlay-values-secret --dry-run=client --from-file=values.yaml=./{{ cluster_domain }}/platform/gitea/overlay-values.yaml -n gitea -o yaml >./{{ cluster_domain }}/platform/gitea/overlay-values-secret.yaml
     rm ./{{ cluster_domain }}/platform/gitea/overlay-values.yaml
 
 - name: Convert overlay-values-secret to SealedSecret
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubeseal --format=yaml <./{{ cluster_domain }}/platform/gitea/overlay-values-secret.yaml >./{{ cluster_domain }}/platform/gitea/overlay-values-secret.tmp
     mv ./{{ cluster_domain }}/platform/gitea/overlay-values-secret.tmp ./{{ cluster_domain }}/platform/gitea/overlay-values-secret.yaml
@@ -34,10 +36,12 @@
     dest: ./{{ cluster_domain }}/platform/gitea/kustomization.yaml
 
 - name: Apply gitea manifests
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kustomize build ./{{ cluster_domain }}/platform/gitea/ | kubectl apply -f -
 
 - name: Wait for Gitea Helmrealse, Deployment, and Pods
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl -n gitea wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
     kubectl -n gitea wait --for=condition=available --timeout=120s deployments --all

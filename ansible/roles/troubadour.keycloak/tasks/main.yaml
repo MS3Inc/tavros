@@ -10,6 +10,7 @@
     dest: ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml
 
 - name: Convert keycloak-db-secret to SealedSecret
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubeseal --format=yaml <./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml >./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.tmp
     mv ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.tmp ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml
@@ -25,18 +26,22 @@
     dest: ./{{ cluster_domain }}/platform/keycloak/kustomization.yaml
 
 - name: Apply operator manifests
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kustomize build ./troubadour-base/keycloak/operator/11.0.3/ | kubectl apply -f -
 
 - name: Wait for Keycloak Operator Deployment
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl -n keycloak wait --for=condition=available --timeout=120s deployments --all
 
 - name: Apply keycloak manifests
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kustomize build ./{{ cluster_domain }}/platform/keycloak/ | kubectl apply -f -
 
 - name: Wait for Keycloak CRD to be Ready
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl get keycloaks -n keycloak -o json | jq -r '.items[0].status | .phase'
   register: keycloak_ready
@@ -45,6 +50,7 @@
   delay: 10
 
 - name: Wait for Keycloak Pods
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl -n keycloak wait --for=condition=ready --timeout=120s pods --all
 

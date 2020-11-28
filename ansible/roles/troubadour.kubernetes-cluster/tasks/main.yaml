@@ -1,13 +1,13 @@
 ---
 # todo: need to add variables for AWS credentials
 - name: create cluster state S3 bucket
-  when: cluster_state == 'present'
+  when: (cluster_state == 'present') and ('dry-run' not in ansible_run_tags)
   amazon.aws.s3_bucket:
     name: troubadour
     state: present
 
 - name: create cluster
-  when: cluster_state == 'present'
+  when: (cluster_state == 'present') and ('dry-run' not in ansible_run_tags)
   register: result
   changed_when: result.rc == 101
   failed_when: (result.rc != 100) and (result.rc != 101)
@@ -36,7 +36,7 @@
     exit 100
 
 - name: remove cluster
-  when: cluster_state == 'absent'
+  when: (cluster_state == 'absent') and ('dry-run' not in ansible_run_tags)
   register: result
   changed_when: result.rc == 101
   failed_when: (result.rc != 100) and (result.rc != 101)
@@ -53,7 +53,7 @@
     exit 100
 
 - name: remove cluster state S3 bucket
-  when: cluster_state == 'absent'
+  when: (cluster_state == 'absent') and ('dry-run' not in ansible_run_tags)
   amazon.aws.s3_bucket:
     name: troubadour
     state: absent

@@ -18,6 +18,7 @@
     dest: ./{{ cluster_domain }}/platform/postgresql/config-secret.yaml
 
 - name: Convert config-secret to SealedSecret
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubeseal --format=yaml <./{{ cluster_domain }}/platform/postgresql/config-secret.yaml >./{{ cluster_domain }}/platform/postgresql/config-secret.tmp
     mv ./{{ cluster_domain }}/platform/postgresql/config-secret.tmp ./{{ cluster_domain }}/platform/postgresql/config-secret.yaml
@@ -33,12 +34,14 @@
     dest: ./{{ cluster_domain }}/platform/postgresql/kustomization.yaml
 
 - name: Apply manifests
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kustomize build ./{{ cluster_domain }}/platform/postgresql/ | kubectl apply -f -
 
 # todo: see if we can use something like shown here
 # https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
 - name: Wait for Postgresql HelmRelease, and Pods
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl -n postgresql wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
     kubectl -n postgresql wait --for=condition=ready --timeout=120s pods --all

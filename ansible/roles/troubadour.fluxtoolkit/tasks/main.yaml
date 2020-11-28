@@ -15,10 +15,12 @@
     dest: ./{{ cluster_domain }}/platform/flux-system/gotk-sync.yaml
 
 - name: Apply Flux manifests
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl apply -f ./{{ cluster_domain }}/platform/flux-system/gotk-components.yaml
 
 - name: Wait for Flux Deployment
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl -n flux-system wait --for=condition=available --timeout=120s deployments --all
 
@@ -29,5 +31,6 @@
     dest: ./{{ cluster_domain }}/platform/flux-system/sources.yaml
 
 - name: Apply Flux Source manifests
+  when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl create -f ./{{ cluster_domain }}/platform/flux-system/sources.yaml
