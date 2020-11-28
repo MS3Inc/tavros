@@ -1,5 +1,0 @@
----
-collections:
-  - name: amazon.aws
-  - name: community.kubernetes
-  - name: community.aws
