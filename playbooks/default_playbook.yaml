@@ -52,15 +52,15 @@
 #       - ns_name: prod
 #         mesh_name: prod
 #
-#   - include_role:
-#       name: ms3_inc.troubadour.kuma
-#     vars:
-#       meshes:
-#       - mesh_name: prod
-#         mtls_enabled: true
-#       - mesh_name: sandbox
-#         mtls_enabled: true
-#
+  - include_role:
+      name: ms3_inc.troubadour.kuma
+    vars:
+      meshes:
+      - mesh_name: prod
+        mtls_enabled: true
+      - mesh_name: sandbox
+        mtls_enabled: true
+
   - include_role:
       name: ms3_inc.troubadour.keycloak
 
