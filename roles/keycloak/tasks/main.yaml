@@ -1,44 +1,59 @@
 ---
 - name: Create directory
   file:
-    path: ./{{ cluster_domain }}/platform/keycloak
+    path: /tmp/{{ cluster_domain }}/platform/keycloak/default
     state: directory
 
-- name: Process keycloak-db-secret template
-  template:
-    src: keycloak-db-secret.j2
-    dest: ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml
-
-- name: Convert keycloak-db-secret to SealedSecret
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubeseal --format=yaml <./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml >./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.tmp
-    mv ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.tmp ./{{ cluster_domain }}/platform/keycloak/keycloak-db-secret.yaml
-
-- name: Process ingress template
-  template:
-    src: ingress.j2
-    dest: ./{{ cluster_domain }}/platform/keycloak/ingress.yaml
-
-- name: Copy keycloak kustomization
+- name: Copy operator
   copy:
-    src: kustomization.yaml
-    dest: ./{{ cluster_domain }}/platform/keycloak/kustomization.yaml
+    src: operator
+    dest: /tmp/{{ cluster_domain }}/platform/keycloak/
 
 - name: Apply operator manifests
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kustomize build ./troubadour-base/keycloak/operator/11.0.3/ | kubectl apply -f -
+    kustomize build /tmp/{{ cluster_domain }}/platform/keycloak/operator/11.0.3/ | kubectl apply -f -
 
 - name: Wait for Keycloak Operator Deployment
   when: "'dry-run' not in ansible_run_tags"
   shell: |
     kubectl -n keycloak wait --for=condition=available --timeout=120s deployments --all
 
+- name: Process keycloak-db-secret template
+  template:
+    src: keycloak-db-secret.j2
+    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.yaml
+
+- name: Convert keycloak-db-secret to SealedSecret
+  when: "'dry-run' not in ansible_run_tags"
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.yaml >/tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.tmp /tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.yaml
+
+- name: Process ingress template
+  template:
+    src: ingress.j2
+    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/ingress.yaml
+
+- name: Copy default keycloak release
+  copy:
+    src: release.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/release.yaml
+
+- name: Copy default keycloak kustomization
+  copy:
+    src: instance-kustomization.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/kustomization.yaml
+
+- name: Copy base keycloak kustomization
+  copy:
+    src: base-kustomization.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/keycloak/kustomization.yaml
+
 - name: Apply keycloak manifests
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kustomize build ./{{ cluster_domain }}/platform/keycloak/ | kubectl apply -f -
+    kustomize build /tmp/{{ cluster_domain }}/platform/keycloak/ | kubectl apply -f -
 
 - name: Wait for Keycloak CRD to be Ready
   when: "'dry-run' not in ansible_run_tags"
@@ -57,4 +72,4 @@
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
-    dest: ./{{ cluster_domain }}/platform/flux-system/watches/keycloak.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/keycloak.yaml

@@ -1,23 +1,23 @@
 - name: Create directory
   file:
-    path: ./{{ cluster_domain }}/platform/flux-system/watches
+    path: /tmp/{{ cluster_domain }}/platform/flux-system/watches
     state: directory
 
 - name: Generate Flux manifests
   shell: |
     flux install --version=latest \
       --arch=amd64 \
-      --export > ./{{ cluster_domain }}/platform/flux-system/gotk-components.yaml
+      --export > /tmp/{{ cluster_domain }}/platform/flux-system/gotk-components.yaml
 
 - name: Process gotk-sync template
   template:
     src: gotk-sync.j2
-    dest: ./{{ cluster_domain }}/platform/flux-system/gotk-sync.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/gotk-sync.yaml
 
 - name: Apply Flux manifests
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kubectl apply -f ./{{ cluster_domain }}/platform/flux-system/gotk-components.yaml
+    kubectl apply -f /tmp/{{ cluster_domain }}/platform/flux-system/gotk-components.yaml
 
 - name: Wait for Flux Deployment
   when: "'dry-run' not in ansible_run_tags"
@@ -28,9 +28,9 @@
 - name: Copy sources
   copy:
     src: sources.yaml
-    dest: ./{{ cluster_domain }}/platform/flux-system/sources.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/sources.yaml
 
 - name: Apply Flux Source manifests
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kubectl create -f ./{{ cluster_domain }}/platform/flux-system/sources.yaml
+    kubectl create -f /tmp/{{ cluster_domain }}/platform/flux-system/sources.yaml

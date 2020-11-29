@@ -63,17 +63,17 @@
 #
   - include_role:
       name: ms3_inc.troubadour.keycloak
-#
-#   - include_role:
-#       name: ms3_inc.troubadour.kong
-#     vars:
-#       kong_name: prod-kong
-#       mesh_name: prod
-#
-#   # - include_role:
-#   #     name: ms3_inc.troubadour.kong
-#   #   vars:
-#   #     kong_name: sandbox-kong
+
+  - include_role:
+      name: ms3_inc.troubadour.kong
+    vars:
+      kong_name: prod-kong
+      mesh_name: prod
+
+  - include_role:
+      name: ms3_inc.troubadour.kong
+    vars:
+      kong_name: sandbox-kong
 #
 #   - name: Set DNS for keycloak
 #     community.aws.route53:
