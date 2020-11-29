@@ -31,7 +31,12 @@
       name: ms3_inc.troubadour.kubernetes_cluster
     vars:
       cluster_state: present
-
+  - set_fact:
+      wait_conditions:
+        HelmRelease:
+          type: Released
+          status: true
+          reason: InstallSucceeded
   - import_role:
       name: ms3_inc.troubadour.fluxtoolkit
 

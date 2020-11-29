@@ -11,13 +11,10 @@
 
 - name: Apply operator manifests
   when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kustomize build /tmp/{{ cluster_domain }}/platform/keycloak/operator/11.0.3/ | kubectl apply -f -
-
-- name: Wait for Keycloak Operator Deployment
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl -n keycloak wait --for=condition=available --timeout=120s deployments --all
+  with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/operator/11.0.3/
+  k8s:
+    definition: "{{ item }}"
+    wait: true
 
 - name: Process keycloak-db-secret template
   template:
@@ -50,24 +47,29 @@
     src: base-kustomization.yaml
     dest: /tmp/{{ cluster_domain }}/platform/keycloak/kustomization.yaml
 
+- name: Copy keycloak ns
+  copy:
+    src: ns.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/keycloak/ns.yaml
+
 - name: Apply keycloak manifests
   when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kustomize build /tmp/{{ cluster_domain }}/platform/keycloak/ | kubectl apply -f -
+  with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] }}"
 
-- name: Wait for Keycloak CRD to be Ready
+- name: Wait for Keycloak
   when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl get keycloaks -n keycloak -o json | jq -r '.items[0].status | .phase'
-  register: keycloak_ready
-  until: keycloak_ready.stdout == "initialising"
-  retries: 12
-  delay: 10
-
-- name: Wait for Keycloak Pods
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl -n keycloak wait --for=condition=ready --timeout=120s pods --all
+  community.kubernetes.k8s_info:
+    kind: Keycloak
+    name: troubadour-keycloak
+    namespace: keycloak
+  register: keycloak_def
+  # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
+  until: keycloak_def[0].status.ready
+  changed_when: false
 
 - name: Process flux-kustomization template
   template:

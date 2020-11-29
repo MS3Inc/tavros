@@ -11,13 +11,10 @@
 
 - name: Apply kubeseal manifests
   when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kustomize build /tmp/{{ cluster_domain }}/platform/kubeseal/ | kubectl apply -f -
-
-- name: Wait for Kubeseal Deployment
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl -n kube-system wait --for=condition=available --timeout=120s deployment.apps/sealed-secrets-controller
+  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kubeseal/
+  k8s:
+    definition: "{{ item }}"
+    wait: true
 
 - name: Process flux-kustomization template
   template:
