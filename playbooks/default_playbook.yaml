@@ -35,23 +35,23 @@
   - import_role:
       name: ms3_inc.troubadour.fluxtoolkit
 
-#   - import_role:
-#       name: ms3_inc.troubadour.kubeseal
-#
-#   - import_role:
-#       name: ms3_inc.troubadour.postgresql
-#
-#   - include_role:
-#       name: ms3_inc.troubadour.namespace
-#     vars:
-#       namespaces:
-#       - ns_name: dev
-#         mesh_name: sandbox
-#       - ns_name: test
-#         mesh_name: sandbox
-#       - ns_name: prod
-#         mesh_name: prod
-#
+  - import_role:
+      name: ms3_inc.troubadour.kubeseal
+
+  - import_role:
+      name: ms3_inc.troubadour.postgresql
+
+  - include_role:
+      name: ms3_inc.troubadour.namespace
+    vars:
+      namespaces:
+      - ns_name: dev
+        mesh_name: sandbox
+      - ns_name: test
+        mesh_name: sandbox
+      - ns_name: prod
+        mesh_name: prod
+
   - include_role:
       name: ms3_inc.troubadour.kuma
     vars:
