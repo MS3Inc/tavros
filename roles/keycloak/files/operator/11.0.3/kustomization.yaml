@@ -9,7 +9,6 @@ resources:
 - https://raw.githubusercontent.com/keycloak/keycloak-operator/11.0.3/deploy/crds/keycloak.org_keycloakrealms_crd.yaml
 - https://raw.githubusercontent.com/keycloak/keycloak-operator/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml
 - https://raw.githubusercontent.com/keycloak/keycloak-operator/11.0.3/deploy/crds/keycloak.org_keycloakusers_crd.yaml
-- https://raw.githubusercontent.com/keycloak/keycloak-operator/11.0.3/deploy/namespace.yaml
 - https://raw.githubusercontent.com/keycloak/keycloak-operator/11.0.3/deploy/role.yaml
 - https://raw.githubusercontent.com/keycloak/keycloak-operator/11.0.3/deploy/role_binding.yaml
 - https://raw.githubusercontent.com/keycloak/keycloak-operator/11.0.3/deploy/service_account.yaml
