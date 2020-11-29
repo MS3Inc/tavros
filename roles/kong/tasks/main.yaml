@@ -1,46 +1,51 @@
 ---
 - name: Create directory
   file:
-    path: ./{{ cluster_domain }}/platform/kong/{{ kong_name }}
+    path: /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}
     state: directory
+
+- name: Copy namespace
+  copy:
+    src: ns.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/ns.yaml
 
 - name: Copy base kustomization if doesn't exist
   copy:
     src: base-kustomization.yaml
-    dest: ./{{ cluster_domain }}/platform/kong/kustomization.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/kustomization.yaml
     force: false
 
 - name: Process config-secret template
   template:
     src: config-secret.j2
-    dest: ./{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.yaml
 
 - name: Convert config-secret to SealedSecret
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kubeseal --format=yaml <./{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.yaml >./{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.tmp
-    mv ./{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.tmp ./{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.yaml
 
 - name: Process release template
   template:
     src: release.j2
-    dest: ./{{ cluster_domain }}/platform/kong/{{ kong_name }}/release.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/release.yaml
 
 - name: Copy kong instance kustomization
   template:
     src: instance-kustomization.j2
-    dest: ./{{ cluster_domain }}/platform/kong/{{ kong_name }}/kustomization.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/kustomization.yaml
 
 - name: Add Kong instance to base kustomization
   lineinfile:
-    path: ./{{ cluster_domain }}/platform/kong/kustomization.yaml
+    path: /tmp/{{ cluster_domain }}/platform/kong/kustomization.yaml
     insertafter: '^/troubadour-base/kong/'
     line: '  - {{ kong_name }}/'
 
 - name: Apply manifests
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kustomize build ./{{ cluster_domain }}/platform/kong/ | kubectl apply -f -
+    kustomize build /tmp/{{ cluster_domain }}/platform/kong/ | kubectl apply -f -
 
 # todo: see if we can use something like shown here
 # https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
@@ -53,5 +58,5 @@
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
-    dest: ./{{ cluster_domain }}/platform/flux-system/watches/kong.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/kong.yaml
     force: false
