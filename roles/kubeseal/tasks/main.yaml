@@ -1,18 +1,18 @@
 ---
 - name: Create directory
   file:
-    path: ./{{ cluster_domain }}/platform/kubeseal
+    path: /tmp/{{ cluster_domain }}/platform/kubeseal
     state: directory
 
 - name: Copy kubeseal kustomization
   copy:
     src: kustomization.yaml
-    dest: ./{{ cluster_domain }}/platform/kubeseal/kustomization.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kubeseal/kustomization.yaml
 
 - name: Apply kubeseal manifests
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kustomize build ./{{ cluster_domain }}/platform/kubeseal/ | kubectl apply -f -
+    kustomize build /tmp/{{ cluster_domain }}/platform/kubeseal/ | kubectl apply -f -
 
 - name: Wait for Kubeseal Deployment
   when: "'dry-run' not in ansible_run_tags"
@@ -22,4 +22,4 @@
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
-    dest: ./{{ cluster_domain }}/platform/flux-system/watches/kubeseal.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/kubeseal.yaml
