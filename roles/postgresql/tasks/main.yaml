@@ -1,7 +1,7 @@
 ---
 - name: Create directory
   file:
-    path: ./{{ cluster_domain }}/platform/postgresql/
+    path: /tmp/{{ cluster_domain }}/platform/postgresql/
     state: directory
 
 - name: Set postgresql password
@@ -15,28 +15,38 @@
 - name: Process config-secret template
   template:
     src: config-secret.j2
-    dest: ./{{ cluster_domain }}/platform/postgresql/config-secret.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml
 
 - name: Convert config-secret to SealedSecret
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kubeseal --format=yaml <./{{ cluster_domain }}/platform/postgresql/config-secret.yaml >./{{ cluster_domain }}/platform/postgresql/config-secret.tmp
-    mv ./{{ cluster_domain }}/platform/postgresql/config-secret.tmp ./{{ cluster_domain }}/platform/postgresql/config-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml >/tmp/{{ cluster_domain }}/platform/postgresql/config-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.tmp /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml
 
 - name: Copy setup.sql
   copy:
     src: setup.sql
-    dest: ./{{ cluster_domain }}/platform/postgresql/setup.sql
+    dest: /tmp/{{ cluster_domain }}/platform/postgresql/setup.sql
+
+- name: Copy postgresql namespace
+  copy:
+    src: ns.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/postgresql/ns.yaml
+
+- name: Copy postgresql default release
+  copy:
+    src: default-release.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/postgresql/default-release.yaml
 
 - name: Copy postgresql kustomization
   copy:
     src: kustomization.yaml
-    dest: ./{{ cluster_domain }}/platform/postgresql/kustomization.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/postgresql/kustomization.yaml
 
 - name: Apply manifests
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kustomize build ./{{ cluster_domain }}/platform/postgresql/ | kubectl apply -f -
+    kustomize build /tmp/{{ cluster_domain }}/platform/postgresql/ | kubectl apply -f -
 
 # todo: see if we can use something like shown here
 # https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
@@ -49,4 +59,4 @@
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
-    dest: ./{{ cluster_domain }}/platform/flux-system/watches/postgresql.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/postgresql.yaml
