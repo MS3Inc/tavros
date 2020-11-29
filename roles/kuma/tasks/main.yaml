@@ -27,19 +27,11 @@
 
 - name: Apply Kuma release
   when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kustomize build ./troubadour-base/kuma/ | kubectl apply -f -
-
-- name: Wait for Kuma HelmRelease, and Deployment
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl -n kuma-system wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
-    kubectl -n kuma-system wait --for=condition=available --timeout=120s deployments --all
-
-- name: Apply Kuma Mehses
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kustomize build /tmp/{{ cluster_domain }}/platform/kuma-system/ | kubectl apply -f -
+  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kuma-system/
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] }}"
 
 - name: Process flux-kustomization template
   template:

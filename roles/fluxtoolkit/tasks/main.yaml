@@ -16,13 +16,10 @@
 
 - name: Apply Flux manifests
   when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl apply -f /tmp/{{ cluster_domain }}/platform/flux-system/gotk-components.yaml
-
-- name: Wait for Flux Deployment
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl -n flux-system wait --for=condition=available --timeout=120s deployments --all
+  loop: "{{ lookup('file', '/tmp/' +  cluster_domain + '/platform/flux-system/gotk-components.yaml') | from_yaml_all | list }}"
+  k8s:
+    definition: "{{ item }}"
+    wait: true
 
 # todo: add single source in each role instead of all at once
 - name: Copy sources
@@ -32,5 +29,7 @@
 
 - name: Apply Flux Source manifests
   when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl create -f /tmp/{{ cluster_domain }}/platform/flux-system/sources.yaml
+  loop: "{{ lookup('file', '/tmp/' +  cluster_domain + '/platform/flux-system/sources.yaml') | from_yaml_all | list }}"
+  k8s:
+    definition: "{{ item }}"
+    wait: true

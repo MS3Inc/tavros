@@ -45,16 +45,11 @@
 
 - name: Apply manifests
   when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kustomize build /tmp/{{ cluster_domain }}/platform/postgresql/ | kubectl apply -f -
-
-# todo: see if we can use something like shown here
-# https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_info_module.html#examples
-- name: Wait for Postgresql HelmRelease, and Pods
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl -n postgresql wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
-    kubectl -n postgresql wait --for=condition=ready --timeout=120s pods --all
+  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/postgresql/
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] }}"
 
 - name: Process flux-kustomization template
   template:
