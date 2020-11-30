@@ -31,15 +31,9 @@
   k8s:
     definition: "{{ item }}"
     wait: true
-    wait_condition: "{{ wait_conditions[item.kind] }}"
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
 
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
     dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/kuma-system.yaml
-
-# Todo Resolve Restart Issue on Kuma Pod
-- name: Wait for Kuma Pod
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl -n kuma-system wait --for=condition=ready --timeout=120s pods --all

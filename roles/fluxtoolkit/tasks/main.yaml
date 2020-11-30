@@ -16,7 +16,9 @@
 
 - name: Apply Flux manifests
   when: "'dry-run' not in ansible_run_tags"
-  loop: "{{ lookup('file', '/tmp/' +  cluster_domain + '/platform/flux-system/gotk-components.yaml') | from_yaml_all | list }}"
+  # difference(...) because flux generates an extra document marker at the end
+  # https://curtisshoward.com/post/multi-document-yaml-files-and-the-ansible-k8s-module/
+  loop: "{{ lookup('file', '/tmp/' +  cluster_domain + '/platform/flux-system/gotk-components.yaml') | from_yaml_all | list | difference([None]) }}"
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -29,7 +31,7 @@
 
 - name: Apply Flux Source manifests
   when: "'dry-run' not in ansible_run_tags"
-  loop: "{{ lookup('file', '/tmp/' +  cluster_domain + '/platform/flux-system/sources.yaml') | from_yaml_all | list }}"
+  loop: "{{ lookup('file', '/tmp/' +  cluster_domain + '/platform/flux-system/sources.yaml') | from_yaml_all | list | difference([None]) }}"
   k8s:
     definition: "{{ item }}"
     wait: true

@@ -48,7 +48,7 @@
   k8s:
     definition: "{{ item }}"
     wait: true
-    wait_condition: "{{ wait_conditions[item.kind] }}"
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
 
 - name: Process flux-kustomization template
   template:
