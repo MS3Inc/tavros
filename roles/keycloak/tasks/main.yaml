@@ -9,13 +9,6 @@
     src: operator
     dest: /tmp/{{ cluster_domain }}/platform/keycloak/
 
-- name: Apply operator manifests
-  when: "'dry-run' not in ansible_run_tags"
-  with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/operator/11.0.3/
-  k8s:
-    definition: "{{ item }}"
-    wait: true
-
 - name: Process keycloak-db-secret template
   template:
     src: keycloak-db-secret.j2
@@ -58,17 +51,20 @@
   k8s:
     definition: "{{ item }}"
     wait: true
-    wait_condition: "{{ wait_conditions[item.kind] }}"
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
 
 - name: Wait for Keycloak
   when: "'dry-run' not in ansible_run_tags"
   community.kubernetes.k8s_info:
+    api_version: keycloak.org/v1alpha1
     kind: Keycloak
     name: troubadour-keycloak
     namespace: keycloak
   register: keycloak_def
   # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
-  until: keycloak_def[0].status.ready
+  until: ('status' in keycloak_def.resources[0]) and (keycloak_def.resources[0].status.ready)
+  retries: 5
+  delay: 10
   changed_when: false
 
 - name: Process flux-kustomization template

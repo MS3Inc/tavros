@@ -31,12 +31,14 @@
       name: ms3_inc.troubadour.kubernetes_cluster
     vars:
       cluster_state: present
+
   - set_fact:
       wait_conditions:
         HelmRelease:
-          type: Released
+          type: Ready
           status: true
-          reason: InstallSucceeded
+          reason: ReconciliationSucceeded
+
   - import_role:
       name: ms3_inc.troubadour.fluxtoolkit
 
@@ -79,33 +81,35 @@
       name: ms3_inc.troubadour.kong
     vars:
       kong_name: sandbox-kong
-#
-#   - name: Set DNS for keycloak
-#     community.aws.route53:
-#       state: present
-#       zone: {{ cluster_domain }}
-#       type: CNAME
-#       record: auth.{{ cluster_name }}.{{ cluster_domain }}
-#       value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-prod-kong-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
-#       overwrite: true
-#       wait: yes
-#
-#   - name: Set wildcard DNS for apps
-#     community.aws.route53:
-#       state: present
-#       zone: {{ cluster_domain }}
-#       type: CNAME
-#       record: "*.apps.{{ cluster_name }}.{{ cluster_domain }}"
-#       value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-prod-kong-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
-#       overwrite: true
-#       wait: yes
-#
-#
+
+  - name: Set DNS for keycloak
+    when: "'dry-run' not in ansible_run_tags"
+    community.aws.route53:
+      state: present
+      zone: "{{ cluster_domain }}"
+      type: CNAME
+      record: auth.{{ cluster_name }}.{{ cluster_domain }}
+      value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-prod-kong-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
+      overwrite: true
+      wait: yes
+
+  - name: Set wildcard DNS for apps
+    when: "'dry-run' not in ansible_run_tags"
+    community.aws.route53:
+      state: present
+      zone: "{{ cluster_domain }}"
+      type: CNAME
+      record: "*.apps.{{ cluster_name }}.{{ cluster_domain }}"
+      value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-prod-kong-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
+      overwrite: true
+      wait: yes
+
+
 # ## teardown
 #   - name: Set DNS for keycloak
 #     community.aws.route53:
 #       state: absent
-#       zone: {{ cluster_domain }}
+#       zone: "{{ cluster_domain }}"
 #       type: CNAME
 #       record: auth.{{ cluster_name }}.{{ cluster_domain }}
 #       value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-prod-kong-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
