@@ -6,11 +6,11 @@
 
 - name: Set postgresql password
   set_fact:
-    postgresql_password: lookup('password', '/dev/null length=12 chars=ascii_letters') | string
+    postgresql_password: "{{ lookup('password', '/dev/null') }}"
 
 - name: Set postgresql postgres password
   set_fact:
-    postgresql_postgres_password: lookup('password', '/dev/null length=12 chars=ascii_letters') | string
+    postgresql_postgres_password: "{{ lookup('password', '/dev/null') }}"
 
 - name: Process config-secret template
   template:
