@@ -5,6 +5,7 @@
   vars:
     cluster_name: test
     cluster_domain: troubadour.ms3-inc.com
+    troubadour_bucket_name: troubadour
   tasks:
   - name: Assert binaries are available
     shell: |
