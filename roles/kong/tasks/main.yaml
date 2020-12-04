@@ -1,8 +1,9 @@
 ---
-- name: Create directory
+- name: Create directories
   file:
-    path: /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}
+    path: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}
     state: directory
+  loop: "{{ kongs }}"
 
 - name: Copy namespace
   copy:
@@ -15,32 +16,37 @@
     dest: /tmp/{{ cluster_domain }}/platform/kong/kustomization.yaml
     force: false
 
-- name: Process config-secret template
+- name: Process config-secret templates
   template:
     src: config-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/config-secret.yaml
+  loop: "{{ kongs }}"
 
-- name: Convert config-secret to SealedSecret
+- name: Convert config-secrets to SealedSecrets
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/config-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/config-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/config-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/config-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/config-secret.yaml
+  loop: "{{ kongs }}"
 
-- name: Process release template
+- name: Process release templates
   template:
     src: release.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/release.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/release.yaml
+  loop: "{{ kongs }}"
 
-- name: Copy kong instance kustomization
+- name: Process instance kustomization templates
   template:
     src: instance-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ kong_name }}/kustomization.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/kustomization.yaml
+  loop: "{{ kongs }}"
 
-- name: Add Kong instance to base kustomization
+- name: Add Kong instances to base kustomization
   lineinfile:
     path: /tmp/{{ cluster_domain }}/platform/kong/kustomization.yaml
     insertafter: '^/troubadour-base/kong/'
-    line: '  - {{ kong_name }}/'
+    line: '  - {{ item.kong_name }}/'
+  loop: "{{ kongs }}"
 
 - name: Apply manifests
   when: "'dry-run' not in ansible_run_tags"

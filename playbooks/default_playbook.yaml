@@ -6,6 +6,11 @@
     cluster_name: test
     cluster_domain: troubadour.ms3-inc.com
     troubadour_bucket_name: troubadour
+    kongs:
+    - kong_name: prod-kong
+      mesh_name: prod
+    - kong_name: sandbox-kong
+      mesh_name: sandbox
   tasks:
   - name: Assert binaries are available
     shell: |
@@ -74,14 +79,6 @@
 
   - include_role:
       name: ms3_inc.troubadour.kong
-    vars:
-      kong_name: prod-kong
-      mesh_name: prod
-
-  - include_role:
-      name: ms3_inc.troubadour.kong
-    vars:
-      kong_name: sandbox-kong
 
   - name: Set DNS for keycloak
     when: "'dry-run' not in ansible_run_tags"

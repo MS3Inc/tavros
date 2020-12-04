@@ -12,6 +12,13 @@
   set_fact:
     postgresql_postgres_password: "{{ lookup('password', '/dev/null') }}"
 
+- name: Generate PG crednetials for Kongs
+  set_fact:
+    kongs_db_info: "{{ kongs_db_info | default({}) | combine(pg_data) }}"   
+  vars:
+    pg_data: "{ '{{ item.kong_name }}': { 'pg_pass': '{{ lookup('password', '/dev/null') }}'}}"
+  loop: "{{ kongs }}"
+
 - name: Process config-secret template
   template:
     src: config-secret.j2
@@ -23,9 +30,14 @@
     kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml >/tmp/{{ cluster_domain }}/platform/postgresql/config-secret.tmp
     mv /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.tmp /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml
 
-- name: Copy setup.sql
+- name: Copy postgresql schema-init-job
   copy:
-    src: setup.sql
+    src: schema-init-job.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-job.yaml
+
+- name: Process setup.sql template
+  template:
+    src: setup.j2
     dest: /tmp/{{ cluster_domain }}/platform/postgresql/setup.sql
 
 - name: Copy postgresql namespace

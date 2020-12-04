@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ kong_name }}
+  name: {{ item.kong_name }}
   namespace: kong
 spec:
   targetNamespace: kong
@@ -31,26 +31,26 @@ spec:
       pg_database:
         valueFrom:
           secretKeyRef:
-            name: {{ kong_name }}-config-secret
+            name: {{ item.kong_name }}-config-secret
             key: pg_database
       pg_user:
         valueFrom:
           secretKeyRef:
-            name: {{ kong_name }}-config-secret
+            name: {{ item.kong_name }}-config-secret
             key: pg_user
       pg_password:
         valueFrom:
           secretKeyRef:
-            name: {{ kong_name }}-config-secret
+            name: {{ item.kong_name }}-config-secret
             key: pg_password
     ingressController:
       installCRDs: false
       env:
         # see https://github.com/Kong/charts/issues/224
         kong_admin_tls_skip_verify: 'true'
-{%  if mesh_name is defined %}
+{%  if item.mesh_name is defined %}
     podAnnotations:
       kuma.io/sidecar-injection: enabled
       kuma.io/gateway: enabled
-      kuma.io/mesh: {{ mesh_name }}
+      kuma.io/mesh: {{ item.mesh_name }}
 {% endif  %}

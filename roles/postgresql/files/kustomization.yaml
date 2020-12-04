@@ -5,6 +5,7 @@ resources:
   - ns.yaml
   - default-release.yaml
   - config-secret.yaml
+  - schema-init-job.yaml
 configMapGenerator:
   - name: setup-config
     namespace: postgresql

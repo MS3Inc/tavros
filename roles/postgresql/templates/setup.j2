@@ -1,0 +1,13 @@
+CREATE DATABASE gitea;
+CREATE USER gitea WITH ENCRYPTED PASSWORD 'gitea';
+GRANT ALL PRIVILEGES ON DATABASE gitea TO gitea;
+
+CREATE DATABASE keycloak;
+CREATE USER keycloak WITH ENCRYPTED PASSWORD 'keycloak';
+GRANT ALL PRIVILEGES ON DATABASE keycloak TO keycloak;
+
+{% for item in kongs %}
+CREATE DATABASE "{{ item.kong_name }}";
+CREATE USER "{{ item.kong_name }}" WITH ENCRYPTED PASSWORD '{{ kongs_db_info[ item.kong_name ].pg_pass }}';
+GRANT ALL PRIVILEGES ON DATABASE "{{ item.kong_name }}" TO "{{ item.kong_name }}";
+{% endfor %}

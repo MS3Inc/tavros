@@ -63,8 +63,8 @@
   register: keycloak_def
   # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
   until: ('status' in keycloak_def.resources[0]) and (keycloak_def.resources[0].status.ready)
-  retries: 5
-  delay: 10
+  retries: 6
+  delay: 20
   changed_when: false
 
 - name: Process flux-kustomization template
