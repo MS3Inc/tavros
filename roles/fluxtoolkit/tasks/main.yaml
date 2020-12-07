@@ -5,7 +5,7 @@
 
 - name: Generate Flux manifests
   shell: |
-    flux install --version=latest \
+    flux install --version=v0.4.3 \
       --arch=amd64 \
       --export > /tmp/{{ cluster_domain }}/platform/flux-system/gotk-components.yaml
 
