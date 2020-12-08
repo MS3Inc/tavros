@@ -1,0 +1,46 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ item.kong_name }}
+  namespace: kong
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/override: https-only
+    kubernetes.io/ingress.class: {{ item.kong_name }}
+spec:
+  tls:
+  - hosts:
+    - "*.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+    secretName: wildcard-kong
+  rules:
+  - host: "admin-api.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-{{ item.kong_name }}-kong-admin
+          servicePort: 8001
+
+{%  if item.kong_ee == true %}
+  - host: "admin.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-{{ item.kong_name }}-kong-manager
+          servicePort: 8002
+  - host: "portal.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-{{ item.kong_name }}-kong-portal
+          servicePort: 8003
+  - host: "portal-api.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-{{ item.kong_name }}-kong-portalapi
+          servicePort: 8004
+{% endif  %}

@@ -1,0 +1,19 @@
+{
+    "issuer":"https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ item.kong_name }}",
+    "client_id":["{{ item.kong_name }}"],
+    "client_secret":["{{ item.kong_name | to_uuid }}"],
+    "consumer_by":["username","custom_id","id"],
+    "ssl_verify":false,
+    "scopes_required":["{{ item.kong_name }}-api"],
+    "authenticated_groups_claim":["{{ item.kong_name }}-api"],
+    "consumer_claim":["email"],
+    "leeway":1000,
+    "redirect_uri":["https://admin.kong.{{ cluster_name }}.{{ cluster_domain }}"],
+    "login_redirect_uri":["https://admin.{{ cluster_name }}.{{ cluster_domain }}"],
+    "logout_methods":["GET"],
+    "logout_query_arg":"logout",
+    "logout_redirect_uri":["https://admin.{{ cluster_name }}.{{ cluster_domain }}"],
+    "scopes":["openid","profile","email","offline_access"],
+    "auth_methods":["authorization_code"]
+}
+    

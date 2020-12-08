@@ -1,0 +1,85 @@
+{%  if item.kong_ee == true %}
+image:
+  repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
+  tag: "2.2.0.0-alpine"
+  pullSecrets:
+    - kong-enterprise-edition-docker
+{% else  %}
+image:
+  tag: '2.2'
+{% endif  %}
+env:
+
+{%  if item.kong_ee == true %}
+  admin_api_uri: "https://admin-api.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+  admin_gui_url: "https://admin.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+  portal_api-url: "https://portal-api.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+  portal_gui_host: "https://portal.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+  proxy_url: "https://{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+  portal_gui_protocol: "https"
+  password:
+    valueFrom:
+      secretKeyRef:
+        name: {{ item.kong_name }}-enterprise-superuser-password
+        key: password
+{% endif  %}
+
+  database: postgres
+  pg_host: troubadour-postgresql.postgresql
+  pg_port: '5432'
+  pg_database:
+    valueFrom:
+      secretKeyRef:
+        name: {{ item.kong_name }}-config-secret
+        key: pg_database
+  pg_user:
+    valueFrom:
+      secretKeyRef:
+        name: {{ item.kong_name }}-config-secret
+        key: pg_user
+  pg_password:
+    valueFrom:
+      secretKeyRef:
+        name: {{ item.kong_name }}-config-secret
+        key: pg_password
+ingressController:
+  ingressClass: {{ item.kong_name }}
+  installCRDs: false
+  env:
+  # see https://github.com/Kong/charts/issues/224
+    kong_admin_tls_skip_verify: 'true'
+
+{%  if item.kong_ee == true %}
+    kong_admin_token:
+      valueFrom:
+        secretKeyRef:
+           name: {{ item.kong_name }}-enterprise-superuser-password
+           key: password
+{% endif  %}
+
+{%  if item.mesh_name is defined %}
+podAnnotations:
+  kuma.io/sidecar-injection: enabled
+  kuma.io/gateway: enabled
+  kuma.io/mesh: {{ item.mesh_name }}
+{% endif  %}
+
+admin:
+  enabled: true
+  http:
+    enabled: true
+    
+{%  if item.kong_ee == true %}
+enterprise:
+  enabled: true
+  license_secret: kong-enterprise-license
+  vitals:
+    enabled: true
+  portal:
+    enabled: true
+  rbac:
+    enabled: true
+    admin_gui_auth: basic-auth
+    session_conf_secret: {{ item.kong_name }}-session-config
+    # admin_gui_auth_conf_secret: {{ item.kong_name }}-admin-gui-auth-conf
+{% endif  %}

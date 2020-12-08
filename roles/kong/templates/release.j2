@@ -21,36 +21,7 @@ spec:
   upgrade:
     remediation:
       retries: 5
-  values:
-    image:
-      tag: '2.2'
-    env:
-      database: postgres
-      pg_host: troubadour-postgresql.postgresql
-      pg_port: '5432'
-      pg_database:
-        valueFrom:
-          secretKeyRef:
-            name: {{ item.kong_name }}-config-secret
-            key: pg_database
-      pg_user:
-        valueFrom:
-          secretKeyRef:
-            name: {{ item.kong_name }}-config-secret
-            key: pg_user
-      pg_password:
-        valueFrom:
-          secretKeyRef:
-            name: {{ item.kong_name }}-config-secret
-            key: pg_password
-    ingressController:
-      installCRDs: false
-      env:
-        # see https://github.com/Kong/charts/issues/224
-        kong_admin_tls_skip_verify: 'true'
-{%  if item.mesh_name is defined %}
-    podAnnotations:
-      kuma.io/sidecar-injection: enabled
-      kuma.io/gateway: enabled
-      kuma.io/mesh: {{ item.mesh_name }}
-{% endif  %}
+  valuesFrom:
+    - kind: ConfigMap
+      name: {{ item.kong_name }}-values-config
+      valuesKey: values.yaml

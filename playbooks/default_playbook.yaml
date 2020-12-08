@@ -9,8 +9,15 @@
     kongs:
     - kong_name: prod-kong
       mesh_name: prod
+      kong_ee: false
     - kong_name: sandbox-kong
       mesh_name: sandbox
+      kong_ee: false
+    # kong_ee_creds:
+    #   license: ""
+    #   docker:
+    #     username: ""
+    #     password: ""
     meshes:
     - mesh_name: prod
       mtls_enabled: true

@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ns.yaml
+{%  if kong_ee_creds.license is defined %}
+  - ee-license-secret.yaml
+  - ee-docker-secret.yaml
+{% endif  %}

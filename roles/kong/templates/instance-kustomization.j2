@@ -4,3 +4,16 @@ namespace: kong
 resources:
   - release.yaml
   - config-secret.yaml
+  - ingresses.yaml
+{%  if item.kong_ee == true %}
+  - ee-superuser-secret.yaml
+  - ee-session-secret.yaml
+  - ee-admin-gui-auth-secret.yaml
+{% endif  %}
+generatorOptions:
+  disableNameSuffixHash: true
+configMapGenerator:
+  - name: {{ item.kong_name }}-values-config
+    namespace: kong
+    files:
+      - values.yaml=values.yaml
