@@ -14,9 +14,9 @@ env:
   admin_api_uri: "https://admin-api.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
   admin_gui_url: "https://admin.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
   portal_api-url: "https://portal-api.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
-  portal_gui_host: "https://portal.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
-  proxy_url: "https://{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+  portal_gui_host: "portal.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
   portal_gui_protocol: "https"
+  # proxy_url: "https://{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
   password:
     valueFrom:
       secretKeyRef:
