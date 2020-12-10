@@ -1,0 +1,44 @@
+---
+- name: Create directory
+  file:
+    path: /tmp/{{ cluster_domain }}/platform/cert-manager
+    state: directory
+
+- name: Process cluster-issuer template
+  template:
+    src: cluster-issuer.j2
+    dest: /tmp/{{ cluster_domain }}/platform/cert-manager/cluster-issuer.yaml
+
+- name: Copy namespace
+  copy:
+    src: ns.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/cert-manager/ns.yaml
+
+- name: Copy kustomization
+  copy:
+    src: kustomization.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/cert-manager/kustomization.yaml
+
+- name: Copy helm source
+  copy:
+    src: helm-source.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/cert-manager/helm-source.yaml
+
+- name: Copy release
+  copy:
+    src: release.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/cert-manager/release.yaml
+
+- name: Apply manifests
+  when: "'dry-run' not in ansible_run_tags"
+  loop: "{{ lookup('ms3_inc.troubadour.kustomize', '/tmp/' + cluster_domain + '/platform/cert-manager/', reorder='none') }}"
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 300
+
+- name: Process flux-kustomization template
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/gitea.yaml
