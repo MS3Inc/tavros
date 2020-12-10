@@ -14,10 +14,10 @@
 
 - name: Generate PG crednetials for Kongs
   set_fact:
-    kongs_db_info: "{{ kongs_db_info | default({}) | combine(pg_data) }}"   
+    kongs_db_info: "{{ kongs_db_info | default({}) | combine(pg_data) }}"
   vars:
-    pg_data: "{ '{{ item.kong_name }}': { 'pg_pass': '{{ lookup('password', '/dev/null') }}'}}"
-  loop: "{{ kongs }}"
+    pg_data: "{ '{{ item.name }}': { 'pg_pass': '{{ lookup('password', '/dev/null') }}'}}"
+  loop: "{{ kong.instances }}"
 
 - name: Process config-secret template
   template:

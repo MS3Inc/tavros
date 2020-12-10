@@ -1,5 +1,5 @@
 master_count: 1
 master_size: t2.large
-node_count: 3
+node_count: 2
 node_size: t2.xlarge
 zones: us-east-1a,us-east-1b

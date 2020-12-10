@@ -3,31 +3,31 @@
 - name: create cluster state S3 bucket
   when: (cluster_state == 'present') and ('dry-run' not in ansible_run_tags)
   amazon.aws.s3_bucket:
-    name: "{{ troubadour_bucket_name }}"
+    name: "{{ kubernetes_cluster.state_bucket }}"
     state: present
-    
+
 - name: create cluster
   when: (cluster_state == 'present') and ('dry-run' not in ansible_run_tags)
   register: result
   changed_when: result.rc == 101
   failed_when: (result.rc != 100) and (result.rc != 101)
   shell: |
-    if [[ ! $(kops get cluster --name "{{ cluster_name }}.{{ cluster_domain }}" --state "s3://{{ troubadour_bucket_name }}/{{ cluster_name }}-cluster-state") ]]; then
+    if [[ ! $(kops get cluster --name "{{ cluster_name }}.{{ cluster_domain }}" --state "s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_name }}-cluster-state") ]]; then
       kops create cluster \
         --name="{{ cluster_name }}.{{ cluster_domain }}" \
-        --cloud=aws \
-        --state="s3://{{ troubadour_bucket_name }}/{{ cluster_name }}-cluster-state" \
-        --master-count={{ master_count }} \
-        --master-size={{ master_size }} \
-        --node-count={{ node_count }} \
-        --node-size={{ node_size }} \
+        --cloud="{{ kubernetes_cluster.cloud }}" \
+        --state="s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_name }}-cluster-state" \
+        --master-count={{ kubernetes_cluster.master_count }} \
+        --master-size={{ kubernetes_cluster.master_size }} \
+        --node-count={{ kubernetes_cluster.node_count }} \
+        --node-size={{ kubernetes_cluster.node_size }} \
         --topology private \
         --networking weave \
         --dns-zone={{ cluster_domain }} \
-        --zones={{ zones }} \
+        --zones={{ kubernetes_cluster.zones }} \
         --authorization RBAC \
         --yes
-      kops validate cluster --wait 1h --state s3://{{ troubadour_bucket_name }}/{{ cluster_name }}-cluster-state
+      kops validate cluster --wait 1h --state s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_name }}-cluster-state
       # signal change
       exit 101
     fi
@@ -40,10 +40,10 @@
   changed_when: result.rc == 101
   failed_when: (result.rc != 100) and (result.rc != 101)
   shell: |
-    if [[ $(kops get cluster --name "{{ cluster_name }}.{{ cluster_domain }}" --state "s3://{{ troubadour_bucket_name }}/{{ cluster_name }}-cluster-state") ]]; then
+    if [[ $(kops get cluster --name "{{ cluster_name }}.{{ cluster_domain }}" --state "s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_name }}-cluster-state") ]]; then
       kops delete cluster \
         --name="{{ cluster_name }}.{{ cluster_domain }}" \
-        --state="s3://{{ troubadour_bucket_name }}/{{ cluster_name }}-cluster-state" \
+        --state="s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_name }}-cluster-state" \
         --yes
       # signal change
       exit 101
@@ -54,5 +54,5 @@
 - name: remove cluster state S3 bucket
   when: (cluster_state == 'absent') and ('dry-run' not in ansible_run_tags)
   amazon.aws.s3_bucket:
-    name: "{{ troubadour_bucket_name }}"
+    name: "{{ kubernetes_cluster.state_bucket }}"
     state: absent

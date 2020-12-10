@@ -5,10 +5,10 @@
     state: directory
 
 - name: Process mesh template
-  with_list: '{{ meshes }}'
+  with_list: '{{ kuma.meshes }}'
   template:
     src: mesh.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.mesh_name }}.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.name }}.yaml
 
 - name: Process kuma kustomization template
   template:

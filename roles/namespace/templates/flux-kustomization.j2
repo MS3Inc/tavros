@@ -1,11 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization
 metadata:
-  name: {{ item.ns_name }}
+  name: {{ item.name }}
   namespace: flux-system
 spec:
   interval: 5m0s
-  path: ./{{ cluster_domain }}/{{ item.ns_name }}/
+  path: ./{{ cluster_domain }}/{{ item.name }}/
   sourceRef:
     kind: GitRepository
     name: flux-system

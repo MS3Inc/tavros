@@ -1,9 +1,9 @@
 apiVersion: kuma.io/v1alpha1
 kind: Mesh
 metadata:
-  name: {{ item.mesh_name }}
+  name: {{ item.name }}
   namespace: kuma-system
-{%  if item.mtls_enabled is defined and item.mtls_enabled %}
+{%  if item.mtls.enabled is defined and item.mtls.enabled %}
 spec:
   mtls:
     enabledBackend: ca-1

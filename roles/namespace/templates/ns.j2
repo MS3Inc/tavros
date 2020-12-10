@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ item.ns_name }}
-{%  if item.mesh_name is defined %}
+  name: {{ item.name }}
+{%  if item.kuma_mesh_name is defined %}
   annotations:
-    kuma.io/mesh: {{ item.mesh_name }}
+    kuma.io/mesh: {{ item.kuma_mesh_name }}
     kuma.io/sidecar-injection: enabled
 {% endif  %}

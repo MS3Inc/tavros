@@ -4,6 +4,6 @@ namespace: kuma-system
 resources:
   - ns.yaml
   - default-release.yaml
-{% for item in meshes %}
-  - meshes/{{ item.mesh_name }}.yaml
+{% for item in kuma.meshes %}
+  - meshes/{{ item.name }}.yaml
 {% endfor %}

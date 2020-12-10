@@ -5,14 +5,15 @@ metadata:
   namespace: cert-manager
 spec:
   acme:
-    email: ops@{{ cluster_name }}.{{ cluster_domain }}.com
+    email: ops@{{ cluster_name }}.{{ cluster_domain }}
     server: https://acme-v02.api.letsencrypt.org/directory
     preferredChain: "ISRG Root X1"
     privateKeySecretRef:
       name: troubadour-issuer-account-key
     solvers:
+{% for item in kong.instances %}
     - selector: {}
       http01:
         ingress:
-          # todo: needs to be a variable
-          class: prod-kong
+          class: {{ item.ingress_class }}
+{% endfor %}
