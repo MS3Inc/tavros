@@ -81,6 +81,9 @@
       name: ms3_inc.troubadour.kuma
 
   - include_role:
+      name: ms3_inc.troubadour.cert_manager
+
+  - include_role:
       name: ms3_inc.troubadour.keycloak
 
   - include_role:

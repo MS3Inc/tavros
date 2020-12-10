@@ -4,6 +4,7 @@ metadata:
   name: keycloak
   namespace: keycloak
   annotations:
+    cert-manager.io/cluster-issuer: troubadour
     kubernetes.io/ingress.class: kong
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
@@ -17,3 +18,7 @@ spec:
         backend:
           serviceName: keycloak-discovery
           servicePort: 8080
+  tls:
+  - hosts:
+    - auth.{{ cluster_name}}.{{ cluster_domain }}
+    secretName: auth-ingress-cert
