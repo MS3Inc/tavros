@@ -13,6 +13,9 @@ DOCUMENTATION = """
           _terms:
             description: path(s) of directories to run kustomize on
             required: True
+          reorder:
+            description: Reorder the resources just before output. Use 'legacy' to apply a legacy reordering (Namespaces first, Webhooks last, etc). Use 'none' to suppress a final reordering. (default 'legacy')
+            required: False
 """
 from ansible.errors import AnsibleError
 from ansible.plugins.lookup import LookupBase
@@ -27,15 +30,22 @@ display = Display()
 class LookupModule(LookupBase):
 
     def run(self, terms, variables=None, **kwargs):
-
         ret = []
+        self.reorder = kwargs.get('reorder')
+
         for term in terms:
             display.debug("Kustomize lookup term: %s" % term)
+            args = ['kustomize', 'build']
+
+            if self.reorder is not None:
+                args.extend(['--reorder', self.reorder])
+
+            args.append(term)
 
             # https://docs.python.org/3/library/subprocess.html#subprocess.run
             # https://github.com/painless-software/kustomize-wrapper/blob/master/kustomize/helpers/binaries.py
             try:
-                result = run(['kustomize', 'build', term],
+                result = run(args,
                          check=True,
                          input=None,
                          stderr=PIPE,
