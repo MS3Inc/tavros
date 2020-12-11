@@ -1,0 +1,17 @@
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: {{ item.name }}
+  namespace: keycloak
+  labels:
+    realm: {{ item.name }}
+spec:
+  realm:
+    id: {{ item.name }}
+    realm: {{ item.name }}
+    enabled: True
+    displayName: {{ item.name }}
+  instanceSelector:
+    matchLabels:
+      app.troubadour/component: auth

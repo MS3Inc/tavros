@@ -30,9 +30,15 @@
     src: release.yaml
     dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/release.yaml
 
-- name: Copy default keycloak kustomization
-  copy:
-    src: instance-kustomization.yaml
+- name: Process Realm templates
+  template:
+    src: realm.j2
+    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.name }}-realm.yaml
+  loop: "{{ keycloak.realms }}"
+
+- name: Process default keycloak kustomization
+  template:
+    src: instance-kustomization.j2
     dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/kustomization.yaml
 
 - name: Copy base keycloak kustomization

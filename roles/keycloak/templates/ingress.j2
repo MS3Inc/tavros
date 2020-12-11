@@ -5,7 +5,7 @@ metadata:
   namespace: keycloak
   annotations:
     cert-manager.io/cluster-issuer: troubadour
-    kubernetes.io/ingress.class: kong
+    kubernetes.io/ingress.class: {{ kong.default_ingress_controller }}
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
     konghq.com/https-redirect-status-code: '302'

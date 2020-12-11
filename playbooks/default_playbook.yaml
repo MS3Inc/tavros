@@ -17,7 +17,7 @@
     kong:
       default_ingress_controller: 'prod'
       ee_creds:
-        default:
+        - name: default
           license: ''
           image_registry:
             username: ''
@@ -29,7 +29,7 @@
         ee:
           enabled: false
           creds: 'default'
-          keycloak_realm: 'sadbox'
+          keycloak_realm: 'sandbox'
       - name: 'prod-kong'
         ingress_class: 'prod'
         kuma_mesh_name: 'prod'
@@ -53,6 +53,10 @@
     - name: 'prod'
       kuma_mesh_name: 'prod'
     keycloak:
+      pg:
+        db: keycloak
+        user: keycloak
+        pass: keycloak
       realms:
       - name: sandbox
       - name: prod

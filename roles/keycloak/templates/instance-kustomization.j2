@@ -5,3 +5,6 @@ resources:
   - keycloak-db-secret.yaml
   - ingress.yaml
   - release.yaml
+{% for item in keycloak.realms %}
+  - {{ item.name }}-realm.yaml
+{% endfor %}
