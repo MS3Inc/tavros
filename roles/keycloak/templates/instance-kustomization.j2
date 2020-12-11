@@ -7,4 +7,5 @@ resources:
   - release.yaml
 {% for item in keycloak.realms %}
   - {{ item.name }}-realm.yaml
+  - {{ item.name }}-user.yaml
 {% endfor %}

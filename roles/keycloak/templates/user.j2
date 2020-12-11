@@ -1,0 +1,28 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: {{ item.name}}
+  labels:
+    app: sso
+spec:
+  user:
+    username: {{ cluster_admin_email }}
+    email: {{ cluster_admin_email }}
+    enabled: False
+    emailVerified: True
+    credentials:
+      - type: "password"
+        value: "{{ keycloak_realm_creds[ item.name ].user_pass }}"
+        temporary: True
+    realmRoles:
+      - "offline_access"
+      - "uma_authorization"
+    clientRoles:
+      account:
+        - "manage-account"
+        - "view-profile"
+      {{item.name}}:
+        - "super-admin"
+  realmSelector:
+    matchLabels:
+      realm: {{ item.name }}

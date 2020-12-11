@@ -36,6 +36,19 @@
     dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.name }}-realm.yaml
   loop: "{{ keycloak.realms }}"
 
+- name: Generate Realm User Credentials
+  set_fact:
+    keycloak_realm_creds: "{{ keycloak_realm_creds | default({}) | combine(user_creds) }}"
+  vars:
+    user_creds: "{ '{{ item.name }}': { 'user_pass': '{{ lookup('password', '/dev/null') }}'}}"
+  loop: "{{ keycloak.realms }}"
+
+- name: Process User templates
+  template:
+    src: user.j2
+    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.name }}-user.yaml
+  loop: "{{ keycloak.realms }}"
+
 - name: Process default keycloak kustomization
   template:
     src: instance-kustomization.j2
