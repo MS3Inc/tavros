@@ -11,11 +11,19 @@ metadata:
 spec:
   tls:
   - hosts:
+    - "admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "portal-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "portal.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     secretName: {{ item.name }}-ingress-certs
   rules:
+  - host: "admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-{{ item.name }}-kong-admin
+          servicePort: 8001
   - host: "admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     http:
       paths:

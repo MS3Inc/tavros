@@ -1,11 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: kong
 resources:
   - release.yaml
   - config-secret.yaml
 {%  if item.ee.enabled %}
   - ingresses.yaml
+  - keycloak-client.yaml
   - ee-superuser-secret.yaml
   - ee-session-secret.yaml
   - ee-admin-gui-auth-secret.yaml

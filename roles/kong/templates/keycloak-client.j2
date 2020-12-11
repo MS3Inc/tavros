@@ -1,0 +1,25 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: {{ item.name }}
+  namespace: keycloak
+  labels:
+    client: {{ item.name }}
+spec:
+  realmSelector:
+    matchLabels:
+        realm: {{ item.ee.keycloak_realm }}
+  client:
+    clientId: {{ item.name }}
+    secret: {{ item.name | to_uuid }}
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect
+    rootUrl: https://admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}
+    redirectUris:
+    - "*"
+    directAccessGrantsEnabled: True
+    standardFlowEnabled: True
+    enabled: True
+    defaultRoles:
+    - "super-admin"
+    

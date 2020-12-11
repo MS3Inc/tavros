@@ -11,7 +11,7 @@ image:
 env:
 
 {%  if item.ee.enabled %}
-  admin_api_uri: "kong-{{ item.name }}-kong-admin.kong.svc.cluster.local:8001"
+  admin_api_uri: "https://admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
   admin_gui_url: "https://admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
   portal_api-url: "https://portal-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
   portal_gui_host: "portal.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"

@@ -39,7 +39,14 @@
     src: values.j2
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/values.yaml
   loop: "{{ kong.instances }}"
-  
+
+- name: Process instance keycloak-client templates
+  when: (item.ee.enabled)
+  template:
+    src: keycloak-client.j2
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-client.yaml
+  loop: "{{ kong.instances }}"
+
 - name: Process instance keycloak-config templates
   when: (item.ee.enabled)
   template:
@@ -131,6 +138,12 @@
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ingresses.yaml
   loop: "{{ kong.instances }}"
 
+- name: Process flux-kustomization template
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/kong.yaml
+    force: false
+
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kong/
@@ -140,8 +153,21 @@
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 300
 
-- name: Process flux-kustomization template
-  template:
-    src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/kong.yaml
-    force: false
+
+# - name: Create EE Realm Users
+#   when: (item.ee.enabled)
+#   shell: |
+#     kubectl exec pods/$(kubectl get pods -n kong -l app.kubernetes.io/instance=kong-{{ item.name }},app.kubernetes.io/component=app -o json | jq -r '.items[0].metadata.name') -c proxy -n kong \
+#       -- curl -X POST "http://localhost:8001/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}" \
+#         -H  "accept: application/json" \
+#         -H "Content-Type: application/json" \
+#         -H "kong-admin-token: $(kubectl get secret {{ item.name }}-enterprise-superuser-password -n kong -o json | jq -r '.data.password | @base64d')"
+    
+    
+#     kubectl exec pods/$(kubectl get pods -n kong -l app.kubernetes.io/instance=kong-{{ item.name }},app.kubernetes.io/component=app -o json | jq -r '.items[0].metadata.name') -c proxy -n kong \
+#       -- curl -X POST "http://localhost:8001/admins/{{ cluster_admin_email }}/roles?roles=super-admin" \
+#         -H  "accept: application/json" \
+#         -H "Content-Type: application/json" \
+#         -H "kong-admin-token: $(kubectl get secret {{ item.name }}-enterprise-superuser-password -n kong -o json | jq -r '.data.password | @base64d')"
+
+#   loop: "{{ kong.instances }}"
