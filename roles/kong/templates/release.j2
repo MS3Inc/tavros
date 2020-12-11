@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ item.kong_name }}
+  name: {{ item.name }}
   namespace: kong
 spec:
   targetNamespace: kong
@@ -23,5 +23,5 @@ spec:
       retries: 5
   valuesFrom:
     - kind: ConfigMap
-      name: {{ item.kong_name }}-values-config
+      name: {{ item.name }}-values-config
       valuesKey: values.yaml

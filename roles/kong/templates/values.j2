@@ -1,26 +1,25 @@
-{%  if item.kong_ee == true %}
+{%  if item.ee.enabled %}
 image:
   repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
   tag: "2.2.0.0-alpine"
   pullSecrets:
-    - kong-enterprise-edition-docker
+    - {{ item.ee.creds }}-kong-enterprise-edition-docker
 {% else  %}
 image:
   tag: '2.2'
 {% endif  %}
 env:
 
-{%  if item.kong_ee == true %}
-  admin_api_uri: "https://admin-api.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
-  admin_gui_url: "https://admin.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
-  portal_api-url: "https://portal-api.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
-  portal_gui_host: "portal.{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
+{%  if item.ee.enabled %}
+  admin_api_uri: "kong-{{ item.name }}-kong-admin.kong.svc.cluster.local:8001"
+  admin_gui_url: "https://admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
+  portal_api-url: "https://portal-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
+  portal_gui_host: "portal.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
   portal_gui_protocol: "https"
-  # proxy_url: "https://{{ item.kong_name }}.{{ cluster_name }}.{{ cluster_domain }}"
   password:
     valueFrom:
       secretKeyRef:
-        name: {{ item.kong_name }}-enterprise-superuser-password
+        name: {{ item.name }}-enterprise-superuser-password
         key: password
 {% endif  %}
 
@@ -30,30 +29,30 @@ env:
   pg_database:
     valueFrom:
       secretKeyRef:
-        name: {{ item.kong_name }}-config-secret
+        name: {{ item.name }}-config-secret
         key: pg_database
   pg_user:
     valueFrom:
       secretKeyRef:
-        name: {{ item.kong_name }}-config-secret
+        name: {{ item.name }}-config-secret
         key: pg_user
   pg_password:
     valueFrom:
       secretKeyRef:
-        name: {{ item.kong_name }}-config-secret
+        name: {{ item.name }}-config-secret
         key: pg_password
 ingressController:
-  ingressClass: {{ item.kong_name }}
+  ingressClass: {{ item.ingress_class }}
   installCRDs: false
   env:
   # see https://github.com/Kong/charts/issues/224
     kong_admin_tls_skip_verify: 'true'
 
-{%  if item.kong_ee == true %}
+{%  if item.ee.enabled %}
     kong_admin_token:
       valueFrom:
         secretKeyRef:
-           name: {{ item.kong_name }}-enterprise-superuser-password
+           name: {{ item.name }}-enterprise-superuser-password
            key: password
 {% endif  %}
 
@@ -61,7 +60,7 @@ ingressController:
 podAnnotations:
   kuma.io/sidecar-injection: enabled
   kuma.io/gateway: enabled
-  kuma.io/mesh: {{ item.mesh_name }}
+  kuma.io/mesh: {{ item.kuma_mesh_name }}
 {% endif  %}
 
 admin:
@@ -69,17 +68,17 @@ admin:
   http:
     enabled: true
     
-{%  if item.kong_ee == true %}
+{%  if item.ee.enabled %}
 enterprise:
   enabled: true
-  license_secret: kong-enterprise-license
+  license_secret: {{ item.ee.creds }}-kong-enterprise-license
   vitals:
     enabled: true
   portal:
     enabled: true
   rbac:
     enabled: true
-    admin_gui_auth: basic-auth
-    session_conf_secret: {{ item.kong_name }}-session-config
-    # admin_gui_auth_conf_secret: {{ item.kong_name }}-admin-gui-auth-conf
+    admin_gui_auth: openid-connect
+    session_conf_secret: {{ item.name }}-session-config
+    admin_gui_auth_conf_secret: {{ item.name }}-admin-gui-auth-conf
 {% endif  %}

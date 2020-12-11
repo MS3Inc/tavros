@@ -1,9 +1,9 @@
 ---
 - name: Create Directories
   file:
-    path: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}
+    path: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}
     state: directory
-  loop: "{{ kongs }}"
+  loop: "{{ kong.instances }}"
 
 - name: Copy Namespace
   copy:
@@ -18,125 +18,121 @@
 - name: Process instance config-secret templates
   template:
     src: config-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/config-secret.yaml
-  loop: "{{ kongs }}"
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/config-secret.yaml
+  loop: "{{ kong.instances }}"
 
 - name: Convert instance config-secrets to SealedSecrets
-  when: not ('dry-run' in ansible_run_tags)
+  when: ('dry-run' not in ansible_run_tags)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/config-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/config-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/config-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/config-secret.yaml
-  loop: "{{ kongs }}"
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/config-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/config-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/config-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/config-secret.yaml
+  loop: "{{ kong.instances }}"
 
 - name: Process instance release templates
   template:
     src: release.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/release.yaml
-  loop: "{{ kongs }}"
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/release.yaml
+  loop: "{{ kong.instances }}"
 
 - name: Process instance values templates
   template:
     src: values.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/values.yaml
-  loop: "{{ kongs }}"
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/values.yaml
+  loop: "{{ kong.instances }}"
   
 - name: Process instance keycloak-config templates
-  when: (item.kong_ee == true)
+  when: (item.ee.enabled)
   template:
     src: keycloak-config.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/keycloak-config.json
-  loop: "{{ kongs }}"
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-config.json
+  loop: "{{ kong.instances }}"
 
 - name: Create ee-admin-gui-auth-secret.yaml from keycloak-config.json
-  when: (item.kong_ee == true)
+  when: (item.ee.enabled)
   shell: |
-    kubectl create secret generic {{ item.kong_name }}-admin-gui-auth-conf -n kong --from-file=admin_gui_auth_conf=/tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/keycloak-config.json --dry-run=client -o yaml > /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-admin-gui-auth-secret.yaml
-  loop: "{{ kongs }}"
+    kubectl create secret generic {{ item.name }}-admin-gui-auth-conf -n kong --from-file=admin_gui_auth_conf=/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-config.json --dry-run=client -o yaml > /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.yaml
+  loop: "{{ kong.instances }}"
 
 - name: Kubeseal ee-admin-gui-auth-secrets
-  when: (item.kong_ee == true) and not ('dry-run' in ansible_run_tags)
+  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-admin-gui-auth-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-admin-gui-auth-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-admin-gui-auth-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-admin-gui-auth-secret.yaml
-    rm /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/keycloak-config.json
-  loop: "{{ kongs }}"
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.yaml
+    rm /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-config.json
+  loop: "{{ kong.instances }}"
 
-- name: Process ee-license-secret Template
-  when: (kong_ee_creds.license is defined)
+- name: Process ee-license-secret Templates
   template:
     src: ee-license-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/ee-license-secret.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-license-secret.yaml
+  loop: "{{ kong.ee_creds }}"
 
 - name: Kubeseal ee-license-secret
-  when: (kong_ee_creds.license is defined) and not ('dry-run' in ansible_run_tags)
+  when: ('dry-run' not in ansible_run_tags)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/ee-license-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/ee-license-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/kong/ee-license-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/ee-license-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-license-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-license-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-license-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-license-secret.yaml
+  loop: "{{ kong.ee_creds }}"
 
 - name: Create ee-docker-secret
-  when: (kong_ee_creds.docker is defined)
   shell: |
-    kubectl create secret docker-registry kong-enterprise-edition-docker -n kong \
+    kubectl create secret docker-registry {{ item.name }}-kong-enterprise-edition-docker -n kong \
     --docker-server=kong-docker-kong-enterprise-edition-docker.bintray.io \
-    --docker-username="{{ kong_ee_creds.docker.username }}" \
-    --docker-password="{{ kong_ee_creds.docker.password }}" \
-    --dry-run=client -o yaml > /tmp/{{ cluster_domain }}/platform/kong/ee-docker-secret.yaml
+    --docker-username="{{ item.image_registry.username }}" \
+    --docker-password="{{ item.image_registry.password }}" \
+    --dry-run=client -o yaml > /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.yaml
+  loop: "{{ kong.ee_creds }}"
 
 - name: Kubeseal ee-docker-secret
-  when: (kong_ee_creds.docker is defined) and not ('dry-run' in ansible_run_tags)
+  when: ('dry-run' not in ansible_run_tags)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/ee-docker-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/ee-docker-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/kong/ee-docker-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/ee-docker-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.yaml
+  loop: "{{ kong.ee_creds }}"
 
 - name: Process instance ee-superuser-secret templates
-  when: (item.kong_ee == true)
+  when: (item.ee.enabled)
   template:
     src: ee-superuser-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-superuser-secret.yaml
-  loop: "{{ kongs }}"
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-superuser-secret.yaml
+  loop: "{{ kong.instances }}"
 
 - name: Kubeseal instance ee-superuser-secret's
-  when: (item.kong_ee == true) and not ('dry-run' in ansible_run_tags)
+  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-superuser-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-superuser-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-superuser-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-superuser-secret.yaml
-  loop: "{{ kongs }}"
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-superuser-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-superuser-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-superuser-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-superuser-secret.yaml
+  loop: "{{ kong.instances }}"
 
 - name: Process instance ee-session-secret templates
-  when: (item.kong_ee == true)
+  when: (item.ee.enabled)
   template:
     src: ee-session-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-session-secret.yaml
-  loop: "{{ kongs }}"
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-session-secret.yaml
+  loop: "{{ kong.instances }}"
 
 - name: Kubeseal instance ee-session-secret's
-  when: (item.kong_ee == true) and not ('dry-run' in ansible_run_tags)
+  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-session-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-session-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-session-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ee-session-secret.yaml
-  loop: "{{ kongs }}"
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-session-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-session-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-session-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-session-secret.yaml
+  loop: "{{ kong.instances }}"
 
 - name: Process instance kustomization templates
   template:
     src: instance-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/kustomization.yaml
-  loop: "{{ kongs }}"
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/kustomization.yaml
+  loop: "{{ kong.instances }}"
 
 - name: Process instance ingresses templates
+  when: (item.ee.enabled)
   template:
     src: ingresses.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.kong_name }}/ingresses.yaml
-  loop: "{{ kongs }}"
-
-- name: Add Kong instances to base kustomization
-  lineinfile:
-    path: /tmp/{{ cluster_domain }}/platform/kong/kustomization.yaml
-    insertafter: '^/troubadour-base/kong/'
-    line: '  - {{ item.kong_name }}/'
-  loop: "{{ kongs }}"
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ingresses.yaml
+  loop: "{{ kong.instances }}"
 
 - name: Apply manifests
-  when: not ('dry-run' in ansible_run_tags)
+  when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kong/
   k8s:
     definition: "{{ item }}"
