@@ -1,72 +1,39 @@
-# [short title of solved problem and solution]
+# Flux v2 Toolkit to Provide Platform GitOps
 
-* Status: [proposed | rejected | accepted | deprecated | … | superseded by [ADR-0005](0005-example.md)] <!-- optional -->
-* Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
-
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+* Status: accepted
+* Deciders: Mohammad Naeem, @jam01, @rmccright-ms3
+* Date: 2020-09
 
 ## Context and Problem Statement
 
-[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
+We want to enable continuous delivery of platform and application workloads in a GitOps way. What tools should we use?
 
 ## Decision Drivers <!-- optional -->
 
-* [driver 1, e.g., a force, facing concern, …]
-* [driver 2, e.g., a force, facing concern, …]
-* … <!-- numbers of drivers can vary -->
+* Simplicity
+* Integration with tools like Helm and Kustomize
 
 ## Considered Options
 
-* [option 1]
-* [option 2]
-* [option 3]
-* … <!-- numbers of options can vary -->
+* Flux
+* Flux v2 GitOps Toolkit
+* Argo CD
 
 ## Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+We'll use Flux v2 GitOps Toolkit to enable continuous delivery of the platform and application workloads. Having had experience with Flux v1 internally, along with the newer features of v2 while still maintaining a simple workflow, it's the more appropriate tool.
 
 ### Positive Consequences <!-- optional -->
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
+* Flux v2 Custom Resource Definitions make it easy to utilize Flux Helm functionality before the source Git repository is up
+* Alert features through integrations like Slack
 
 ### Negative Consequences <!-- optional -->
 
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
-
-## Pros and Cons of the Options <!-- optional -->
-
-### [option 1]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+* Have to be careful with the 'chicken and egg problem' between Flux managing the platform, and provisioning platform components through Flux
 
 ## Links <!-- optional -->
 
-* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-* … <!-- numbers of links can vary -->
+* [GitOps Guide](https://www.weave.works/technologies/gitops/)
+* [Flux v2 GitOps Toolkit](https://toolkit.fluxcd.io/)
+* [Argo CD](https://argoproj.github.io/argo-cd/)

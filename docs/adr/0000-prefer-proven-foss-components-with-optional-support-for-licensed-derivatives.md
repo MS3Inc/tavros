@@ -1,72 +1,24 @@
-# [short title of solved problem and solution]
+# Prefer Proven FOSS Components with Optional Support for Licensed Derivatives
 
-* Status: [proposed | rejected | accepted | deprecated | … | superseded by [ADR-0005](0005-example.md)] <!-- optional -->
-* Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
-
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+* Status: accepted
+* Deciders: @k2merlinsix, @jam01
+* Date: 2020-08
 
 ## Context and Problem Statement
 
-[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
+Should we include licensed or non-FOSS components in the Troubadour platform for a given component or component's feature?
 
 ## Decision Drivers <!-- optional -->
 
-* [driver 1, e.g., a force, facing concern, …]
-* [driver 2, e.g., a force, facing concern, …]
-* … <!-- numbers of drivers can vary -->
-
-## Considered Options
-
-* [option 1]
-* [option 2]
-* [option 3]
-* … <!-- numbers of options can vary -->
+* Total cost of ownership
+* Providing the necessary features for a competitive product
 
 ## Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+We will prioritize FOSS components, while providing optional support for paid or licensed derivatives, e.g.: Elastic Stack Open Source vs Enterprise subscription, Apache Camel vs JBoss Fuse, etc.
 
-### Positive Consequences <!-- optional -->
-
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
+Ultimately total cost of ownership will be the deciding factor for our customers when comparing to established alternatives. There are many FOSS components that address different concerns that we can incorporate and still provide a best-in-class platform.
 
 ### Negative Consequences <!-- optional -->
 
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
-
-## Pros and Cons of the Options <!-- optional -->
-
-### [option 1]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-## Links <!-- optional -->
-
-* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-* … <!-- numbers of links can vary -->
+* High number of components to configure and integrate

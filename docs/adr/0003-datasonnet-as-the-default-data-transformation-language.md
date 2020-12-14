@@ -1,72 +1,35 @@
-# [short title of solved problem and solution]
+# DataSonnet as the Default Data Transformation Language
 
-* Status: [proposed | rejected | accepted | deprecated | … | superseded by [ADR-0005](0005-example.md)] <!-- optional -->
-* Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
-
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+* Status: accepted
+* Deciders: @k2merlinsix, @jam01, @JakeMHughes
+* Date: 2020-08
 
 ## Context and Problem Statement
 
-[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
+Does DataSonnet, or can we make it, meet functional and performance requirements for modern integration workloads?
 
 ## Decision Drivers <!-- optional -->
 
-* [driver 1, e.g., a force, facing concern, …]
-* [driver 2, e.g., a force, facing concern, …]
-* … <!-- numbers of drivers can vary -->
-
-## Considered Options
-
-* [option 1]
-* [option 2]
-* [option 3]
-* … <!-- numbers of options can vary -->
+* Provide the necessary transformation functions
+* Performance
 
 ## Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+We'll extend DataSonnet and use it as our default data transformation language. Extending ModusBox' work on top of DataBrick's sjsonnet project we delivered a feature-full and very performant language.
 
 ### Positive Consequences <!-- optional -->
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
+* Joint ownership with ModusBox offers great visibility to our company and offerings
+* Apache 2.0 License opens possibilities of adoption by the larger community or existing projects in the same space
 
 ### Negative Consequences <!-- optional -->
 
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
-
-## Pros and Cons of the Options <!-- optional -->
-
-### [option 1]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+* Lead time to delivery of the next major release
+* Responsibility of maintaining and stewarding the project with the community
 
 ## Links <!-- optional -->
 
-* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-* … <!-- numbers of links can vary -->
+* [DataSonnet Mapper Project](https://github.com/datasonnet/datasonnet-mapper)
+* [DataSonnet](https://datasonnet.com/)
+* [Jsonnet](https://jsonnet.org/)
+* [sjsonnet Project](https://github.com/databricks/sjsonnet/)
