@@ -1,0 +1,107 @@
+---
+type: object
+properties:
+  cluster_name:
+    type: string
+  cluster_domain:
+    type: string
+  cluster_admin_email:
+    type: string
+  kubernetes_cluster:
+    type: object
+    properties:
+      master_count:
+        type: integer
+      master_size:
+        type: string
+      node_count:
+        type: integer
+      node_size:
+        type: string
+      zones:
+        type: string
+      state_bucket:
+        type: string
+      ssh_public_key_path:
+        type: string
+      aws_access_key_id:
+        type: string
+      aws_secret_access_key:
+        type: string
+  kong:
+    type: object
+    properties:
+      default_ingress_controller:
+        type: string
+      ee_creds:
+        type: array
+        items:
+          type: object
+          properties:
+            license:
+              type: string
+            image_registry:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      instances:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            ingress_class:
+              type: string
+            kuma_mesh_name:
+              type: string
+            ee:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+                creds:
+                  type: string
+  kuma:
+    type: object
+    properties:
+      meshes:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            mtls:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+  namespaces:
+    type: array
+    items:
+      type: object
+      properties:
+        name:
+          type: string
+        kuma_mesh_name:
+          type: string
+  keycloak:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+  postgresql:
+    type: object
+    properties: {}
+  cert_manager:
+    type: object
+    properties: {}
+  gitea:
+    type: object
+    properties:
+      enabled:
+        type: boolean

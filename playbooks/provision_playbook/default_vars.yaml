@@ -1,0 +1,50 @@
+---
+kubernetes_cluster:
+  cloud: 'aws'
+  master_count: 3
+  master_size: 't2.large'
+  node_count: 2
+  node_size: 't2.xlarge'
+  zones: 'us-east-1a,us-east-1b'
+  state_bucket: 'troubadour'
+kong:
+  default_ingress_controller: 'prod'
+  ee_creds: []
+  instances:
+  - name: 'sandbox'
+    ingress_class: 'sandbox'
+    kuma_mesh_name: 'sandbox'
+    ee:
+      enabled: false
+  - name: 'prod'
+    ingress_class: 'prod'
+    kuma_mesh_name: 'prod'
+    ee:
+      enabled: false
+kuma:
+  meshes:
+  - name: 'sandbox'
+    mtls:
+      enabled: true
+  - name: 'prod'
+    mtls:
+      enabled: true
+namespaces:
+- name: 'dev'
+  kuma_mesh_name: 'sandbox'
+- name: 'test'
+  kuma_mesh_name: 'sandbox'
+- name: 'prod'
+  kuma_mesh_name: 'prod'
+keycloak:
+  enabled: true
+  pg:
+    db: keycloak
+    user: keycloak
+    pass: keycloak
+  realms:
+  - name: sandbox
+  - name: prod
+postgresql: {}
+cert_manager: {}
+gitea: {}
