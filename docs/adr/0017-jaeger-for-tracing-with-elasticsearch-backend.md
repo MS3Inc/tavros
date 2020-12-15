@@ -1,72 +1,43 @@
-# [short title of solved problem and solution]
+# Jaeger for Tracing with Elasticsearch Backend
 
-* Status: [proposed | rejected | accepted | deprecated | … | superseded by [ADR-0005](0005-example.md)] <!-- optional -->
-* Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
-
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+* Status: accepted
+* Deciders: @jam01
+* Date: 2020-10
 
 ## Context and Problem Statement
 
-[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
+In a microservices architectural system observability is imperative, and Elastic Stack Open Source does not offer service dependency DAG. Can/should we fill in that feature with another component?
 
 ## Decision Drivers <!-- optional -->
 
-* [driver 1, e.g., a force, facing concern, …]
-* [driver 2, e.g., a force, facing concern, …]
-* … <!-- numbers of drivers can vary -->
+* Cost
+* Feature set
 
 ## Considered Options
 
-* [option 1]
-* [option 2]
-* [option 3]
-* … <!-- numbers of options can vary -->
+* Elastic Stack
+* Jaeger
 
 ## Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+We'll use Jaeger by default for tracing data, with Elasticsearch as the backend. Using Jaeger enables a service DAG that's very valuable and using elasticsearch as the backend enables data aggregation and analysis in Kibana.
 
 ### Positive Consequences <!-- optional -->
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
+* Value of the service DAG dependency graph
+* Maintain the ability to cross reference logs and trace data in a single pane
+* Jaeger has closer participation to OpenTracing/Telemetry projects than Elastic
 
 ### Negative Consequences <!-- optional -->
 
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
-
-## Pros and Cons of the Options <!-- optional -->
-
-### [option 1]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+* Another integration point
+* Must correlate logs and traces in Camel through MDC
 
 ## Links <!-- optional -->
 
-* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-* … <!-- numbers of links can vary -->
+* [Jaeger](https://www.jaegertracing.io/)
+* [Elastic with Jaeger](https://www.elastic.co/guide/en/apm/server/7.10/jaeger-reference.html)
+* [Jaeger Operator](https://www.jaegertracing.io/docs/1.20/operator/)
+* Article [Jaeger Elasticsearch and Kibana](https://medium.com/jaegertracing/jaeger-elasticsearch-and-kibana-7ecb846137b6)
+* Article [Distributed Tracing with Jaeger and the ELK Stack](https://logz.io/blog/jaeger-and-the-elk-stack/)
+* Article [Exploring Jaeger traces with Elastic APM](https://www.elastic.co/blog/exploring-jaeger-traces-with-elastic-apm)
