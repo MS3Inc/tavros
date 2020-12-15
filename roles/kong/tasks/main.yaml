@@ -8,7 +8,7 @@
 - name: Copy Namespace
   copy:
     src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/kong/ns.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/ns.yaml 
 
 - name: Process base kustomization template
   template:
@@ -38,13 +38,6 @@
   template:
     src: values.j2
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/values.yaml
-  loop: "{{ kong.instances }}"
-
-- name: Process instance keycloak-client templates
-  when: (item.ee.enabled)
-  template:
-    src: keycloak-client.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-client.yaml
   loop: "{{ kong.instances }}"
 
 - name: Process instance keycloak-config templates
@@ -96,6 +89,12 @@
     kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.tmp
     mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.yaml
   loop: "{{ kong.ee_creds }}"
+
+- name: Generate Instace Superuser Passwords
+  when: (item.ee.enabled)
+  set_fact:
+    kong: "{{ kong | combine({ 'generated': { item.name: { 'su_pass': lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=8') } } }, recursive=True) }}"
+  loop: "{{ kong.instances }}"
 
 - name: Process instance ee-superuser-secret templates
   when: (item.ee.enabled)
@@ -153,21 +152,57 @@
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 300
 
+- name: Set DNS for Troubadour Apps
+  when: ('dry-run' not in ansible_run_tags)
+  community.aws.route53:
+    state: present
+    zone: "{{ cluster_domain }}"
+    type: CNAME
+    record: "*.{{ cluster_name }}.{{ cluster_domain }}"
+    value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+  vars:
+    prod_kong_proxy: "kong-{{ kong.default_ingress_class }}-kong-proxy"
 
-# - name: Create EE Realm Users
-#   when: (item.ee.enabled)
-#   shell: |
-#     kubectl exec pods/$(kubectl get pods -n kong -l app.kubernetes.io/instance=kong-{{ item.name }},app.kubernetes.io/component=app -o json | jq -r '.items[0].metadata.name') -c proxy -n kong \
-#       -- curl -X POST "http://localhost:8001/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}" \
-#         -H  "accept: application/json" \
-#         -H "Content-Type: application/json" \
-#         -H "kong-admin-token: $(kubectl get secret {{ item.name }}-enterprise-superuser-password -n kong -o json | jq -r '.data.password | @base64d')"
-    
-    
-#     kubectl exec pods/$(kubectl get pods -n kong -l app.kubernetes.io/instance=kong-{{ item.name }},app.kubernetes.io/component=app -o json | jq -r '.items[0].metadata.name') -c proxy -n kong \
-#       -- curl -X POST "http://localhost:8001/admins/{{ cluster_admin_email }}/roles?roles=super-admin" \
-#         -H  "accept: application/json" \
-#         -H "Content-Type: application/json" \
-#         -H "kong-admin-token: $(kubectl get secret {{ item.name }}-enterprise-superuser-password -n kong -o json | jq -r '.data.password | @base64d')"
+- name: Set DNS for Kongs by Name
+  when: ('dry-run' not in ansible_run_tags)
+  community.aws.route53:
+    state: present
+    zone: "{{ cluster_domain }}"
+    type: CNAME
+    record: "*.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
+    value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+  vars:
+    instance_kong_proxy: "kong-{{ item.name }}-kong-proxy"
+  loop: "{{ kong.instances }}"
 
-#   loop: "{{ kong.instances }}"
+- name: Set DNS for non Prod Kongs by Ingress Class
+  when: (item.ingress_class != kong.default_ingress_class) and ('dry-run' not in ansible_run_tags)
+  community.aws.route53:
+    state: present
+    zone: "{{ cluster_domain }}"
+    type: CNAME
+    record: "*.{{ item.ingress_class }}.{{ cluster_name }}.{{ cluster_domain }}"
+    value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+  vars:
+    instance_kong_proxy: "kong-{{ item.name }}-kong-proxy"
+  loop: "{{ kong.instances }}"
+ 
+- name: Set DNS for Client Apps
+  when: ('dry-run' not in ansible_run_tags)
+  community.aws.route53:
+    state: present
+    zone: "{{ cluster_domain }}"
+    type: CNAME
+    record: "*.{{ 'apps' + ( ('.' + item.ingress_class)  if (item.ingress_class != kong.default_ingress_class) else ('') ) }}.{{ cluster_name }}.{{ cluster_domain }}"
+    value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+  vars:
+    instance_kong_proxy: "kong-{{ item.name }}-kong-proxy"
+  loop: "{{ kong.instances }}"

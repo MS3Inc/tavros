@@ -55,30 +55,12 @@
       name: ms3_inc.troubadour.cert_manager
 
   - include_role:
-      name: ms3_inc.troubadour.keycloak
-    when: keycloak.enabled
-
-  - include_role:
       name: ms3_inc.troubadour.kong
 
-  - name: Set base wildcard DNS
-    when: "'dry-run' not in ansible_run_tags"
-    community.aws.route53:
-      state: present
-      zone: "{{ cluster_domain }}"
-      type: CNAME
-      record: "*.{{ cluster_name }}.{{ cluster_domain }}"
-      value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-' + kong.default_ingress_controller + '-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
-      overwrite: true
-      wait: yes
-
-  - name: Set apps wildcard DNS
-    when: "'dry-run' not in ansible_run_tags"
-    community.aws.route53:
-      state: present
-      zone: "{{ cluster_domain }}"
-      type: CNAME
-      record: "*.apps.{{ cluster_name }}.{{ cluster_domain }}"
-      value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name='kong-' + kong.default_ingress_controller + '-kong-proxy').status.loadBalancer.ingress[0].hostname }}"
-      overwrite: true
-      wait: yes
+  - include_role:
+      name: ms3_inc.troubadour.keycloak
+    when: keycloak.enabled
+  
+  - include_role:
+      name: ms3_inc.troubadour.kong_ee_keycloak_sso
+    when: keycloak.enabled

@@ -8,7 +8,7 @@ kubernetes_cluster:
   zones: 'us-east-1a,us-east-1b'
   state_bucket: 'troubadour'
 kong:
-  default_ingress_controller: 'prod'
+  default_ingress_class: 'prod'
   ee_creds: []
   instances:
   - name: 'sandbox'

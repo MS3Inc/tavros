@@ -12,7 +12,16 @@ spec:
       name: troubadour-issuer-account-key
     solvers:
 {% for item in kong.instances %}
-    - selector: {}
+    - selector:
+        dnsZones:
+        - '{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}'
+{%  if (item.ingress_class == kong.default_ingress_class) %}
+        - '{{ cluster_name }}.{{ cluster_domain }}'
+        - 'apps.{{ cluster_name }}.{{ cluster_domain }}'
+{% else  %}
+        - '{{ item.ingress_class }}.{{ cluster_name }}.{{ cluster_domain }}'
+        - 'apps.{{ item.ingress_class }}.{{ cluster_name }}.{{ cluster_domain }}'
+{% endif  %}
       http01:
         ingress:
           class: {{ item.ingress_class }}

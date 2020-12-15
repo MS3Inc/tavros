@@ -110,7 +110,7 @@ aws_secret_access_key | The AWS IAM SecretAccessKey | _uses aws cli logged in us
 
 | Field Name | Type | Description | Default Value |
 | ---------- | ---- | ----------- | ------------- |
-default_ingress_controller | String | The default ingress controller class for other components to use | 'prod'
+default_ingress_class | String | The default ingress controller class for other components to use | 'prod'
 ee_creds | [[Kong EE Credentials Object](#kong-ee-credentials-object)] | An array of Kong Enterprise Edition Credentials available for Kong instances to use |
 instances | [[Kong Instance Object](#kong-instance-object)] | An array of Kong instance object to be configured |
 

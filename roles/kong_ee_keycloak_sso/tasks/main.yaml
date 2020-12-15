@@ -1,0 +1,54 @@
+---
+- name: Process instance keycloak-client templates
+  when: (item.ee.enabled)
+  template:
+    src: keycloak-client.j2
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-client.yaml
+  loop: "{{ kong.instances }}"
+
+- name: Add keycloak-client to EE Instance Kustomizations
+  when: (item.ee.enabled)
+  lineinfile:
+    path: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/kustomization.yaml
+    line: "  - keycloak-client.yaml"
+    insertafter: "resources:"
+  loop: "{{ kong.instances }}"
+
+- name: Re Apply updated manifests
+  when: ('dry-run' not in ansible_run_tags)
+  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kong/
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 300
+
+- name: Create Kong EE Admins
+  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  uri:
+    url: "https://admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}"
+    method: POST
+    status_code: 200
+    headers:
+      kong-admin-token: "{{ kong.generated[item.name].su_pass }}"
+    validate_certs: False
+  register: _result
+  until: _result.status == 200
+  retries: 20
+  delay: 30
+  loop: "{{ kong.instances }}"
+
+- name: Give super-admin role Kong EE Admins
+  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  uri:
+    url: "https://admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}/admins/{{ cluster_admin_email }}/roles?roles=super-admin"
+    method: POST
+    status_code: 201
+    headers:
+      kong-admin-token: "{{ kong.generated[item.name].su_pass }}"
+    validate_certs: False
+  register: _result
+  until: _result.status == 201
+  retries: 20
+  delay: 30
+  loop: "{{ kong.instances }}"

@@ -38,9 +38,7 @@
 
 - name: Generate Realm User Credentials
   set_fact:
-    keycloak_realm_creds: "{{ keycloak_realm_creds | default({}) | combine(user_creds) }}"
-  vars:
-    user_creds: "{ '{{ item.name }}': { 'user_pass': '{{ lookup('password', '/dev/null') }}'}}"
+    keycloak: "{{ keycloak | combine({ 'generated': { 'realms': { item.name: { 'user_pass': lookup('password', '/dev/null') } } } }, recursive=True) }}"
   loop: "{{ keycloak.realms }}"
 
 - name: Process User templates

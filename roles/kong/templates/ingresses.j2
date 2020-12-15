@@ -13,8 +13,8 @@ spec:
   - hosts:
     - "admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
-    - "portal-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
-    - "portal.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
+    - "dev-portal-api{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
+    - "dev-portal{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
     secretName: {{ item.name }}-ingress-certs
   rules:
   - host: "admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
@@ -31,14 +31,14 @@ spec:
         backend:
           serviceName: kong-{{ item.name }}-kong-manager
           servicePort: 8002
-  - host: "portal.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
+  - host: "dev-portal{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
     http:
       paths:
       - path: /
         backend:
           serviceName: kong-{{ item.name }}-kong-portal
           servicePort: 8003
-  - host: "portal-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
+  - host: "dev-portal-api{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
     http:
       paths:
       - path: /

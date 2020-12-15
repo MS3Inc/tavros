@@ -8,12 +8,12 @@ spec:
   user:
     username: {{ cluster_admin_email }}
     email: {{ cluster_admin_email }}
-    enabled: False
+    enabled: True
     emailVerified: True
     credentials:
       - type: "password"
-        value: "{{ keycloak_realm_creds[ item.name ].user_pass }}"
-        temporary: True
+        value: "{{ keycloak.generated.realms[ item.name ].user_pass }}"
+        temporary: False
     realmRoles:
       - "offline_access"
       - "uma_authorization"
