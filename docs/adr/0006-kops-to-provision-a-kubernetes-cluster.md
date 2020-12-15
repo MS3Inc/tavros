@@ -1,4 +1,4 @@
-# [short title of solved problem and solution]
+# Kops to Provision a Kubernetes Cluster
 
 * Status: accepted
 * Deciders: Mohammad Naeem

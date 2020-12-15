@@ -1,6 +1,6 @@
-# [short title of solved problem and solution]
+# Kubeseal to Securely Manage Secrets in GitOps
 
-* Status: [proposed | rejected | accepted | deprecated | … | superseded by [ADR-0005](0005-example.md)] <!-- optional -->
+* Status: accepted
 * Deciders: @jam01, @rmccright-ms3
 * Date: 2020-09
 

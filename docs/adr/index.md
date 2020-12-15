@@ -18,7 +18,7 @@ This log lists the architectural decisions for Troubadour.
 - [ADR-0011](0011-postgresql-as-the-platform's-default-database.md) - PostgreSQL as the Platform's Default Database
 - [ADR-0012](0012-gitea-for-a-lightweight-git-server.md) - Gitea for a Lightweight Git Server
 - [ADR-0013](0013-kuma-for-service-mesh.md) - Kuma for Service Mesh
-- [ADR-0014](0014-jenkins-for-continuous-delivery-jobs.md) - Jenkins for Continuous Delivery Jobs
+- [ADR-0014](0014-jenkins-for-continuous-integration.md) - Jenkins for Continuous Integration
 - [ADR-0015](0015-sonarqube-for-application-static-code-analysis.md) - Sonarqube for Application Static Code Analysis
 - [ADR-0016](0016-elastic-cloud-for-observability-data-aggregation-and-visualization.md) - Elastic Cloud for Observability Data Aggregation and Visualization
 - [ADR-0017](0017-jaeger-for-tracing-with-elasticsearch-backend.md) - Jaeger for Tracing with Elasticsearch Backend
