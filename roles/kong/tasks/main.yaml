@@ -8,7 +8,7 @@
 - name: Copy Namespace
   copy:
     src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/kong/ns.yaml 
+    dest: /tmp/{{ cluster_domain }}/platform/kong/ns.yaml
 
 - name: Process base kustomization template
   template:
@@ -163,7 +163,7 @@
     overwrite: true
     wait: yes
   vars:
-    prod_kong_proxy: "kong-{{ kong.default_ingress_class }}-kong-proxy"
+    prod_kong_proxy: "kong-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}-kong-proxy"
 
 - name: Set DNS for Kongs by Name
   when: ('dry-run' not in ansible_run_tags)
@@ -192,7 +192,7 @@
   vars:
     instance_kong_proxy: "kong-{{ item.name }}-kong-proxy"
   loop: "{{ kong.instances }}"
- 
+
 - name: Set DNS for Client Apps
   when: ('dry-run' not in ansible_run_tags)
   community.aws.route53:
