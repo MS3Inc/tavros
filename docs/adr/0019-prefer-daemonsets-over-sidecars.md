@@ -6,7 +6,9 @@
 
 ## Context and Problem Statement
 
-Kubernetes supports deploying workloads as daemonsets or sidecars. Which should we use for cross cutting concern deployments?
+Kubernetes supports deploying workloads as daemonsets or sidecars. For example, when deploying Jaeger Agent for reporting trace data, in a DaemonSet strategy there will be a single Agent deployment in every Kubernetes node, so all applications' Jaeger Client in a single node share the same agent. Conversely, in a side-car strategy each application will have its own dedicated Jaeger Agent deployment, requiring extra resources.
+
+Which should we favor for cross cutting concern deployments?
 
 ## Decision Drivers <!-- optional -->
 
@@ -32,3 +34,4 @@ We'll prefer daemonsets over sidecar deployments whenever there is the option. G
 ## Links <!-- optional -->
 
 * [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+* See about single tenancy in [ADR-0029](0029-troubadour-as-a-single-tenant-platform.md)
