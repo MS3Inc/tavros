@@ -48,3 +48,4 @@ keycloak:
 postgresql: {}
 cert_manager: {}
 gitea: {}
+nexus: {}

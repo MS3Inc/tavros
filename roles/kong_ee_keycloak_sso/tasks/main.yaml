@@ -34,7 +34,7 @@
     validate_certs: False
   register: _result
   until: _result.status == 200
-  retries: 20
+  retries: 120
   delay: 30
   loop: "{{ kong.instances }}"
 
@@ -49,6 +49,6 @@
     validate_certs: False
   register: _result
   until: _result.status == 201
-  retries: 20
+  retries: 120
   delay: 30
   loop: "{{ kong.instances }}"

@@ -1,5 +1,0 @@
-keycloak:
-  pg:
-    db: keycloak
-    user: keycloak
-    pass: keycloak

@@ -1,0 +1,52 @@
+---
+- name: Create directory
+  file:
+    path: /tmp/{{ cluster_domain }}/platform/nexus/
+    state: directory
+
+- name: Copy NS
+  copy:
+    src: ns.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/nexus/ns.yaml
+
+- name: Copy Release
+  copy:
+    src: default-release.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/nexus/default-release.yaml
+
+- name: Copy kustomization
+  copy:
+    src: kustomization.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/nexus/kustomization.yaml
+
+- name: Process ingress template
+  template:
+    src: ingress.j2
+    dest: /tmp/{{ cluster_domain }}/platform/nexus/ingress.yaml
+
+- name: Process flux-kustomization Template
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/nexus.yaml
+
+- name: Apply manifests
+  when: ('dry-run' not in ansible_run_tags)
+  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/nexus/
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+  
+- name: Retreive admin.password
+  community.kubernetes.k8s_exec:
+    namespace: nexus
+    pod: "{{ lookup('k8s', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
+    command: |
+      cat nexus-data/admin.password
+  vars:
+    nexus_pod_name: "app.kubernetes.io/name=nexus-repository-manager"
+  register: nexus_creds
+
+- name: Set Nexus Password
+  set_fact:
+    nexus: "{{ nexus | combine({ 'generated': { 'admin_creds': nexus_creds.stdout } }, recursive=True) }}"

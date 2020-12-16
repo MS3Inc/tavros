@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nexus
+  namespace: nexus
+  annotations:
+    cert-manager.io/cluster-issuer: troubadour
+    kubernetes.io/ingress.class: {{ kong.default_ingress_class }}
+    konghq.com/strip-path: 'true'
+    konghq.com/protocols: https
+    konghq.com/https-redirect-status-code: '302'
+spec:
+  rules:
+  - host: nexus.{{ cluster_name}}.{{ cluster_domain }}
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: troubadour-nexus-repository-manager
+          servicePort: 8081
+  tls:
+  - hosts:
+    - nexus.{{ cluster_name}}.{{ cluster_domain }}
+    secretName: nexus-ingress-cert

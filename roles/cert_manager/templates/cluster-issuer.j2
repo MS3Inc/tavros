@@ -6,7 +6,7 @@ metadata:
 spec:
   acme:
     email: ops@{{ cluster_name }}.{{ cluster_domain }}
-    server: https://acme-v02.api.letsencrypt.org/directory
+    server: {{ ('https://acme-v02.api.letsencrypt.org/directory') if ('test-run' not in ansible_run_tags) else ('https://acme-staging-v02.api.letsencrypt.org/directory') }}
     preferredChain: "ISRG Root X1"
     privateKeySecretRef:
       name: troubadour-issuer-account-key
