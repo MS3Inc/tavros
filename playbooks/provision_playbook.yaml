@@ -60,10 +60,13 @@
   - include_role:
       name: ms3_inc.troubadour.keycloak
     when: keycloak.enabled
-  
+
   - include_role:
       name: ms3_inc.troubadour.kong_ee_keycloak_sso
     when: keycloak.enabled
 
   - include_role:
       name: ms3_inc.troubadour.nexus
+
+  - debug:
+      var: vars

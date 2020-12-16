@@ -76,7 +76,13 @@ There is a default configuration vars file that results in the following:
 * 2x Kong ingress controllers: 'sandbox' and 'prod'. The ingress controllers are part of the Kuma meshes, respectively.
 * 3x application namespaced environments: 'dev', 'test', and 'prod'. 'dev' and 'test' belong to the 'sandbox' Kuma mesh, and 'prod' to the 'prod' Kuma mesh.
 
-To use the default configuration simply provide a `cluster_name` and `cluster_domain` variable and point Ansible to use the [default configuration vars file](#provision_playbook/default_vars.yaml).
+To use the default configuration:
+
+``` bash
+ansible-playbook $PLAYBOOKS_PATH/provision_playbook.yaml \
+  --extra-vars '{"cluster_name":"troubadour","cluster_domain":"example.com","cluster_admin_email":"ops@example.com"}' \
+  --inventory "playbooks/provision_playbook/default_vars.yaml"
+```
 
 ## Configuration Variables
 
