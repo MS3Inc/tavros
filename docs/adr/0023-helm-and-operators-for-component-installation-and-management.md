@@ -1,72 +1,36 @@
-# [short title of solved problem and solution]
+# Helm and Operators for Component Installation and Management
 
-* Status: [proposed | rejected | accepted | deprecated | … | superseded by [ADR-0005](0005-example.md)] <!-- optional -->
-* Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
-
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+* Status: accepted
+* Deciders: @jam01, @rmccright-ms3
+* Date: 2020-11
 
 ## Context and Problem Statement
 
-[Describe the context and problem statement, e.g., in free form using two to three sentences. You may want to articulate the problem in form of a question.]
+We're currently installing components ad-hoc through directly modified Kubernetes manifests from helm charts. This removes the ability to use Helm's upgrade features. This is done because we can't use Helm until Flux is up and running, and Flux depends on other components being installed before.
 
 ## Decision Drivers <!-- optional -->
 
-* [driver 1, e.g., a force, facing concern, …]
-* [driver 2, e.g., a force, facing concern, …]
-* … <!-- numbers of drivers can vary -->
+* Ability to use Helm upgrades
+* Minimize hand crafted manifests
 
 ## Considered Options
 
-* [option 1]
-* [option 2]
-* [option 3]
-* … <!-- numbers of options can vary -->
+* Helm releases through Flux v2
+* Operators
 
 ## Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+We'll use Helm releases and Operators custom resources for component installation and management. Given that we're now using Flux v2 we can use their Helm release functionality before any Git repository is available, this way we can do Helm releases through Flux and eventually commit them to Git to enable GitOps from that point on. Kubernets Operators enable a higher level of component lifecycle management, these should always be preferred to Helm whenever available.
 
 ### Positive Consequences <!-- optional -->
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
-
-### Negative Consequences <!-- optional -->
-
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
-
-## Pros and Cons of the Options <!-- optional -->
-
-### [option 1]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+* Upon provisioning the platform it will be entirely driven by GitOps
+* Will be able to do component upgrades through Helm releases
+* Less custom code by using official functionality as available
 
 ## Links <!-- optional -->
 
-* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-* … <!-- numbers of links can vary -->
+* [Helm](https://helm.sh/)
+* [Operator Pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
+* [Operator Hub](https://operatorhub.io/)
+* [Flux v2 Helm Controller](https://toolkit.fluxcd.io/components/helm/controller/)

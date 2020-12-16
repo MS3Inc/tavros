@@ -29,8 +29,8 @@ This log lists the architectural decisions for Troubadour.
 - [ADR-0022](0022-use-ansible-as-the-provisioning-engine.md) - Use Ansible as the Provisioning Engine
 - [ADR-0023](0023-helm-and-operators-for-component-installation-and-management.md) - Helm and Operators for Component Installation and Management
 - [ADR-0024](0024-use-ansible-collection-to-structure-and-package-ansible-code.md) - Use Ansible Collection to Structure and Package Ansible Code
-- [ADR-0025](0025-setup-sandbox-and-production-kuma-meshes-and-kong-ingress-controllers-by-default.md) - Setup Sandbox and Production Kuma Meshes and Kong Ingress Controllers by Default
-- [ADR-0026](0026-setup-sandbox-and-production-keycloak-realms-by-default.md) - Setup Sandbox and Production Keycloak Realms by Default
+- [ADR-0025](0025-setup-sandbox-and-production-kuma-meshes-and-kong-ingress-controllers.md) - Setup Sandbox and Production Kuma Meshes and Kong Ingress Controllers
+- [ADR-0026](0026-setup-sandbox-and-production-keycloak-realms.md) - Setup Sandbox and Production Keycloak Realms
 - [ADR-0027](0027-cert-manager-for-certificate-management.md) - cert-manager for Certificate Management
 - [ADR-0028](0028-use-markdown-architectural-decision-records.md) - Use Markdown Architectural Decision Records
 

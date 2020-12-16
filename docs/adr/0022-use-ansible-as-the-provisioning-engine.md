@@ -1,10 +1,8 @@
-# [short title of solved problem and solution]
+# Use Ansible as Provisioning Engine
 
-* Status: [proposed | rejected | accepted | deprecated | … | superseded by [ADR-0005](0005-example.md)] <!-- optional -->
-* Deciders: [list everyone involved in the decision] <!-- optional -->
-* Date: [YYYY-MM-DD when the decision was last updated] <!-- optional -->
-
-Technical Story: [description | ticket/issue URL] <!-- optional -->
+* Status: accepted
+* Deciders: Mohammad Naeem, @jam01
+* Date: 2020-11
 
 ## Context and Problem Statement
 
@@ -12,61 +10,29 @@ Technical Story: [description | ticket/issue URL] <!-- optional -->
 
 ## Decision Drivers <!-- optional -->
 
-* [driver 1, e.g., a force, facing concern, …]
-* [driver 2, e.g., a force, facing concern, …]
-* … <!-- numbers of drivers can vary -->
+* Flexibility
+* Maintainability
 
 ## Considered Options
 
-* [option 1]
-* [option 2]
-* [option 3]
-* … <!-- numbers of options can vary -->
+* Bash
+* Ansible
 
 ## Decision Outcome
 
-Chosen option: "[option 1]", because [justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force force | … | comes out best (see below)].
+We'll use Ansible as the provisioning engine. Ansible modules, variable handling, Jinja 2 templating, and Kubernetes module make it easier to install and configure components. Helm Charts use the same templating language, and the Operator SDK has support for Ansible, if we decide to build an Operator.
 
 ### Positive Consequences <!-- optional -->
 
-* [e.g., improvement of quality attribute satisfaction, follow-up decisions required, …]
-* …
+* Ansible being a desired-state engine enables idempotency
+* Simpler setup
 
 ### Negative Consequences <!-- optional -->
 
-* [e.g., compromising quality attribute, follow-up decisions required, …]
-* …
-
-## Pros and Cons of the Options <!-- optional -->
-
-### [option 1]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 2]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
-
-### [option 3]
-
-[example | description | pointer to more information | …] <!-- optional -->
-
-* Good, because [argument a]
-* Good, because [argument b]
-* Bad, because [argument c]
-* … <!-- numbers of pros and cons can vary -->
+* A learning curve to Ansible, playbooks, roles, etc
 
 ## Links <!-- optional -->
 
-* [Link type] [Link to ADR] <!-- example: Refined by [ADR-0005](0005-example.md) -->
-* … <!-- numbers of links can vary -->
+* [Ansible](https://www.ansible.com/)
+* [Kubernetes Ansible](https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_module.html)
+* [Ansible Operator SDK](https://sdk.operatorframework.io/docs/building-operators/ansible/tutorial/)
