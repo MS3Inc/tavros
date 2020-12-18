@@ -1,6 +1,6 @@
 {
   "realm": "{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).ee.keycloak_realm }}",
-  "auth-server-url": "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/",
+  "auth-server-url": "http://keycloak-discovery.keycloak.svc.cluster.local:8080/auth/",
   "ssl-required": "external",
   "resource": "nexus",
   "verify-token-audience": true,

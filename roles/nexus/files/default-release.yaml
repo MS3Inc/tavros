@@ -31,6 +31,12 @@ spec:
       additionalVolumeMounts:
       - mountPath: /opt/sonatype/nexus/deploy/
         name: nexus-deploy
-      - mountPath: /opt/sonatype/nexus/etc/keycloak-config.json
+      - mountPath: /opt/sonatype/nexus/etc/keycloak.json
         name: keycloak-config
         subPath: keycloak-config.json
+      # postStart:
+      #   exec:
+      #     command:
+      #     - /bin/sh
+      #     - -c
+      #     - curl -LJo /opt/sonatype/nexus/deploy/nexus3-keycloak-plugin-0.4.0-bundle.kar https://github.com/flytreeleft/nexus3-keycloak-plugin/releases/download/v0.4.0/nexus3-keycloak-plugin-0.4.0-bundle.kar
