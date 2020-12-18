@@ -24,6 +24,32 @@
     src: ingress.j2
     dest: /tmp/{{ cluster_domain }}/platform/nexus/ingress.yaml
 
+- name: Copy Deploy PVC
+  copy:
+    src: nexus-deploy-pvc.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/nexus/nexus-deploy-pvc.yaml
+
+- name: Process keycloak-client template
+  template:
+    src: keycloak-client.j2
+    dest: /tmp/{{ cluster_domain }}/platform/nexus/keycloak-client.yaml
+
+- name: Process keycloak-config template
+  template:
+    src: keycloak-config.j2
+    dest: /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.json
+
+- name: Create keycloak-config.yaml
+  shell: |
+    kubectl create secret generic keycloak-config -n nexus --from-file=/tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.json --dry-run=client -o yaml > /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.yaml
+
+- name: Kubeseal keycloak-config.yaml
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.yaml >/tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.tmp
+    mv /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.tmp /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.yaml
+    rm /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.json
+
 - name: Process flux-kustomization Template
   template:
     src: flux-kustomization.j2
@@ -36,8 +62,19 @@
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-  
+
+- name: Install nexus3-keycloak-plugin-0.4.0-bundle.kar
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_exec:
+    namespace: nexus
+    pod: "{{ lookup('k8s', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
+    command: |
+      curl -LJo /opt/sonatype/nexus/deploy/nexus3-keycloak-plugin-0.4.0-bundle.kar https://github.com/flytreeleft/nexus3-keycloak-plugin/releases/download/v0.4.0/nexus3-keycloak-plugin-0.4.0-bundle.kar
+  vars:
+    nexus_pod_name: "app.kubernetes.io/name=nexus-repository-manager"
+
 - name: Retreive admin.password
+  when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_exec:
     namespace: nexus
     pod: "{{ lookup('k8s', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
@@ -47,6 +84,49 @@
     nexus_pod_name: "app.kubernetes.io/name=nexus-repository-manager"
   register: nexus_creds
 
-- name: Set Nexus Password
+- name: Set Nexus Password 
+  when: ('dry-run' not in ansible_run_tags)
   set_fact:
     nexus: "{{ nexus | combine({ 'generated': { 'admin_creds': nexus_creds.stdout } }, recursive=True) }}"
+
+- name: Add Keycloak Nexus Realm
+  when: ('dry-run' not in ansible_run_tags)
+  uri:
+    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/realms/active"
+    method: PUT
+    status_code: 204
+    headers:
+      Authorization: "Basic {{ ('admin:' + nexus.generated.admin_creds ) | b64encode }}"
+    validate_certs: False
+    body_format: json
+    body:
+      - 'NexusAuthenticatingRealm'
+      - 'NexusAuthorizingRealm'
+      - 'org.github.flytreeleft.nexus3.keycloak.plugin.KeycloakAuthenticatingRealm'
+  register: _result
+  until: _result.status == 204
+  retries: 120
+  delay: 30
+
+- name: Add Keycloak Role Mapping
+  when: ('dry-run' not in ansible_run_tags)
+  uri:
+    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
+    method: POST
+    status_code: 200
+    headers:
+      Authorization: "Basic {{ ('admin:' + nexus.generated.admin_creds) | b64encode }}"
+    validate_certs: False
+    body_format: json
+    body:
+      id: admin
+      name: keycloak-admin 
+      description: Mapping for Keycloak to Nexus Role
+      privileges:
+      - 'nx-all'
+      roles:
+      - 'nx-admin'
+  register: _result
+  until: _result.status == 200
+  retries: 120
+  delay: 30

@@ -1,0 +1,29 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: nexus
+  namespace: keycloak
+  labels:
+    client: nexus
+spec:
+  realmSelector:
+    matchLabels:
+        realm: {{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).ee.keycloak_realm }}
+  client:
+    clientId: "nexus"
+    secret: "57abfc51-716f-4b0a-8922-9a5eeba73342"
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect
+    redirectUris:
+    - "*"
+    directAccessGrantsEnabled: True
+    standardFlowEnabled: True
+    authorizationEnabled: True
+    authorizationServicesEnabled: True
+    serviceAccountsEnabled: True
+    enabled: True
+    defaultRoles:
+    - "admin"
+    - "employee"
+    - "uma_protection"
+    

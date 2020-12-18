@@ -1,0 +1,12 @@
+{
+  "realm": "{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).ee.keycloak_realm }}",
+  "auth-server-url": "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/",
+  "ssl-required": "external",
+  "resource": "nexus",
+  "verify-token-audience": true,
+  "credentials": {
+    "secret": "57abfc51-716f-4b0a-8922-9a5eeba73342"
+  },
+  "use-resource-role-mappings": true,
+  "confidential-port": 0
+}

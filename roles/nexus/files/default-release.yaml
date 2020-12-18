@@ -19,5 +19,18 @@ spec:
       retries: 3
   # Default values
   # https://github.com/sonatype/helm3-charts/blob/master/charts/nexus-repository-manager/values.yaml
-  # values:
-    
+  values:
+    deployment:
+      additionalVolumes:
+      - name: keycloak-config
+        secret:
+          secretName: keycloak-config
+      - name: nexus-deploy
+        persistentVolumeClaim:
+          claimName: nexus-deploy
+      additionalVolumeMounts:
+      - mountPath: /opt/sonatype/nexus/deploy/
+        name: nexus-deploy
+      - mountPath: /opt/sonatype/nexus/etc/keycloak-config.json
+        name: keycloak-config
+        subPath: keycloak-config.json
