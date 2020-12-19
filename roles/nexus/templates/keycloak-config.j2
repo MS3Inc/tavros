@@ -4,7 +4,7 @@
   "allow-any-hostname": true,
 {% endif  %}
   "realm": "{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).ee.keycloak_realm }}",
-  "auth-server-url": "http://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/",
+  "auth-server-url": "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/",
   "ssl-required": "external",
   "resource": "nexus",
   "verify-token-audience": true,
