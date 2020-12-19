@@ -1,0 +1,11 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: keycloak
+resources:
+  - keycloak-db-secret.yaml
+  - ingress.yaml
+  - release.yaml
+  - sandbox-realm.yaml
+  - sandbox-user.yaml
+  - prod-realm.yaml
+  - prod-user.yaml

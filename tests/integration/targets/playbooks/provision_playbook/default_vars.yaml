@@ -1,0 +1,64 @@
+---
+# THIS SHOULD BE KEPT IN SYNC WITH PROVISION_PLAYBOOK'S DEFAULT_VARS.YAML FILE
+# THE DIFF IS EXPLICITLY ADDING PASSWORDS SO THEY'RE NOT GENERATED IN ORDER TO ASSERT THE RESULT
+all:
+  vars:
+    kubernetes_cluster:
+      cloud: 'aws'
+      master_count: 3
+      master_size: 't2.large'
+      node_count: 2
+      node_size: 't2.xlarge'
+      zones: 'us-east-1a,us-east-1b'
+      state_bucket: 'troubadour'
+    kong:
+      default_ingress_class: 'prod'
+      ee_creds: []
+      instances:
+      - name: 'sandbox-kong'
+        ingress_class: 'sandbox'
+        kuma_mesh_name: 'sandbox'
+        pg:
+          password: placeholder1
+        ee:
+          enabled: false
+      - name: 'prod-kong'
+        ingress_class: 'prod'
+        kuma_mesh_name: 'prod'
+        pg:
+          password: placeholder2
+        ee:
+          enabled: false
+    kuma:
+      meshes:
+      - name: 'sandbox'
+        mtls:
+          enabled: true
+      - name: 'prod'
+        mtls:
+          enabled: true
+    namespaces:
+    - name: 'dev'
+      kuma_mesh_name: 'sandbox'
+    - name: 'test'
+      kuma_mesh_name: 'sandbox'
+    - name: 'prod'
+      kuma_mesh_name: 'prod'
+    keycloak:
+      enabled: true
+      pg:
+        password: placeholder3
+      realms:
+      - name: sandbox
+        admin_password: placeholder4
+      - name: prod
+        admin_password: placeholder5
+    postgresql:
+      password: placeholder6
+      postgres_password: placeholder7
+    cert_manager:
+      enabled: true
+    gitea: {}
+    nexus:
+      enabled: true
+      keycloak_realm: 'prod'

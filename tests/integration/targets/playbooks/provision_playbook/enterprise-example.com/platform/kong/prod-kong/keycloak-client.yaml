@@ -1,0 +1,25 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: prod-kong
+  namespace: keycloak
+  labels:
+    client: prod-kong
+spec:
+  realmSelector:
+    matchLabels:
+        realm: prod
+  client:
+    clientId: prod-kong
+    secret: 819017ab-df06-5458-8925-5ac6e608b157
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect
+    rootUrl: https://admin.prod-kong.troubadour.enterprise-example.com
+    redirectUris:
+    - "*"
+    directAccessGrantsEnabled: True
+    standardFlowEnabled: True
+    enabled: True
+    defaultRoles:
+    - "super-admin"
+    

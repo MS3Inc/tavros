@@ -1,0 +1,28 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: nexus
+  namespace: keycloak
+  labels:
+    client: nexus
+spec:
+  realmSelector:
+    matchLabels:
+        realm: prod
+  client:
+    clientId: "nexus"
+    secret: "57abfc51-716f-4b0a-8922-9a5eeba73342"
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect
+    redirectUris:
+    - "*"
+    directAccessGrantsEnabled: True
+    standardFlowEnabled: True
+    authorizationEnabled: True
+    authorizationServicesEnabled: True
+    serviceAccountsEnabled: True
+    enabled: True
+    defaultRoles:
+    - "nexus-admin"
+    - "developer"
+    - "uma_protection"

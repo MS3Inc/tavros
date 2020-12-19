@@ -39,9 +39,12 @@
     src: keycloak-config.j2
     dest: /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.json
 
-- name: Create keycloak-config.yaml
-  shell: |
-    kubectl create secret generic keycloak-config -n nexus --from-file=/tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.json --dry-run=client -o yaml > /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.yaml
+- name: Process keycloak-config secret template
+  template:
+    src: keycloak-config-secret.j2
+    dest: /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.yaml
+  vars:
+    config: "{{ lookup('file', '/tmp/' + cluster_domain + '/platform/nexus/keycloak-config.json') }}"
 
 - name: Kubeseal keycloak-config.yaml
   when: ('dry-run' not in ansible_run_tags)

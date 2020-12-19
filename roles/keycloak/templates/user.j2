@@ -12,7 +12,7 @@ spec:
     emailVerified: True
     credentials:
       - type: "password"
-        value: "{{ keycloak.generated.realms[ item.name ].user_pass }}"
+        value: "{{ item.admin_password }}"
         temporary: False
     realmRoles:
       - "offline_access"

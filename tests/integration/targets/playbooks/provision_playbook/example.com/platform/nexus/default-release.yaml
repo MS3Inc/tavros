@@ -1,0 +1,42 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: troubadour
+  namespace: nexus
+spec:
+  releaseName: troubadour
+  chart:
+    spec:
+      chart: nexus-repository-manager
+      sourceRef:
+        kind: HelmRepository
+        name: sonatype
+        namespace: flux-system
+      version: 29.0.2
+  interval: 30m
+  install:
+    remediation:
+      retries: 3
+  # Default values
+  # https://github.com/sonatype/helm3-charts/blob/master/charts/nexus-repository-manager/values.yaml
+  values:
+    deployment:
+      additionalVolumes:
+      - name: keycloak-config
+        secret:
+          secretName: keycloak-config
+      - name: nexus-deploy
+        persistentVolumeClaim:
+          claimName: nexus-deploy
+      additionalVolumeMounts:
+      - mountPath: /opt/sonatype/nexus/deploy/
+        name: nexus-deploy
+      - mountPath: /opt/sonatype/nexus/etc/keycloak.json
+        name: keycloak-config
+        subPath: keycloak-config.json
+      # postStart:
+      #   exec:
+      #     command:
+      #     - /bin/sh
+      #     - -c
+      #     - curl -LJo /opt/sonatype/nexus/deploy/nexus3-keycloak-plugin-0.4.0-bundle.kar https://github.com/flytreeleft/nexus3-keycloak-plugin/releases/download/v0.4.0/nexus3-keycloak-plugin-0.4.0-bundle.kar

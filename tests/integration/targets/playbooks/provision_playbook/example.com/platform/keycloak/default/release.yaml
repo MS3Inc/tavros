@@ -1,0 +1,15 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: troubadour-keycloak
+  namespace: keycloak
+  labels:
+    app.troubadour/component: auth
+spec:
+  instances: 1
+  externalDatabase:
+    enabled: true
+  externalAccess:
+    enabled: false
+  podDisruptionBudget:
+    enabled: true
