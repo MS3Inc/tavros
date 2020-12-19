@@ -105,10 +105,10 @@
       - 'org.github.flytreeleft.nexus3.keycloak.plugin.KeycloakAuthenticatingRealm'
   register: _result
   until: _result.status == 204
-  retries: 120
+  retries: 5
   delay: 30
 
-- name: Add Keycloak Role Mapping
+- name: Add Keycloak admin Role Mapping
   when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
@@ -119,14 +119,65 @@
     validate_certs: False
     body_format: json
     body:
-      id: ClientRole:admin
+      id: ClientRole:nexus-admin
       name: keycloak-admin
       description: Mapping for Keycloak to Nexus Role
-      privileges:
-      - 'nx-all'
       roles:
       - 'nx-admin'
   register: _result
   until: _result.status == 200
-  retries: 120
+  retries: 5
   delay: 30
+
+- name: Add Keycloak developer Role
+  when: ('dry-run' not in ansible_run_tags)
+  uri:
+    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
+    method: POST
+    status_code: 200
+    headers:
+      Authorization: "Basic {{ ('admin:' + nexus.generated.admin_creds) | b64encode }}"
+    validate_certs: False
+    body_format: json
+    body:
+      id: developer
+      name: developer
+      description: Necessary permissions for developers
+      # todo
+      privileges:
+      - nx-repository-view-maven2-maven-releases-browse
+      - nx-repository-view-maven2-maven-releases-read
+      - nx-repository-view-maven2-maven-snapshots-add
+      - nx-repository-view-maven2-maven-snapshots-browse
+      - nx-repository-view-maven2-maven-snapshots-edit
+      - nx-repository-view-maven2-maven-snapshots-read
+  register: _result
+  until: _result.status == 200
+  retries: 5
+  delay: 30
+
+- name: Add Keycloak developer Role Mapping
+  when: ('dry-run' not in ansible_run_tags)
+  uri:
+    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
+    method: POST
+    status_code: 200
+    headers:
+      Authorization: "Basic {{ ('admin:' + nexus.generated.admin_creds) | b64encode }}"
+    validate_certs: False
+    body_format: json
+    body:
+      id: ClientRole:developer
+      name: keycloak-developer
+      description: Mapping for Keycloak to Nexus Role
+      roles:
+      - 'developer'
+  register: _result
+  until: _result.status == 200
+  retries: 5
+  delay: 30
+
+# todo
+# add api calls to add realm-management roles to nexus service account
+# add curl calls to create docker repos
+# add ci service account that can read/write maven and docker
