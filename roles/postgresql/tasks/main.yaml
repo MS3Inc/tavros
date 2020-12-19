@@ -4,20 +4,29 @@
     path: /tmp/{{ cluster_domain }}/platform/postgresql/
     state: directory
 
-- name: Set postgresql password
+- name: Generate postgresql password
+  when: "'password' not in postgresql"
   set_fact:
-    postgresql_password: "{{ lookup('password', '/dev/null') }}"
+    postgresql: "{{ { 'password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
 
-- name: Set postgresql postgres password
+- name: Generate postgres password
+  when: "'postgres_password' not in postgresql"
   set_fact:
-    postgresql_postgres_password: "{{ lookup('password', '/dev/null') }}"
+    postgresql: "{{ { 'postgres_password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
 
-- name: Generate PG crednetials for Kongs
-  set_fact:
-    kongs_db_info: "{{ kongs_db_info | default({}) | combine(pg_data) }}"
-  vars:
-    pg_data: "{ '{{ item.name }}': { 'pg_pass': '{{ lookup('password', '/dev/null') }}'}}"
+- name: Generate PG credentials for Kongs
   loop: "{{ kong.instances }}"
+  set_fact:
+    gen_kong_instances: "{{ (gen_kong_instances | default([])) + [ { 'pg': { 'password': lookup('password', '/dev/null') }} | combine(item, recursive=true) ] }}"
+
+- name: Combine kong with generated passwords
+  set_fact:
+    kong: "{{ kong | combine({'instances': gen_kong_instances}, recursive=true, list_merge='replace') }}"
+
+- name: Generate PG credentials for Keycloak
+  when: keycloak.pg.password is not defined
+  set_fact:
+    keycloak: "{{ { 'pg': { 'password': lookup('password', '/dev/null') } } | combine(keycloak, recursive=true) }}"
 
 - name: Process config-secret template
   template:

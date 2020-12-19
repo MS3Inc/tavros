@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: prod-kong
+  namespace: kong
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: https
+    kubernetes.io/ingress.class: prod
+    cert-manager.io/cluster-issuer: troubadour
+spec:
+  tls:
+  - hosts:
+    - "admin-api.prod-kong.troubadour.enterprise-example.com"
+    - "admin.prod-kong.troubadour.enterprise-example.com"
+    - "dev-portal-api.troubadour.enterprise-example.com"
+    - "dev-portal.troubadour.enterprise-example.com"
+    secretName: prod-kong-ingress-certs
+  rules:
+  - host: "admin-api.prod-kong.troubadour.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-prod-kong-kong-admin
+          servicePort: 8001
+  - host: "admin.prod-kong.troubadour.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-prod-kong-kong-manager
+          servicePort: 8002
+  - host: "dev-portal.troubadour.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-prod-kong-kong-portal
+          servicePort: 8003
+  - host: "dev-portal-api.troubadour.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-prod-kong-kong-portalapi
+          servicePort: 8004

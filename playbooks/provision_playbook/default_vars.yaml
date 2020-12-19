@@ -40,14 +40,13 @@ all:
       kuma_mesh_name: 'prod'
     keycloak:
       enabled: true
-      pg:
-        db: keycloak
-        user: keycloak
-        pass: keycloak
       realms:
       - name: sandbox
       - name: prod
     postgresql: {}
-    cert_manager: {}
+    cert_manager:
+      enabled: true
     gitea: {}
-    nexus: {}
+    nexus:
+      enabled: true
+      keycloak_realm: 'prod'

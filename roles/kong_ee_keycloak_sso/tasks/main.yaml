@@ -30,7 +30,7 @@
     method: POST
     status_code: 200
     headers:
-      kong-admin-token: "{{ kong.generated[item.name].su_pass }}"
+      kong-admin-token: "{{ item.ee.admin_password }}"
     validate_certs: False
   register: _result
   until: _result.status == 200
@@ -45,7 +45,7 @@
     method: POST
     status_code: 201
     headers:
-      kong-admin-token: "{{ kong.generated[item.name].su_pass }}"
+      kong-admin-token: "{{ item.ee.admin_password }}"
     validate_certs: False
   register: _result
   until: _result.status == 201

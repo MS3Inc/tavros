@@ -1,0 +1,59 @@
+---
+all:
+  vars:
+    kubernetes_cluster:
+      cloud: 'aws'
+      master_count: 1
+      master_size: 't2.large'
+      node_count: 2
+      node_size: 't2.xlarge'
+      zones: 'us-east-1a,us-east-1b'
+      state_bucket: 'troubadour'
+    kong:
+      default_ingress_class: 'prod'
+      ee_creds:
+        - name: default
+          license: '{"license":{"version":1,"signature":"placeholder1","payload":{"customer":"example.com","license_creation_date":"2020-4-6","product_subscription":"Kong Enterprise Edition","support_plan":"None","admin_seats":"5","license_expiration_date":"2021-04-07","license_key":"placeholder2"}}}'
+          image_registry:
+            username: 'placeholder3@kong'
+            password: 'placeholder4'
+      instances:
+      - name: 'sandbox-kong'
+        ingress_class: 'sandbox'
+        pg:
+          password: placeholder1
+        ee:
+          enabled: true
+          creds: 'default'
+          keycloak_realm: 'sandbox'
+          admin_password: 'placeholder10'
+      - name: 'prod-kong'
+        ingress_class: 'prod'
+        pg:
+          password: placeholder2
+        ee:
+          enabled: true
+          creds: 'default'
+          keycloak_realm: 'prod'
+          admin_password: 'placeholder11'
+    keycloak:
+      enabled: true
+      pg:
+        password: placeholder5
+      realms:
+      - name: sandbox
+        admin_password: placeholder6
+      - name: prod
+        admin_password: placeholder7
+    postgresql:
+      password: placeholder8
+      postgres_password: placeholder9
+    cert_manager:
+      enabled: false
+    gitea:
+      enabled: false
+    nexus:
+      enabled: false
+    namespaces: []
+    kuma:
+      meshes: []

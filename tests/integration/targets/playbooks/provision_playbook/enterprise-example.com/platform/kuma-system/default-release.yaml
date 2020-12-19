@@ -1,0 +1,19 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: troubadour
+  namespace: kuma-system
+spec:
+  releaseName: kuma
+  chart:
+    spec:
+      chart: kuma
+      sourceRef:
+        kind: HelmRepository
+        name: kuma
+        namespace: flux-system
+      version: 0.4.0
+  interval: 30m
+  install:
+    remediation:
+      retries: 3

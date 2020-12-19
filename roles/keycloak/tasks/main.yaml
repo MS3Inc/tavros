@@ -36,10 +36,14 @@
     dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.name }}-realm.yaml
   loop: "{{ keycloak.realms }}"
 
-- name: Generate Realm User Credentials
-  set_fact:
-    keycloak: "{{ keycloak | combine({ 'generated': { 'realms': { item.name: { 'user_pass': lookup('password', '/dev/null') } } } }, recursive=True) }}"
+- name: Generate admin credentials for keycloak realms
   loop: "{{ keycloak.realms }}"
+  set_fact:
+    gen_keycloak_realms: "{{ (gen_keycloak_realms | default([])) + [ { 'admin_password': lookup('password', '/dev/null') } | combine(item, recursive=true) ] }}"
+
+- name: Combine keycloak with generated realm admin passwords
+  set_fact:
+    keycloak: "{{ keycloak | combine({'realms': gen_keycloak_realms}, recursive=true, list_merge='replace') }}"
 
 - name: Process User templates
   template:

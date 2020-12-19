@@ -11,4 +11,4 @@ install: build
 	ansible-galaxy collection install --force ms3_inc-troubadour-${VERSION}.tar.gz
 
 test:
-	cd ~/.ansible/collections/ansible_collections/ms3_inc/troubadour; ansible-test integration -v --color --retry-on-error --continue-on-error --diff --coverage
+	cd ~/.ansible/collections/ansible_collections/ms3_inc/troubadour; ansible-test integration -v --color --continue-on-error --diff --coverage

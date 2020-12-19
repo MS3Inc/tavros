@@ -47,10 +47,13 @@
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-config.json
   loop: "{{ kong.instances }}"
 
-- name: Create ee-admin-gui-auth-secret.yaml from keycloak-config.json
+- name: Process ee-admin-gui-auth-secret template
   when: (item.ee.enabled)
-  shell: |
-    kubectl create secret generic {{ item.name }}-admin-gui-auth-conf -n kong --from-file=admin_gui_auth_conf=/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-config.json --dry-run=client -o yaml > /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.yaml
+  template:
+    src: ee-admin-gui-auth-secret.j2
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.yaml
+  vars:
+    config: "{{ lookup('file', '/tmp/' + cluster_domain + '/platform/kong/' + item.name + '/keycloak-config.json') }}"
   loop: "{{ kong.instances }}"
 
 - name: Kubeseal ee-admin-gui-auth-secrets
@@ -74,13 +77,15 @@
     mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-license-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-license-secret.yaml
   loop: "{{ kong.ee_creds }}"
 
-- name: Create ee-docker-secret
-  shell: |
-    kubectl create secret docker-registry {{ item.name }}-kong-enterprise-edition-docker -n kong \
-    --docker-server=kong-docker-kong-enterprise-edition-docker.bintray.io \
-    --docker-username="{{ item.image_registry.username }}" \
-    --docker-password="{{ item.image_registry.password }}" \
-    --dry-run=client -o yaml > /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.yaml
+- name: Process ee-registry-secret template
+  template:
+    src: ee-registry-secret.j2
+    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.yaml
+  vars:
+    config:
+      auths:
+        kong-docker-kong-enterprise-edition-docker.bintray.io:
+          auth: "{{ (item.image_registry.username + ':' + item.image_registry.password) | b64encode }}"
   loop: "{{ kong.ee_creds }}"
 
 - name: Kubeseal ee-docker-secret
@@ -90,11 +95,14 @@
     mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}-ee-docker-secret.yaml
   loop: "{{ kong.ee_creds }}"
 
-- name: Generate Instace Superuser Passwords
-  when: (item.ee.enabled)
-  set_fact:
-    kong: "{{ kong | combine({ 'generated': { item.name: { 'su_pass': lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=8') } } }, recursive=True) }}"
+- name: Generate instance Superuser Passwords
   loop: "{{ kong.instances }}"
+  set_fact:
+    gen_kong_instances_admin: "{{ (gen_kong_instances_admin | default([])) + [ { 'ee': { 'admin_password': lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=8') }} | combine(item, recursive=true) ] }}"
+
+- name: Combine kong with generated passwords
+  set_fact:
+    kong: "{{ kong | combine({'instances': gen_kong_instances_admin}, recursive=true, list_merge='replace') }}"
 
 - name: Process instance ee-superuser-secret templates
   when: (item.ee.enabled)

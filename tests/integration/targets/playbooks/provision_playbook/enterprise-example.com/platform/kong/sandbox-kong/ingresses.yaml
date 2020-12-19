@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: sandbox-kong
+  namespace: kong
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: https
+    kubernetes.io/ingress.class: sandbox
+    cert-manager.io/cluster-issuer: troubadour
+spec:
+  tls:
+  - hosts:
+    - "admin-api.sandbox-kong.troubadour.enterprise-example.com"
+    - "admin.sandbox-kong.troubadour.enterprise-example.com"
+    - "dev-portal-api.sandbox.troubadour.enterprise-example.com"
+    - "dev-portal.sandbox.troubadour.enterprise-example.com"
+    secretName: sandbox-kong-ingress-certs
+  rules:
+  - host: "admin-api.sandbox-kong.troubadour.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-sandbox-kong-kong-admin
+          servicePort: 8001
+  - host: "admin.sandbox-kong.troubadour.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-sandbox-kong-kong-manager
+          servicePort: 8002
+  - host: "dev-portal.sandbox.troubadour.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-sandbox-kong-kong-portal
+          servicePort: 8003
+  - host: "dev-portal-api.sandbox.troubadour.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-sandbox-kong-kong-portalapi
+          servicePort: 8004
