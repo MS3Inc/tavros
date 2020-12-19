@@ -84,7 +84,7 @@
     nexus_pod_name: "app.kubernetes.io/name=nexus-repository-manager"
   register: nexus_creds
 
-- name: Set Nexus Password 
+- name: Set Nexus Password
   when: ('dry-run' not in ansible_run_tags)
   set_fact:
     nexus: "{{ nexus | combine({ 'generated': { 'admin_creds': nexus_creds.stdout } }, recursive=True) }}"
@@ -119,8 +119,8 @@
     validate_certs: False
     body_format: json
     body:
-      id: admin
-      name: keycloak-admin 
+      id: ClientRole:admin
+      name: keycloak-admin
       description: Mapping for Keycloak to Nexus Role
       privileges:
       - 'nx-all'
