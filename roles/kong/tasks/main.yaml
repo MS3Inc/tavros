@@ -158,7 +158,7 @@
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-    wait_timeout: 300
+    wait_timeout: 150
 
 - name: Set DNS for Troubadour Apps
   when: ('dry-run' not in ansible_run_tags)
