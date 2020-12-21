@@ -21,8 +21,9 @@ spec:
       account:
         - "manage-account"
         - "view-profile"
-      {{item.name}}:
-        - "super-admin"
+      realm-management:
+        - "realm-admin"
+
   realmSelector:
     matchLabels:
       realm: {{ item.name }}

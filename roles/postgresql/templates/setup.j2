@@ -1,14 +1,14 @@
-CREATE DATABASE 'gitea';
-CREATE USER 'gitea' WITH ENCRYPTED PASSWORD 'gitea';
-GRANT ALL PRIVILEGES ON DATABASE 'gitea' TO 'gitea';
+CREATE DATABASE "gitea";
+CREATE USER "gitea" WITH ENCRYPTED PASSWORD 'gitea';
+GRANT ALL PRIVILEGES ON DATABASE "gitea" TO "gitea";
 
-CREATE DATABASE 'keycloak';
-CREATE USER 'keycloak' WITH ENCRYPTED PASSWORD '{{ keycloak.pg.password }}';
-GRANT ALL PRIVILEGES ON DATABASE 'keycloak' TO 'keycloak';
+CREATE DATABASE "keycloak";
+CREATE USER "keycloak" WITH ENCRYPTED PASSWORD '{{ keycloak.pg.password }}';
+GRANT ALL PRIVILEGES ON DATABASE "keycloak" TO "keycloak";
 
 {% for item in kong.instances %}
-CREATE DATABASE '{{ item.name }}';
-CREATE USER '{{ item.name }}' WITH ENCRYPTED PASSWORD '{{ item.pg.password }}';
-GRANT ALL PRIVILEGES ON DATABASE '{{ item.name }}' TO '{{ item.name }}';
+CREATE DATABASE "{{ item.name }}";
+CREATE USER "{{ item.name }}" WITH ENCRYPTED PASSWORD '{{ item.pg.password }}';
+GRANT ALL PRIVILEGES ON DATABASE "{{ item.name }}" TO "{{ item.name }}";
 
 {% endfor %}
