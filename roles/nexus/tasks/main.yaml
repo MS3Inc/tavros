@@ -82,6 +82,26 @@
   set_fact:
     nexus: "{{ nexus | combine({ 'generated': { 'admin_password': nexus_creds.stdout } }, recursive=True) }}"
 
+- name: Create Keycloak Nexus client roles
+  when: ('dry-run' not in ansible_run_tags)
+  ms3_inc.troubadour.keycloak_client_roles:
+    auth_keycloak_url: 'https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth'
+    validate_certs: false
+    auth_realm: master
+    auth_username: admin
+    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-' + cluster_name + '-keycloak').data.ADMIN_PASSWORD | b64decode }}"
+    realm: "{{ nexus.keycloak_realm }}"
+    clientId: "nexus"
+    roles:
+    - name: "admin"
+    - name: "developer"
+    serviceAccountRoles:
+      clientRoles:
+        realm-management:
+          - name: "view-clients"
+          - name: "view-users"
+          - name: "view-realm"
+
 - name: Add dockerhub-proxy repository
   when: ('dry-run' not in ansible_run_tags)
   uri:
@@ -281,5 +301,5 @@
   delay: 30
 
 # todo
-# add api calls to add realm-management roles to nexus service account
+# change admin password and disable anon access
 # add ci service account that can read/write maven and docker
