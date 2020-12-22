@@ -36,40 +36,43 @@
           status: true
           reason: ReconciliationSucceeded
 
-  - import_role:
-      name: ms3_inc.troubadour.fluxtoolkit
+  - name: Install and configure components
+    block:
+      - import_role:
+          name: ms3_inc.troubadour.fluxtoolkit
 
-  - import_role:
-      name: ms3_inc.troubadour.kubeseal
+      - import_role:
+          name: ms3_inc.troubadour.kubeseal
 
-  - import_role:
-      name: ms3_inc.troubadour.postgresql
+      - import_role:
+          name: ms3_inc.troubadour.postgresql
 
-  - include_role:
-      name: ms3_inc.troubadour.namespace
+      - include_role:
+          name: ms3_inc.troubadour.namespace
 
-  - include_role:
-      name: ms3_inc.troubadour.kuma
+      - include_role:
+          name: ms3_inc.troubadour.kuma
 
-  - include_role:
-      name: ms3_inc.troubadour.cert_manager
-    when: cert_manager.enabled
+      - include_role:
+          name: ms3_inc.troubadour.cert_manager
+        when: cert_manager.enabled
 
-  - include_role:
-      name: ms3_inc.troubadour.kong
+      - include_role:
+          name: ms3_inc.troubadour.kong
 
-  - include_role:
-      name: ms3_inc.troubadour.keycloak
-    when: keycloak.enabled
+      - include_role:
+          name: ms3_inc.troubadour.keycloak
+        when: keycloak.enabled
 
-  - include_role:
-      name: ms3_inc.troubadour.kong_ee_keycloak_sso
-    when: keycloak.enabled
+      - include_role:
+          name: ms3_inc.troubadour.kong_ee_keycloak_sso
+        when: keycloak.enabled
 
-  - include_role:
-      name: ms3_inc.troubadour.nexus
-    when: nexus.enabled
+      - include_role:
+          name: ms3_inc.troubadour.nexus
+        when: nexus.enabled
 
-  - copy:
-      content: "{{ { 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql } | to_yaml }}"
-      dest: /tmp/{{ cluster_domain }}_vars.yaml
+    always:
+      - copy:
+          content: "{{ { 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql } | to_nice_yaml }}"
+          dest: /tmp/{{ cluster_domain }}_vars.yaml
