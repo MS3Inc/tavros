@@ -5,6 +5,56 @@ DOCUMENTATION = '''
 ---
 module: keycloak_client_roles
 
+short_description: An extension to Ansible's keycloak_client specific to Client Roles
+
+description:
+    - The keycloak_client module does not allow for specifying client roles. This module extends
+    that module with the ability to add client roles and client service account roles.
+
+    - This module also extends Ansible's KeycloakAPI class to re-use its token and general client
+    functionality.
+
+    - See
+    https://github.com/ansible-collections/community.general/blob/1.3.1/plugins/modules/identity/keycloak/keycloak_client.py
+    and
+    https://github.com/ansible-collections/community.general/blob/1.3.1/plugins/module_utils/identity/keycloak/keycloak.py
+
+options:
+    realm:
+        description:
+            - The realm to create the client in.
+        type: str
+        default: master
+    client_id:
+        description:
+            - Client id of client to be worked on. This is usually an alphanumeric name chosen by
+              you. Either this or I(id) is required. If you specify both, I(id) takes precedence.
+              This is 'clientId' in the Keycloak REST API.
+        aliases:
+            - clientId
+        type: str
+    roles:
+        description:
+            - list of roles for this client. If the client roles referenced do not exist
+              yet, they will be created.
+        type: list
+        elements: dict
+        suboptions:
+            name:
+                description:
+                    - the name of the role to be created.
+                type: str
+    serviceAccountRoles:
+        description:
+            - the client's service account roles configuration.
+        type: dict
+        suboptions:
+            clientRoles:
+                description:
+                    - the desired client's service account client roles
+                    - the dict keys are the desired client role's clientId and the value is a list of dicts
+                    that must have a 'name' key the desired client role name.
+                type: dict
 '''
 
 import json
@@ -87,7 +137,6 @@ class KeycloakAPIX(KeycloakAPI):
         """
 
         client_roles_url = URL_CLIENT_ROLES.format(url=self.baseurl, realm=realm, id=id)
-        # self.module.fail_json(msg=client_roles_url, data=str(json.dumps(roleReps)), headers=str(self.restheaders))
         try:
             return open_url(client_roles_url, method='POST', headers=self.restheaders,
                             data=json.dumps(roleRep), validate_certs=self.validate_certs)
@@ -156,7 +205,6 @@ class KeycloakAPIX(KeycloakAPI):
         """
         user_client_role_mapping_url = URL_USER_CLIENT_ROLE_MAPPINGS.format(url=self.baseurl, realm=realm, id=id, cid=cid)
         try:
-            # self.module.fail_json(msg=user_client_role_mapping_url, data=json.dumps(roleReps), headers=self.restheaders)
             return open_url(user_client_role_mapping_url, method='POST', headers=self.restheaders,
                             data=json.dumps(roleReps), validate_certs=self.validate_certs)
         except Exception as e:
