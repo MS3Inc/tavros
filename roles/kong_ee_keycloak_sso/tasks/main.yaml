@@ -23,6 +23,20 @@
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 300
 
+- name: Wait for Keycloak
+  when: "'dry-run' not in ansible_run_tags"
+  community.kubernetes.k8s_info:
+    api_version: keycloak.org/v1alpha1
+    kind: Keycloak
+    name: troubadour-keycloak
+    namespace: keycloak
+  register: keycloak_def
+  # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
+  until: ('status' in keycloak_def.resources[0]) and (keycloak_def.resources[0].status.ready)
+  retries: 6
+  delay: 20
+  changed_when: false
+
 - name: Create Keycloak Kong client roles
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   loop: "{{ kong.instances }}"

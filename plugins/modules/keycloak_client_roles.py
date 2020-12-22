@@ -119,7 +119,7 @@ def main():
             kcx.create_client_role(cid, role, realm)
 
     saRoles = module.params.get('serviceAccountRoles')
-    if saRoles['clientRoles']:
+    if saRoles and saRoles['clientRoles']:
         kcx.add_client_sa_roles(cid, client_id, saRoles['clientRoles'], realm)
 
     result = dict(changed=True, msg='', diff={}, proposed={}, existing={}, end_state={})
