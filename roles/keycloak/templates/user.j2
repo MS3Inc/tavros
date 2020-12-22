@@ -1,10 +1,13 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
-  name: {{ item.name}}
+  name: {{ item.name }}
   labels:
     app: sso
 spec:
+  realmSelector:
+    matchLabels:
+      realm: {{ item.name }}
   user:
     username: {{ cluster_admin_email }}
     email: {{ cluster_admin_email }}
@@ -12,6 +15,7 @@ spec:
     emailVerified: True
     credentials:
       - type: "password"
+        # todo: should be a secret?
         value: "{{ item.admin_password }}"
         temporary: False
     realmRoles:
@@ -23,7 +27,3 @@ spec:
         - "view-profile"
       realm-management:
         - "realm-admin"
-
-  realmSelector:
-    matchLabels:
-      realm: {{ item.name }}

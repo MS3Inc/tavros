@@ -7,11 +7,11 @@ metadata:
   labels:
     realm: {{ item.name }}
 spec:
+  instanceSelector:
+    matchLabels:
+      app.troubadour/component: auth
   realm:
     id: {{ item.name }}
     realm: {{ item.name }}
     enabled: True
     displayName: {{ item.name }}
-  instanceSelector:
-    matchLabels:
-      app.troubadour/component: auth
