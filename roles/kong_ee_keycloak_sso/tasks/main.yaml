@@ -23,6 +23,20 @@
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 300
 
+- name: Create Keycloak Kong client roles
+  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  loop: "{{ kong.instances }}"
+  ms3_inc.troubadour.keycloak_client_roles:
+    auth_keycloak_url: 'https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth'
+    validate_certs: false
+    auth_realm: master
+    auth_username: admin
+    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-' + cluster_name + '-keycloak).data.ADMIN_PASSWORD | b64decode }}"
+    realm: "{{ item.ee.keycloak_realm }}"
+    clientId: "{{ item.name }}"
+    roles:
+    - name: "super-admin"
+
 - name: Create Kong EE Admins
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   uri:
