@@ -1,0 +1,41 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: troubadour
+  namespace: elastic-system
+spec:
+  version: 7.10.1
+  nodeSets:
+  - name: default
+    count: 3
+    config:
+      xpack.security.authc.token.enabled: true
+      xpack.security.authc.realms.oidc.oidc1:
+        order: 2
+        rp.client_id: "elastic-cloud"
+        rp.response_type: code
+        rp.redirect_uri: "https://kibana.troubadour.enterprise-example.com/api/security/oidc/callback"
+        rp.post_logout_redirect_uri: "https://kibana.troubadour.enterprise-example.com" # /logged_out
+        op.issuer: "https://auth.troubadour.enterprise-example.com/auth/realms/prod"
+        op.authorization_endpoint: "https://auth.troubadour.enterprise-example.com/auth/realms/prod/protocol/openid-connect/auth"
+        op.token_endpoint: "https://auth.troubadour.enterprise-example.com/auth/realms/prod/protocol/openid-connect/token"
+        op.jwkset_path: "https://auth.troubadour.enterprise-example.com/auth/realms/prod/protocol/openid-connect/certs"
+        op.userinfo_endpoint: "https://auth.troubadour.enterprise-example.com/auth/realms/prod/protocol/openid-connect/userinfo"
+        op.endsession_endpoint: "https://auth.troubadour.enterprise-example.com/auth/realms/prod/protocol/openid-connect/logout"
+        claims.principal: sub
+        claims.name: name
+        claims.mail: email
+        claims.groups: groups
+    podTemplate:
+      spec:
+        initContainers:
+        - name: sysctl
+          securityContext:
+            privileged: true
+          command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+        - name: ee-setup
+          command:   
+            - "sh"
+            - "-c"
+            - |
+              echo '57abfc51-716f-4b0a-8922-9a5eeba73342' | bin/elasticsearch-keystore add xpack.security.authc.realms.oidc.oidc1.rp.client_secret -x -f

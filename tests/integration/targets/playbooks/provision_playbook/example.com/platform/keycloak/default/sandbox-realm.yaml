@@ -7,11 +7,11 @@ metadata:
   labels:
     realm: sandbox
 spec:
+  instanceSelector:
+    matchLabels:
+      app.troubadour/component: auth
   realm:
     id: sandbox
     realm: sandbox
     enabled: True
     displayName: sandbox
-  instanceSelector:
-    matchLabels:
-      app.troubadour/component: auth

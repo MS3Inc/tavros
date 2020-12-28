@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: nexus
-  namespace: nexus
+  name: elastic-system
+  namespace: elastic-system
   annotations:
     cert-manager.io/cluster-issuer: troubadour
     kubernetes.io/ingress.class: prod
@@ -11,14 +11,14 @@ metadata:
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: nexus.troubadour.example.com
+  - host: kibana.troubadour.enterprise-example.com
     http:
       paths:
       - path: /
         backend:
-          serviceName: troubadour-nexus-repository-manager
-          servicePort: 8081
+          serviceName: troubadour-kb-http
+          servicePort: 5601
   tls:
   - hosts:
-    - nexus.troubadour.example.com
-    secretName: nexus-ingress-cert
+    - kibana.troubadour.enterprise-example.com
+    secretName: elastic-cloud-ingress-cert

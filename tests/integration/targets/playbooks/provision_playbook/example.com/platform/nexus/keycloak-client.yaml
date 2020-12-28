@@ -22,7 +22,3 @@ spec:
     authorizationServicesEnabled: True
     serviceAccountsEnabled: True
     enabled: True
-    defaultRoles:
-    - "nexus-admin"
-    - "developer"
-    - "uma_protection"

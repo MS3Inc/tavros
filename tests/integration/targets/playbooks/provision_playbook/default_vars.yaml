@@ -47,6 +47,8 @@ all:
     keycloak:
       enabled: true
       pg:
+        db: keycloak
+        user: keycloak
         password: placeholder3
       realms:
       - name: sandbox
@@ -58,7 +60,14 @@ all:
       postgres_password: placeholder7
     cert_manager:
       enabled: true
-    gitea: {}
+    gitea:
+      enabled: false
     nexus:
       enabled: true
       keycloak_realm: 'prod'
+    elastic_cloud:
+      ee:
+        enabled: false
+      enabled: true
+      elastic_secret: placeholder8
+    

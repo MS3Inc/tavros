@@ -7,11 +7,11 @@ metadata:
   labels:
     realm: prod
 spec:
+  instanceSelector:
+    matchLabels:
+      app.troubadour/component: auth
   realm:
     id: prod
     realm: prod
     enabled: True
     displayName: prod
-  instanceSelector:
-    matchLabels:
-      app.troubadour/component: auth

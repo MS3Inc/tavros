@@ -2,9 +2,13 @@ apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
   name: sandbox
+  namespace: keycloak
   labels:
     app: sso
 spec:
+  realmSelector:
+    matchLabels:
+      realm: sandbox
   user:
     username: ops@example.com
     email: ops@example.com
@@ -12,17 +16,14 @@ spec:
     emailVerified: True
     credentials:
       - type: "password"
+        # todo: should be a secret?
         value: "placeholder4"
         temporary: False
     realmRoles:
       - "offline_access"
-      - "uma_authorization"
     clientRoles:
       account:
         - "manage-account"
         - "view-profile"
-      sandbox:
-        - "super-admin"
-  realmSelector:
-    matchLabels:
-      realm: sandbox
+      realm-management:
+        - "realm-admin"

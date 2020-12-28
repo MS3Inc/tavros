@@ -1,8 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-
 namespace: keycloak
-
 resources:
 - https://raw.githubusercontent.com/keycloak/keycloak-operator/11.0.3/deploy/crds/keycloak.org_keycloakbackups_crd.yaml
 - https://raw.githubusercontent.com/keycloak/keycloak-operator/11.0.3/deploy/crds/keycloak.org_keycloakclients_crd.yaml

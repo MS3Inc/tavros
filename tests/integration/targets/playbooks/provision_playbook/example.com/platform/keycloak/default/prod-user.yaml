@@ -2,9 +2,13 @@ apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
   name: prod
+  namespace: keycloak
   labels:
     app: sso
 spec:
+  realmSelector:
+    matchLabels:
+      realm: prod
   user:
     username: ops@example.com
     email: ops@example.com
@@ -12,17 +16,14 @@ spec:
     emailVerified: True
     credentials:
       - type: "password"
+        # todo: should be a secret?
         value: "placeholder5"
         temporary: False
     realmRoles:
       - "offline_access"
-      - "uma_authorization"
     clientRoles:
       account:
         - "manage-account"
         - "view-profile"
-      prod:
-        - "super-admin"
-  realmSelector:
-    matchLabels:
-      realm: prod
+      realm-management:
+        - "realm-admin"

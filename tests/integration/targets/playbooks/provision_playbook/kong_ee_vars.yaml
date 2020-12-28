@@ -36,9 +36,14 @@ all:
           creds: 'default'
           keycloak_realm: 'prod'
           admin_password: 'placeholder11'
+    kuma:
+      meshes: []
+    namespaces: []
     keycloak:
       enabled: true
       pg:
+        db: keycloak
+        user: keycloak
         password: placeholder5
       realms:
       - name: sandbox
@@ -54,6 +59,12 @@ all:
       enabled: false
     nexus:
       enabled: false
-    namespaces: []
-    kuma:
-      meshes: []
+      keycloak_realm: 'prod'
+    elastic_cloud:
+      enabled: true
+      elastic_secret: placeholder10
+      ee:
+        enabled: true
+        trial: true
+        keycloak_realm: 'prod'
+        license: "{}"
