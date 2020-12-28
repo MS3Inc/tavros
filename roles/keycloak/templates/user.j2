@@ -2,6 +2,7 @@ apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
   name: {{ item.name }}
+  namespace: keycloak
   labels:
     app: sso
 spec:
@@ -20,7 +21,6 @@ spec:
         temporary: False
     realmRoles:
       - "offline_access"
-      - "uma_authorization"
     clientRoles:
       account:
         - "manage-account"

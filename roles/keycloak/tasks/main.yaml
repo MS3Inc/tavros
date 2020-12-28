@@ -9,13 +9,34 @@
     src: operator
     dest: /tmp/{{ cluster_domain }}/platform/keycloak/
 
+- name: Apply operator manifests
+  when: ('dry-run' not in ansible_run_tags)
+  with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/operator/12.0.1
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+
+- name: Wait for Keycloak
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_info:
+    api_version: apps/v1
+    kind: Deployment
+    name: keycloak-operator
+    namespace: keycloak
+  register: keycloak_def
+  until: ('status' in keycloak_def.resources[0]) and (keycloak_def.resources[0].status.readyReplicas >= 1)
+  retries: 6
+  delay: 20
+  changed_when: false
+
 - name: Process keycloak-db-secret template
   template:
     src: keycloak-db-secret.j2
     dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.yaml
 
 - name: Convert keycloak-db-secret to SealedSecret
-  when: "'dry-run' not in ansible_run_tags"
+  when: ('dry-run' not in ansible_run_tags)
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.yaml >/tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.tmp
     mv /tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.tmp /tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.yaml
@@ -43,7 +64,7 @@
 
 - name: Combine keycloak with generated realm admin passwords
   set_fact:
-    keycloak: "{{ keycloak | combine({'realms': gen_keycloak_realms}, recursive=true, list_merge='replace') }}"
+    keycloak: "{{ keycloak | combine({'realms': gen_keycloak_realms}, recursive=true) }}"
 
 - name: Process User templates
   template:
@@ -61,13 +82,8 @@
     src: base-kustomization.yaml
     dest: /tmp/{{ cluster_domain }}/platform/keycloak/kustomization.yaml
 
-- name: Copy keycloak ns
-  copy:
-    src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/keycloak/ns.yaml
-
 - name: Apply keycloak manifests
-  when: "'dry-run' not in ansible_run_tags"
+  when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/
   k8s:
     definition: "{{ item }}"
@@ -75,7 +91,7 @@
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
 
 - name: Wait for Keycloak
-  when: "'dry-run' not in ansible_run_tags"
+  when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
     api_version: keycloak.org/v1alpha1
     kind: Keycloak
