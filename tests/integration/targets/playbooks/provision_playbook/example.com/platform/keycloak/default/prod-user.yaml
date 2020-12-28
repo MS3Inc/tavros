@@ -11,6 +11,8 @@ spec:
       realm: prod
   user:
     username: ops@example.com
+    firstName: Troubadour
+    lastName: Admin
     email: ops@example.com
     enabled: True
     emailVerified: True

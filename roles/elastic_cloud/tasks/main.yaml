@@ -4,11 +4,6 @@
     path: /tmp/{{ cluster_domain }}/platform/elastic-cloud
     state: directory
 
-- name: Copy all-in-one
-  copy:
-    src: all-in-one.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/all-in-one.yaml
-
 - name: Process elastic template
   template:
     src: elastic.j2
