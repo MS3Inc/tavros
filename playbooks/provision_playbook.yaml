@@ -14,14 +14,10 @@
   - name: Install dependencies with pip3 module
     pip:
       name:
-        # amazon.aws
         - boto3
         - botocore
-        # community.kubernetes
         - openshift
-        # community.aws
         - boto
-      executable: pip-3
       extra_args: --user
 
   - import_role:
@@ -38,13 +34,13 @@
 
   - name: Install and configure components
     block:
-      - import_role:
+      - include_role:
           name: ms3_inc.troubadour.fluxtoolkit
 
-      - import_role:
+      - include_role:
           name: ms3_inc.troubadour.kubeseal
 
-      - import_role:
+      - include_role:
           name: ms3_inc.troubadour.postgresql
 
       - include_role:
@@ -72,7 +68,11 @@
           name: ms3_inc.troubadour.nexus
         when: nexus.enabled
 
+      - include_role:
+          name: ms3_inc.troubadour.elastic_cloud
+        when: elastic_cloud.enabled
+
     always:
       - copy:
-          content: "{{ { 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql } | to_nice_yaml }}"
+          content: "{{ { 'all': { 'vars': { 'cluster_name': cluster_name, 'cluster_domain': cluster_domain, 'cluster_admin_email': cluster_admin_email, 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql, 'elastic_cloud': elastic_cloud, 'cert_manager': cert_manager }}} | to_nice_yaml(indent=2) }}"
           dest: /tmp/{{ cluster_domain }}_vars.yaml

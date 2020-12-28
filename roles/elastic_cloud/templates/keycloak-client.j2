@@ -1,0 +1,32 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: {{ elastic_cloud.ee.keycloak_realm }}-elastic-cloud
+  namespace: keycloak
+  labels:
+    client: elastic-cloud
+spec:
+  realmSelector:
+    matchLabels:
+        realm: {{ elastic_cloud.ee.keycloak_realm }}
+  client:
+    clientId: elastic-cloud
+    secret: "57abfc51-716f-4b0a-8922-9a5eeba73342"
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect
+    redirectUris:
+    - "*"
+    standardFlowEnabled: True
+    enabled: True
+    protocolMappers:
+    - name: groups
+      protocol: openid-connect
+      protocolMapper: "oidc-usermodel-client-role-mapper"
+      config:
+        id.token.claim: "true"
+        claim.name: groups
+        multivalued: "true"
+        userinfo.token.claim: "true"
+        jsonType.label: string
+        access.token.claim: "false"
+        usermodel.clientRoleMapping.clientId: elastic-cloud

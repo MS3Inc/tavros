@@ -10,6 +10,8 @@ properties:
   kubernetes_cluster:
     type: object
     properties:
+      cloud:
+        type: string
       master_count:
         type: integer
       master_size:
@@ -38,6 +40,8 @@ properties:
         items:
           type: object
           properties:
+            name:
+              type: string
             license:
               type: string
             image_registry:
@@ -64,6 +68,15 @@ properties:
                 enabled:
                   type: boolean
                 creds:
+                  type: string
+                keycloak_realm:
+                  type: string
+                admin_password:
+                  type: string
+            pg:
+              type: object
+              properties:
+                password:
                   type: string
   kuma:
     type: object
@@ -94,14 +107,63 @@ properties:
     properties:
       enabled:
         type: boolean
+      pg:
+        type: object
+        properties:
+          db:
+            type: string
+          user:
+            type: string
+          password:
+            type: string
+      realms:
+        type: array
+        items:
+          type: object
+          properties:
+            name:
+              type: string
+            admin_password:
+              type: string
   postgresql:
     type: object
-    properties: {}
+    properties:
+      password:
+        type: string
+      postgres_password:
+        type: string
   cert_manager:
     type: object
-    properties: {}
+    properties:
+      enabled:
+        type: boolean
   gitea:
     type: object
     properties:
       enabled:
         type: boolean
+  nexus:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      keycloak_realm:
+        type: string
+  elastic_cloud:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      elastic_secret:
+        type: string
+      ee:
+        type: object
+        properties:
+          enabled:
+            type: boolean
+          trial:
+            type: boolean
+          keycloak_realm:
+            type: string
+          licnese:
+            type: string

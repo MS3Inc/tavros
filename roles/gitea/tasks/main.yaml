@@ -30,6 +30,11 @@
     src: patch.json
     dest: /tmp/{{ cluster_domain }}/platform/gitea/patch.json
 
+- name: Copy Gitea ns
+  copy:
+    src: ns.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/gitea/ns.yaml
+
 - name: Copy gitea kustomization
   copy:
     src: kustomization.yaml

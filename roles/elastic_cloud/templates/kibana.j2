@@ -1,0 +1,25 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: troubadour
+  namespace: elastic-system
+spec:
+  version: 7.10.1
+  count: 1
+  elasticsearchRef:
+    name: troubadour  
+  http:
+    service:
+      metadata:
+        annotations:
+          konghq.com/protocol: https
+{% if elastic_cloud.ee.enabled %}
+  config:
+    xpack.security.authc.providers:
+      oidc.oidc1:
+        order: 0
+        realm: "oidc1"
+      basic.basic1:
+        order: 1
+        icon: "logoElasticsearch"
+{% endif %}

@@ -1,0 +1,150 @@
+---
+- name: Create directory
+  file:
+    path: /tmp/{{ cluster_domain }}/platform/elastic-cloud
+    state: directory
+
+- name: Copy all-in-one
+  copy:
+    src: all-in-one.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/all-in-one.yaml
+
+- name: Process elastic template
+  template:
+    src: elastic.j2
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/elastic.yaml
+
+- name: Process kibana template
+  template:
+    src: kibana.j2
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/kibana.yaml
+
+- name: Process ingress template
+  template:
+    src: ingress.j2
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/ingress.yaml
+
+- name: Process keycloak-client template
+  when: (elastic_cloud.ee.enabled)
+  template:
+    src: keycloak-client.j2
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/keycloak-client.yaml
+
+- name: Copy trial-ee-secret
+  when: (elastic_cloud.ee.enabled) and (elastic_cloud.ee.trial)
+  copy:
+    src: trial-ee-secret.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/ee-secret.yaml
+
+- name: Process ee-secret template
+  when: (elastic_cloud.ee.enabled) and (not elastic_cloud.ee.trial)
+  template:
+    src: ee-secret.j2
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/ee-secret.yaml
+
+- name: Convert ee-secret to SealedSecrets
+  when: (elastic_cloud.ee.enabled) and (not elastic_cloud.ee.trial) and ('dry-run' not in ansible_run_tags)
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/elastic-cloud/ee-secret.yaml >/tmp/{{ cluster_domain }}/platform/elastic-cloud/ee-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/elastic-cloud/ee-secret.tmp /tmp/{{ cluster_domain }}/platform/elastic-cloud/ee-secret.yaml
+
+- name: Process kustomization template
+  template:
+    src: kustomization.j2
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/kustomization.yaml
+
+- name: Process flux-kustomization template
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/elastic-cloud.yaml
+
+- name: Apply manifests
+  when: ('dry-run' not in ansible_run_tags)
+  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/elastic-cloud/
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 150
+
+- name: Wait for Elastic
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_info:
+    api_version: elasticsearch.k8s.elastic.co/v1
+    kind: Elasticsearch
+    name: troubadour
+    namespace: elastic-system
+  register: elastic_def
+  until: ('status' in elastic_def.resources[0]) and (elastic_def.resources[0].status.phase == 'Ready')
+  retries: 120
+  delay: 30
+  changed_when: false
+
+- name: Wait for Kibana
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_info:
+    api_version: kibana.k8s.elastic.co/v1
+    kind: Kibana
+    name: troubadour
+    namespace: elastic-system
+  register: kibana_def
+  until: ('status' in kibana_def.resources[0]) and (kibana_def.resources[0].status.health == 'green')
+  retries: 120
+  delay: 30
+  changed_when: false
+
+- name: Get troubadour-es-elastic-user object
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_info:
+    api_version: v1
+    kind: Secret
+    name: troubadour-es-elastic-user
+    namespace: elastic-system
+  register: elastic_secret
+
+- name: Set elastic_cloud elastic_secret field
+  when: ('dry-run' not in ansible_run_tags)
+  set_fact:
+    elastic_cloud: "{{ elastic_cloud | combine({'elastic_secret': elastic_pass}, recursive=true) }}"
+  vars:
+    elastic_pass: "{{ elastic_secret.resources[0].data.elastic | b64decode }}"
+
+- name: Add Role Mapping for Keycloak
+  when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_exec:
+    namespace: elastic-system
+    pod: "troubadour-es-default-0"
+    command: |
+      curl --insecure -X PUT https://localhost:9200/_security/role_mapping/ansible?pretty --user elastic:{{ elastic_cloud.elastic_secret }} -H 'Content-Type: application/json' -d'{"roles": [ "kibana_admin" ],"enabled": true,"rules": {"field": { "groups": "admin" }}}'
+  register: elk_results
+
+- name: Create Elastic Cloud Keycloak Client Roles
+  when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  ms3_inc.troubadour.keycloak_client_roles:
+    auth_keycloak_url: 'https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth'
+    validate_certs: false
+    auth_realm: master
+    auth_username: admin
+    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-' + cluster_name + '-keycloak').data.ADMIN_PASSWORD | b64decode }}"
+    realm: "{{ elastic_cloud.ee.keycloak_realm}}"
+    clientId: elastic-cloud
+    roles:
+    - name: "admin"
+
+- name: Add admin client role to realm user
+  when: (elastic_cloud.ee.enabled)
+  blockinfile:
+    marker_begin: "elastic-cloud"
+    marker_end: "elastic-cloud"
+    path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak_realm }}-user.yaml
+    insertafter: "    clientRoles:"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    block: |2
+            elastic-cloud:
+              - admin
+
+- name: Apply updated Keycloak User for Realm
+  when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s:
+    state: present
+    src: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak_realm }}-user.yaml

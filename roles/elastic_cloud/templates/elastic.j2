@@ -1,0 +1,53 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: troubadour
+  namespace: elastic-system
+spec:
+  version: 7.10.1
+  nodeSets:
+  - name: default
+    count: 3
+{% if elastic_cloud.ee.enabled %}
+    config:
+      xpack.security.authc.token.enabled: true
+      xpack.security.authc.realms.oidc.oidc1:
+        order: 2
+        rp.client_id: "elastic-cloud"
+        rp.response_type: code
+        rp.redirect_uri: "https://kibana.{{ cluster_name }}.{{ cluster_domain }}/api/security/oidc/callback"
+        rp.post_logout_redirect_uri: "https://kibana.{{ cluster_name }}.{{ cluster_domain }}" # /logged_out
+        op.issuer: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}"
+        op.authorization_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}/protocol/openid-connect/auth"
+        op.token_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}/protocol/openid-connect/token"
+        op.jwkset_path: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}/protocol/openid-connect/certs"
+        op.userinfo_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}/protocol/openid-connect/userinfo"
+        op.endsession_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}/protocol/openid-connect/logout"
+        claims.principal: sub
+        claims.name: name
+        claims.mail: email
+        claims.groups: groups
+{% if ('test-run' in ansible_run_tags) %}
+        ssl.certificate_authorities: ["oidc/fakeleintermediatex1.pem","oidc/fakelerootx1.pem"]
+{% endif %}
+{% endif %}
+    podTemplate:
+      spec:
+        initContainers:
+        - name: sysctl
+          securityContext:
+            privileged: true
+          command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+{% if elastic_cloud.ee.enabled %}
+        - name: ee-setup
+          command:   
+            - "sh"
+            - "-c"
+            - |
+              echo '57abfc51-716f-4b0a-8922-9a5eeba73342' | bin/elasticsearch-keystore add xpack.security.authc.realms.oidc.oidc1.rp.client_secret -x -f
+{% if ('test-run' in ansible_run_tags) %}
+              mkdir config/oidc
+              curl https://letsencrypt.org/certs/fakeleintermediatex1.pem --output config/oidc/fakeleintermediatex1.pem
+              curl https://letsencrypt.org/certs/fakelerootx1.pem --output config/oidc/fakelerootx1.pem
+{% endif %}
+{% endif %}

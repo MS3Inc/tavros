@@ -17,6 +17,8 @@
   + [Kuma mTLS Object](#kuma-mtls-object)
   + [Namespace Object](#namespace-object)
   + [Keycloak Object](#keycloak-object)
+  + [Nexus Object](#nexus-object)
+  + [Elastic Cloud Object](#elastic-cloud-object)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -29,8 +31,10 @@ The order of component configuration is as follows:
 * Namespaces - Application namespaced environments
 * Kuma - Service Meshes
 * cert-manager - TLS certificate manager for the given domain
-* Keycloak - To provide Identity and Access Management, if enabled
 * Kong - As a API Gateway and Manager, with enterprise edition features if that is enabled
+* Keycloak - To provide Identity and Access Management, if enabled
+* Nexus - To provide repository for varios formats, if enabled
+* Elastic Cloud - To provide observability, if enabled
 
 ## Requirements
 
@@ -181,3 +185,41 @@ kuma_mesh_name | String | The name of the Kuma mesh this namespace should be a p
 | Field Name | Type | Description | Default Value |
 | ---------- | ---- | ----------- | ------------- |
 enabled | Boolean | Whether to use Keycloak | true
+pg | [Keycloak Postgres Object](#keycloak-postgres-object)  | Postgres Info | { "db": "keycloak", "user": "keycloak"}
+realms | Array of [Keycloak Realms Object](#keycloak-realms-object) | Enumeration of Desired Realms | [{"name": "sandbox"}, {"name": "prod"}]
+
+### Keycloak Postgres Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+db | String | Postgres Database Name | keycloak
+user | String | Postgres Database Name | keycloak
+
+### Keycloak Realms Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+name | Boolean | Whether to use Keycloak | 
+
+### Nexus Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+enabled | Boolean | Whether to use Elastic Cloud | true
+keycloak_realm | string | Keycloak Realm to authenticated against | prod
+
+### Elastic Cloud Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+enabled | Boolean | Whether to use Elastic Cloud | true
+ee | [Elastic Cloud EE Object](#elastic-cloud-ee-object) | EE Config | { "enabled": false }
+
+### Elastic Cloud EE Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+enabled | Boolean | Whether to use EE | 
+trial | Boolean | Whether to use 30 day cluster trial license | 
+keycloak_realm | String | Keycloak Realm Name | 
+licnese | String | License JSON | 
