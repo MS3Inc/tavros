@@ -51,6 +51,26 @@
     roles:
     - name: "super-admin"
 
+- name: Add super-admin client role to realm user
+  when: (item.ee.enabled)
+  loop: "{{ kong.instances }}"
+  blockinfile:
+    marker_begin: "{{ item.name }} Kong"
+    marker_end: "{{ item.name }} Kong"
+    path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak_realm }}-user.yaml
+    insertafter: "    clientRoles:"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    block: |2
+            {{ item.name }}:
+              - super-admin
+
+- name: Apply updated Keycloak User for Realm
+  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  loop: "{{ kong.instances }}"
+  community.kubernetes.k8s:
+    state: present
+    src: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak_realm }}-user.yaml
+
 - name: Create Kong EE Admins
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   uri:

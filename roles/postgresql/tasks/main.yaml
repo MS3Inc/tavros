@@ -5,7 +5,7 @@
     state: directory
 
 - name: Generate postgresql password
-  when: "'password' not in postgresql"
+  when: postgresql.password is not defined
   set_fact:
     postgresql: "{{ { 'password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
 
@@ -21,12 +21,12 @@
 
 - name: Combine kong with generated passwords
   set_fact:
-    kong: "{{ kong | combine({'instances': gen_kong_instances}, recursive=true, list_merge='replace') }}"
+    kong: "{{ kong | combine({'instances': gen_kong_instances}, recursive=true) }}"
 
 - name: Generate PG credentials for Keycloak
   when: keycloak.pg.password is not defined
   set_fact:
-    keycloak: "{{ { 'pg': { 'password': lookup('password', '/dev/null') } } | combine(keycloak, recursive=true) }}"
+    keycloak: "{{ keycloak | combine({ 'pg': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
 
 - name: Process config-secret template
   template:
