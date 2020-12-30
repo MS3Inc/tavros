@@ -8,18 +8,18 @@ The objective of this Ansible Collection is to provide the necessary Ansible Pla
 
 ### Provision Playbook
 
-The provision playbook provisions a Kubernetes cluster and configures Troubadour's platform components, application environments, etc. All of the components are configurable through Ansible variables or the default configuration can chosen. See the provision playbook's [documentation](playbooks/provision_playbook/README.md) for more information.
+The provision playbook provisions a Kubernetes cluster and configures Troubadour's platform components, application environments, etc. All of the components are configurable through Ansible variables or the default configuration can be chosen. See the provision playbook's [documentation](playbooks/provision_playbook/README.md) for more information.
 
 ## Supported Platform Components
 
-| Concern | Component | Version | Since Trou. Version |
+| Concern | Component | Current Version | Since Trou. Version |
 | ------- | --------- | ------- | ------------------ |
 | Platform GitOps | Flux v2 | 0.4.3 | 0.1.0 |
 | API Gateway and Manager | Kong | 2.2.0 | 0.1.0 |
 | API Portal | Kong Enterprise Edition | 2.2.0 | 0.1.0 |
 | Service Mesh | Kuma | 1.0.0 | 0.1.0 |
 | Identity and Access Management | Keycloak | 11.0.2 | 0.1.0 |
-| Application Artifact Management | Nexus Repository Manager | 3.28.1 | 0.2.0 |
+| Artifact Management | Nexus Repository Manager | 3.28.1 | 0.2.0 |
 | Continuous Delivery | Jenkins | 2.249.2 | na |
 | Observability | Elastic Cloud | 7.9.3 | na |
 | Observability | Jaeger | 1.20.0 | na |
@@ -27,7 +27,7 @@ The provision playbook provisions a Kubernetes cluster and configures Troubadour
 
 ## Roadmap
 
-na
+The Troubadour team will publish a roadmap for each major and minor release based on product strategy and business objectives. See our [Troubadour Roadmap](docs/roadmap/index.md).
 
 ## Architectural Decision Log
 
