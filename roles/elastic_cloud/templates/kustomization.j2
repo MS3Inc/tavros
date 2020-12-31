@@ -1,9 +1,14 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - kube-state-metrics/
   - https://download.elastic.co/downloads/eck/1.3.1/all-in-one.yaml
-  - elastic.yaml
+  - elasticsearch.yaml
   - kibana.yaml
+  - filebeat.yaml
+  - metricbeat-perms.yaml
+  - metricbeat-daemonset.yaml
+  - metricbeat-deployment.yaml
   - ingress.yaml
 {% if elastic_cloud.ee.enabled %}
   - keycloak-client.yaml

@@ -4,15 +4,40 @@
     path: /tmp/{{ cluster_domain }}/platform/elastic-cloud
     state: directory
 
-- name: Process elastic template
+- name: Copy kube-state-metrics
+  copy:
+    src: kube-state-metrics
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/
+
+- name: Process elasticsearch template
   template:
-    src: elastic.j2
-    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/elastic.yaml
+    src: elasticsearch.j2
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/elasticsearch.yaml
 
 - name: Process kibana template
   template:
     src: kibana.j2
     dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/kibana.yaml
+
+- name: Copy filebeat
+  copy:
+    src: filebeat.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/filebeat.yaml
+
+- name: Copy metricbeat-perms
+  copy:
+    src: metricbeat-perms.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/metricbeat-perms.yaml
+
+- name: Copy metricbeat-deployment
+  copy:
+    src: metricbeat-deployment.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/metricbeat-deployment.yaml
+
+- name: Copy metricbeat-daemonset
+  copy:
+    src: metricbeat-daemonset.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/metricbeat-daemonset.yaml
 
 - name: Process ingress template
   template:
@@ -62,12 +87,12 @@
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 150
 
-- name: Wait for Elastic
+- name: Wait for Elasticsearch
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
     api_version: elasticsearch.k8s.elastic.co/v1
     kind: Elasticsearch
-    name: troubadour
+    name: elasticsearch
     namespace: elastic-system
   register: elastic_def
   until: ('status' in elastic_def.resources[0]) and (elastic_def.resources[0].status.phase == 'Ready')
@@ -80,7 +105,7 @@
   community.kubernetes.k8s_info:
     api_version: kibana.k8s.elastic.co/v1
     kind: Kibana
-    name: troubadour
+    name: kibana
     namespace: elastic-system
   register: kibana_def
   until: ('status' in kibana_def.resources[0]) and (kibana_def.resources[0].status.health == 'green')
@@ -88,12 +113,12 @@
   delay: 30
   changed_when: false
 
-- name: Get troubadour-es-elastic-user object
+- name: Get elasticsearch-es-elastic-user object
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
     api_version: v1
     kind: Secret
-    name: troubadour-es-elastic-user
+    name: elasticsearch-es-elastic-user
     namespace: elastic-system
   register: elastic_secret
 
@@ -108,9 +133,9 @@
   when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_exec:
     namespace: elastic-system
-    pod: "troubadour-es-default-0"
+    pod: "elasticsearch-es-default-0"
     command: |
-      curl --insecure -X PUT https://localhost:9200/_security/role_mapping/ansible?pretty --user elastic:{{ elastic_cloud.elastic_secret }} -H 'Content-Type: application/json' -d'{"roles": [ "kibana_admin" ],"enabled": true,"rules": {"field": { "groups": "admin" }}}'
+      curl --insecure -X PUT https://localhost:9200/_security/role_mapping/admin?pretty --user elastic:{{ elastic_cloud.elastic_secret }} -H 'Content-Type: application/json' -d'{"roles": [ "superuser" ],"enabled": true,"rules": {"field": { "groups": "admin" }}}'
   register: elk_results
 
 - name: Create Elastic Cloud Keycloak Client Roles
