@@ -1,0 +1,24 @@
+apiVersion: beat.k8s.elastic.co/v1beta1
+kind: Beat
+metadata:
+  name: heartbeat  
+  namespace: elastic-system
+spec:
+  type: heartbeat
+  version: 7.10.1
+  elasticsearchRef:
+    name: elasticsearch
+  config:
+    heartbeat.monitors:
+    - type: tcp
+      schedule: '@every 5s'
+      hosts: ["elasticsearch-es-http.elastic-system.svc:9200"]
+    - type: tcp
+      schedule: '@every 5s'
+      hosts: ["kibana-kb-http.elastic-system.svc:5601"]
+  deployment:
+    replicas: 1
+    podTemplate:
+      spec:
+        securityContext:
+          runAsUser: 0

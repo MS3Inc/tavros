@@ -20,29 +20,6 @@ spec:
           hints:
             default_config: {}
             enabled: "true"
-          # templates:
-          # - condition:
-          #     contains:
-          #       kubernetes.labels.k8s-app: kube-controller-manager
-          #       kubernetes.namespace: kube-system
-          #     config:
-          #     - module: kubernetes
-          #       enabled: true
-          #       metricsets:
-          #       - controllermanager
-          #       hosts: ["${data.host}:10252"]
-          #       period: 10s
-          # - condition:
-          #     contains:
-          #       kubernetes.labels.k8s-app: kube-scheduler
-          #       kubernetes.namespace: kube-system
-          #     config:
-          #     - module: kubernetes
-          #       enabled: true
-          #       metricsets:
-          #       - scheduler
-          #       hosts: ["${data.host}:10251"]
-          #       period: 10s
       modules:
       - module: system
         period: 30s

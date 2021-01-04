@@ -23,6 +23,10 @@ spec:
               paths:
               - /var/log/containers/*${data.kubernetes.container.id}.log
     processors:
+    - add_fields:
+        target: event
+        fields:
+          dataset: troubadour
     - add_cloud_metadata: {}
     - add_host_metadata: {}
   daemonSet:

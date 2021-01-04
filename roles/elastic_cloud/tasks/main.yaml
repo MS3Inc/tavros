@@ -24,6 +24,11 @@
     src: filebeat.yaml
     dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/filebeat.yaml
 
+- name: Copy heartbeat
+  copy:
+    src: heartbeat.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/heartbeat.yaml
+
 - name: Copy metricbeat-perms
   copy:
     src: metricbeat-perms.yaml
