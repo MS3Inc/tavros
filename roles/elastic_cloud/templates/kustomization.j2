@@ -14,4 +14,6 @@ resources:
 {% if elastic_cloud.ee.enabled %}
   - keycloak-client.yaml
   - ee-secret.yaml
+  - apm-server.yaml
+  - jaeger-agent.yaml
 {% endif %}

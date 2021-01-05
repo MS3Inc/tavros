@@ -19,6 +19,18 @@
     src: kibana.j2
     dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/kibana.yaml
 
+- name: Copy apm-server
+  when: (elastic_cloud.ee.enabled)
+  copy:
+    src: apm-server.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/apm-server.yaml
+
+- name: Copy jaeger-agent
+  when: (elastic_cloud.ee.enabled)
+  copy:
+    src: jaeger-agent.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/elastic-cloud/jaeger-agent.yaml
+
 - name: Copy filebeat
   copy:
     src: filebeat.yaml
