@@ -17,6 +17,7 @@
         --name="{{ cluster_name }}.{{ cluster_domain }}" \
         --cloud="{{ kubernetes_cluster.cloud }}" \
         --state="s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_name }}-cluster-state" \
+        --container-runtime containerd \
         --master-count={{ kubernetes_cluster.master_count }} \
         --master-size={{ kubernetes_cluster.master_size }} \
         --node-count={{ kubernetes_cluster.node_count }} \
