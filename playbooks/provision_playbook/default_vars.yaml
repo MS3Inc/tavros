@@ -61,3 +61,5 @@ all:
       ee:
         enabled: false
       enabled: true
+    jenkins:
+      keycloak_realm: 'prod'

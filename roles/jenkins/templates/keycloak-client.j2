@@ -1,0 +1,24 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: jenkins
+  namespace: keycloak
+  labels:
+    client: jenkins
+spec:
+  realmSelector:
+    matchLabels:
+        realm: {{ jenkins.keycloak_realm }}
+  client:
+    clientId: jenkins
+    rootUrl: https://ci.{{ cluster_name}}.{{ cluster_domain }}
+    enabled: true
+    clientAuthenticatorType: client-secret
+    redirectUris:
+    - https://ci.{{ cluster_name}}.{{ cluster_domain }}/*
+    standardFlowEnabled: true
+    implicitFlowEnabled: false
+    directAccessGrantsEnabled: true
+    serviceAccountsEnabled: false
+    publicClient: true
+    protocol: openid-connect
