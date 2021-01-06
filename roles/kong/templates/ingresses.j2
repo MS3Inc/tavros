@@ -8,6 +8,7 @@ metadata:
     konghq.com/protocols: https
     kubernetes.io/ingress.class: {{ item.ingress_class }}
     cert-manager.io/cluster-issuer: troubadour
+    konghq.com/https-redirect-status-code: '302'
 spec:
   tls:
   - hosts:

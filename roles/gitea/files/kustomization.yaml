@@ -5,6 +5,7 @@ resources:
   - release.yaml
   - helm-source.yaml
   - overlay-values-secret.yaml
+  - ingress.yaml
 configMapGenerator:
   - name: values-config
     namespace: gitea

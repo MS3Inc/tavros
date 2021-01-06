@@ -19,6 +19,7 @@
   + [Keycloak Object](#keycloak-object)
   + [Nexus Object](#nexus-object)
   + [Elastic Cloud Object](#elastic-cloud-object)
+  + [Gitea](#gitea-object)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -185,15 +186,7 @@ kuma_mesh_name | String | The name of the Kuma mesh this namespace should be a p
 | Field Name | Type | Description | Default Value |
 | ---------- | ---- | ----------- | ------------- |
 enabled | Boolean | Whether to use Keycloak | true
-pg | [Keycloak Postgres Object](#keycloak-postgres-object)  | Postgres Info | { "db": "keycloak", "user": "keycloak"}
 realms | Array of [Keycloak Realms Object](#keycloak-realms-object) | Enumeration of Desired Realms | [{"name": "sandbox"}, {"name": "prod"}]
-
-### Keycloak Postgres Object
-
-| Field Name | Type | Description | Default Value |
-| ---------- | ---- | ----------- | ------------- |
-db | String | Postgres Database Name | keycloak
-user | String | Postgres Database Name | keycloak
 
 ### Keycloak Realms Object
 
@@ -223,3 +216,9 @@ enabled | Boolean | Whether to use EE |
 trial | Boolean | Whether to use 30 day cluster trial license | 
 keycloak_realm | String | Keycloak Realm Name | 
 licnese | String | License JSON | 
+
+### Gitea Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+enabled | Boolean | Whether to use Gitea | true

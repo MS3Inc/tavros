@@ -46,9 +46,6 @@ all:
       kuma_mesh_name: 'prod'
     keycloak:
       enabled: true
-      pg:
-        db: keycloak
-        user: keycloak
       realms:
       - name: sandbox
       - name: prod

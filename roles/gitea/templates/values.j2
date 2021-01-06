@@ -7,6 +7,6 @@ gitea:
     database:
       DB_TYPE: postgres
       HOST: troubadour-postgresql.postgresql.svc.cluster.local:5432
-      NAME: "{{ gitea.pg.db }}"
-      USER: "{{ gitea.pg.user }}"
-      PASSWD: "{{ gitea.pg.pass }}"
+      NAME: "gitea"
+      USER: "gitea"
+      PASSWD: "{{ gitea.pg.password }}"

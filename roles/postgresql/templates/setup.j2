@@ -1,5 +1,5 @@
 CREATE DATABASE "gitea";
-CREATE USER "gitea" WITH ENCRYPTED PASSWORD 'gitea';
+CREATE USER "gitea" WITH ENCRYPTED PASSWORD '{{ gitea.pg.password }}';
 GRANT ALL PRIVILEGES ON DATABASE "gitea" TO "gitea";
 
 CREATE DATABASE "keycloak";

@@ -8,6 +8,16 @@ spec:
   nodeSets:
   - name: default
     count: 3
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: kops-ssd-1-17
 {% if elastic_cloud.ee.enabled %}
     config:
       xpack.security.authc.token.enabled: true

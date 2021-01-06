@@ -72,7 +72,16 @@
           name: ms3_inc.troubadour.elastic_cloud
         when: elastic_cloud.enabled
 
+      - include_role:
+          name: ms3_inc.troubadour.gitea
+        when: gitea.enabled
+        
+      - include_role:
+          name: ms3_inc.troubadour.fluxtoolkit
+          tasks_from: gitea-setup
+        when: gitea.enabled
+
     always:
       - copy:
-          content: "{{ { 'all': { 'vars': { 'cluster_name': cluster_name, 'cluster_domain': cluster_domain, 'cluster_admin_email': cluster_admin_email, 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql, 'elastic_cloud': elastic_cloud, 'cert_manager': cert_manager }}} | to_nice_yaml(indent=2) }}"
+          content: "{{ { 'all': { 'vars': { 'cluster_name': cluster_name, 'cluster_domain': cluster_domain, 'cluster_admin_email': cluster_admin_email, 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql, 'elastic_cloud': elastic_cloud, 'cert_manager': cert_manager, 'gitea': gitea }}} | to_nice_yaml(indent=2) }}"
           dest: /tmp/{{ cluster_domain }}_vars.yaml

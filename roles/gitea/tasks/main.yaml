@@ -55,19 +55,21 @@
     src: values.yaml
     dest: /tmp/{{ cluster_domain }}/platform/gitea/values.yaml
 
-- name: Apply gitea manifests
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kustomize build /tmp/{{ cluster_domain }}/platform/gitea/ | kubectl apply -f -
-
-- name: Wait for Gitea Helmrealse, Deployment, and Pods
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl -n gitea wait --for=condition=ready --timeout=120s helmrelease.helm.toolkit.fluxcd.io --all
-    kubectl -n gitea wait --for=condition=available --timeout=120s deployments --all
-    kubectl -n gitea wait --for=condition=ready --timeout=120s pods --all
+- name: Process ingress template
+  template:
+    src: ingress.j2
+    dest: /tmp/{{ cluster_domain }}/platform/gitea/ingress.yaml
 
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
     dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/gitea.yaml
+
+- name: Apply manifests
+  when: ('dry-run' not in ansible_run_tags)
+  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/gitea/
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 1800

@@ -171,8 +171,8 @@
 - name: Add admin client role to realm user
   when: (elastic_cloud.ee.enabled)
   blockinfile:
-    marker_begin: "elastic-cloud"
-    marker_end: "elastic-cloud"
+    marker_begin: "Begin elastic-cloud"
+    marker_end: "End elastic-cloud"
     path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak_realm }}-user.yaml
     insertafter: "    clientRoles:"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"

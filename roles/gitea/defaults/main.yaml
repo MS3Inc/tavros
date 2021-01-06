@@ -1,8 +1,0 @@
-gitea:
-  admin:
-    user: gitea_admin
-    email: "default@ms3-inc.com"
-  pg:
-    db: gitea
-    user: gitea
-    pass: gitea

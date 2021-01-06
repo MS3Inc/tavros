@@ -55,8 +55,8 @@
   when: (item.ee.enabled)
   loop: "{{ kong.instances }}"
   blockinfile:
-    marker_begin: "{{ item.name }} Kong"
-    marker_end: "{{ item.name }} Kong"
+    marker_begin: "Begin {{ item.name }} Kong"
+    marker_end: "End {{ item.name }} Kong"
     path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak_realm }}-user.yaml
     insertafter: "    clientRoles:"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"

@@ -23,6 +23,11 @@
   set_fact:
     kong: "{{ kong | combine({'instances': gen_kong_instances}, recursive=true) }}"
 
+- name: Generate PG credentials for Gitea
+  when: gitea.pg.password is not defined
+  set_fact:
+    gitea: "{{ gitea | combine({ 'pg': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
+
 - name: Generate PG credentials for Keycloak
   when: keycloak.pg.password is not defined
   set_fact:
