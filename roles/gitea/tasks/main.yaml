@@ -4,36 +4,26 @@
     path: /tmp/{{ cluster_domain }}/platform/gitea
     state: directory
 
-- name: Set gitea_admin_pass
-  set_fact:
-    gitea_admin_pass: "{{ lookup('password', '/dev/null') }}"
-
-- name: Process values template
-  template:
-    src: values.j2
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/overlay-values.yaml
-
-- name: Convert overlay-values to Secret
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubectl create secret generic overlay-values-secret --dry-run=client --from-file=values.yaml=/tmp/{{ cluster_domain }}/platform/gitea/overlay-values.yaml -n gitea -o yaml >/tmp/{{ cluster_domain }}/platform/gitea/overlay-values-secret.yaml
-    rm /tmp/{{ cluster_domain }}/platform/gitea/overlay-values.yaml
-
-- name: Convert overlay-values-secret to SealedSecret
-  when: "'dry-run' not in ansible_run_tags"
-  shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/gitea/overlay-values-secret.yaml >/tmp/{{ cluster_domain }}/platform/gitea/overlay-values-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/gitea/overlay-values-secret.tmp /tmp/{{ cluster_domain }}/platform/gitea/overlay-values-secret.yaml
-
-- name: Copy Gitea HelmChart patch
-  copy:
-    src: patch.json
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/patch.json
-
 - name: Copy Gitea ns
   copy:
     src: ns.yaml
     dest: /tmp/{{ cluster_domain }}/platform/gitea/ns.yaml
+
+- name: Generate Admin pass for Gitea
+  when: gitea.admin.password is not defined
+  set_fact:
+    gitea: "{{ gitea | combine({ 'admin': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
+
+- name: Process values-secret template
+  template:
+    src: values-secret.j2
+    dest: /tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml
+
+- name: Convert values-secret to SealedSecrets
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml >/tmp/{{ cluster_domain }}/platform/gitea/values-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/gitea/values-secret.tmp /tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml
 
 - name: Copy gitea kustomization
   copy:
@@ -49,11 +39,6 @@
   copy:
     src: release.yaml
     dest: /tmp/{{ cluster_domain }}/platform/gitea/release.yaml
-
-- name: Copy gitea release values
-  copy:
-    src: values.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/values.yaml
 
 - name: Process ingress template
   template:

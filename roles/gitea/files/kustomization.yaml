@@ -4,17 +4,5 @@ resources:
   - ns.yaml
   - release.yaml
   - helm-source.yaml
-  - overlay-values-secret.yaml
   - ingress.yaml
-configMapGenerator:
-  - name: values-config
-    namespace: gitea
-    files:
-      - values.yaml=values.yaml
-generatorOptions:
-  disableNameSuffixHash: true
-patches:
-- target:
-    kind: HelmRelease
-    name: gitea
-  path: patch.json
+  - values-secret.yaml

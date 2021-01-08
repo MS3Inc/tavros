@@ -23,6 +23,6 @@ spec:
     remediation:
       retries: 5
   valuesFrom:
-    - kind: ConfigMap
-      name: values-config
+    - kind: Secret
+      name: values-secret
       valuesKey: values.yaml

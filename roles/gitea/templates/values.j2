@@ -1,8 +1,11 @@
+fullnameOverride: gitea
+
 gitea:
   admin:
-    username: "{{ gitea.admin.user }}"
-    password: "{{ gitea_admin_pass }}"
-    email: "{{ gitea.admin.email }}"
+    username: "gitea_admin"
+    password: "{{ gitea.admin.password }}"
+    email: "{{ cluster_admin_email }}"
+
   config:
     database:
       DB_TYPE: postgres
@@ -10,3 +13,11 @@ gitea:
       NAME: "gitea"
       USER: "gitea"
       PASSWD: "{{ gitea.pg.password }}"
+
+    security:
+      PASSWORD_COMPLEXITY: "off"
+
+  database:
+    builtIn:
+      postgresql:
+        enabled: false
