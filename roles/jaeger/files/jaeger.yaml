@@ -1,0 +1,35 @@
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: troubadour
+  namespace: observability
+spec:
+  strategy: production
+  agent:
+    strategy: DaemonSet
+  ingress:
+    enabled: false
+    security: none
+  collector:
+    maxReplicas: 2
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+  storage:
+    type: elasticsearch
+    options:
+      es:
+        server-urls: https://elasticsearch-es-http.elastic-system.svc:9200
+        index-prefix: troubadour
+        tls:
+          ca: /es/certificates/ca.crt
+    secretName: jaeger-es-secret
+  volumeMounts:
+    - name: certificates
+      mountPath: /es/certificates/
+      readOnly: true
+  volumes:
+    - name: certificates
+      secret:
+        secretName: es-http-certs

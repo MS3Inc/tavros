@@ -1,0 +1,60 @@
+---
+- name: Create directory
+  file:
+    path: /tmp/{{ cluster_domain }}/platform/jaeger
+    state: directory
+
+- name: Copy Namespace
+  copy:
+    src: ns.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/jaeger/ns.yaml
+
+- name: Copy Jaeger
+  copy:
+    src: jaeger.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/jaeger/jaeger.yaml
+
+- name: Process ingress template
+  template:
+    src: ingress.j2
+    dest: /tmp/{{ cluster_domain }}/platform/jaeger/ingress.yaml
+
+- name: Process kustomization template
+  template:
+    src: kustomization.j2
+    dest: /tmp/{{ cluster_domain }}/platform/jaeger/kustomization.yaml
+
+- name: Process flux-kustomization template
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/jaeger.yaml
+
+- name: Process jaeger-es-secret template
+  template:
+    src: jaeger-es-secret.j2
+    dest: /tmp/{{ cluster_domain }}/platform/jaeger/jaeger-es-secret.yaml
+
+# Certificate info
+# https://www.elastic.co/guide/en/cloud-on-k8s/1.3/k8s-tls-certificates.html#k8s-default-self-signed-certificate
+- name: Get elasticsearch-es-cert-public object
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_info:
+    api_version: v1
+    kind: Secret
+    name: elasticsearch-es-http-certs-public
+    namespace: elastic-system
+  register: elastic_certs
+
+- name: Process es-http-certs template
+  template:
+    src: es-http-certs.j2
+    dest: /tmp/{{ cluster_domain }}/platform/jaeger/es-http-certs.yaml
+
+- name: Apply manifests
+  when: ('dry-run' not in ansible_run_tags)
+  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/jaeger/
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 1800
