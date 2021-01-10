@@ -16,7 +16,7 @@
 - name: Create Gitea Access Token
   shell: |
     kubectl exec pods/gitea-0 -n gitea \
-      -- curl -s -X POST "http://gitea_admin:{{ gitea_admin_pass }}@localhost:3000/api/v1/users/gitea_admin/tokens" \
+      -- curl -s -X POST "http://gitea_admin:{{ gitea.admin.password }}@localhost:3000/api/v1/users/admin/tokens" \
         -H  "accept: application/json" \
         -H "Content-Type: application/json" \
         -d '{"name":"token"}' | jq -r '.sha1'

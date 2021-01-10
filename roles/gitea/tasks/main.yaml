@@ -50,11 +50,18 @@
     src: flux-kustomization.j2
     dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/gitea.yaml
 
+- name: Process instance keycloak-client templates
+  template:
+    src: keycloak-client.j2
+    dest: /tmp/{{ cluster_domain }}/platform/gitea/keycloak-client.yaml
+
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/gitea/
+  loop: "{{ lookup('ms3_inc.troubadour.kustomize', '/tmp/' + cluster_domain + '/platform/gitea/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 1800
+
+- include_tasks: keycloak_sso.yaml

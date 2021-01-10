@@ -1,0 +1,32 @@
+---
+- name: Register gitea login cookies
+  uri:
+    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/user/login
+    method: POST
+    follow_redirects: all
+    body_format: form-urlencoded
+    body:
+      user_name: gitea_admin
+      password: '{{ gitea.admin.password }}'
+    status_code: 200
+  register: gitea_login
+
+- name: Add keycloak sso
+  uri:
+    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/admin/auths/new
+    method: POST
+    follow_redirects: all
+    body_format: form-urlencoded
+    headers:
+      Cookie: "{{ gitea_login.cookies_string }}"
+    body:
+      _csrf: "{{ gitea_login.cookies._csrf }}"
+      type: 6
+      name: keycloak
+      oauth2_provider: openidConnect
+      oauth2_key: gitea
+      oauth2_secret: 57abfc51-716f-4b0a-8922-9a5eeba73342
+      open_id_connect_auto_discovery_url: https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/prod/.well-known/openid-configuration
+      is_sync_enabled: on
+      is_active: on
+    status_code: 200

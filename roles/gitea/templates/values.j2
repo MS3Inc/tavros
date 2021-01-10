@@ -2,20 +2,31 @@ fullnameOverride: gitea
 
 gitea:
   admin:
-    username: "gitea_admin"
-    password: "{{ gitea.admin.password }}"
-    email: "{{ cluster_admin_email }}"
+    username: 'gitea_admin'
+    password: '{{ gitea.admin.password }}'
+    email: '{{ cluster_admin_email }}'
 
   config:
+    # Disable registration, except via OpenID
+    DISABLE_REGISTRATION: false
+    ALLOW_ONLY_EXTERNAL_REGISTRATION: true
+    # Do not allow signin to local users via OpenID
+    ENABLE_OPENID_SIGNIN: false
+    # Do not allow creation of new users via OpenID
+    ENABLE_OPENID_SIGNUP: false
+
+    server:
+      ROOT_URL: 'https://code.{{ cluster_name}}.{{ cluster_domain }}/'
+
     database:
       DB_TYPE: postgres
-      HOST: troubadour-postgresql.postgresql.svc.cluster.local:5432
-      NAME: "gitea"
-      USER: "gitea"
-      PASSWD: "{{ gitea.pg.password }}"
+      HOST: 'troubadour-postgresql.postgresql.svc.cluster.local:5432'
+      NAME: 'gitea'
+      USER: 'gitea'
+      PASSWD: '{{ gitea.pg.password }}'
 
     security:
-      PASSWORD_COMPLEXITY: "off"
+      PASSWORD_COMPLEXITY: 'off'
 
   database:
     builtIn:

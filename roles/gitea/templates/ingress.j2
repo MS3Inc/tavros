@@ -11,7 +11,7 @@ metadata:
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: git.{{ cluster_name}}.{{ cluster_domain }}
+  - host: code.{{ cluster_name}}.{{ cluster_domain }}
     http:
       paths:
       - path: /
@@ -20,5 +20,5 @@ spec:
           servicePort: 3000
   tls:
   - hosts:
-    - git.{{ cluster_name}}.{{ cluster_domain }}
+    - code.{{ cluster_name}}.{{ cluster_domain }}
     secretName: gitea-ingress-cert
