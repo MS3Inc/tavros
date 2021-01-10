@@ -64,13 +64,19 @@ all:
         password: placeholder8
     nexus:
       enabled: true
-      keycloak_realm: 'prod'
+      keycloak:
+        realm: 'prod'
+        client_secret: placeholder10
     elastic_cloud:
       ee:
         enabled: false
       enabled: true
       elastic_secret: placeholder9
     jaeger:
+      enabled: false
+      keycloak:
+        realm: 'prod'
+    jenkins:
       enabled: false
       keycloak:
         realm: 'prod'

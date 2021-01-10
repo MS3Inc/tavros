@@ -56,7 +56,8 @@ all:
       enabled: true
     nexus:
       enabled: true
-      keycloak_realm: 'prod'
+      keycloak:
+        realm: 'prod'
     elastic_cloud:
       ee:
         enabled: false
@@ -66,4 +67,6 @@ all:
       keycloak:
         realm: 'prod'
     jenkins:
-      keycloak_realm: 'prod'
+      enabled: true
+      keycloak:
+        realm: 'prod'

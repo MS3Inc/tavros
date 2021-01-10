@@ -8,10 +8,10 @@ metadata:
 spec:
   realmSelector:
     matchLabels:
-        realm: {{ item.ee.keycloak_realm }}
+        realm: {{ item.ee.keycloak.realm }}
   client:
     clientId: {{ item.name }}
-    secret: {{ item.name | to_uuid }}
+    secret: {{ item.ee.keycloak.client_secret }}
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     rootUrl: https://admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}

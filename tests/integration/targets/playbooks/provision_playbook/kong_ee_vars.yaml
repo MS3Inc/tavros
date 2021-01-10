@@ -25,7 +25,9 @@ all:
         ee:
           enabled: true
           creds: 'default'
-          keycloak_realm: 'sandbox'
+          keycloak:
+            realm: 'sandbox'
+            client_secret: 'placeholder14'
           admin_password: 'placeholder10'
       - name: 'prod-kong'
         ingress_class: 'prod'
@@ -34,8 +36,10 @@ all:
         ee:
           enabled: true
           creds: 'default'
-          keycloak_realm: 'prod'
-          admin_password: 'placeholder11'
+          keycloak:
+            realm: 'prod'
+            client_secret: 'placeholder12'
+          admin_password: 'placeholder13'
     kuma:
       meshes: []
     namespaces: []
@@ -59,16 +63,24 @@ all:
         password: placeholder10
     nexus:
       enabled: false
-      keycloak_realm: 'prod'
+      keycloak:
+        realm: 'prod'
+        client_secret: placeholder16
     elastic_cloud:
       enabled: true
       elastic_secret: placeholder11
       ee:
         enabled: true
         trial: true
-        keycloak_realm: 'prod'
+        keycloak:
+          realm: 'prod'
+          client_secret: placeholder15
         license: "{}"
     jaeger:
+      enabled: false
+      keycloak:
+        realm: 'prod'
+    jenkins:
       enabled: false
       keycloak:
         realm: 'prod'

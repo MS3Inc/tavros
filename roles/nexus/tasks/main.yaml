@@ -29,6 +29,13 @@
     src: nexus-deploy-pvc.yaml
     dest: /tmp/{{ cluster_domain }}/platform/nexus/nexus-deploy-pvc.yaml
 
+- name: Generate Keycloak Client Secret
+  when: (nexus.keycloak.client_secret is not defined)
+  set_fact:
+    nexus: "{{ nexus | combine({ 'keycloak': { 'client_secret': uuid }} , recursive=true) }}"
+  vars:
+    uuid: "{{ 1000000 | random | to_uuid }}"
+
 - name: Process keycloak-client template
   template:
     src: keycloak-client.j2

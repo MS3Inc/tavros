@@ -12,7 +12,7 @@ data:
       keycloakSecurityRealm:
         keycloakJson: |-
           {
-            "realm": "{{ jenkins.keycloak_realm }}",
+            "realm": "{{ jenkins.keycloak.realm }}",
             "auth-server-url": "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/",
 {%  if 'test-run' in ansible_run_tags %}
             "disable-trust-manager": true,

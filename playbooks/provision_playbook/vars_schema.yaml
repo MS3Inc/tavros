@@ -69,10 +69,15 @@ properties:
                   type: boolean
                 creds:
                   type: string
-                keycloak_realm:
-                  type: string
                 admin_password:
                   type: string
+                keycloak:
+                  type: object
+                  properties:
+                    realm:
+                      type: string
+                    client_secret:
+                      type: string
             pg:
               type: object
               properties:
@@ -143,8 +148,13 @@ properties:
     properties:
       enabled:
         type: boolean
-      keycloak_realm:
-        type: string
+      keycloak:
+        type: object
+        properties:
+          realm:
+            type: string
+          client_secret:
+            type: string
   elastic_cloud:
     type: object
     properties:
@@ -159,8 +169,13 @@ properties:
             type: boolean
           trial:
             type: boolean
-          keycloak_realm:
-            type: string
+          keycloak:
+            type: object
+            properties:
+              realm:
+                type: string
+              client_secret:
+                type: string
           licnese:
             type: string
   jaeger:
@@ -174,4 +189,14 @@ properties:
           realm:
             type: string
           client_secret:
+            type: string
+  jenkins:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      keycloak:
+        type: object
+        properties:
+          realm:
             type: string

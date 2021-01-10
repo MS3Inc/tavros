@@ -27,12 +27,12 @@ spec:
         rp.response_type: code
         rp.redirect_uri: "https://kibana.{{ cluster_name }}.{{ cluster_domain }}/api/security/oidc/callback"
         rp.post_logout_redirect_uri: "https://kibana.{{ cluster_name }}.{{ cluster_domain }}" # /logged_out
-        op.issuer: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}"
-        op.authorization_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}/protocol/openid-connect/auth"
-        op.token_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}/protocol/openid-connect/token"
-        op.jwkset_path: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}/protocol/openid-connect/certs"
-        op.userinfo_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}/protocol/openid-connect/userinfo"
-        op.endsession_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak_realm }}/protocol/openid-connect/logout"
+        op.issuer: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}"
+        op.authorization_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/auth"
+        op.token_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/token"
+        op.jwkset_path: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/certs"
+        op.userinfo_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/userinfo"
+        op.endsession_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/logout"
         claims.principal: sub
         claims.name: name
         claims.mail: email
@@ -54,7 +54,7 @@ spec:
             - "sh"
             - "-c"
             - |
-              echo '57abfc51-716f-4b0a-8922-9a5eeba73342' | bin/elasticsearch-keystore add xpack.security.authc.realms.oidc.oidc1.rp.client_secret -x -f
+              echo '{{ elastic_cloud.ee.keycloak.client_secret }}' | bin/elasticsearch-keystore add xpack.security.authc.realms.oidc.oidc1.rp.client_secret -x -f
 {% if ('test-run' in ansible_run_tags) %}
               mkdir config/oidc
               curl https://letsencrypt.org/certs/fakeleintermediatex1.pem --output config/oidc/fakeleintermediatex1.pem

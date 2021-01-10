@@ -1,7 +1,7 @@
 {
-    "issuer":"https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ item.ee.keycloak_realm }}",
+    "issuer":"https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ item.ee.keycloak.realm }}",
     "client_id":["{{ item.name }}"],
-    "client_secret":["{{ item.name | to_uuid }}"],
+    "client_secret":["{{ item.ee.keycloak.client_secret }}"],
     "consumer_by":["username","custom_id","id"],
     "ssl_verify":false,
     "consumer_claim":["email"],
@@ -10,7 +10,7 @@
     "login_redirect_uri":["https://admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"],
     "logout_methods":["GET", "DELETE"],
     "logout_query_arg":"logout",
-    "logout_redirect_uri":["https://admin..{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"],
+    "logout_redirect_uri":["https://admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"],
     "scopes":["openid","profile","email","offline_access"],
     "auth_methods":["authorization_code"]
 }

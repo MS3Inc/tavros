@@ -157,6 +157,15 @@ ee | [Kong Instance EE Object](#kong-instance-ee-object) | The EE configuration 
 | ---------- | ---- | ----------- | ------------- |
 enabled | Boolean | Whether to use Enterprise Edition | false
 creds | String | The name of the Kong EE Credentials resource to use | 'default'
+keycloak | [Kong Keycloak Object](#kong-keycloak-object) | Keycloak Config | { "realm": "", "client_secret": "" }
+
+### Kong Keycloak Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+realm | String | Keycloak Realm Name | 
+client_secret | String | Client Secret | 
+
 
 ### Kuma Object
 
@@ -202,7 +211,14 @@ name | Boolean | Whether to use Keycloak |
 | Field Name | Type | Description | Default Value |
 | ---------- | ---- | ----------- | ------------- |
 enabled | Boolean | Whether to use Elastic Cloud | true
-keycloak_realm | string | Keycloak Realm to authenticated against | prod
+keycloak | [Nexus Keycloak Object](#nexus-keycloak-object) | Keycloak Config | { "realm": "", "client_secret": "" }
+
+### Nexus Keycloak Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+realm | String | Keycloak Realm Name | 
+client_secret | String | Client Secret | 
 
 ### Elastic Cloud Object
 
@@ -219,6 +235,15 @@ enabled | Boolean | Whether to use EE |
 trial | Boolean | Whether to use 30 day cluster trial license | 
 keycloak_realm | String | Keycloak Realm Name | 
 licnese | String | License JSON | 
+keycloak | [Elastic Cloud Keycloak Object](#elastic-cloud-keycloak-object) | Keycloak Config | { "realm": "", "client_secret": "" }
+
+### Elastic Cloud Keycloak Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+realm | String | Keycloak Realm Name | 
+client_secret | String | Client Secret | 
+
 
 ### Gitea Object
 
@@ -239,4 +264,17 @@ keycloak | [Jaeger Keycloak Object](#jaeger-keycloak-object) | Keycloak Config |
 | ---------- | ---- | ----------- | ------------- |
 realm | String | Keycloak Realm Name | 
 client_secret | String | Client Secret | 
+
+### Jenkins Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+enabled | Boolean | Whether to use Jenkins | true
+keycloak | [Jenkins Keycloak Object](#jenkins-keycloak-object) | Keycloak Config | { "realm": "" }
+
+### Jenkins Keycloak Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+realm | String | Keycloak Realm Name | 
 

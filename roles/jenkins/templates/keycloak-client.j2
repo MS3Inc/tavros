@@ -8,7 +8,7 @@ metadata:
 spec:
   realmSelector:
     matchLabels:
-        realm: {{ jenkins.keycloak_realm }}
+        realm: {{ jenkins.keycloak.realm }}
   client:
     clientId: jenkins
     rootUrl: https://ci.{{ cluster_name}}.{{ cluster_domain }}

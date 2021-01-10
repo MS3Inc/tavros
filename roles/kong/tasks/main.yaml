@@ -40,6 +40,19 @@
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/values.yaml
   loop: "{{ kong.instances }}"
 
+- name: Generate Keycloak Client Secrets
+  when: (item.ee.enabled)
+  set_fact:
+    temp_kong_instances: "{{ (temp_kong_instances | default([])) + [ { 'ee': { 'keycloak': { 'client_secret': uuid } } } | combine(item, recursive=true) ] }}"
+  vars:
+    uuid: "{{ ( item.ee.keycloak.client_secret | default((1000000 | random | to_uuid)) ) }}"
+  loop: "{{ kong.instances }}"
+
+- name: Combine kong with generated passwords 
+  when: (temp_kong_instances is defined)
+  set_fact:
+    kong: "{{ kong | combine({'instances': temp_kong_instances}, recursive=true) }}"
+
 - name: Process instance keycloak-config templates
   when: (item.ee.enabled)
   template:
@@ -99,12 +112,14 @@
   when: (item.ee.enabled)
   loop: "{{ kong.instances }}"
   set_fact:
-    gen_kong_instances_admin: "{{ (gen_kong_instances_admin | default([])) + [ { 'ee': { 'admin_password': lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=8') }} | combine(item, recursive=true) ] }}"
+    temp_kong_instances: "{{ (temp_kong_instances | default([])) + [ { 'ee': { 'admin_password': password }} | combine(item, recursive=true) ] }}"
+  vars:
+    password: "{{ ( item.ee.admin_password | default(lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=8')) ) }}"
 
 - name: Combine kong with generated passwords
-  when: (gen_kong_instances_admin is defined)
+  when: (temp_kong_instances is defined)
   set_fact:
-    kong: "{{ kong | combine({'instances': gen_kong_instances_admin}, recursive=true) }}"
+    kong: "{{ kong | combine({'instances': temp_kong_instances}, recursive=true) }}"
 
 - name: Process instance ee-superuser-secret templates
   when: (item.ee.enabled)
