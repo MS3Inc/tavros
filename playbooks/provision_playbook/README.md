@@ -20,6 +20,7 @@
   + [Nexus Object](#nexus-object)
   + [Elastic Cloud Object](#elastic-cloud-object)
   + [Gitea](#gitea-object)
+  + [Jaeger](#jaeger-object)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -36,6 +37,8 @@ The order of component configuration is as follows:
 * Keycloak - To provide Identity and Access Management, if enabled
 * Nexus - To provide repository for varios formats, if enabled
 * Elastic Cloud - To provide observability, if enabled
+* Gitea - To provide source control, if enabled
+* Jaeger - To provide observability, if enabled
 
 ## Requirements
 
@@ -222,3 +225,18 @@ licnese | String | License JSON |
 | Field Name | Type | Description | Default Value |
 | ---------- | ---- | ----------- | ------------- |
 enabled | Boolean | Whether to use Gitea | true
+
+### Jaeger Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+enabled | Boolean | Whether to use Jaeger | true
+keycloak | [Jaeger Keycloak Object](#jaeger-keycloak-object) | Keycloak Config | { "realm": "", "client_secret": "" }
+
+### Jaeger Keycloak Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+realm | String | Keycloak Realm Name | 
+client_secret | String | Client Secret | 
+

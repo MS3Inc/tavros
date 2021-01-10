@@ -68,3 +68,7 @@ all:
         trial: true
         keycloak_realm: 'prod'
         license: "{}"
+    jaeger:
+      enabled: false
+      keycloak:
+        realm: 'prod'

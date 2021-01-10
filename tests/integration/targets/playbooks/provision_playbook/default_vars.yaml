@@ -70,4 +70,8 @@ all:
         enabled: false
       enabled: true
       elastic_secret: placeholder9
+    jaeger:
+      enabled: false
+      keycloak:
+        realm: 'prod'
     

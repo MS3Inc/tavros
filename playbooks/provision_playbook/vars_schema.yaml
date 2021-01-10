@@ -163,3 +163,15 @@ properties:
             type: string
           licnese:
             type: string
+  jaeger:
+    type: object
+    properties:
+      enabled:
+        type: boolean
+      keycloak:
+        type: object
+        properties:
+          realm:
+            type: string
+          client_secret:
+            type: string
