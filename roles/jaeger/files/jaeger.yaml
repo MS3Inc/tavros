@@ -2,7 +2,7 @@ apiVersion: jaegertracing.io/v1
 kind: Jaeger
 metadata:
   name: troubadour
-  namespace: observability
+  namespace: jaeger
 spec:
   strategy: production
   agent:

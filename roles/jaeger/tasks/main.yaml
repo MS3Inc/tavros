@@ -4,11 +4,6 @@
     path: /tmp/{{ cluster_domain }}/platform/jaeger
     state: directory
 
-- name: Copy Namespace
-  copy:
-    src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jaeger/ns.yaml
-
 - name: Copy Jaeger
   copy:
     src: jaeger.yaml
@@ -19,10 +14,27 @@
     src: ingress.j2
     dest: /tmp/{{ cluster_domain }}/platform/jaeger/ingress.yaml
 
-- name: Process kustomization template
-  template:
-    src: kustomization.j2
+- name: Copy kustomization
+  copy:
+    src: kustomization.yaml
     dest: /tmp/{{ cluster_domain }}/platform/jaeger/kustomization.yaml
+
+- name: Generate Keycloak Client Secret
+  when: jaeger.keycloak.client_secret is not defined
+  set_fact:
+    jaeger: "{{ jaeger | combine({ 'keycloak': { 'client_secret': uuid } } , recursive=true) }}"
+  vars:
+    uuid: "{{ 1000000 | random | to_uuid }}"
+
+- name: Process oidc-plugin template
+  template:
+    src: oidc-plugin.j2
+    dest: /tmp/{{ cluster_domain }}/platform/jaeger/oidc-plugin.yaml
+
+- name: Copy operator
+  copy:
+    src: operator
+    dest: /tmp/{{ cluster_domain }}/platform/jaeger/
 
 - name: Process flux-kustomization template
   template:
@@ -50,6 +62,11 @@
     src: es-http-certs.j2
     dest: /tmp/{{ cluster_domain }}/platform/jaeger/es-http-certs.yaml
 
+- name: Process keycloak-client template
+  template:
+    src: keycloak-client.j2
+    dest: /tmp/{{ cluster_domain }}/platform/jaeger/keycloak-client.yaml
+
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/jaeger/
@@ -58,3 +75,47 @@
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 1800
+
+- name: Wait for Client
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_info:
+    api_version: keycloak.org/v1alpha1
+    kind: KeycloakClient
+    name: jaeger
+    namespace: keycloak
+  register: keycloak_def
+  # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
+  until: ('status' in keycloak_def.resources[0]) and (keycloak_def.resources[0].status.ready)
+  retries: 6
+  delay: 20
+  changed_when: false
+
+- name: Create Jaeger Keycloak Client Roles
+  when: ('dry-run' not in ansible_run_tags)
+  ms3_inc.troubadour.keycloak_client_roles:
+    auth_keycloak_url: 'https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth'
+    validate_certs: false
+    auth_realm: master
+    auth_username: admin
+    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-' + cluster_name + '-keycloak').data.ADMIN_PASSWORD | b64decode }}"
+    realm: "{{ jaeger.keycloak.realm}}"
+    clientId: jaeger
+    roles:
+    - name: "user"
+
+- name: Add user client role to realm user
+  blockinfile:
+    marker_begin: "Begin jaeger"
+    marker_end: "End jaeger"
+    path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak_realm }}-user.yaml
+    insertafter: "    clientRoles:"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    block: |2
+            jaeger:
+              - user
+
+- name: Apply updated Keycloak User for Realm
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s:
+    state: present
+    src: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak_realm }}-user.yaml
