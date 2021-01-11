@@ -43,15 +43,15 @@
 - name: Generate Keycloak Client Secrets
   when: (item.ee.enabled)
   set_fact:
-    temp_kong_instances: "{{ (temp_kong_instances | default([])) + [ { 'ee': { 'keycloak': { 'client_secret': uuid } } } | combine(item, recursive=true) ] }}"
+    generated_keycloak_secrets: "{{ (generated_keycloak_secrets | default([])) + [ (item | combine({ 'ee': { 'keycloak': { 'client_secret': uuid } } }, recursive=true)) ] }}"
   vars:
     uuid: "{{ ( item.ee.keycloak.client_secret | default((1000000 | random | to_uuid)) ) }}"
   loop: "{{ kong.instances }}"
 
 - name: Combine kong with generated passwords 
-  when: (temp_kong_instances is defined)
+  when: (generated_keycloak_secrets is defined)
   set_fact:
-    kong: "{{ kong | combine({'instances': temp_kong_instances}, recursive=true) }}"
+    kong: "{{ kong | combine({'instances': generated_keycloak_secrets}, recursive=true) }}"
 
 - name: Process instance keycloak-config templates
   when: (item.ee.enabled)
@@ -112,14 +112,14 @@
   when: (item.ee.enabled)
   loop: "{{ kong.instances }}"
   set_fact:
-    temp_kong_instances: "{{ (temp_kong_instances | default([])) + [ { 'ee': { 'admin_password': password }} | combine(item, recursive=true) ] }}"
+    generated_su_passwords: "{{ (generated_su_passwords | default([])) + [ (item | combine({ 'ee': { 'admin_password': password } }, recursive=true)) ] }}"
   vars:
     password: "{{ ( item.ee.admin_password | default(lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=8')) ) }}"
 
 - name: Combine kong with generated passwords
-  when: (temp_kong_instances is defined)
+  when: (generated_su_passwords is defined)
   set_fact:
-    kong: "{{ kong | combine({'instances': temp_kong_instances}, recursive=true) }}"
+    kong: "{{ kong | combine({'instances': generated_su_passwords}, recursive=true) }}"
 
 - name: Process instance ee-superuser-secret templates
   when: (item.ee.enabled)
@@ -211,20 +211,6 @@
     zone: "{{ cluster_domain }}"
     type: CNAME
     record: "*.{{ item.ingress_class }}.{{ cluster_name }}.{{ cluster_domain }}"
-    value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
-    overwrite: true
-    wait: yes
-  vars:
-    instance_kong_proxy: "kong-{{ item.name }}-kong-proxy"
-  loop: "{{ kong.instances }}"
-
-- name: Set DNS for Client Apps
-  when: ('dry-run' not in ansible_run_tags)
-  community.aws.route53:
-    state: present
-    zone: "{{ cluster_domain }}"
-    type: CNAME
-    record: "*.{{ 'apps' + ( ('.' + item.ingress_class)  if (item.ingress_class != kong.default_ingress_class) else ('') ) }}.{{ cluster_name }}.{{ cluster_domain }}"
     value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
