@@ -143,6 +143,13 @@ properties:
     properties:
       enabled:
         type: boolean
+      keycloak:
+        type: object
+        properties:
+          realm:
+            type: string
+          client_secret:
+            type: string
   nexus:
     type: object
     properties:

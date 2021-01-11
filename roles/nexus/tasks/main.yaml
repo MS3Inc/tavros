@@ -97,7 +97,7 @@
     auth_realm: master
     auth_username: admin
     auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-' + cluster_name + '-keycloak').data.ADMIN_PASSWORD | b64decode }}"
-    realm: "{{ nexus.keycloak_realm }}"
+    realm: "{{ nexus.keycloak.realm }}"
     clientId: "nexus"
     roles:
     - name: "admin"

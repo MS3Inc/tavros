@@ -233,7 +233,6 @@ ee | [Elastic Cloud EE Object](#elastic-cloud-ee-object) | EE Config | { "enable
 | ---------- | ---- | ----------- | ------------- |
 enabled | Boolean | Whether to use EE | 
 trial | Boolean | Whether to use 30 day cluster trial license | 
-keycloak_realm | String | Keycloak Realm Name | 
 licnese | String | License JSON | 
 keycloak | [Elastic Cloud Keycloak Object](#elastic-cloud-keycloak-object) | Keycloak Config | { "realm": "", "client_secret": "" }
 

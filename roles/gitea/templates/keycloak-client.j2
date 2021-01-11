@@ -8,11 +8,11 @@ metadata:
 spec:
   realmSelector:
     matchLabels:
-        realm: {{ gitea.keycloak_realm }}
+        realm: {{ gitea.keycloak.realm }}
   client:
     clientId: "gitea"
     # todo: make dynamic
-    secret: "57abfc51-716f-4b0a-8922-9a5eeba73342"
+    secret: {{ gitea.keycloak.client_secret }}
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     redirectUris:

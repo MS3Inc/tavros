@@ -54,6 +54,8 @@ all:
       enabled: true
     gitea:
       enabled: true
+      keycloak:
+        realm: 'prod'
     nexus:
       enabled: true
       keycloak:

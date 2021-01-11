@@ -62,6 +62,8 @@ all:
       enabled: false
       pg:
         password: placeholder8
+      keycloak:
+        realm: 'prod'
     nexus:
       enabled: true
       keycloak:

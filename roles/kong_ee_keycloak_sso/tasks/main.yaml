@@ -46,7 +46,7 @@
     auth_realm: master
     auth_username: admin
     auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-' + cluster_name + '-keycloak').data.ADMIN_PASSWORD | b64decode }}"
-    realm: "{{ item.ee.keycloak_realm }}"
+    realm: "{{ item.ee.keycloak.realm }}"
     clientId: "{{ item.name }}"
     roles:
     - name: "super-admin"
@@ -57,7 +57,7 @@
   blockinfile:
     marker_begin: "Begin {{ item.name }} Kong"
     marker_end: "End {{ item.name }} Kong"
-    path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak_realm }}-user.yaml
+    path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}-user.yaml
     insertafter: "    clientRoles:"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |2
@@ -69,7 +69,7 @@
   loop: "{{ kong.instances }}"
   community.kubernetes.k8s:
     state: present
-    src: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak_realm }}-user.yaml
+    src: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}-user.yaml
 
 - name: Create Kong EE Admins
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)

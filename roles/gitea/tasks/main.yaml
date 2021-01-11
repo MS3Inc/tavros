@@ -50,6 +50,13 @@
     src: flux-kustomization.j2
     dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/gitea.yaml
 
+- name: Generate Keycloak Client Secret
+  when: gitea.keycloak.client_secret is not defined
+  set_fact:
+    gitea: "{{ gitea | combine({ 'keycloak': { 'client_secret': uuid } } , recursive=true) }}"
+  vars:
+    uuid: "{{ 1000000 | random | to_uuid }}"
+
 - name: Process instance keycloak-client templates
   template:
     src: keycloak-client.j2
@@ -65,8 +72,10 @@
     wait_timeout: 1800
 
 - include_tasks: keycloak_sso.yaml
+  when: ('dry-run' not in ansible_run_tags)
 
 - name: Add tavros organization
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/orgs
     method: POST

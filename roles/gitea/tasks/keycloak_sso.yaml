@@ -25,8 +25,8 @@
       name: keycloak
       oauth2_provider: openidConnect
       oauth2_key: gitea
-      oauth2_secret: 57abfc51-716f-4b0a-8922-9a5eeba73342
-      open_id_connect_auto_discovery_url: https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/prod/.well-known/openid-configuration
+      oauth2_secret: "{{ gitea.keycloak.client_secret }}"
+      open_id_connect_auto_discovery_url: https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ gitea.keycloak.realm }}/.well-known/openid-configuration
       is_sync_enabled: on
       is_active: on
     status_code: 200

@@ -56,7 +56,7 @@ ingressController:
            key: password
 {% endif  %}
 
-{%  if item.mesh_name is defined %}
+{%  if item.kuma_mesh_name is defined %}
 podAnnotations:
   kuma.io/sidecar-injection: enabled
   kuma.io/gateway: enabled
