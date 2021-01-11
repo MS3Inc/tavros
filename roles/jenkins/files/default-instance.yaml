@@ -8,6 +8,9 @@ spec:
     plugins:
       - name: keycloak
         version: 2.3.0
+      # should be conditional of gitea enabled
+      - name: gitea
+        version: 1.2.1
   configurationAsCode:
     configurations:
     - name: jenkins-configuration

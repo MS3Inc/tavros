@@ -24,6 +24,11 @@
     src: instance-kustomization.yaml
     dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/kustomization.yaml
 
+- name: Copy gitea credentials
+  copy:
+    src: gitea-credentials.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/gitea-credentials.yaml
+
 - name: Process ingress template
   template:
     src: ingress.j2
@@ -38,6 +43,11 @@
   template:
     src: keycloak-client.j2
     dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/keycloak-client.yaml
+
+- name: Process keycloak user template
+  template:
+    src: keycloak-user.j2
+    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/keycloak-user.yaml
 
 - name: Copy jenkins instance
   copy:
@@ -75,3 +85,5 @@
   template:
     src: flux-kustomization.j2
     dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/jenkins.yaml
+
+- include_tasks: gitea_setup.yaml

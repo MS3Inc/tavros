@@ -1,0 +1,28 @@
+---
+# todo: should this live in the gitea role?
+# this should be changed to not add a password and subsequently add a personal tokens
+# this is blocked by lack of support of plain secret credentials by the jenkins gitea plugin
+# we can workaround that by adding a kubernetes to gitea token credential converter
+# see: https://www.jenkins.io/doc/developer/extensions/kubernetes-credentials-provider/
+# https://github.com/jenkinsci/gitea-plugin/blob/gitea-1.2.1/src/main/java/org/jenkinsci/plugin/gitea/credentials/PersonalAccessToken.java
+- name: Add local jenkins user with password
+  uri:
+    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/admin/users
+    method: POST
+    force_basic_auth: true
+    follow_redirects: all
+    body_format: json
+    url_username: gitea_admin
+    url_password: '{{ gitea.admin.password }}'
+    body:
+      username: jenkins-ci
+      # todo: should be configurable because we'll want to send emails from jenkins
+      email: jenkins-ci@{{ cluster_domain }}.com
+      login_name: jenkins-ci
+      must_change_password: false
+      # todo: change to dynamic
+      password: jenkins-ci
+      send_notify: false
+      # this points to Keycloak as local is source_id 0
+      source_id: 1
+    status_code: 201

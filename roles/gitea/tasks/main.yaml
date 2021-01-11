@@ -65,3 +65,18 @@
     wait_timeout: 1800
 
 - include_tasks: keycloak_sso.yaml
+
+- name: Add tavros organization
+  uri:
+    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/orgs
+    method: POST
+    force_basic_auth: true
+    follow_redirects: all
+    body_format: json
+    url_username: gitea_admin
+    url_password: '{{ gitea.admin.password }}'
+    body:
+      username: tavros
+      visibility: limited
+      repo_admin_change_team_access: true
+    status_code: 201

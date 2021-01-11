@@ -3,5 +3,7 @@ kind: Kustomization
 resources:
   - config.yaml
   - keycloak-client.yaml
+  - keycloak-user.yaml
+  - gitea-credentials.yaml
   - instance.yaml
   - ingress.yaml

@@ -76,13 +76,12 @@
           name: jaeger
         when: jaeger.enabled and keycloak.enabled and not elastic_cloud.ee.enabled
 
-      # - include_role:
-      #     name: ms3_inc.troubadour.jenkins
-      #   when: jenkins.enabled
-
       - include_role:
           name: ms3_inc.troubadour.gitea
         when: gitea.enabled
+
+      - include_role:
+          name: ms3_inc.troubadour.jenkins
 
       - include_role:
           name: ms3_inc.troubadour.fluxtoolkit

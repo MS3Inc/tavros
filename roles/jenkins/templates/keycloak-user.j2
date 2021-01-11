@@ -1,0 +1,20 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: jenkins-ci
+  namespace: keycloak
+  labels:
+    app: sso
+spec:
+  realmSelector:
+    matchLabels:
+      realm: {{ jenkins.keycloak.realm }}
+  user:
+    username: jenkins-ci
+    enabled: true
+    emailVerified: true
+    credentials:
+      - type: password
+        # todo: should be a secret?
+        value: jenkins-ci
+        temporary: false
