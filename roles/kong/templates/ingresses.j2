@@ -16,6 +16,7 @@ spec:
     - "admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "dev-portal-api{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "dev-portal{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
+    - "apps{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
     secretName: {{ item.name }}-ingress-certs
   rules:
   - host: "admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
@@ -46,3 +47,10 @@ spec:
         backend:
           serviceName: kong-{{ item.name }}-kong-portalapi
           servicePort: 8004
+  - host: "apps{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-{{ item.name }}-kong-proxy
+          servicePort: 80
