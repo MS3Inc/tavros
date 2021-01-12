@@ -3,52 +3,95 @@
   set_fact:
     gitea_flux_pass: "{{ lookup('password', '/dev/null') }}"
 
+  # todo: change to template to enable dry-run
 - name: Create flux-repo-secret SealedSecret for Flux Gitea Creds
   shell: |
     kubectl create secret generic flux-repo-secret --dry-run=client -n flux-system \
     --from-literal=username=flux \
     --from-literal=password="{{ gitea_flux_pass }}" \
-    -o yaml >./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
+    -o yaml >/tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
 
-    kubeseal --format=yaml <./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml >./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.tmp
-    mv ./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.tmp ./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml >/tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.tmp /tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
 
-- name: Create Gitea Access Token
+- name: Create flux-cd User
+  uri:
+    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/admin/users
+    method: POST
+    force_basic_auth: true
+    follow_redirects: all
+    body_format: json
+    url_username: gitea_admin
+    url_password: '{{ gitea.admin.password }}'
+    body:
+      username: flux-cd
+      email: flux-cd@{{ cluster_domain }}.com
+      login_name: flux-cd
+      must_change_password: false
+      password: "{{ gitea_flux_pass }}"
+      send_notify: false
+      source_id: 0
+    status_code: 201
+
+- name: Create Tavros Platform Repo
+  uri:
+    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/orgs/tavros/repos
+    method: POST
+    force_basic_auth: true
+    follow_redirects: all
+    body_format: json
+    url_username: gitea_admin
+    url_password: '{{ gitea.admin.password }}'
+    body:
+      auto_init: false
+      default_branch: main
+      description: Tavros Platform Repo
+      name: platform
+      private: false
+      template: false
+      trust_model: default
+    status_code: 201
+
+- name: Register gitea login cookies
+  when: gitea_login is not defined
+  uri:
+    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/user/login
+    method: POST
+    follow_redirects: all
+    body_format: form-urlencoded
+    body:
+      user_name: gitea_admin
+      password: '{{ gitea.admin.password }}'
+    status_code: 200
+  register: gitea_login
+
+- name: Add flux-cd as owner to tavros/platform
+  uri:
+    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/org/tavros/teams/owners/action/add
+    method: POST
+    follow_redirects: all
+    body_format: form-urlencoded
+    headers:
+      Cookie: "{{ gitea_login.cookies_string }}"
+    body:
+      _csrf: "{{ gitea_login.cookies._csrf }}"
+      # gitea_admin uid
+      uid: 1
+      uname: flux-cd
+    status_code: 200
+
+- name: Add/Commit/Push to the Platform Tavros Repo
+  args:
+    chdir: /tmp/{{ cluster_domain }}/
   shell: |
-    kubectl exec pods/gitea-0 -n gitea \
-      -- curl -s -X POST "http://gitea_admin:{{ gitea.admin.password }}@localhost:3000/api/v1/users/admin/tokens" \
-        -H  "accept: application/json" \
-        -H "Content-Type: application/json" \
-        -d '{"name":"token"}' | jq -r '.sha1'
-  register: gitea_token
+    git init
+    git checkout -b main
+    git add .
+    git commit -m "Initial platform state"
+    git push --set-upstream https://flux-cd:{{ gitea_flux_pass }}@code.{{ cluster_name }}.{{ cluster_domain }}/tavros/platform.git main
 
-- name: Create Flux User
-  shell: |
-    kubectl exec pods/gitea-0 -n gitea \
-      -- curl -X POST "http://localhost:3000/api/v1/admin/users" \
-        -H  "accept: application/json" \
-        -H "Content-Type: application/json" \
-        -H "Authorization: token {{ gitea_token.stdout }}" \
-        -d '{"email":"flux@example.com","full_name":"flux","login_name":"flux","must_change_password":false,"password":"{{ gitea_flux_pass }}","send_notify":false,"source_id":0,"username":"flux"}'
-
-- name: Create Flux Repo
-  shell: |
-    kubectl exec pods/gitea-0 -n gitea \
-      -- curl -X POST "http://localhost:3000/api/v1/user/repos" \
-        -H  "accept: application/json" \
-        -H "Content-Type: application/json" \
-        -H "Authorization: token {{ gitea_token.stdout }}" \
-        -H "Sudo: flux" \
-        -d '{"auto_init":true,"default_branch":"main","description":"Flux Troubadour Repo","gitignores":null,"issue_labels":null,"license":null,"name":"troubadour","private":true,"readme":null,"template":false,"trust_model":"default"}'
-
-- name: Copy to Gitea Pod, and Add/Commit/Push to the Troubadour Flux Repo
-  shell: |
-    kubectl cp ./ gitea/gitea-0:~/../tmp/troubadour/
-    kubectl exec pods/gitea-0 -c gitea -n gitea -- git -C /tmp/troubadour/ add .
-    kubectl exec pods/gitea-0 -c gitea -n gitea -- git -C /tmp/troubadour/ commit -m "Commiting Custer Configuration State"
-    kubectl exec pods/gitea-0 -n gitea -- git -C /tmp/troubadour/ push http://flux:{{ gitea_flux_pass }}@localhost:3000/flux/troubadour.git --force
-
+  # todo: change to k8s and enable dry-run
 - name: Apply Remaining Flux manifests to activate Repo Sync
   shell: |
-    kubectl apply -f ./{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
-    kubectl apply -f ./{{ cluster_domain }}/platform/flux-system/gotk-sync.yaml
+    kubectl apply -f /tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
+    kubectl apply -f /tmp/{{ cluster_domain }}/platform/flux-system/gotk-sync.yaml
