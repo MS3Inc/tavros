@@ -12,13 +12,16 @@ metadata:
 spec:
   tls:
   - hosts:
+{%  if item.ee.enabled %}
     - "admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "dev-portal-api{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "dev-portal{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
+{% endif  %}
     - "apps{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
     secretName: {{ item.name }}-ingress-certs
   rules:
+{%  if item.ee.enabled %}
   - host: "admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     http:
       paths:
@@ -47,6 +50,7 @@ spec:
         backend:
           serviceName: kong-{{ item.name }}-kong-portalapi
           servicePort: 8004
+{% endif  %}
   - host: "apps{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
     http:
       paths:

@@ -3,8 +3,8 @@ kind: Kustomization
 resources:
   - release.yaml
   - config-secret.yaml
-{%  if item.ee.enabled %}
   - ingresses.yaml
+{%  if item.ee.enabled %}
   - ee-superuser-secret.yaml
   - ee-session-secret.yaml
   - ee-admin-gui-auth-secret.yaml

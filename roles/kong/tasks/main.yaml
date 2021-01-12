@@ -156,7 +156,6 @@
   loop: "{{ kong.instances }}"
 
 - name: Process instance ingresses templates
-  when: (item.ee.enabled)
   template:
     src: ingresses.j2
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ingresses.yaml
