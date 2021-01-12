@@ -7,7 +7,7 @@
 - name: Create flux-repo-secret SealedSecret for Flux Gitea Creds
   shell: |
     kubectl create secret generic flux-repo-secret --dry-run=client -n flux-system \
-    --from-literal=username=flux \
+    --from-literal=username=flux-cd \
     --from-literal=password="{{ gitea_flux_pass }}" \
     -o yaml >/tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
 
