@@ -26,6 +26,7 @@
         --networking weave \
         --dns-zone={{ cluster_domain }} \
         --zones={{ kubernetes_cluster.zones }} \
+        --bastion \
         --authorization RBAC \
         --yes
       kops validate cluster --wait 1h --state s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_name }}-cluster-state
