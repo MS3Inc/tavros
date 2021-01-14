@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jenkins-configuration
+  namespace: jenkins
+data:
+  1-casc.yaml: |
+    unclassified:
+      location:
+        url: https://ci.troubadour.enterprise-example.com/
+        adminAddress: ops@example.com
+      keycloakSecurityRealm:
+        keycloakJson: |-
+          {
+            "realm": "prod",
+            "auth-server-url": "https://auth.troubadour.enterprise-example.com/auth/",
+            "ssl-required": "external",
+            "resource": "jenkins",
+            "public-client": true,
+            "confidential-port": 0
+          }
+      giteaServers:
+        servers:
+        - credentialsId: "gitea-credentials"
+          displayName: "gitea"
+          manageHooks: true
+          serverUrl: "https://code.troubadour.enterprise-example.com"
+    jenkins:
+      securityRealm: keycloak
+
+    jobs:
+    - script: >
+        organizationFolder('Gitea Tavros Folder') {
+            description("Track Tavros Gitea repositories and events")
+            displayName('Gitea Tavros')
+            organizations {
+            }
+
+            configure { node ->
+                // todo: setup auto scan every 30 mins
+                node / navigators << 'org.jenkinsci.plugin.gitea.GiteaSCMNavigator' {
+                    serverUrl("https://code.troubadour.enterprise-example.com")
+                    repoOwner("tavros")
+                    credentialsId("gitea-credentials")
+                    traits {
+                        'org.jenkinsci.plugin.gitea.BranchDiscoveryTrait'() {
+                            strategyId('1')
+                        }
+                        'org.jenkinsci.plugin.gitea.OriginPullRequestDiscoveryTrait'() {
+                            strategyId('1')
+                        }
+                        'org.jenkinsci.plugin.gitea.ForkPullRequestDiscoveryTrait'() {
+                            strategyId('1')
+                            trust(class: 'org.jenkinsci.plugin.gitea.ForkPullRequestDiscoveryTrait\$TrustContributors')
+                        }
+                    }
+                }
+            }
+        }

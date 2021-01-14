@@ -11,7 +11,7 @@ spec:
         realm: prod
   client:
     clientId: elastic-cloud
-    secret: "57abfc51-716f-4b0a-8922-9a5eeba73342"
+    secret: placeholder15
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     redirectUris:

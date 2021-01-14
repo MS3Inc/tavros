@@ -1,7 +1,7 @@
 {
     "issuer":"https://auth.troubadour.enterprise-example.com/auth/realms/prod",
     "client_id":["prod-kong"],
-    "client_secret":["819017ab-df06-5458-8925-5ac6e608b157"],
+    "client_secret":["placeholder12"],
     "consumer_by":["username","custom_id","id"],
     "ssl_verify":false,
     "consumer_claim":["email"],
@@ -10,7 +10,7 @@
     "login_redirect_uri":["https://admin.prod-kong.troubadour.enterprise-example.com"],
     "logout_methods":["GET", "DELETE"],
     "logout_query_arg":"logout",
-    "logout_redirect_uri":["https://admin..prod-kong.troubadour.enterprise-example.com"],
+    "logout_redirect_uri":["https://admin.prod-kong.troubadour.enterprise-example.com"],
     "scopes":["openid","profile","email","offline_access"],
     "auth_methods":["authorization_code"]
 }

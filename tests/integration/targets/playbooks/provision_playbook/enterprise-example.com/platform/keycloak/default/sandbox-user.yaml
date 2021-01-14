@@ -24,10 +24,10 @@ spec:
     realmRoles:
       - "offline_access"
     clientRoles:
-# sandbox-kong Kong ANSIBLE MANAGED BLOCK
+# Begin sandbox-kong Kong ANSIBLE MANAGED BLOCK
       sandbox-kong:
         - super-admin
-# sandbox-kong Kong ANSIBLE MANAGED BLOCK
+# End sandbox-kong Kong ANSIBLE MANAGED BLOCK
       account:
         - "manage-account"
         - "view-profile"

@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 5m0s
-  path: ./enterprise-example.com/platform/postgresql
+  path: ./platform/postgresql
   sourceRef:
     kind: GitRepository
     name: flux-system

@@ -8,6 +8,7 @@ metadata:
     konghq.com/protocols: https
     kubernetes.io/ingress.class: prod
     cert-manager.io/cluster-issuer: troubadour
+    konghq.com/https-redirect-status-code: '302'
 spec:
   tls:
   - hosts:
@@ -15,6 +16,7 @@ spec:
     - "admin.prod-kong.troubadour.enterprise-example.com"
     - "dev-portal-api.troubadour.enterprise-example.com"
     - "dev-portal.troubadour.enterprise-example.com"
+    - "apps.troubadour.enterprise-example.com"
     secretName: prod-kong-ingress-certs
   rules:
   - host: "admin-api.prod-kong.troubadour.enterprise-example.com"
@@ -45,3 +47,10 @@ spec:
         backend:
           serviceName: kong-prod-kong-kong-portalapi
           servicePort: 8004
+  - host: "apps.troubadour.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-prod-kong-kong-proxy
+          servicePort: 80

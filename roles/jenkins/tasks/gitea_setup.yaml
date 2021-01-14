@@ -6,6 +6,7 @@
 # see: https://www.jenkins.io/doc/developer/extensions/kubernetes-credentials-provider/
 # https://github.com/jenkinsci/gitea-plugin/blob/gitea-1.2.1/src/main/java/org/jenkinsci/plugin/gitea/credentials/PersonalAccessToken.java
 - name: Add local jenkins user with password
+  when: "'dry-run' not in ansible_run_tags"
   uri:
     url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/admin/users
     method: POST

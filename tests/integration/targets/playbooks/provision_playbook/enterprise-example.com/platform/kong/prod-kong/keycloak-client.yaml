@@ -11,7 +11,7 @@ spec:
         realm: prod
   client:
     clientId: prod-kong
-    secret: 819017ab-df06-5458-8925-5ac6e608b157
+    secret: placeholder12
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     rootUrl: https://admin.prod-kong.troubadour.enterprise-example.com

@@ -1,7 +1,7 @@
 {
     "issuer":"https://auth.troubadour.enterprise-example.com/auth/realms/sandbox",
     "client_id":["sandbox-kong"],
-    "client_secret":["d08eb58c-3ddc-5b60-8ecf-24a2ff6490e2"],
+    "client_secret":["placeholder14"],
     "consumer_by":["username","custom_id","id"],
     "ssl_verify":false,
     "consumer_claim":["email"],
@@ -10,7 +10,7 @@
     "login_redirect_uri":["https://admin.sandbox-kong.troubadour.enterprise-example.com"],
     "logout_methods":["GET", "DELETE"],
     "logout_query_arg":"logout",
-    "logout_redirect_uri":["https://admin..sandbox-kong.troubadour.enterprise-example.com"],
+    "logout_redirect_uri":["https://admin.sandbox-kong.troubadour.enterprise-example.com"],
     "scopes":["openid","profile","email","offline_access"],
     "auth_methods":["authorization_code"]
 }
