@@ -31,7 +31,7 @@
 
 - name: Apply manifests
   when: "'dry-run' not in ansible_run_tags"
-  loop: "{{ lookup('ms3_inc.troubadour.kustomize', '/tmp/' + cluster_domain + '/platform/cert-manager/', reorder='none') }}"
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_domain + '/platform/cert-manager/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -39,7 +39,7 @@
     wait_timeout: 300
   # adding retry because cert-manager release reports ready before CRDs are stable
   # applying these is an idempotent operation
-  # see https://github.com/MS3Inc/troubadour/issues/34
+  # see https://github.com/MS3Inc/tavros/issues/34
   retries: 2
   delay: 3
   register: result

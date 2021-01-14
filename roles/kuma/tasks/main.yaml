@@ -27,7 +27,7 @@
 
 - name: Apply Kuma release
   when: "'dry-run' not in ansible_run_tags"
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kuma-system/
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/kuma-system/
   k8s:
     definition: "{{ item }}"
     wait: true

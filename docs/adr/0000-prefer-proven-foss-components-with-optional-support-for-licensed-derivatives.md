@@ -6,7 +6,7 @@
 
 ## Context and Problem Statement
 
-Should we include licensed or non-FOSS components in the Troubadour platform for a given component or component's feature?
+Should we include licensed or non-FOSS components in the Tavros platform for a given component or component's feature?
 
 ## Decision Drivers <!-- optional -->
 

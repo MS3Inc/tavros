@@ -42,7 +42,7 @@ spec:
         args:
         env:
         - name: REPORTER_GRPC_HOST_PORT
-          value: 'troubadour-apm-http.elastic-system.svc:14250'
+          value: 'tavros-apm-http.elastic-system.svc:14250'
         - name: REPORTER_TYPE_GRPC
           value: 'true'
         - name: REPORTER_GRPC_TLS_ENABLED

@@ -4,21 +4,21 @@ metadata:
   name: jenkins
   namespace: jenkins
   annotations:
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: prod
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: ci.troubadour.enterprise-example.com
+  - host: ci.tavros.enterprise-example.com
     http:
       paths:
       - path: /
         backend:
-          serviceName: jenkins-operator-http-troubadour
+          serviceName: jenkins-operator-http-tavros
           servicePort: 8080
   tls:
   - hosts:
-    - ci.troubadour.enterprise-example.com
+    - ci.tavros.enterprise-example.com
     secretName: ci-ingress-cert

@@ -11,7 +11,7 @@
 * Application continuous delivery through Jenkins v2.249.2
 * Artifact management through Nexus Repository Manager v3.28.1
 
-For an up-to-date and more granular view of what is planned see https://github.com/MS3Inc/troubadour/milestone/1
+For an up-to-date and more granular view of what is planned see https://github.com/MS3Inc/tavros/milestone/1
 
 ## Schedule
 

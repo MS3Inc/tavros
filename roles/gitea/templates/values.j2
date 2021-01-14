@@ -20,7 +20,7 @@ gitea:
 
     database:
       DB_TYPE: postgres
-      HOST: 'troubadour-postgresql.postgresql.svc.cluster.local:5432'
+      HOST: 'tavros-postgresql.postgresql.svc.cluster.local:5432'
       NAME: 'gitea'
       USER: 'gitea'
       PASSWD: '{{ gitea.pg.password }}'

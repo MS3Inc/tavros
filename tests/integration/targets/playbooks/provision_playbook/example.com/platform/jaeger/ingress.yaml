@@ -4,7 +4,7 @@ metadata:
   name: jaeger
   namespace: jaeger
   annotations:
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: prod
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
@@ -12,14 +12,14 @@ metadata:
     konghq.com/plugins: jaeger-oidc
 spec:
   rules:
-  - host: jaeger.troubadour.example.com
+  - host: jaeger.tavros.example.com
     http:
       paths:
       - path: /
         backend:
-          serviceName: troubadour-query
+          serviceName: tavros-query
           servicePort: http-query
   tls:
   - hosts:
-    - jaeger.troubadour.example.com
+    - jaeger.tavros.example.com
     secretName: jaeger-ingress-cert

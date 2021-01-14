@@ -9,7 +9,7 @@ metadata:
 spec:
   instanceSelector:
     matchLabels:
-      app.troubadour/component: auth
+      app.tavros/component: auth
   realm:
     id: sandbox
     realm: sandbox

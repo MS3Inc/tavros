@@ -13,7 +13,7 @@ all:
       node_count: 2
       node_size: 't2.xlarge'
       zones: 'us-east-1a,us-east-1b'
-      state_bucket: 'troubadour'
+      state_bucket: 'tavros'
       ssh_public_key_path: ''
       aws_access_key_id: ''
       aws_secret_access_key: ''

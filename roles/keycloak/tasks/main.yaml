@@ -11,7 +11,7 @@
 
 - name: Apply operator manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/operator/12.0.1
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/operator/12.0.1
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -84,7 +84,7 @@
 
 - name: Apply keycloak manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -95,7 +95,7 @@
   community.kubernetes.k8s_info:
     api_version: keycloak.org/v1alpha1
     kind: Keycloak
-    name: troubadour-keycloak
+    name: tavros-keycloak
     namespace: keycloak
   register: keycloak_def
   # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175

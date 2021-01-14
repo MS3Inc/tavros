@@ -4,7 +4,7 @@ env:
 
 
   database: postgres
-  pg_host: troubadour-postgresql.postgresql
+  pg_host: tavros-postgresql.postgresql
   pg_port: '5432'
   pg_database:
     valueFrom:

@@ -4,7 +4,7 @@ metadata:
   name: jenkins
   namespace: jenkins
   annotations:
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: {{ kong.default_ingress_class }}
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
@@ -16,7 +16,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: jenkins-operator-http-troubadour
+          serviceName: jenkins-operator-http-tavros
           servicePort: 8080
   tls:
   - hosts:

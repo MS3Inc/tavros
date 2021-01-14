@@ -5,10 +5,10 @@ image:
     - default-kong-enterprise-edition-docker
 env:
 
-  admin_api_uri: "https://admin-api.prod-kong.troubadour.enterprise-example.com"
-  admin_gui_url: "https://admin.prod-kong.troubadour.enterprise-example.com"
-  portal_api-url: "https://dev-portal-api.troubadour.enterprise-example.com"
-  portal_gui_host: "dev-portal.troubadour.enterprise-example.com"
+  admin_api_uri: "https://admin-api.prod-kong.tavros.enterprise-example.com"
+  admin_gui_url: "https://admin.prod-kong.tavros.enterprise-example.com"
+  portal_api-url: "https://dev-portal-api.tavros.enterprise-example.com"
+  portal_gui_host: "dev-portal.tavros.enterprise-example.com"
   portal_gui_protocol: "https"
   password:
     valueFrom:
@@ -17,7 +17,7 @@ env:
         key: password
 
   database: postgres
-  pg_host: troubadour-postgresql.postgresql
+  pg_host: tavros-postgresql.postgresql
   pg_port: '5432'
   pg_database:
     valueFrom:

@@ -1,6 +1,6 @@
 {
   "realm": "prod",
-  "auth-server-url": "https://auth.troubadour.example.com/auth/",
+  "auth-server-url": "https://auth.tavros.example.com/auth/",
   "ssl-required": "external",
   "resource": "nexus",
   "verify-token-audience": true,

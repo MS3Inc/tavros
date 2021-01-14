@@ -4,7 +4,7 @@ metadata:
   name: gitea
   namespace: gitea
   annotations:
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: {{ kong.default_ingress_class }}
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https

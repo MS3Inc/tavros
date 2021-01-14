@@ -9,7 +9,7 @@
 * Refined provisioning workflow and documentation
 * User interface for configuring and provisioning platform
 
-For an up-to-date and more granular view of what is planned see https://github.com/MS3Inc/troubadour/milestone/2
+For an up-to-date and more granular view of what is planned see https://github.com/MS3Inc/tavros/milestone/2
 
 ## Schedule
 
