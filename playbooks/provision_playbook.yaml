@@ -73,7 +73,7 @@
         when: elastic_cloud.enabled
 
       - include_role:
-          name: jaeger
+          name: ms3_inc.troubadour.jaeger
         when: jaeger.enabled and keycloak.enabled and not elastic_cloud.ee.enabled
 
       - include_role:
@@ -92,3 +92,7 @@
       - copy:
           content: "{{ { 'all': { 'vars': { 'cluster_name': cluster_name, 'cluster_domain': cluster_domain, 'cluster_admin_email': cluster_admin_email, 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql, 'elastic_cloud': elastic_cloud, 'cert_manager': cert_manager, 'gitea': gitea, 'jaeger': jaeger, 'jenkins': jenkins }}} | to_nice_yaml(indent=2) }}"
           dest: /tmp/{{ cluster_domain }}_vars.yaml
+      - include_role:
+          name: kubernetes_cluster
+          tasks_from: tavros_config_backup
+        when: ('dry-run' not in ansible_run_tags)
