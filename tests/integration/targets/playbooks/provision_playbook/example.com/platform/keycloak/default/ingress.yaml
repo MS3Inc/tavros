@@ -4,14 +4,14 @@ metadata:
   name: keycloak
   namespace: keycloak
   annotations:
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: prod
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: auth.troubadour.example.com
+  - host: auth.tavros.example.com
     http:
       paths:
       - path: /
@@ -20,5 +20,5 @@ spec:
           servicePort: 8080
   tls:
   - hosts:
-    - auth.troubadour.example.com
+    - auth.tavros.example.com
     secretName: auth-ingress-cert

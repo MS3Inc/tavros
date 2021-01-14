@@ -7,47 +7,47 @@ metadata:
     konghq.com/strip-path: "true"
     konghq.com/protocols: https
     kubernetes.io/ingress.class: prod
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     konghq.com/https-redirect-status-code: '302'
 spec:
   tls:
   - hosts:
-    - "admin-api.prod-kong.troubadour.enterprise-example.com"
-    - "admin.prod-kong.troubadour.enterprise-example.com"
-    - "dev-portal-api.troubadour.enterprise-example.com"
-    - "dev-portal.troubadour.enterprise-example.com"
-    - "apps.troubadour.enterprise-example.com"
+    - "admin-api.prod-kong.tavros.enterprise-example.com"
+    - "admin.prod-kong.tavros.enterprise-example.com"
+    - "dev-portal-api.tavros.enterprise-example.com"
+    - "dev-portal.tavros.enterprise-example.com"
+    - "apps.tavros.enterprise-example.com"
     secretName: prod-kong-ingress-certs
   rules:
-  - host: "admin-api.prod-kong.troubadour.enterprise-example.com"
+  - host: "admin-api.prod-kong.tavros.enterprise-example.com"
     http:
       paths:
       - path: /
         backend:
           serviceName: kong-prod-kong-kong-admin
           servicePort: 8001
-  - host: "admin.prod-kong.troubadour.enterprise-example.com"
+  - host: "admin.prod-kong.tavros.enterprise-example.com"
     http:
       paths:
       - path: /
         backend:
           serviceName: kong-prod-kong-kong-manager
           servicePort: 8002
-  - host: "dev-portal.troubadour.enterprise-example.com"
+  - host: "dev-portal.tavros.enterprise-example.com"
     http:
       paths:
       - path: /
         backend:
           serviceName: kong-prod-kong-kong-portal
           servicePort: 8003
-  - host: "dev-portal-api.troubadour.enterprise-example.com"
+  - host: "dev-portal-api.tavros.enterprise-example.com"
     http:
       paths:
       - path: /
         backend:
           serviceName: kong-prod-kong-kong-portalapi
           servicePort: 8004
-  - host: "apps.troubadour.enterprise-example.com"
+  - host: "apps.tavros.enterprise-example.com"
     http:
       paths:
       - path: /

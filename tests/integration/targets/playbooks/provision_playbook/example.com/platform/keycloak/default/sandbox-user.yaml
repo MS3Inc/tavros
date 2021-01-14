@@ -11,7 +11,7 @@ spec:
       realm: sandbox
   user:
     username: ops@example.com
-    firstName: Troubadour
+    firstName: Tavros
     lastName: Admin
     email: ops@example.com
     enabled: True

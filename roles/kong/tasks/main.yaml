@@ -169,14 +169,14 @@
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kong/
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/kong/
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 150
 
-- name: Set DNS for Troubadour Apps
+- name: Set DNS for Tavros Apps
   when: ('dry-run' not in ansible_run_tags)
   community.aws.route53:
     state: present

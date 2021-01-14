@@ -14,7 +14,7 @@ spec:
     secret: placeholder14
     clientAuthenticatorType: client-secret
     protocol: openid-connect
-    rootUrl: https://admin.sandbox-kong.troubadour.enterprise-example.com
+    rootUrl: https://admin.sandbox-kong.tavros.enterprise-example.com
     redirectUris:
     - "*"
     directAccessGrantsEnabled: True

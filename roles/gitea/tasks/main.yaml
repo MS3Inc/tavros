@@ -64,7 +64,7 @@
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  loop: "{{ lookup('ms3_inc.troubadour.kustomize', '/tmp/' + cluster_domain + '/platform/gitea/', reorder='none') }}"
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_domain + '/platform/gitea/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true

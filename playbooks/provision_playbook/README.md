@@ -1,4 +1,4 @@
-# Troubadour Provision Playbook
+# Tavros Provision Playbook
 
 * [Requirements](#requirements)
   + [For clusters on AWS](#for-clusters-on-aws)
@@ -46,22 +46,22 @@ The order of component configuration is as follows:
 
 #### IAM
 
-For Troubadour cluster on AWS, IAM should be configured as follows:
+For Tavros cluster on AWS, IAM should be configured as follows:
 ``` bash
 #!/bin/bash
-aws iam create-group --group-name troubadour-provisioner
+aws iam create-group --group-name tavros-provisioner
 ​
 # required for kops
 # https://github.com/kubernetes/kops/blob/master/docs/getting_started/aws.md#setup-iam-user
-aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess --group-name troubadour-provisioner
-aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonRoute53FullAccess --group-name troubadour-provisioner
-aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --group-name troubadour-provisioner
-aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/IAMFullAccess --group-name troubadour-provisioner
-aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonVPCFullAccess --group-name troubadour-provisioner
+aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess --group-name tavros-provisioner
+aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonRoute53FullAccess --group-name tavros-provisioner
+aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --group-name tavros-provisioner
+aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/IAMFullAccess --group-name tavros-provisioner
+aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonVPCFullAccess --group-name tavros-provisioner
 ​
-aws iam create-user --user-name troubadour-ci
-aws iam add-user-to-group --user-name troubadour-ci --group-name troubadour-provisioner
-aws iam create-access-key --user-name troubadour-ci
+aws iam create-user --user-name tavros-ci
+aws iam add-user-to-group --user-name tavros-ci --group-name tavros-provisioner
+aws iam create-access-key --user-name tavros-ci
 ```
 
 The resulting Access Key and Secret should be passed to the Ansible Playbook.
@@ -88,7 +88,7 @@ To use the default configuration:
 
 ``` bash
 ansible-playbook $PLAYBOOKS_PATH/provision_playbook.yaml \
-  --extra-vars '{"cluster_name":"troubadour","cluster_domain":"example.com","cluster_admin_email":"ops@example.com"}' \
+  --extra-vars '{"cluster_name":"tavros","cluster_domain":"example.com","cluster_admin_email":"ops@example.com"}' \
   --inventory "playbooks/provision_playbook/default_vars.yaml"
 ```
 
@@ -96,7 +96,7 @@ ansible-playbook $PLAYBOOKS_PATH/provision_playbook.yaml \
 
 | Field Name | Type | Description | Default Value |
 | ---------- | ---- | ----------- | ------------- |
-cluster_name | String | **Required** The name of the Troubadour Kubernetes cluster
+cluster_name | String | **Required** The name of the Tavros Kubernetes cluster
 cluster_domain | String | **Required** The domain name to use for the platform. This should be managed by the cloud provider chosen in order to setup routes and certificates
 cluster_admin_email | String | **Required** The email for alerts and general notifications. |
 kubernetes_cluster | [Kubernetes Cluster Object](#kubernetes-cluster-object) | **Required** Configuration for the Kubernetes Cluster to be provisioned

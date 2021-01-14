@@ -7,13 +7,13 @@ data:
   1-casc.yaml: |
     unclassified:
       location:
-        url: https://ci.troubadour.example.com/
+        url: https://ci.tavros.example.com/
         adminAddress: ops@example.com
       keycloakSecurityRealm:
         keycloakJson: |-
           {
             "realm": "prod",
-            "auth-server-url": "https://auth.troubadour.example.com/auth/",
+            "auth-server-url": "https://auth.tavros.example.com/auth/",
             "ssl-required": "external",
             "resource": "jenkins",
             "public-client": true,
@@ -24,7 +24,7 @@ data:
         - credentialsId: "gitea-credentials"
           displayName: "gitea"
           manageHooks: true
-          serverUrl: "https://code.troubadour.example.com"
+          serverUrl: "https://code.tavros.example.com"
     jenkins:
       securityRealm: keycloak
 
@@ -39,7 +39,7 @@ data:
             configure { node ->
                 // todo: setup auto scan every 30 mins
                 node / navigators << 'org.jenkinsci.plugin.gitea.GiteaSCMNavigator' {
-                    serverUrl("https://code.troubadour.example.com")
+                    serverUrl("https://code.tavros.example.com")
                     repoOwner("tavros")
                     credentialsId("gitea-credentials")
                     traits {

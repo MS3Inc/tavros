@@ -11,7 +11,7 @@
 
 - name: Apply kubeseal manifests
   when: "'dry-run' not in ansible_run_tags"
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kubeseal/
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/kubeseal/
   k8s:
     definition: "{{ item }}"
     wait: true

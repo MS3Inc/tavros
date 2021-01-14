@@ -64,7 +64,7 @@ spec:
     - add_fields:
         target: kubernetes
         fields:
-          name: troubadour
+          name: tavros
     - add_cloud_metadata: {}
     - add_host_metadata: {}
     - add_kubernetes_metadata: {}

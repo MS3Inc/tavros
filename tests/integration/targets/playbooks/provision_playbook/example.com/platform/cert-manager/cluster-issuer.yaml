@@ -1,29 +1,29 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: troubadour
+  name: tavros
   namespace: cert-manager
 spec:
   acme:
-    email: ops@troubadour.example.com
+    email: ops@tavros.example.com
     server: https://acme-v02.api.letsencrypt.org/directory
     preferredChain: "ISRG Root X1"
     privateKeySecretRef:
-      name: troubadour-issuer-account-key
+      name: tavros-issuer-account-key
     solvers:
     - selector:
         dnsZones:
-        - 'sandbox-kong.troubadour.example.com'
-        - 'sandbox.troubadour.example.com'
-        - 'apps.sandbox.troubadour.example.com'
+        - 'sandbox-kong.tavros.example.com'
+        - 'sandbox.tavros.example.com'
+        - 'apps.sandbox.tavros.example.com'
       http01:
         ingress:
           class: sandbox
     - selector:
         dnsZones:
-        - 'prod-kong.troubadour.example.com'
-        - 'troubadour.example.com'
-        - 'apps.troubadour.example.com'
+        - 'prod-kong.tavros.example.com'
+        - 'tavros.example.com'
+        - 'apps.tavros.example.com'
       http01:
         ingress:
           class: prod

@@ -7,15 +7,15 @@ metadata:
     konghq.com/strip-path: "true"
     konghq.com/protocols: https
     kubernetes.io/ingress.class: sandbox
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     konghq.com/https-redirect-status-code: '302'
 spec:
   tls:
   - hosts:
-    - "apps.sandbox.troubadour.example.com"
+    - "apps.sandbox.tavros.example.com"
     secretName: sandbox-kong-ingress-certs
   rules:
-  - host: "apps.sandbox.troubadour.example.com"
+  - host: "apps.sandbox.tavros.example.com"
     http:
       paths:
       - path: /

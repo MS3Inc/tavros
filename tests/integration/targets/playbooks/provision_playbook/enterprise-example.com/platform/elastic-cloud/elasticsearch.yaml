@@ -24,14 +24,14 @@ spec:
         order: 2
         rp.client_id: "elastic-cloud"
         rp.response_type: code
-        rp.redirect_uri: "https://kibana.troubadour.enterprise-example.com/api/security/oidc/callback"
-        rp.post_logout_redirect_uri: "https://kibana.troubadour.enterprise-example.com" # /logged_out
-        op.issuer: "https://auth.troubadour.enterprise-example.com/auth/realms/prod"
-        op.authorization_endpoint: "https://auth.troubadour.enterprise-example.com/auth/realms/prod/protocol/openid-connect/auth"
-        op.token_endpoint: "https://auth.troubadour.enterprise-example.com/auth/realms/prod/protocol/openid-connect/token"
-        op.jwkset_path: "https://auth.troubadour.enterprise-example.com/auth/realms/prod/protocol/openid-connect/certs"
-        op.userinfo_endpoint: "https://auth.troubadour.enterprise-example.com/auth/realms/prod/protocol/openid-connect/userinfo"
-        op.endsession_endpoint: "https://auth.troubadour.enterprise-example.com/auth/realms/prod/protocol/openid-connect/logout"
+        rp.redirect_uri: "https://kibana.tavros.enterprise-example.com/api/security/oidc/callback"
+        rp.post_logout_redirect_uri: "https://kibana.tavros.enterprise-example.com" # /logged_out
+        op.issuer: "https://auth.tavros.enterprise-example.com/auth/realms/prod"
+        op.authorization_endpoint: "https://auth.tavros.enterprise-example.com/auth/realms/prod/protocol/openid-connect/auth"
+        op.token_endpoint: "https://auth.tavros.enterprise-example.com/auth/realms/prod/protocol/openid-connect/token"
+        op.jwkset_path: "https://auth.tavros.enterprise-example.com/auth/realms/prod/protocol/openid-connect/certs"
+        op.userinfo_endpoint: "https://auth.tavros.enterprise-example.com/auth/realms/prod/protocol/openid-connect/userinfo"
+        op.endsession_endpoint: "https://auth.tavros.enterprise-example.com/auth/realms/prod/protocol/openid-connect/logout"
         claims.principal: sub
         claims.name: name
         claims.mail: email

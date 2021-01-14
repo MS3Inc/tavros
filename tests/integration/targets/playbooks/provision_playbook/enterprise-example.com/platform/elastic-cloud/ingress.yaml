@@ -4,14 +4,14 @@ metadata:
   name: elastic-system
   namespace: elastic-system
   annotations:
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: prod
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: kibana.troubadour.enterprise-example.com
+  - host: kibana.tavros.enterprise-example.com
     http:
       paths:
       - path: /
@@ -20,5 +20,5 @@ spec:
           servicePort: 5601
   tls:
   - hosts:
-    - kibana.troubadour.enterprise-example.com
+    - kibana.tavros.enterprise-example.com
     secretName: elastic-cloud-ingress-cert

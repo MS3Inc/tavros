@@ -1,7 +1,7 @@
 apiVersion: jaegertracing.io/v1
 kind: Jaeger
 metadata:
-  name: troubadour
+  name: tavros
   namespace: jaeger
 spec:
   strategy: production
@@ -21,7 +21,7 @@ spec:
     options:
       es:
         server-urls: https://elasticsearch-es-http.elastic-system.svc:9200
-        index-prefix: troubadour
+        index-prefix: tavros
         tls:
           ca: /es/certificates/ca.crt
     secretName: jaeger-es-secret

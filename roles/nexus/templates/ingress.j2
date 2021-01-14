@@ -4,7 +4,7 @@ metadata:
   name: nexus
   namespace: nexus
   annotations:
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: {{ kong.default_ingress_class }}
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
@@ -16,7 +16,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: troubadour-nexus-repository-manager
+          serviceName: tavros-nexus-repository-manager
           servicePort: 8081
   tls:
   - hosts:

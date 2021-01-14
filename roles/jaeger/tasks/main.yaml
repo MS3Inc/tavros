@@ -69,7 +69,7 @@
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/jaeger/
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/jaeger/
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -92,12 +92,12 @@
 
 - name: Create Jaeger Keycloak Client Roles
   when: ('dry-run' not in ansible_run_tags)
-  ms3_inc.troubadour.keycloak_client_roles:
+  ms3_inc.tavros.keycloak_client_roles:
     auth_keycloak_url: 'https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth'
     validate_certs: false
     auth_realm: master
     auth_username: admin
-    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-troubadour-keycloak').data.ADMIN_PASSWORD | b64decode }}"
+    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros-keycloak').data.ADMIN_PASSWORD | b64decode }}"
     realm: "{{ jaeger.keycloak.realm}}"
     clientId: jaeger
     roles:
