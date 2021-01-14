@@ -1,5 +1,5 @@
 # Also needs to be updated in galaxy.yml
-VERSION = 0.2.0
+VERSION = 0.4.0
 
 clean:
 	rm -f ms3_inc-troubadour-${VERSION}.tar.gz

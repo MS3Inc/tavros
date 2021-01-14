@@ -20,9 +20,9 @@ The provision playbook provisions a Kubernetes cluster and configures Troubadour
 | Service Mesh | Kuma | 1.0.0 | 0.1.0 |
 | Identity and Access Management | Keycloak | 11.0.2 | 0.1.0 |
 | Artifact Management | Nexus Repository Manager | 3.28.1 | 0.2.0 |
-| Continuous Delivery | Jenkins | 2.249.2 | na |
-| Observability | Elastic Cloud | 7.9.3 | na |
-| Observability | Jaeger | 1.20.0 | na |
+| Continuous Delivery | Jenkins | 2.249.2 | 0.4.0 |
+| Observability | Elastic Cloud | 7.9.3 | 0.4.0 |
+| Observability | Jaeger | 1.20.0 | 0.4.0 |
 | Static Code Qualitative Analysis | Sonarqube | 8.5 | na |
 
 ## Roadmap
