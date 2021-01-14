@@ -3,6 +3,9 @@
 # THE DIFF IS EXPLICITLY ADDING PASSWORDS SO THEY'RE NOT GENERATED IN ORDER TO ASSERT THE RESULT
 all:
   vars:
+    cluster_name: ''
+    cluster_domain: ''
+    cluster_admin_email: ''
     kubernetes_cluster:
       cloud: 'aws'
       master_count: 3
@@ -11,6 +14,9 @@ all:
       node_size: 't2.xlarge'
       zones: 'us-east-1a,us-east-1b'
       state_bucket: 'troubadour'
+      ssh_public_key_path: ''
+      aws_access_key_id: ''
+      aws_secret_access_key: ''
     kong:
       default_ingress_class: 'prod'
       ee_creds: []
