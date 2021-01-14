@@ -65,7 +65,7 @@ all:
         enabled: false
       enabled: true
     jaeger:
-      enabled: false
+      enabled: true
       keycloak:
         realm: 'prod'
     jenkins:

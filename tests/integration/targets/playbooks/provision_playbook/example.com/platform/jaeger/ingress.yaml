@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: jaeger
+  namespace: jaeger
+  annotations:
+    cert-manager.io/cluster-issuer: troubadour
+    kubernetes.io/ingress.class: prod
+    konghq.com/strip-path: 'true'
+    konghq.com/protocols: https
+    konghq.com/https-redirect-status-code: '302'
+    konghq.com/plugins: jaeger-oidc
+spec:
+  rules:
+  - host: jaeger.troubadour.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: troubadour-query
+          servicePort: http-query
+  tls:
+  - hosts:
+    - jaeger.troubadour.example.com
+    secretName: jaeger-ingress-cert
