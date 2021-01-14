@@ -11,7 +11,7 @@ spec:
         realm: sandbox
   client:
     clientId: sandbox-kong
-    secret: d08eb58c-3ddc-5b60-8ecf-24a2ff6490e2
+    secret: placeholder14
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     rootUrl: https://admin.sandbox-kong.troubadour.enterprise-example.com

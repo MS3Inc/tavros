@@ -5,7 +5,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 5m0s
-  path: ./example.com/platform/kubeseal
+  path: ./platform/kubeseal
   sourceRef:
     kind: GitRepository
     name: flux-system

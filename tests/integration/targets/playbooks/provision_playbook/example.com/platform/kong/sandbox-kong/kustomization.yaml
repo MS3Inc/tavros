@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - release.yaml
   - config-secret.yaml
+  - ingresses.yaml
 generatorOptions:
   disableNameSuffixHash: true
 configMapGenerator:

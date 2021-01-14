@@ -1,13 +1,23 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
 metadata:
-  name: troubadour
+  name: elasticsearch
   namespace: elastic-system
 spec:
   version: 7.10.1
   nodeSets:
   - name: default
     count: 3
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: kops-ssd-1-17
     podTemplate:
       spec:
         initContainers:
