@@ -6,26 +6,14 @@ on:
     branches: [ main ]
     
 jobs:
-  test:
-    name: Check the repo
-    runs-on: ubuntu-latest
+  build:
+    container: 
+      image: docker.kube.cloudapps.ms3-inc.com/tavros-tools:1.0
+      credentials:
+        username: gh-bot
+        password: ${{ secrets.NEXUS_PASSWORD }}
 
     steps: 
       - uses: actions/checkout@v1
-    
-
-      name: Pull and run Docker Image
-      - uses: addnab/docker-run-action@v1
-        with:
-          username: gh-bot
-          password: ${{ secrets.NEXUS_PASSWORD}}
-          registry: docker.kube.cloudapps.ms3-inc.com
-          image: ocker.kube.cloudapps.ms3-inc.com/tavros-tools:1.0
-          run: echo "Docker container created successfully"
-        
-      name: Copy the repo   
-      run: cd /root/tavros
-      
-      name: Run integration test
-      run: make install test
-    
+      - run: make install test
+  
