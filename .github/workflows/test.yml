@@ -6,7 +6,8 @@ on:
     branches: [ main ]
     
 jobs:
-  build:
+  test:
+  runs_on: ubuntu:latest
     container: 
       image: docker.kube.cloudapps.ms3-inc.com/tavros-tools:1.0
       credentials:
@@ -14,6 +15,6 @@ jobs:
         password: ${{ secrets.NEXUS_PASSWORD }}
 
     steps: 
-      - uses: actions/checkout@v1
-      - run: make install test
+    - uses: actions/checkout@v1
+    - run: make install test
   
