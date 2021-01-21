@@ -7,7 +7,7 @@ on:
     
 jobs:
   test:
-  runs_on: ubuntu:latest
+    runs_on: ubuntu:latest
     container: 
       image: docker.kube.cloudapps.ms3-inc.com/tavros-tools:1.0
       credentials:
