@@ -16,7 +16,7 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 5Gi
+            storage: 50Gi
         storageClassName: kops-ssd-1-17
     podTemplate:
       spec:

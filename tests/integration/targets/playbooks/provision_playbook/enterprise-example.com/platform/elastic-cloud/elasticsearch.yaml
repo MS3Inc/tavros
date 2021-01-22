@@ -16,7 +16,7 @@ spec:
         - ReadWriteOnce
         resources:
           requests:
-            storage: 5Gi
+            storage: 50Gi
         storageClassName: kops-ssd-1-17
     config:
       xpack.security.authc.token.enabled: true
@@ -44,7 +44,7 @@ spec:
             privileged: true
           command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
         - name: ee-setup
-          command:   
+          command:
             - "sh"
             - "-c"
             - |

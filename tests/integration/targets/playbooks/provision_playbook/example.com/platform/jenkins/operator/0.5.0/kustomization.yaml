@@ -3,13 +3,5 @@ kind: Kustomization
 namespace: jenkins
 resources:
   - ns.yaml
-  - https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/release-0.5.0/deploy/crds/jenkins_v1alpha2_jenkins_crd.yaml
-  - https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/release-0.5.0/deploy/all-in-one-v1alpha2.yaml
-patchesJson6902:
-  - target:
-      kind: Deployment
-      name: jenkins-operator
-    patch: |-
-      - op: replace
-        path: /spec/template/spec/containers/0/image
-        value: quay.io/jam01/jenkins-operator:v0.5.0
+  - https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/v0.5.0/deploy/crds/jenkins_v1alpha2_jenkins_crd.yaml
+  - https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/v0.5.0/deploy/all-in-one-v1alpha2.yaml
