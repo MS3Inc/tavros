@@ -11,4 +11,4 @@ install: build
 	ansible-galaxy collection install --force ms3_inc-tavros-${VERSION}.tar.gz
 
 test:
-	cd ~/.ansible/collections/ansible_collections/ms3_inc/tavros; ansible-test integration -v --color --continue-on-error --diff 
+	cd ~/.ansible/collections/ansible_collections/ms3_inc/tavros; ansible-test integration -v --color --continue-on-error --diff --coverage
