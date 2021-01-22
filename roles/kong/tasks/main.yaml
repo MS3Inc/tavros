@@ -10,6 +10,11 @@
     src: ns.yaml
     dest: /tmp/{{ cluster_domain }}/platform/kong/ns.yaml
 
+- name: Copy Source
+  copy:
+    src: source.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/source.yaml
+
 - name: Process base kustomization template
   template:
     src: base-kustomization.j2
@@ -41,9 +46,8 @@
   loop: "{{ kong.instances }}"
 
 - name: Generate Keycloak Client Secrets
-  when: (item.ee.enabled)
   set_fact:
-    generated_keycloak_secrets: "{{ (generated_keycloak_secrets | default([])) + [ (item | combine({ 'ee': { 'keycloak': { 'client_secret': uuid } } }, recursive=true)) ] }}"
+    generated_keycloak_secrets: "{{ (generated_keycloak_secrets | default([])) + [ (item | combine(({ 'ee': { 'keycloak': { 'client_secret': uuid } } } if (item.ee.enabled) else {}), recursive=true)) ] }}"
   vars:
     uuid: "{{ ( item.ee.keycloak.client_secret | default((1000000 | random | to_uuid)) ) }}"
   loop: "{{ kong.instances }}"
@@ -109,10 +113,9 @@
   loop: "{{ kong.ee_creds }}"
 
 - name: Generate instance Superuser Passwords
-  when: (item.ee.enabled)
   loop: "{{ kong.instances }}"
   set_fact:
-    generated_su_passwords: "{{ (generated_su_passwords | default([])) + [ (item | combine({ 'ee': { 'admin_password': password } }, recursive=true)) ] }}"
+    generated_su_passwords: "{{ (generated_su_passwords | default([])) + [ (item | combine(({ 'ee': { 'admin_password': password } } if (item.ee.enabled) else {}), recursive=true)) ] }}"
   vars:
     password: "{{ ( item.ee.admin_password | default(lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=8')) ) }}"
 

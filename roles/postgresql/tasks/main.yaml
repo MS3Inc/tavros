@@ -14,14 +14,17 @@
   set_fact:
     postgresql: "{{ { 'postgres_password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
 
-- name: Generate PG credentials for Kongs
+- name: Generate PG Passwords
   loop: "{{ kong.instances }}"
   set_fact:
-    gen_kong_instances: "{{ (gen_kong_instances | default([])) + [ { 'pg': { 'password': lookup('password', '/dev/null') }} | combine(item, recursive=true) ] }}"
+    generated_pg_passwords: "{{ (generated_pg_passwords | default([])) + [ (item | combine({ 'pg': { 'password': password } }, recursive=true)) ] }}"
+  vars:
+    password: "{{ ( item.pg.password | default(lookup('password', '/dev/null')) ) }}"
 
 - name: Combine kong with generated passwords
+  when: (generated_pg_passwords is defined)
   set_fact:
-    kong: "{{ kong | combine({'instances': gen_kong_instances}, recursive=true) }}"
+    kong: "{{ kong | combine({'instances': generated_pg_passwords}, recursive=true) }}"
 
 - name: Generate PG credentials for Gitea
   when: gitea.pg.password is not defined
