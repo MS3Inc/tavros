@@ -1,9 +1,9 @@
 name: Tavros Integration Test
 on:
   push:
-    branches: [ feature/integration-test ]
+    branches: [ main ]
   pull_request:
-    branches: [ feature/integration-test ]
+    branches: [ main ]
     
 jobs:
   test:
