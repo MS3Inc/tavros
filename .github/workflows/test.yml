@@ -1,9 +1,9 @@
 name: Tavros Integration Test
 on:
   push:
-    branches: [ main ]
+    branches: [ feature/integration-test ]
   pull_request:
-    branches: [ main ]
+    branches: [ feature/integration-test ]
     
 jobs:
   test:
@@ -15,6 +15,6 @@ jobs:
         password: ${{ secrets.NEXUS_PASSWORD }}
 
     steps: 
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - run: make install test
   
