@@ -1,6 +1,6 @@
 namespace: ms3_inc
 name: tavros
-version: 0.4.0
+version: 0.4.1
 readme: README.md
 authors:
 - Randy McCright <rmccright@ms3-inc.com>

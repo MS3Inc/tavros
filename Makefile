@@ -1,5 +1,5 @@
 # Also needs to be updated in galaxy.yml
-VERSION = 0.4.0
+VERSION = 0.4.1
 
 clean:
 	rm -f ms3_inc-tavros-${VERSION}.tar.gz
