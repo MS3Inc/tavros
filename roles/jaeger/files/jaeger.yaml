@@ -24,13 +24,13 @@ spec:
     type: elasticsearch
     dependencies:
       enabled: true
-      schedule: "10 * * * *"
+      image: quay.io/jam01/jaeger-spark-dependencies:0.0.1-SNAPSHOT-001
       resources:
         requests:
           memory: 2048Mi
         limits:
           memory: 2048Mi
-      javaOpts: -Djavax.net.ssl.trustStore=/es-tls/truststore.jks -Djavax.net.ssl.trustStorePassword='password'
+      javaOpts: -Djavax.net.ssl.trustStore=/es-tls/truststore.jks -Djavax.net.ssl.trustStorePassword=password
     options:
       es:
         server-urls: https://elasticsearch-es-http.elastic-system.svc:9200
