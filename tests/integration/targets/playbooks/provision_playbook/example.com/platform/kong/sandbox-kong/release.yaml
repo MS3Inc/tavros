@@ -8,9 +8,9 @@ spec:
   interval: 10m
   chart:
     spec:
-      # https://github.com/Kong/charts/tree/kong-1.13.0/charts/kong
+      # https://github.com/Kong/charts/tree/kong-1.14.0/charts/kong
       chart: kong
-      version: 1.13.0
+      version: 1.14.0
       sourceRef:
         kind: HelmRepository
         name: kong
@@ -21,7 +21,45 @@ spec:
   upgrade:
     remediation:
       retries: 5
-  valuesFrom:
-    - kind: ConfigMap
-      name: sandbox-kong-values-config
-      valuesKey: values.yaml
+  values:
+    image:
+      tag: '2.2'
+    env:
+
+
+      database: postgres
+      pg_host: tavros-postgresql.postgresql
+      pg_port: '5432'
+      pg_database:
+        valueFrom:
+          secretKeyRef:
+            name: sandbox-kong-config-secret
+            key: pg_database
+      pg_user:
+        valueFrom:
+          secretKeyRef:
+            name: sandbox-kong-config-secret
+            key: pg_user
+      pg_password:
+        valueFrom:
+          secretKeyRef:
+            name: sandbox-kong-config-secret
+            key: pg_password
+    ingressController:
+      ingressClass: sandbox
+      installCRDs: false
+      env:
+      # see https://github.com/Kong/charts/issues/224
+        kong_admin_tls_skip_verify: 'true'
+
+
+    podAnnotations:
+      kuma.io/sidecar-injection: enabled
+      kuma.io/gateway: enabled
+      kuma.io/mesh: sandbox
+
+    admin:
+      enabled: true
+      http:
+        enabled: true
+    

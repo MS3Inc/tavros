@@ -2,16 +2,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - keycloak-client.yaml
-  - release.yaml
-  - config-secret.yaml
-  - ingresses.yaml
   - ee-superuser-secret.yaml
   - ee-session-secret.yaml
   - ee-admin-gui-auth-secret.yaml
-generatorOptions:
-  disableNameSuffixHash: true
-configMapGenerator:
-  - name: prod-kong-values-config
-    namespace: kong
-    files:
-      - values.yaml=values.yaml
+  - config-secret.yaml
+  - release.yaml
+  - ingresses.yaml

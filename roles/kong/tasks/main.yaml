@@ -39,12 +39,6 @@
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/release.yaml
   loop: "{{ kong.instances }}"
 
-- name: Process instance values templates
-  template:
-    src: values.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/values.yaml
-  loop: "{{ kong.instances }}"
-
 - name: Generate Keycloak Client Secrets
   set_fact:
     generated_keycloak_secrets: "{{ (generated_keycloak_secrets | default([])) + [ (item | combine(({ 'ee': { 'keycloak': { 'client_secret': uuid } } } if (item.ee.enabled) else {}), recursive=true)) ] }}"
@@ -172,13 +166,13 @@
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/kong/
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_domain + '/platform/kong/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-    wait_timeout: 150
-
+    wait_timeout: 1800
+    
 - name: Set DNS for Tavros Apps
   when: ('dry-run' not in ansible_run_tags)
   community.aws.route53:

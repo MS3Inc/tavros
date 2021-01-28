@@ -1,18 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - release.yaml
-  - config-secret.yaml
-  - ingresses.yaml
 {%  if item.ee.enabled %}
   - ee-superuser-secret.yaml
   - ee-session-secret.yaml
   - ee-admin-gui-auth-secret.yaml
 {% endif  %}
-generatorOptions:
-  disableNameSuffixHash: true
-configMapGenerator:
-  - name: {{ item.name }}-values-config
-    namespace: kong
-    files:
-      - values.yaml=values.yaml
+  - config-secret.yaml
+  - release.yaml
+  - ingresses.yaml

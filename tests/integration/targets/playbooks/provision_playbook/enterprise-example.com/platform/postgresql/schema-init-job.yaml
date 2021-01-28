@@ -32,8 +32,8 @@ spec:
             - name: setup-volume
               mountPath: /tmp/setup
       volumes:
-        - name: setup-volume
-          configMap:
-            name: setup-config
+      - name: setup-volume
+        secret:
+          secretName: schema-init-sql
       restartPolicy: OnFailure
   backoffLimit: 4
