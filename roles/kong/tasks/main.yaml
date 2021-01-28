@@ -171,7 +171,7 @@
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-    wait_timeout: 1800
+    wait_timeout: 900
     
 - name: Set DNS for Tavros Apps
   when: ('dry-run' not in ansible_run_tags)
@@ -183,6 +183,7 @@
     value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
+    wait_timeout: 900
   vars:
     prod_kong_proxy: "kong-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}-kong-proxy"
 
@@ -196,6 +197,7 @@
     value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
+    wait_timeout: 900
   vars:
     instance_kong_proxy: "kong-{{ item.name }}-kong-proxy"
   loop: "{{ kong.instances }}"
@@ -210,6 +212,7 @@
     value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
+    wait_timeout: 900
   vars:
     instance_kong_proxy: "kong-{{ item.name }}-kong-proxy"
   loop: "{{ kong.instances }}"

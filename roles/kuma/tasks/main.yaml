@@ -38,7 +38,8 @@
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-
+    wait_timeout: 900
+    
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2

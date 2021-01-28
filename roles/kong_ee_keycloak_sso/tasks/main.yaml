@@ -21,7 +21,7 @@
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-    wait_timeout: 300
+    wait_timeout: 900
 
 - name: Wait for Keycloak
   when: "'dry-run' not in ansible_run_tags"
@@ -33,8 +33,8 @@
   register: keycloak_def
   # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
   until: ('status' in keycloak_def.resources[0]) and (keycloak_def.resources[0].status.ready)
-  retries: 6
-  delay: 20
+  retries: 30
+  delay: 30
   changed_when: false
 
 - name: Create Keycloak Kong client roles
@@ -82,7 +82,7 @@
     validate_certs: False
   register: _result
   until: _result.status == 200
-  retries: 120
+  retries: 30
   delay: 30
   loop: "{{ kong.instances }}"
 
@@ -97,6 +97,6 @@
     validate_certs: False
   register: _result
   until: _result.status == 201
-  retries: 120
+  retries: 30
   delay: 30
   loop: "{{ kong.instances }}"
