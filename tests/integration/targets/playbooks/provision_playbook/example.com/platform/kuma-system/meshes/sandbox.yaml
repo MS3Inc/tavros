@@ -16,3 +16,11 @@ spec:
           caCert:
             RSAbits: 2048
             expiration: 10y
+  tracing:
+    defaultBackend: jaeger-collector
+    backends:
+      - name: jaeger-collector
+        type: zipkin
+        sampling: 100
+        conf:
+          url: http://troubadour-collector.jaeger.svc.cluster.local:9411/api/v2/spans

@@ -10,6 +10,12 @@
     src: mesh.j2
     dest: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.name }}.yaml
 
+- name: Process tracing template
+  with_list: '{{ kuma.meshes }}'
+  template:
+    src: prod-traffictrace.j2
+    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.name }}-traffictrace.yaml
+
 - name: Process kuma kustomization template
   template:
     src: kustomization.j2

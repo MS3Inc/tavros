@@ -7,3 +7,6 @@ resources:
 {% for item in kuma.meshes %}
   - meshes/{{ item.name }}.yaml
 {% endfor %}
+{%  if jaeger.enabled  %}
+  - meshes/prod-traffictrace.yaml
+{% endif %}

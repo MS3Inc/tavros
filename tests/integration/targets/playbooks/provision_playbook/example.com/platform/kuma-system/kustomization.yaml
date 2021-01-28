@@ -6,3 +6,4 @@ resources:
   - default-release.yaml
   - meshes/sandbox.yaml
   - meshes/prod.yaml
+  - meshes/prod-traffictrace.yaml
