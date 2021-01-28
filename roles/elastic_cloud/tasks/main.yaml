@@ -109,7 +109,7 @@
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-    wait_timeout: 150
+    wait_timeout: 900
 
 - name: Wait for Elasticsearch
   when: ('dry-run' not in ansible_run_tags)
@@ -120,7 +120,7 @@
     namespace: elastic-system
   register: elastic_def
   until: ('status' in elastic_def.resources[0]) and (elastic_def.resources[0].status.phase == 'Ready')
-  retries: 120
+  retries: 30
   delay: 30
   changed_when: false
 
@@ -133,7 +133,7 @@
     namespace: elastic-system
   register: kibana_def
   until: ('status' in kibana_def.resources[0]) and (kibana_def.resources[0].status.health == 'green')
-  retries: 120
+  retries: 30
   delay: 30
   changed_when: false
 
