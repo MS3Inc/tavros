@@ -2,7 +2,7 @@ apiVersion: kuma.io/v1alpha1
 kind: TrafficTrace
 mesh: prod
 metadata:
-  name: trace-all-traffic
+  name: prod-trace-all-traffic
   namespace: kuma-system
 spec:
   selectors:

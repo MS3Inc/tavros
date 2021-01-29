@@ -2,7 +2,7 @@ apiVersion: kuma.io/v1alpha1
 kind: TrafficTrace
 mesh: sandbox
 metadata:
-  name: trace-all-traffic
+  name: sandbox-trace-all-traffic
   namespace: kuma-system
 spec:
   selectors:
