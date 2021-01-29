@@ -86,7 +86,7 @@
       - include_role:
           name: ms3_inc.tavros.fluxtoolkit
           tasks_from: gitea-setup
-        when: gitea.enabled
+        when: gitea.enabled and ('dry-run' not in ansible_run_tags)
 
     always:
       - copy:
