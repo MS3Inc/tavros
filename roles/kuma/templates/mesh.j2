@@ -18,11 +18,7 @@ spec:
             RSAbits: 2048
             expiration: 10y
 {%  endif %}
-<<<<<<< HEAD
 {%  if item.traffictrace.enabled and jaeger.enabled %}
-=======
-{%  if jaeger.enabled  %}
->>>>>>> 7146bf4b0543abc034f0f44e8eabf681f0921ef7
   tracing:
     defaultBackend: jaeger-collector
     backends:
@@ -30,10 +26,5 @@ spec:
         type: zipkin
         sampling: 100
         conf:
-<<<<<<< HEAD
           url: http://tavros-collector.jaeger.svc.cluster.local:9411/api/v2/spans
 {%  endif %}
-=======
-          url: http://troubadour-collector.jaeger.svc.cluster.local:9411/api/v2/spans
-{%  endif %}
->>>>>>> 7146bf4b0543abc034f0f44e8eabf681f0921ef7
