@@ -20,7 +20,7 @@ spec:
       - type: "password"
         # todo: should be a secret?
         value: "placeholder6"
-        temporary: True
+        temporary: False
     realmRoles:
       - "offline_access"
     clientRoles:

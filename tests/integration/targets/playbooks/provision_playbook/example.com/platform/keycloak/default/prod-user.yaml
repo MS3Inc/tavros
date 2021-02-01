@@ -20,7 +20,7 @@ spec:
       - type: "password"
         # todo: should be a secret?
         value: "placeholder5"
-        temporary: True
+        temporary: False
     realmRoles:
       - "offline_access"
     clientRoles:
@@ -28,6 +28,10 @@ spec:
       jaeger:
         - user
 # End jaeger ANSIBLE MANAGED BLOCK
+# Begin nexus ANSIBLE MANAGED BLOCK
+      nexus:
+        - admin
+# End nexus ANSIBLE MANAGED BLOCK
       account:
         - "manage-account"
         - "view-profile"

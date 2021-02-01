@@ -9,6 +9,7 @@ metadata:
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
     konghq.com/https-redirect-status-code: '302'
+    konghq.com/plugins: nexus-oidc
 spec:
   rules:
   - host: nexus.tavros.example.com

@@ -19,6 +19,11 @@
     src: kustomization.yaml
     dest: /tmp/{{ cluster_domain }}/platform/nexus/kustomization.yaml
 
+- name: Copy nexus-properties-config
+  copy:
+    src: nexus-properties-config.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/nexus/nexus-properties-config.yaml
+
 - name: Process ingress template
   template:
     src: ingress.j2
@@ -35,6 +40,11 @@
     nexus: "{{ nexus | combine({ 'keycloak': { 'client_secret': uuid }} , recursive=true) }}"
   vars:
     uuid: "{{ 1000000 | random | to_uuid }}"
+
+- name: Process oidc-plugin template
+  template:
+    src: oidc-plugin.j2
+    dest: /tmp/{{ cluster_domain }}/platform/nexus/oidc-plugin.yaml
 
 - name: Process keycloak-client template
   template:
@@ -101,6 +111,20 @@
   set_fact:
     nexus: "{{ nexus | combine({ 'generated': { 'admin_password': nexus_creds.stdout } }, recursive=True) }}"
 
+- name: Wait for Client
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_info:
+    api_version: keycloak.org/v1alpha1
+    kind: KeycloakClient
+    name: nexus
+    namespace: keycloak
+  register: keycloak_def
+  # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
+  until: ('status' in keycloak_def.resources[0]) and (keycloak_def.resources[0].status.ready)
+  retries: 30
+  delay: 30
+  changed_when: false
+
 - name: Create Keycloak Nexus client roles
   when: ('dry-run' not in ansible_run_tags)
   ms3_inc.tavros.keycloak_client_roles:
@@ -120,6 +144,23 @@
           - name: "view-clients"
           - name: "view-users"
           - name: "view-realm"
+
+- name: Add user client role to realm user
+  blockinfile:
+    marker_begin: "Begin nexus"
+    marker_end: "End nexus"
+    path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ nexus.keycloak.realm }}-user.yaml
+    insertafter: "    clientRoles:"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    block: |2
+            nexus:
+              - admin
+
+- name: Apply updated Keycloak User for Realm
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s:
+    state: present
+    src: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ nexus.keycloak.realm }}-user.yaml
 
 - name: Add dockerhub-proxy repository
   when: ('dry-run' not in ansible_run_tags)
@@ -321,6 +362,21 @@
   until: _result.status == 200
   retries: 30
   delay: 30
+
+- name: Enabled OIDC
+  lineinfile:
+    path: /tmp/{{ cluster_domain }}/platform/nexus/oidc-plugin.yaml
+    line: "disabled: False"
+    regexp: '^disabled: True'
+    backrefs: True
+
+- name: Apply Enabled OIDC
+  when: ('dry-run' not in ansible_run_tags)
+  loop: "{{ lookup('file', '/tmp/' +  cluster_domain + '/platform/nexus/oidc-plugin.yaml') | from_yaml_all | list | difference([None]) }}"
+  k8s:
+    definition: "{{ item }}"
+    wait: true
+    wait_timeout: 900
 
 # todo
 # change admin password and disable anon access

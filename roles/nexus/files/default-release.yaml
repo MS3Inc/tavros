@@ -25,6 +25,9 @@ spec:
       - name: keycloak-config
         secret:
           secretName: keycloak-config
+      - name: nexus-properties
+        configMap:
+          name: nexus-properties
       - name: nexus-deploy
         persistentVolumeClaim:
           claimName: nexus-deploy
@@ -34,9 +37,6 @@ spec:
       - mountPath: /opt/sonatype/nexus/etc/keycloak.json
         name: keycloak-config
         subPath: keycloak-config.json
-      # postStart:
-      #   exec:
-      #     command:
-      #     - /bin/sh
-      #     - -c
-      #     - curl -LJo /opt/sonatype/nexus/deploy/nexus3-keycloak-plugin-0.4.0-bundle.kar https://github.com/flytreeleft/nexus3-keycloak-plugin/releases/download/v0.4.0/nexus3-keycloak-plugin-0.4.0-bundle.kar
+      - mountPath: /opt/sonatype/nexus/etc/nexus-default.properties
+        name: nexus-properties
+        subPath: nexus.properties

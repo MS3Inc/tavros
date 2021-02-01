@@ -11,7 +11,7 @@ spec:
       #https://docs.gitea.io/en-us/config-cheat-sheet/
       #https://artifacthub.io/packages/helm/gitea/gitea
       chart: gitea
-      version: 2.0.2
+      version: 2.1.9
       sourceRef:
         kind: HelmRepository
         name: gitea

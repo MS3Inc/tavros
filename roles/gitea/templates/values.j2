@@ -32,3 +32,13 @@ gitea:
     builtIn:
       postgresql:
         enabled: false
+
+{% if ('test-run' in ansible_run_tags) %}
+extraVolumes:
+- name: ca-certs
+  configMap:
+    name: ca-certs
+extraVolumeMounts:
+- name: ca-certs
+  mountPath: /etc/ssl/certs/
+{% endif %}

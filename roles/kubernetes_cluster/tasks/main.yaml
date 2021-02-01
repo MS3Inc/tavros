@@ -54,6 +54,6 @@
 
 - name: remove cluster state S3 bucket
   when: (cluster_state == 'absent') and ('dry-run' not in ansible_run_tags)
-  amazon.aws.s3_bucket:
-    name: "{{ kubernetes_cluster.state_bucket }}"
-    state: absent
+  amazon.aws.aws_s3:
+    bucket: "{{ kubernetes_cluster.state_bucket }}"
+    mode: delete

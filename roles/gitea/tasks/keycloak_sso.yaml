@@ -9,7 +9,11 @@
       user_name: gitea_admin
       password: '{{ gitea.admin.password }}'
     status_code: 200
+    validate_certs: False
   register: gitea_login
+  until: gitea_login.status == 200
+  retries: 30
+  delay: 30
 
 - name: Add keycloak sso
   uri:
@@ -30,3 +34,8 @@
       is_sync_enabled: on
       is_active: on
     status_code: 200
+    validate_certs: False
+  register: _result
+  until: _result.status == 200
+  retries: 30
+  delay: 30

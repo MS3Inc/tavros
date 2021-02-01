@@ -15,7 +15,7 @@
     dest: /tmp/{{ cluster_domain }}/platform/flux-system/gotk-sync.yaml
 
 - name: Apply Flux manifests
-  when: "'dry-run' not in ansible_run_tags"
+  when: ('dry-run' not in ansible_run_tags)
   # difference(...) because flux generates an extra document marker at the end
   # https://curtisshoward.com/post/multi-document-yaml-files-and-the-ansible-k8s-module/
   loop: "{{ lookup('file', '/tmp/' +  cluster_domain + '/platform/flux-system/gotk-components.yaml') | from_yaml_all | list | difference([None]) }}"
@@ -31,9 +31,22 @@
     dest: /tmp/{{ cluster_domain }}/platform/flux-system/sources.yaml
 
 - name: Apply Flux Source manifests
-  when: "'dry-run' not in ansible_run_tags"
+  when: ('dry-run' not in ansible_run_tags)
   loop: "{{ lookup('file', '/tmp/' +  cluster_domain + '/platform/flux-system/sources.yaml') | from_yaml_all | list | difference([None]) }}"
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_timeout: 900
+
+- name: Process slack-alert template
+  when: (flux.alerts.slack.address is defined)
+  template:
+    src: slack-alert.j2
+    dest: /tmp/{{ cluster_domain }}/platform/flux-system/slack-alert.yaml
+
+- name: Apply Flux slack-alert manifest
+  when: (flux.alerts.slack.address is defined) and ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s:
+    state: present
+    src: /tmp/{{ cluster_domain }}/platform/flux-system/slack-alert.yaml
+    
