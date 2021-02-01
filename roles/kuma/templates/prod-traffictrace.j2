@@ -1,16 +1,12 @@
 apiVersion: kuma.io/v1alpha1
 kind: TrafficTrace
-mesh: sandbox
+mesh: {{ item.name }}
 metadata:
-  name: sandbox-trace-all-traffic
+  name: {{ item.name }}-trace-all-traffic
   namespace: kuma-system
 spec:
   selectors:
   - match:
       kuma.io/service: '*'
   conf:
-<<<<<<< HEAD
     backend: jaeger-collector
-=======
-    backend: jaeger-collector
->>>>>>> 7146bf4b0543abc034f0f44e8eabf681f0921ef7
