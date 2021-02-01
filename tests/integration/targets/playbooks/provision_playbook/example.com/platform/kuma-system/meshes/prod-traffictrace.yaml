@@ -9,8 +9,4 @@ spec:
   - match:
       kuma.io/service: '*'
   conf:
-<<<<<<< HEAD
     backend: jaeger-collector
-=======
-    backend: jaeger-collector
->>>>>>> 7146bf4b0543abc034f0f44e8eabf681f0921ef7
