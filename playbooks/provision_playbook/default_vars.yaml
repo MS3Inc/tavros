@@ -34,9 +34,13 @@ all:
       - name: 'sandbox'
         mtls:
           enabled: true
+        traffictrace:
+            enabled: true
       - name: 'prod'
         mtls:
           enabled: true
+        traffictrace:
+            enabled: true
     namespaces:
     - name: 'dev'
       kuma_mesh_name: 'sandbox'
