@@ -8,7 +8,7 @@ all:
       node_count: 2
       node_size: 't2.xlarge'
       zones: 'us-east-1a,us-east-1b'
-      state_bucket: 'troubadour'
+      state_bucket: 'tavros'
     kong:
       default_ingress_class: 'prod'
       ee_creds:
@@ -86,3 +86,4 @@ all:
       enabled: false
       keycloak:
         realm: 'prod'
+    flux: {}

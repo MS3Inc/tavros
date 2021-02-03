@@ -6,13 +6,13 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: prod
 config:  
-  issuer: "https://auth.troubadour.example.com/auth/realms/prod"
+  issuer: "https://auth.tavros.example.com/auth/realms/prod"
   client_id: 
   - jaeger
   client_secret: 
   - "placeholder15"
   redirect_uri: 
-  - https://jaeger.troubadour.example.com
+  - https://jaeger.tavros.example.com
   ssl_verify: false
   roles_claim: [ "roles" ]
   roles_required: 

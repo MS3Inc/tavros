@@ -10,6 +10,12 @@
     src: mesh.j2
     dest: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.name }}.yaml
 
+- name: Process tracing template
+  with_list: '{{ kuma.meshes }}'
+  template:
+    src: traffictrace.j2
+    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.name }}-traffictrace.yaml
+
 - name: Process kuma kustomization template
   template:
     src: kustomization.j2
@@ -27,12 +33,13 @@
 
 - name: Apply Kuma release
   when: "'dry-run' not in ansible_run_tags"
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kuma-system/
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/kuma-system/
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-
+    wait_timeout: 900
+    
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2

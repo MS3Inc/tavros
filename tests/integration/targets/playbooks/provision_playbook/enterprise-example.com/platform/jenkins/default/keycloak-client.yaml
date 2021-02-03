@@ -11,11 +11,11 @@ spec:
         realm: prod
   client:
     clientId: jenkins
-    rootUrl: https://ci.troubadour.enterprise-example.com
+    rootUrl: https://ci.tavros.enterprise-example.com
     enabled: true
     clientAuthenticatorType: client-secret
     redirectUris:
-    - https://ci.troubadour.enterprise-example.com/*
+    - https://ci.tavros.enterprise-example.com/*
     standardFlowEnabled: true
     implicitFlowEnabled: false
     directAccessGrantsEnabled: true

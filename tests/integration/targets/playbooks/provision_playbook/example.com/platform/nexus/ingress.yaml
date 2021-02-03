@@ -4,21 +4,22 @@ metadata:
   name: nexus
   namespace: nexus
   annotations:
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: prod
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
     konghq.com/https-redirect-status-code: '302'
+    konghq.com/plugins: nexus-oidc
 spec:
   rules:
-  - host: nexus.troubadour.example.com
+  - host: nexus.tavros.example.com
     http:
       paths:
       - path: /
         backend:
-          serviceName: troubadour-nexus-repository-manager
+          serviceName: tavros-nexus-repository-manager
           servicePort: 8081
   tls:
   - hosts:
-    - nexus.troubadour.example.com
+    - nexus.tavros.example.com
     secretName: nexus-ingress-cert

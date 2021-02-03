@@ -14,4 +14,4 @@ What should be our base platform?
 
 ## Decision Outcome
 
-We'll use Kubernetes as Troubadour's computing platform. The adoption and support for Kubernetes has been evident for some time, most importantly tools like Kops, Helm, Operators, and Ansible's Kubernetes modules, make a great base for us to focus on delivering our platform.
+We'll use Kubernetes as Tavros's computing platform. The adoption and support for Kubernetes has been evident for some time, most importantly tools like Kops, Helm, Operators, and Ansible's Kubernetes modules, make a great base for us to focus on delivering our platform.

@@ -56,29 +56,30 @@
 
 - name: Apply operator manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/jenkins/operator/0.5.0
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_domain }}/platform/jenkins/operator/0.5.0
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-
+    wait_timeout: 900
+    
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/jenkins
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_domain }}/platform/jenkins
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
 
 - name: Wait for Jenkins
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
     kind: Pod
-    name: jenkins-troubadour
+    name: jenkins-tavros
     namespace: jenkins
     wait: true
-    wait_sleep: 10
-    wait_timeout: 3600
+    wait_timeout: 900
   changed_when: false
 
 - name: Process flux-kustomization template

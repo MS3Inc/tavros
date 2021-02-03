@@ -6,4 +6,7 @@ resources:
   - default-release.yaml
 {% for item in kuma.meshes %}
   - meshes/{{ item.name }}.yaml
+{% if item.traffictrace.enabled and jaeger.enabled %}
+  - meshes/{{ item.name }}-traffictrace.yaml
+{% endif %}
 {% endfor %}

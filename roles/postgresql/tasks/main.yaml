@@ -14,14 +14,17 @@
   set_fact:
     postgresql: "{{ { 'postgres_password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
 
-- name: Generate PG credentials for Kongs
+- name: Generate PG Passwords
   loop: "{{ kong.instances }}"
   set_fact:
-    gen_kong_instances: "{{ (gen_kong_instances | default([])) + [ { 'pg': { 'password': lookup('password', '/dev/null') }} | combine(item, recursive=true) ] }}"
+    generated_pg_passwords: "{{ (generated_pg_passwords | default([])) + [ (item | combine({ 'pg': { 'password': password } }, recursive=true)) ] }}"
+  vars:
+    password: "{{ ( item.pg.password | default(lookup('password', '/dev/null')) ) }}"
 
 - name: Combine kong with generated passwords
+  when: (generated_pg_passwords is defined)
   set_fact:
-    kong: "{{ kong | combine({'instances': gen_kong_instances}, recursive=true) }}"
+    kong: "{{ kong | combine({'instances': generated_pg_passwords}, recursive=true) }}"
 
 - name: Generate PG credentials for Gitea
   when: gitea.pg.password is not defined
@@ -49,10 +52,16 @@
     src: schema-init-job.yaml
     dest: /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-job.yaml
 
-- name: Process setup.sql template
+- name: Process schema-init-sql-secret template
   template:
-    src: setup.j2
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/setup.sql
+    src: schema-init-sql-secret.j2
+    dest: /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.yaml
+
+- name: Convert schema-init-sql-secret to SealedSecret
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.yaml >/tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.tmp
+    mv /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.tmp /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.yaml
 
 - name: Copy postgresql namespace
   copy:
@@ -70,12 +79,13 @@
     dest: /tmp/{{ cluster_domain }}/platform/postgresql/kustomization.yaml
 
 - name: Apply manifests
-  when: "'dry-run' not in ansible_run_tags"
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/postgresql/
+  when: ('dry-run' not in ansible_run_tags)
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_domain + '/platform/postgresql/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
 
 - name: Process flux-kustomization template
   template:

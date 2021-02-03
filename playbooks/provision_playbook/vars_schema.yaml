@@ -98,6 +98,11 @@ properties:
               properties:
                 enabled:
                   type: boolean
+            traffictrace:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
   namespaces:
     type: array
     items:

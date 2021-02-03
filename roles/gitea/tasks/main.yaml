@@ -9,6 +9,12 @@
     src: ns.yaml
     dest: /tmp/{{ cluster_domain }}/platform/gitea/ns.yaml
 
+- name: Copy ca-certs-config
+  when: ('test-run' in ansible_run_tags)
+  copy:
+    src: ca-certs-config.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/gitea/ca-certs-config.yaml
+
 - name: Generate Admin pass for Gitea
   when: gitea.admin.password is not defined
   set_fact:
@@ -25,9 +31,9 @@
     kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml >/tmp/{{ cluster_domain }}/platform/gitea/values-secret.tmp
     mv /tmp/{{ cluster_domain }}/platform/gitea/values-secret.tmp /tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml
 
-- name: Copy gitea kustomization
-  copy:
-    src: kustomization.yaml
+- name: Process gitea kustomization template
+  template:
+    src: kustomization.j2
     dest: /tmp/{{ cluster_domain }}/platform/gitea/kustomization.yaml
 
 - name: Copy gitea helm source
@@ -64,12 +70,12 @@
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  loop: "{{ lookup('ms3_inc.troubadour.kustomize', '/tmp/' + cluster_domain + '/platform/gitea/', reorder='none') }}"
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_domain + '/platform/gitea/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-    wait_timeout: 1800
+    wait_timeout: 900
 
 - include_tasks: keycloak_sso.yaml
   when: ('dry-run' not in ansible_run_tags)
@@ -89,3 +95,4 @@
       visibility: limited
       repo_admin_change_team_access: true
     status_code: 201
+    validate_certs: False

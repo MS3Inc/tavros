@@ -21,7 +21,7 @@
       extra_args: --user
 
   - import_role:
-      name: ms3_inc.troubadour.kubernetes_cluster
+      name: ms3_inc.tavros.kubernetes_cluster
     vars:
       cluster_state: present
 
@@ -35,60 +35,64 @@
   - name: Install and configure components
     block:
       - include_role:
-          name: ms3_inc.troubadour.fluxtoolkit
+          name: ms3_inc.tavros.fluxtoolkit
 
       - include_role:
-          name: ms3_inc.troubadour.kubeseal
+          name: ms3_inc.tavros.kubeseal
 
       - include_role:
-          name: ms3_inc.troubadour.postgresql
+          name: ms3_inc.tavros.postgresql
 
       - include_role:
-          name: ms3_inc.troubadour.namespace
+          name: ms3_inc.tavros.namespace
 
       - include_role:
-          name: ms3_inc.troubadour.kuma
+          name: ms3_inc.tavros.kuma
 
       - include_role:
-          name: ms3_inc.troubadour.cert_manager
+          name: ms3_inc.tavros.cert_manager
         when: cert_manager.enabled
 
       - include_role:
-          name: ms3_inc.troubadour.kong
+          name: ms3_inc.tavros.kong
 
       - include_role:
-          name: ms3_inc.troubadour.keycloak
+          name: ms3_inc.tavros.keycloak
         when: keycloak.enabled
 
       - include_role:
-          name: ms3_inc.troubadour.kong_ee_keycloak_sso
+          name: ms3_inc.tavros.kong_ee_keycloak_sso
         when: keycloak.enabled
 
       - include_role:
-          name: ms3_inc.troubadour.nexus
+          name: ms3_inc.tavros.nexus
         when: nexus.enabled
 
       - include_role:
-          name: ms3_inc.troubadour.elastic_cloud
+          name: ms3_inc.tavros.elastic_cloud
         when: elastic_cloud.enabled
 
       - include_role:
-          name: jaeger
+          name: ms3_inc.tavros.jaeger
         when: jaeger.enabled and keycloak.enabled and not elastic_cloud.ee.enabled
 
       - include_role:
-          name: ms3_inc.troubadour.gitea
+          name: ms3_inc.tavros.gitea
         when: gitea.enabled
 
       - include_role:
-          name: ms3_inc.troubadour.jenkins
+          name: ms3_inc.tavros.jenkins
 
       - include_role:
-          name: ms3_inc.troubadour.fluxtoolkit
+          name: ms3_inc.tavros.fluxtoolkit
           tasks_from: gitea-setup
-        when: gitea.enabled
+        when: gitea.enabled and ('dry-run' not in ansible_run_tags)
 
     always:
       - copy:
-          content: "{{ { 'all': { 'vars': { 'cluster_name': cluster_name, 'cluster_domain': cluster_domain, 'cluster_admin_email': cluster_admin_email, 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql, 'elastic_cloud': elastic_cloud, 'cert_manager': cert_manager, 'gitea': gitea, 'jaeger': jaeger, 'jenkins': jenkins }}} | to_nice_yaml(indent=2) }}"
+          content: "{{ { 'all': { 'vars': { 'flux': flux, 'cluster_name': cluster_name, 'cluster_domain': cluster_domain, 'cluster_admin_email': cluster_admin_email, 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql, 'elastic_cloud': elastic_cloud, 'cert_manager': cert_manager, 'gitea': gitea, 'jaeger': jaeger, 'jenkins': jenkins }}} | to_nice_yaml(indent=2) }}"
           dest: /tmp/{{ cluster_domain }}_vars.yaml
+      - include_role:
+          name: ms3_inc.tavros.kubernetes_cluster
+          tasks_from: tavros_config_backup
+        when: ('dry-run' not in ansible_run_tags)

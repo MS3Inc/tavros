@@ -26,7 +26,7 @@ spec:
     - add_fields:
         target: event
         fields:
-          dataset: troubadour
+          dataset: tavros
     - add_cloud_metadata: {}
     - add_host_metadata: {}
   daemonSet:

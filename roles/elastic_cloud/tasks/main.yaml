@@ -104,12 +104,12 @@
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/elastic-cloud/
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/elastic-cloud/
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-    wait_timeout: 150
+    wait_timeout: 900
 
 - name: Wait for Elasticsearch
   when: ('dry-run' not in ansible_run_tags)
@@ -120,7 +120,7 @@
     namespace: elastic-system
   register: elastic_def
   until: ('status' in elastic_def.resources[0]) and (elastic_def.resources[0].status.phase == 'Ready')
-  retries: 120
+  retries: 30
   delay: 30
   changed_when: false
 
@@ -133,7 +133,7 @@
     namespace: elastic-system
   register: kibana_def
   until: ('status' in kibana_def.resources[0]) and (kibana_def.resources[0].status.health == 'green')
-  retries: 120
+  retries: 30
   delay: 30
   changed_when: false
 
@@ -164,12 +164,12 @@
 
 - name: Create Elastic Cloud Keycloak Client Roles
   when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
-  ms3_inc.troubadour.keycloak_client_roles:
+  ms3_inc.tavros.keycloak_client_roles:
     auth_keycloak_url: 'https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth'
     validate_certs: false
     auth_realm: master
     auth_username: admin
-    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-troubadour-keycloak').data.ADMIN_PASSWORD | b64decode }}"
+    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros-keycloak').data.ADMIN_PASSWORD | b64decode }}"
     realm: "{{ elastic_cloud.ee.keycloak.realm}}"
     clientId: elastic-cloud
     roles:

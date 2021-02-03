@@ -1,10 +1,10 @@
 apiVersion: keycloak.org/v1alpha1
 kind: Keycloak
 metadata:
-  name: troubadour-keycloak
+  name: tavros-keycloak
   namespace: keycloak
   labels:
-    app.troubadour/component: auth
+    app.tavros/component: auth
 spec:
   instances: 1
   externalDatabase:

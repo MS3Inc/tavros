@@ -11,7 +11,7 @@ spec:
         realm: prod
   client:
     clientId: "nexus"
-    secret: "prod"
+    secret: "placeholder10"
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     redirectUris:

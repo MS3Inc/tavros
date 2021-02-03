@@ -1,0 +1,8 @@
+---
+- name: Store Tavros Vars
+  when: (kubernetes_cluster.cloud == 'aws')
+  amazon.aws.aws_s3:
+    bucket: "{{ kubernetes_cluster.state_bucket }}"
+    object: /{{ cluster_domain }}_vars.yaml
+    src: /tmp/{{ cluster_domain }}_vars.yaml
+    mode: put 

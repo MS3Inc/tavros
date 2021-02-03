@@ -9,12 +9,14 @@
     src: kustomization.yaml
     dest: /tmp/{{ cluster_domain }}/platform/kubeseal/kustomization.yaml
 
-- name: Apply kubeseal manifests
-  when: "'dry-run' not in ansible_run_tags"
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kubeseal/
+- name: Apply manifests
+  when: ('dry-run' not in ansible_run_tags)
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_domain + '/platform/kubeseal/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
 
 - name: Process flux-kustomization template
   template:

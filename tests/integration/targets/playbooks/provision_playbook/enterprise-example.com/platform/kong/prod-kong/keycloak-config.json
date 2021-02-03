@@ -1,16 +1,16 @@
 {
-    "issuer":"https://auth.troubadour.enterprise-example.com/auth/realms/prod",
+    "issuer":"https://auth.tavros.enterprise-example.com/auth/realms/prod",
     "client_id":["prod-kong"],
     "client_secret":["placeholder12"],
     "consumer_by":["username","custom_id","id"],
     "ssl_verify":false,
     "consumer_claim":["email"],
     "leeway":1000,
-    "redirect_uri":["https://admin.prod-kong.troubadour.enterprise-example.com"],
-    "login_redirect_uri":["https://admin.prod-kong.troubadour.enterprise-example.com"],
+    "redirect_uri":["https://admin.prod-kong.tavros.enterprise-example.com"],
+    "login_redirect_uri":["https://admin.prod-kong.tavros.enterprise-example.com"],
     "logout_methods":["GET", "DELETE"],
     "logout_query_arg":"logout",
-    "logout_redirect_uri":["https://admin.prod-kong.troubadour.enterprise-example.com"],
+    "logout_redirect_uri":["https://admin.prod-kong.tavros.enterprise-example.com"],
     "scopes":["openid","profile","email","offline_access"],
     "auth_methods":["authorization_code"]
 }

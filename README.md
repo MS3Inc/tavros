@@ -1,14 +1,14 @@
-# Troubadour
+# Tavros
 
-Troubadour is a cost-effective, cloud-native, and modular integration platform composed of best-of-breed, and seamlessly integrated open-source components.
+Tavros is a cost-effective, cloud-native, and modular integration platform composed of best-of-breed, and seamlessly integrated open-source components.
 
-## Ansible Collection - ms3_inc.troubadour
+## Ansible Collection - ms3_inc.tavros
 
-The objective of this Ansible Collection is to provide the necessary Ansible Playbooks to configure, provision, and manage the Troubadour Kubernetes Cluster and supported components.
+The objective of this Ansible Collection is to provide the necessary Ansible Playbooks to configure, provision, and manage the Tavros Kubernetes Cluster and supported components.
 
 ### Provision Playbook
 
-The provision playbook provisions a Kubernetes cluster and configures Troubadour's platform components, application environments, etc. All of the components are configurable through Ansible variables or the default configuration can be chosen. See the provision playbook's [documentation](playbooks/provision_playbook/README.md) for more information.
+The provision playbook provisions a Kubernetes cluster and configures Tavros's platform components, application environments, etc. All of the components are configurable through Ansible variables or the default configuration can be chosen. See the provision playbook's [documentation](playbooks/provision_playbook/README.md) for more information.
 
 ## Supported Platform Components
 
@@ -20,14 +20,14 @@ The provision playbook provisions a Kubernetes cluster and configures Troubadour
 | Service Mesh | Kuma | 1.0.0 | 0.1.0 |
 | Identity and Access Management | Keycloak | 11.0.2 | 0.1.0 |
 | Artifact Management | Nexus Repository Manager | 3.28.1 | 0.2.0 |
-| Continuous Delivery | Jenkins | 2.249.2 | na |
-| Observability | Elastic Cloud | 7.9.3 | na |
-| Observability | Jaeger | 1.20.0 | na |
+| Continuous Delivery | Jenkins | 2.249.2 | 0.4.0 |
+| Observability | Elastic Cloud | 7.9.3 | 0.4.0 |
+| Observability | Jaeger | 1.20.0 | 0.4.0 |
 | Static Code Qualitative Analysis | Sonarqube | 8.5 | na |
 
 ## Roadmap
 
-The Troubadour team will publish a roadmap for each major and minor release based on product strategy and business objectives. See our [Troubadour Roadmap](docs/roadmap/index.md).
+The Tavros team will publish a roadmap for each major and minor release based on product strategy and business objectives. See our [Tavros Roadmap](docs/roadmap/index.md).
 
 ## Architectural Decision Log
 

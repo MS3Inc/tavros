@@ -22,7 +22,7 @@ spec:
               psql -h $PG_HOST -U postgres -f /tmp/setup/setup.sql || { echo 'PSQL Setup failure' ; exit 1; }
           env:
             - name: PG_HOST
-              value: troubadour-postgresql.postgresql.svc.cluster.local
+              value: tavros-postgresql.postgresql.svc.cluster.local
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
@@ -32,8 +32,8 @@ spec:
             - name: setup-volume
               mountPath: /tmp/setup
       volumes:
-        - name: setup-volume
-          configMap:
-            name: setup-config
+      - name: setup-volume
+        secret:
+          secretName: schema-init-sql
       restartPolicy: OnFailure
   backoffLimit: 4

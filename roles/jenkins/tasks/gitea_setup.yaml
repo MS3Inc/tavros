@@ -27,3 +27,4 @@
       # this points to Keycloak as local is source_id 0
       source_id: 1
     status_code: 201
+    validate_certs: False

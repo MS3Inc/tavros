@@ -5,5 +5,8 @@ resources:
   - helm-source.yaml
   - values-secret.yaml
   - keycloak-client.yaml
+{% if ('test-run' in ansible_run_tags) %}
+  - ca-certs-config.yaml
+{% endif %}
   - release.yaml
   - ingress.yaml

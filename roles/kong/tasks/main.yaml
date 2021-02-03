@@ -10,6 +10,11 @@
     src: ns.yaml
     dest: /tmp/{{ cluster_domain }}/platform/kong/ns.yaml
 
+- name: Copy Source
+  copy:
+    src: source.yaml
+    dest: /tmp/{{ cluster_domain }}/platform/kong/source.yaml
+
 - name: Process base kustomization template
   template:
     src: base-kustomization.j2
@@ -34,16 +39,9 @@
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/release.yaml
   loop: "{{ kong.instances }}"
 
-- name: Process instance values templates
-  template:
-    src: values.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/values.yaml
-  loop: "{{ kong.instances }}"
-
 - name: Generate Keycloak Client Secrets
-  when: (item.ee.enabled)
   set_fact:
-    generated_keycloak_secrets: "{{ (generated_keycloak_secrets | default([])) + [ (item | combine({ 'ee': { 'keycloak': { 'client_secret': uuid } } }, recursive=true)) ] }}"
+    generated_keycloak_secrets: "{{ (generated_keycloak_secrets | default([])) + [ (item | combine(({ 'ee': { 'keycloak': { 'client_secret': uuid } } } if (item.ee.enabled) else {}), recursive=true)) ] }}"
   vars:
     uuid: "{{ ( item.ee.keycloak.client_secret | default((1000000 | random | to_uuid)) ) }}"
   loop: "{{ kong.instances }}"
@@ -109,10 +107,9 @@
   loop: "{{ kong.ee_creds }}"
 
 - name: Generate instance Superuser Passwords
-  when: (item.ee.enabled)
   loop: "{{ kong.instances }}"
   set_fact:
-    generated_su_passwords: "{{ (generated_su_passwords | default([])) + [ (item | combine({ 'ee': { 'admin_password': password } }, recursive=true)) ] }}"
+    generated_su_passwords: "{{ (generated_su_passwords | default([])) + [ (item | combine(({ 'ee': { 'admin_password': password } } if (item.ee.enabled) else {}), recursive=true)) ] }}"
   vars:
     password: "{{ ( item.ee.admin_password | default(lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=8')) ) }}"
 
@@ -169,14 +166,14 @@
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kong/
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_domain + '/platform/kong/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-    wait_timeout: 150
-
-- name: Set DNS for Troubadour Apps
+    wait_timeout: 900
+    
+- name: Set DNS for Tavros Apps
   when: ('dry-run' not in ansible_run_tags)
   community.aws.route53:
     state: present
@@ -186,6 +183,7 @@
     value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
+    wait_timeout: 900
   vars:
     prod_kong_proxy: "kong-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}-kong-proxy"
 
@@ -199,6 +197,7 @@
     value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
+    wait_timeout: 900
   vars:
     instance_kong_proxy: "kong-{{ item.name }}-kong-proxy"
   loop: "{{ kong.instances }}"
@@ -213,6 +212,7 @@
     value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
+    wait_timeout: 900
   vars:
     instance_kong_proxy: "kong-{{ item.name }}-kong-proxy"
   loop: "{{ kong.instances }}"
