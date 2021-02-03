@@ -67,6 +67,11 @@
     src: keycloak-client.j2
     dest: /tmp/{{ cluster_domain }}/platform/jaeger/keycloak-client.yaml
 
+- name: Process spark-dependencies template
+  template:
+    src: spark-dependencies.j2
+    dest: /tmp/{{ cluster_domain }}/platform/jaeger/spark-dependencies.yaml
+
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/jaeger/
