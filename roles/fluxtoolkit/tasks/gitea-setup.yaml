@@ -54,8 +54,11 @@
     status_code: 201
     validate_certs: False
 
+
 - name: Register gitea login cookies
-  when: gitea_login is not defined
+  # todo: figure out how to re-use gitea_login if available
+  # beware a simple `when` with a `register` will ovewrite the variable with the skipped task dict
+  # when: gitea_login.cookies_string is not defined
   uri:
     url: https://code.{{ cluster_name }}.{{ cluster_domain }}/user/login
     method: POST
