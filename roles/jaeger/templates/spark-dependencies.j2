@@ -37,8 +37,8 @@ spec:
             - name: keystore-volume
               emptyDir: {}
           initContainers:
-            - name: {{ initcontainer_name }}
-              image: '{{ initcontainer_image }}'
+            - name: bootstrap-truststore
+              image: 'openjdk:8-jre-slim'
               command: ['/bin/bash']
               args: ['-c', 'keytool -noprompt -import -trustcacerts -alias tls -file /es/certificates/tls.crt -keystore /var/run/secrets/java.io/keystores/truststore.jks -storepass password']
               volumeMounts:
@@ -46,13 +46,13 @@ spec:
                   readOnly: true
                   mountPath: /es/certificates/
                 - name: keystore-volume
-                  mountPath: {{ mount_path }}
+                  mountPath: /var/run/secrets/java.io/keystores
           containers:
-            - name: {{ spark_image_name }}
+            - name: tavros-spark-dependencies
               image: '{{ spark_image }}'
               envFrom:
                 - secretRef:
-                    name: {{ secret }}
+                    name: jaeger-es-secret
               env:
                 - name: STORAGE
                   value: elasticsearch
@@ -73,7 +73,7 @@ spec:
                   memory: 2Gi
               volumeMounts:
                 - name: keystore-volume
-                  mountPath: {{ mount_path }}
+                  mountPath: /var/run/secrets/java.io/keystores
           restartPolicy: Never
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst
