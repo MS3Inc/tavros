@@ -83,7 +83,7 @@
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 900
-  
+
 - name: Wait for Nexus
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
@@ -165,7 +165,7 @@
 - name: Add dockerhub-proxy repository
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/beta/repositories/docker/proxy"
+    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/beta/repositories/docker/proxy"
     method: POST
     status_code: 201
     headers:
@@ -202,7 +202,7 @@
 - name: Add internal container image repository
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/beta/repositories/docker/hosted"
+    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/beta/repositories/docker/hosted"
     method: POST
     status_code: 201
     headers:
@@ -229,7 +229,7 @@
 - name: Add container registry group repository
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/beta/repositories/docker/group"
+    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/beta/repositories/docker/group"
     method: POST
     status_code: 201
     headers:
@@ -268,7 +268,7 @@
 - name: Add Keycloak Nexus Realm
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/realms/active"
+    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/realms/active"
     method: PUT
     status_code: 204
     headers:
@@ -287,7 +287,7 @@
 - name: Add Keycloak admin Role Mapping
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
+    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
     method: POST
     status_code: 200
     headers:
@@ -308,7 +308,7 @@
 - name: Add Keycloak developer Role
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
+    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
     method: POST
     status_code: 200
     headers:
@@ -345,7 +345,7 @@
 - name: Add Keycloak developer Role Mapping
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://nexus.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
+    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
     method: POST
     status_code: 200
     headers:

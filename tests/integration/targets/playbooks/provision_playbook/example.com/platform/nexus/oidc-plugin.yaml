@@ -13,7 +13,7 @@ config:
   client_secret: 
   - "placeholder10"
   redirect_uri: 
-  - https://nexus.tavros.example.com
+  - https://artifacts.tavros.example.com
   ssl_verify: false
 
   upstream_headers_claims: 

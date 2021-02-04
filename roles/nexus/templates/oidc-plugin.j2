@@ -13,7 +13,7 @@ config:
   client_secret: 
   - "{{ nexus.keycloak.client_secret }}"
   redirect_uri: 
-  - https://nexus.{{ cluster_name}}.{{ cluster_domain }}
+  - https://artifacts.{{ cluster_name}}.{{ cluster_domain }}
   ssl_verify: false
 
   upstream_headers_claims: 

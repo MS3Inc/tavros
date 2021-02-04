@@ -12,7 +12,7 @@ metadata:
     konghq.com/plugins: nexus-oidc
 spec:
   rules:
-  - host: nexus.tavros.example.com
+  - host: artifacts.tavros.example.com
     http:
       paths:
       - path: /
@@ -21,5 +21,5 @@ spec:
           servicePort: 8081
   tls:
   - hosts:
-    - nexus.tavros.example.com
+    - artifacts.tavros.example.com
     secretName: nexus-ingress-cert
