@@ -57,7 +57,7 @@ spec:
                 - name: STORAGE
                   value: elasticsearch
                 - name: ES_NODES
-                  value: 'https://elasticsearch-es-http.elastic-system.svc:9200'
+                  value: 'https://tavros-es-http.elastic-system.svc:9200'
                 - name: ES_INDEX_PREFIX
                   value: tavros
                 - name: JAVA_OPTS
