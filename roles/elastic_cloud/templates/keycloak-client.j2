@@ -15,7 +15,7 @@ spec:
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     redirectUris:
-    - "*"
+    - "https://kibana.{{ cluster_name}}.{{ cluster_domain }}/*"
     standardFlowEnabled: True
     enabled: True
     protocolMappers:

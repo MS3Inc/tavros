@@ -16,7 +16,7 @@ spec:
     protocol: openid-connect
     rootUrl: https://admin.prod-kong.tavros.enterprise-example.com
     redirectUris:
-    - "*"
+    - "https://admin.prod-kong.tavros.enterprise-example.com/*"
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
     enabled: True

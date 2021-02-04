@@ -16,7 +16,7 @@ spec:
     protocol: openid-connect
     rootUrl: https://admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}
     redirectUris:
-    - "*"
+    - "https://admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}/*"
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
     enabled: True
