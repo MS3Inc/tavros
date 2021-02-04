@@ -16,6 +16,10 @@ spec:
       limits:
         cpu: 100m
         memory: 128Mi
+  ui:
+    options:
+      dependencies:
+        menuEnabled: true
   storage:
     type: elasticsearch
     options:

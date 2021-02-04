@@ -8,3 +8,4 @@ resources:
   - ingress.yaml
   - keycloak-client.yaml
   - oidc-plugin.yaml
+  - spark-dependencies.yaml
