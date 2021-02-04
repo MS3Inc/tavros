@@ -1,15 +1,15 @@
 apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
 metadata:
-  name: filebeat
+  name: tavros-filebeat
   namespace: elastic-system
 spec:
   type: filebeat
   version: 7.10.1
   elasticsearchRef:
-    name: elasticsearch
+    name: tavros
   kibanaRef:
-    name: kibana
+    name: tavros
   config:
     filebeat:
       autodiscover:

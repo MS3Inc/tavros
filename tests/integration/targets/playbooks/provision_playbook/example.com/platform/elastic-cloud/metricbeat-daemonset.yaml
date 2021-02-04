@@ -7,9 +7,9 @@ spec:
   type: metricbeat
   version: 7.10.1
   elasticsearchRef:
-    name: elasticsearch
+    name: tavros
   kibanaRef:
-    name: kibana
+    name: tavros
   config:
     metricbeat:
       autodiscover:

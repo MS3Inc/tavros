@@ -116,7 +116,7 @@
   community.kubernetes.k8s_info:
     api_version: elasticsearch.k8s.elastic.co/v1
     kind: Elasticsearch
-    name: elasticsearch
+    name: tavros
     namespace: elastic-system
   register: elastic_def
   until: ('status' in elastic_def.resources[0]) and (elastic_def.resources[0].status.phase == 'Ready')
@@ -129,7 +129,7 @@
   community.kubernetes.k8s_info:
     api_version: kibana.k8s.elastic.co/v1
     kind: Kibana
-    name: kibana
+    name: tavros
     namespace: elastic-system
   register: kibana_def
   until: ('status' in kibana_def.resources[0]) and (kibana_def.resources[0].status.health == 'green')
@@ -137,12 +137,12 @@
   delay: 30
   changed_when: false
 
-- name: Get elasticsearch-es-elastic-user object
+- name: Get tavros-es-elastic-user object
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
     api_version: v1
     kind: Secret
-    name: elasticsearch-es-elastic-user
+    name: tavros-es-elastic-user
     namespace: elastic-system
   register: elastic_secret
 
@@ -157,7 +157,7 @@
   when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_exec:
     namespace: elastic-system
-    pod: "elasticsearch-es-default-0"
+    pod: "tavros-es-default-0"
     command: |
       curl --insecure -X PUT https://localhost:9200/_security/role_mapping/admin?pretty --user elastic:{{ elastic_cloud.elastic_secret }} -H 'Content-Type: application/json' -d'{"roles": [ "superuser" ],"enabled": true,"rules": {"field": { "groups": "admin" }}}'
   register: elk_results

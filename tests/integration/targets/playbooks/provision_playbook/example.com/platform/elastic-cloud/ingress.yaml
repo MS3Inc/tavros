@@ -16,7 +16,7 @@ spec:
       paths:
       - path: /
         backend:
-          serviceName: kibana-kb-http
+          serviceName: tavros-kb-http
           servicePort: 5601
   tls:
   - hosts:

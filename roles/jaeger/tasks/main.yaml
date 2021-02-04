@@ -48,12 +48,12 @@
 
 # Certificate info
 # https://www.elastic.co/guide/en/cloud-on-k8s/1.3/k8s-tls-certificates.html#k8s-default-self-signed-certificate
-- name: Get elasticsearch-es-cert-public object
+- name: Get tavros-es-cert-public object
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
     api_version: v1
     kind: Secret
-    name: elasticsearch-es-http-certs-public
+    name: tavros-es-http-certs-public
     namespace: elastic-system
   register: elastic_certs
 

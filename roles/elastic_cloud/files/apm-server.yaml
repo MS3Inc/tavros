@@ -7,9 +7,9 @@ spec:
   version: 7.10.1
   count: 1
   elasticsearchRef:
-    name: elasticsearch
+    name: tavros
   kibanaRef:
-    name: kibana
+    name: tavros
   config:
     name: elastic-apm
     apm-server.jaeger.grpc.enabled: true
