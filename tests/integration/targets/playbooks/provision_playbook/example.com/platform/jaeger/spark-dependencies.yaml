@@ -22,7 +22,6 @@ spec:
             app: jaeger
             app.kubernetes.io/component: spark-dependencies
             app.kubernetes.io/instance: tavros
-            app.kubernetes.io/managed-by: jaeger-operator
             app.kubernetes.io/name: tavros-spark-dependencies
             app.kubernetes.io/part-of: jaeger
           annotations:
@@ -61,7 +60,6 @@ spec:
                   value: 'https://elasticsearch-es-http.elastic-system.svc:9200'
                 - name: ES_INDEX_PREFIX
                   value: tavros
-                  # make password a secret
                 - name: JAVA_OPTS
                   value: >-
                     -Djavax.net.ssl.trustStore=/var/run/secrets/java.io/keystores/truststore.jks

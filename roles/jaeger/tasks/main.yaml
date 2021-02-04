@@ -71,6 +71,14 @@
   template:
     src: spark-dependencies.j2
     dest: /tmp/{{ cluster_domain }}/platform/jaeger/spark-dependencies.yaml
+  vars: 
+    cron_schedule: '55 23 * * *'
+    initcontainer_name: bootstrap-truststore
+    initcontainer_image: 'openjdk:8-jre-slim'
+    spark_image_name: tavros-spark-dependencies
+    spark_image:  'quay.io/jam01/jaeger-spark-dependencies:0.0.1-SNAPSHOT-001'
+    mount_path: '/var/run/secrets/java.io/keystores'
+    secret: jaeger-es-secret
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
