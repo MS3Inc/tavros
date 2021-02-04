@@ -76,7 +76,12 @@ spec:
       enabled: true
       http:
         enabled: true
-    
+    proxy:
+      enabled: true
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+
     enterprise:
       enabled: true
       license_secret: default-kong-enterprise-license
