@@ -87,7 +87,7 @@ There is a default configuration vars file that results in the following:
 To use the default configuration:
 
 ``` bash
-ansible-playbook $PLAYBOOKS_PATH/provision_playbook.yaml \
+ansible-playbook playbooks/provision_playbook.yaml \
   --extra-vars '{"cluster_name":"tavros","cluster_domain":"example.com","cluster_admin_email":"ops@example.com"}' \
   --inventory "playbooks/provision_playbook/default_vars.yaml"
 ```
