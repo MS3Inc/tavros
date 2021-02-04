@@ -11,7 +11,6 @@ spec:
         realm: {{ gitea.keycloak.realm }}
   client:
     clientId: "gitea"
-    # todo: make dynamic
     secret: {{ gitea.keycloak.client_secret }}
     clientAuthenticatorType: client-secret
     protocol: openid-connect

@@ -3,8 +3,6 @@ kind: KeycloakUser
 metadata:
   name: jenkins-ci
   namespace: keycloak
-  labels:
-    app: sso
 spec:
   realmSelector:
     matchLabels:
@@ -15,10 +13,8 @@ spec:
     emailVerified: true
     credentials:
       - type: password
-        # todo: should be a secret?
         value: jenkins-ci
         temporary: false
     clientRoles:
       nexus:
         - "developer"
-

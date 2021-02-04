@@ -76,3 +76,4 @@ all:
       enabled: true
       keycloak:
         realm: 'prod'
+    flux: {}
