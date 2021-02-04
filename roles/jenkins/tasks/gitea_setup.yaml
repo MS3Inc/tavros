@@ -28,3 +28,37 @@
       source_id: 1
     status_code: 201
     validate_certs: False
+
+- name: Register gitea login cookies
+  # todo: figure out how to re-use gitea_login if available
+  # beware a simple `when` with a `register` will ovewrite the variable with the skipped task dict
+  # when: gitea_login.cookies_string is not defined
+  when: "'dry-run' not in ansible_run_tags"
+  uri:
+    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/user/login
+    method: POST
+    follow_redirects: all
+    body_format: form-urlencoded
+    body:
+      user_name: gitea_admin
+      password: '{{ gitea.admin.password }}'
+    status_code: 200
+    validate_certs: False
+  register: gitea_login
+
+- name: Add jenkinsci as owner to tavros/platform
+  when: "'dry-run' not in ansible_run_tags"
+  uri:
+    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/org/tavros/teams/owners/action/add
+    method: POST
+    follow_redirects: all
+    body_format: form-urlencoded
+    headers:
+      Cookie: "{{ gitea_login.cookies_string }}"
+    body:
+      _csrf: "{{ gitea_login.cookies._csrf }}"
+      # gitea_admin uid
+      uid: 1
+      uname: jenkins-ci
+    status_code: 200
+    validate_certs: False
