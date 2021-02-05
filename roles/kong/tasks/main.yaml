@@ -21,13 +21,14 @@
     dest: /tmp/{{ cluster_domain }}/platform/kong/kustomization.yaml
 
 - name: Process instance config-secret templates
+  when: not (item.cluster.enabled and item.cluster.type == 'dp')
   template:
     src: config-secret.j2
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/config-secret.yaml
   loop: "{{ kong.instances }}"
 
 - name: Convert instance config-secrets to SealedSecrets
-  when: ('dry-run' not in ansible_run_tags)
+  when: ('dry-run' not in ansible_run_tags) and not (item.cluster.enabled and item.cluster.type == 'dp')
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/config-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/config-secret.tmp
     mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/config-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/config-secret.yaml
@@ -41,7 +42,7 @@
 
 - name: Generate Keycloak Client Secrets
   set_fact:
-    generated_keycloak_secrets: "{{ (generated_keycloak_secrets | default([])) + [ (item | combine(({ 'ee': { 'keycloak': { 'client_secret': uuid } } } if (item.ee.enabled) else {}), recursive=true)) ] }}"
+    generated_keycloak_secrets: "{{ (generated_keycloak_secrets | default([])) + [ (item | combine(({ 'ee': { 'keycloak': { 'client_secret': uuid } } } if (item.ee.enabled and not (item.cluster.enabled and item.cluster.type == 'dp')) else {}), recursive=true)) ] }}"
   vars:
     uuid: "{{ ( item.ee.keycloak.client_secret | default((1000000 | random | to_uuid)) ) }}"
   loop: "{{ kong.instances }}"
@@ -52,14 +53,14 @@
     kong: "{{ kong | combine({'instances': generated_keycloak_secrets}, recursive=true) }}"
 
 - name: Process instance keycloak-config templates
-  when: (item.ee.enabled)
+  when: (item.ee.enabled) and not (item.cluster.enabled and item.cluster.type == 'dp')
   template:
     src: keycloak-config.j2
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-config.json
   loop: "{{ kong.instances }}"
 
 - name: Process ee-admin-gui-auth-secret template
-  when: (item.ee.enabled)
+  when: (item.ee.enabled) and not (item.cluster.enabled and item.cluster.type == 'dp')
   template:
     src: ee-admin-gui-auth-secret.j2
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.yaml
@@ -68,7 +69,7 @@
   loop: "{{ kong.instances }}"
 
 - name: Kubeseal ee-admin-gui-auth-secrets
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags) and not (item.cluster.enabled and item.cluster.type == 'dp')
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.tmp
     mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-admin-gui-auth-secret.yaml
@@ -109,7 +110,7 @@
 - name: Generate instance Superuser Passwords
   loop: "{{ kong.instances }}"
   set_fact:
-    generated_su_passwords: "{{ (generated_su_passwords | default([])) + [ (item | combine(({ 'ee': { 'admin_password': password } } if (item.ee.enabled) else {}), recursive=true)) ] }}"
+    generated_su_passwords: "{{ (generated_su_passwords | default([])) + [ (item | combine(({ 'ee': { 'admin_password': password } } if (item.ee.enabled and not (item.cluster.enabled and item.cluster.type == 'dp')) else {}), recursive=true)) ] }}"
   vars:
     password: "{{ ( item.ee.admin_password | default(lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=8')) ) }}"
 
@@ -119,28 +120,28 @@
     kong: "{{ kong | combine({'instances': generated_su_passwords}, recursive=true) }}"
 
 - name: Process instance ee-superuser-secret templates
-  when: (item.ee.enabled)
+  when: (item.ee.enabled) and not (item.cluster.enabled and item.cluster.type == 'dp')
   template:
     src: ee-superuser-secret.j2
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-superuser-secret.yaml
   loop: "{{ kong.instances }}"
 
 - name: Kubeseal instance ee-superuser-secret's
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags) and not (item.cluster.enabled and item.cluster.type == 'dp')
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-superuser-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-superuser-secret.tmp
     mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-superuser-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-superuser-secret.yaml
   loop: "{{ kong.instances }}"
 
 - name: Process instance ee-session-secret templates
-  when: (item.ee.enabled)
+  when: (item.ee.enabled) and not (item.cluster.enabled and item.cluster.type == 'dp')
   template:
     src: ee-session-secret.j2
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-session-secret.yaml
   loop: "{{ kong.instances }}"
 
 - name: Kubeseal instance ee-session-secret's
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags) and not (item.cluster.enabled and item.cluster.type == 'dp')
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-session-secret.yaml >/tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-session-secret.tmp
     mv /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-session-secret.tmp /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ee-session-secret.yaml
@@ -153,6 +154,7 @@
   loop: "{{ kong.instances }}"
 
 - name: Process instance ingresses templates
+  when: not (item.cluster.enabled and item.cluster.type == 'dp')
   template:
     src: ingresses.j2
     dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/ingresses.yaml
@@ -188,7 +190,7 @@
     prod_kong_proxy: "kong-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}-kong-proxy"
 
 - name: Set DNS for Kongs by Name
-  when: ('dry-run' not in ansible_run_tags)
+  when: ('dry-run' not in ansible_run_tags) and not (item.cluster.enabled and item.cluster.type == 'cp' and item.cluster.publish_service is defined)
   community.aws.route53:
     state: present
     zone: "{{ cluster_domain }}"
@@ -203,7 +205,7 @@
   loop: "{{ kong.instances }}"
 
 - name: Set DNS for non Prod Kongs by Ingress Class
-  when: (item.ingress_class != kong.default_ingress_class) and ('dry-run' not in ansible_run_tags)
+  when: (item.ingress_class != kong.default_ingress_class) and ('dry-run' not in ansible_run_tags) and not (item.cluster.enabled and item.cluster.type == 'cp' and item.cluster.publish_service is defined)
   community.aws.route53:
     state: present
     zone: "{{ cluster_domain }}"

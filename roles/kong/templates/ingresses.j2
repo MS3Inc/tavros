@@ -12,7 +12,7 @@ metadata:
 spec:
   tls:
   - hosts:
-{%  if item.ee.enabled %}
+{% if item.ee.enabled %}
     - "admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     - "dev-portal-api{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
@@ -21,7 +21,7 @@ spec:
     - "apps{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
     secretName: {{ item.name }}-ingress-certs
   rules:
-{%  if item.ee.enabled %}
+{% if item.ee.enabled %}
   - host: "admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
     http:
       paths:
@@ -58,3 +58,23 @@ spec:
         backend:
           serviceName: kong-{{ item.name }}-kong-proxy
           servicePort: 80
+{% if (item.cluster.enabled and item.cluster.type == 'cp') %}
+---
+apiVersion: configuration.konghq.com/v1beta1
+kind: TCPIngress
+metadata:
+  name: {{ item.name }}-cluster
+  namespace: kong
+  annotations:
+    kubernetes.io/ingress.class: sandbox
+spec:
+  rules:
+  - port: 8005
+    backend:
+      serviceName: kong-sandbox-kong-cluster
+      servicePort: 8005
+  - port: 8006
+    backend:
+      serviceName: kong-sandbox-kong-clustertelemetry
+      servicePort: 8006
+{% endif  %}

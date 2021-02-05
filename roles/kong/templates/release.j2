@@ -32,9 +32,17 @@ spec:
     image:
       tag: '2.2'
 {% endif  %}
-    env:
 
-{%  if item.ee.enabled %}
+{%  if item.kuma_mesh_name is defined %}
+    podAnnotations:
+      kuma.io/sidecar-injection: enabled
+      kuma.io/gateway: enabled
+      kuma.io/mesh: {{ item.kuma_mesh_name }}
+{% endif  %}
+
+    env:
+{%  if item.ee.enabled and not (item.cluster.enabled and item.cluster.type == 'dp') %}
+      vitals: "on"
       admin_api_uri: "https://admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
       admin_gui_url: "https://admin.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}"
       portal_api-url: "https://dev-portal-api{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_name }}.{{ cluster_domain }}"
@@ -46,7 +54,23 @@ spec:
             name: {{ item.name }}-enterprise-superuser-password
             key: password
 {% endif  %}
-
+{%  if (item.cluster.enabled and item.cluster.type == 'cp') %}
+      role: control_plane
+      cluster_cert: /etc/secrets/{{ item.name }}-cluster-cert/tls.crt
+      cluster_cert_key: /etc/secrets/{{ item.name }}-cluster-cert/tls.key
+{% endif  %}
+{%  if (item.cluster.enabled and item.cluster.type == 'dp') %}
+      role: data_plane
+      database: 'off'
+      cluster_cert: /etc/secrets/{{ item.name }}-cluster-cert/tls.crt
+      cluster_cert_key: /etc/secrets/{{ item.name }}-cluster-cert/tls.key
+      lua_ssl_trusted_certificate: /etc/secrets/{{ item.name }}-cluster-cert/tls.crt
+      cluster_control_plane: {{ item.cluster.cp.address }}
+{%  if item.ee.enabled %}
+      cluster_telemetry_endpoint: {{ item.cluster.cp.telemetry }}
+{% endif  %}
+{% endif  %}
+{%  if not (item.cluster.enabled and item.cluster.type == 'dp') %}
       database: postgres
       pg_host: tavros-postgresql.postgresql
       pg_port: '5432'
@@ -65,13 +89,19 @@ spec:
           secretKeyRef:
             name: {{ item.name }}-config-secret
             key: pg_password
+{% endif  %}
+
     ingressController:
+      enabled: {{ false if (item.cluster.enabled and item.cluster.type == 'dp') else true }}
+{%  if not (item.cluster.enabled and item.cluster.type == 'dp') %}
       ingressClass: {{ item.ingress_class }}
       installCRDs: false
       env:
       # see https://github.com/Kong/charts/issues/224
         kong_admin_tls_skip_verify: 'true'
-
+{%  if (item.cluster.enabled and item.cluster.type == 'cp') %}
+        publish_service: {{ item.cluster.dp.publish_service }}
+{% endif  %}
 {%  if item.ee.enabled %}
         kong_admin_token:
           valueFrom:
@@ -79,24 +109,56 @@ spec:
               name: {{ item.name }}-enterprise-superuser-password
               key: password
 {% endif  %}
-
-{%  if item.kuma_mesh_name is defined %}
-    podAnnotations:
-      kuma.io/sidecar-injection: enabled
-      kuma.io/gateway: enabled
-      kuma.io/mesh: {{ item.kuma_mesh_name }}
 {% endif  %}
 
     admin:
-      enabled: true
+      enabled: {{ false if (item.cluster.enabled and item.cluster.type == 'dp') else true }}
       http:
         enabled: true
+
+{%  if item.cluster.enabled and item.cluster.type == 'dp' %}
+    portal:
+      enabled: False
+    portalapi:
+      enabled: False
+    manager:
+      enabled: False
+{% endif  %}
+
     proxy:
-      enabled: true
-{%  if kubernetes_cluster.cloud == 'aws' %}
+      enabled: {{ false if (item.cluster.enabled and item.cluster.type == 'cp') else true }}
+{%  if kubernetes_cluster.cloud == 'aws' and (item.cluster.enabled and item.cluster.type == 'dp') %}
       annotations:
         service.beta.kubernetes.io/aws-load-balancer-type: nlb
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+{% endif  %}
+{%  if (item.cluster.enabled and item.cluster.type == 'dp') %}
+      stream:
+        - containerPort: 8005
+          servicePort: 8005
+          parameters: []
+{%  if item.ee.enabled %}
+        - containerPort: 8006
+          servicePort: 8006
+          parameters: []
+{% endif  %}
+{% endif  %}
+
+{%  if (item.cluster.enabled and item.cluster.type == 'cp') %}
+    cluster:
+      enabled: true
+      tls:
+        enabled: true
+        servicePort: 8005
+        containerPort: 8005
+{%  if item.ee.enabled %}
+    clustertelemetry:
+      enabled: true
+      tls:
+        enabled: true
+        servicePort: 8006
+        containerPort: 8006
+{% endif  %}
 {% endif  %}
 
 {%  if item.ee.enabled %}
@@ -106,10 +168,17 @@ spec:
       vitals:
         enabled: true
       portal:
-        enabled: true
+        enabled: {{ false if (item.cluster.enabled and item.cluster.type == 'dp') else true }}
       rbac:
-        enabled: true
+        enabled: {{ false if (item.cluster.enabled and item.cluster.type == 'dp') else true }}
+{%  if not (item.cluster.enabled and item.cluster.type == 'dp') %}
         admin_gui_auth: openid-connect
         session_conf_secret: {{ item.name }}-session-config
         admin_gui_auth_conf_secret: {{ item.name }}-admin-gui-auth-conf
+{% endif  %}
+{% endif  %}
+
+{%  if item.cluster.enabled %}
+    secretVolumes:
+    - {{ item.name }}-cluster-cert
 {% endif  %}
