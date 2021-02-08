@@ -1,3 +1,4 @@
+![alt text](https://www.ms3-inc.com/wp-content/uploads/2021/02/b.png)
 # Tavros
 
 Tavros is a cost-effective, cloud-native, and modular integration platform composed of best-of-breed, and seamlessly integrated open-source components.
