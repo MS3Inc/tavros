@@ -7,16 +7,19 @@ gitea:
     email: '{{ cluster_admin_email }}'
 
   config:
-    # Disable registration, except via OpenID
-    DISABLE_REGISTRATION: false
-    ALLOW_ONLY_EXTERNAL_REGISTRATION: true
-    # Do not allow signin to local users via OpenID
-    ENABLE_OPENID_SIGNIN: false
-    # Do not allow creation of new users via OpenID
-    ENABLE_OPENID_SIGNUP: false
+    service:
+      # Disable registration, except via OpenID
+      DISABLE_REGISTRATION: false
+      ALLOW_ONLY_EXTERNAL_REGISTRATION: true
+    openid:
+      # Do not allow signin to local users via OpenID
+      ENABLE_OPENID_SIGNIN: false
+      # Do not allow creation of new users via OpenID
+      ENABLE_OPENID_SIGNUP: false
 
     server:
       ROOT_URL: 'https://code.{{ cluster_name}}.{{ cluster_domain }}/'
+      SSH_DOMAIN: 'code.{{ cluster_name}}.{{ cluster_domain }}'
 
     database:
       DB_TYPE: postgres
