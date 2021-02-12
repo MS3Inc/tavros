@@ -32,6 +32,16 @@ data:
     jenkins:
       securityRealm: keycloak
 
+    unclassified: 
+      globalLibraries:
+        libraries:
+          - name: "camel-library"
+            retriever:
+              modernSCM:
+                scm:
+                  git:
+                    remote: "https://github.com/MS3Inc/tavros-jenkins-libraries.git"
+
     jobs:
     - script: >
         organizationFolder('Gitea Tavros Folder') {
@@ -58,6 +68,38 @@ data:
                             trust(class: 'org.jenkinsci.plugin.gitea.ForkPullRequestDiscoveryTrait\$TrustContributors')
                         }
                     }
+                }
+            }
+        }
+    - script: >
+        pipelineJob('Quickstart \u2212 OpenAPI Project') {
+            definition {
+                cpsScm {
+                    scm {
+                      git {
+                        remote {
+                          url("https://code.{{ cluster_name }}.{{ cluster_domain }}/tavros/jenkinsfiles.git")
+                          credentials("gitea-credentials")
+                        }
+                      }
+                    }
+                    scriptPath("openapi.jenkinsfile")
+                }
+            }
+        }
+    - script: >
+        pipelineJob('Quickstart \u2212 Camel Web Service Project') {
+            definition {
+                cpsScm {
+                    scm {
+                      git {
+                        remote {
+                          url("https://code.{{ cluster_name }}.{{ cluster_domain }}/tavros/jenkinsfiles.git")
+                          credentials("gitea-credentials")
+                        }
+                      }
+                    }
+                    scriptPath("camel-web-service.jenkinsfile")
                 }
             }
         }

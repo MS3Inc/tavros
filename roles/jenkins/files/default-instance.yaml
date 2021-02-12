@@ -11,6 +11,8 @@ spec:
       # should be conditional of gitea enabled
       - name: gitea
         version: 1.2.1
+      - name: build-user-vars
+        version: 1.7
   configurationAsCode:
     configurations:
     - name: jenkins-configuration
