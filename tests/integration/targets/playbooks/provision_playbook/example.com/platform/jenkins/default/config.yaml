@@ -31,7 +31,7 @@ data:
     unclassified: 
       globalLibraries:
         libraries:
-          - name: "camel-library"
+          - name: "tavros-library"
             retriever:
               modernSCM:
                 scm:
@@ -74,7 +74,7 @@ data:
                     scm {
                       git {
                         remote {
-                          url('https://code.tavros.ms3-inc.com/tavros/jenkins-quickstarts.git')
+                          url('https://code.tavros.example.com/tavros/jenkins-quickstarts.git')
                           credentials('gitea-credentials')
                         }
                       }
@@ -90,7 +90,7 @@ data:
                     scm {
                       git {
                         remote {
-                          url('https://code.tavros.ms3-inc.com/tavros/jenkins-quickstarts.git')
+                          url('https://code.tavros.example.com/tavros/jenkins-quickstarts.git')
                           credentials('gitea-credentials')
                         }
                       }
