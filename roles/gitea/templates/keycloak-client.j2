@@ -15,7 +15,7 @@ spec:
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     redirectUris:
-    - "https://code.{{ cluster_name}}.{{ cluster_domain }}/*"
+    - "https://code.{{ cluster_fqdn }}/*"
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
     authorizationEnabled: True

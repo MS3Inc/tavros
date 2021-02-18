@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/instance: flux-system
     app.kubernetes.io/version: v0.4.3
-  name: tavros
+  name: flux-system
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

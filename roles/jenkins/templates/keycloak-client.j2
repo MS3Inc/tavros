@@ -11,11 +11,11 @@ spec:
         realm: {{ jenkins.keycloak.realm }}
   client:
     clientId: jenkins
-    rootUrl: https://ci.{{ cluster_name}}.{{ cluster_domain }}
+    rootUrl: https://ci.{{ cluster_fqdn }}
     enabled: true
     clientAuthenticatorType: client-secret
     redirectUris:
-    - https://ci.{{ cluster_name}}.{{ cluster_domain }}/*
+    - https://ci.{{ cluster_fqdn }}/*
     standardFlowEnabled: true
     implicitFlowEnabled: false
     directAccessGrantsEnabled: true

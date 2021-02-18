@@ -11,7 +11,7 @@ metadata:
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: kibana.{{ cluster_name}}.{{ cluster_domain }}
+  - host: kibana.{{ cluster_fqdn }}
     http:
       paths:
       - path: /
@@ -20,5 +20,5 @@ spec:
           servicePort: 5601
   tls:
   - hosts:
-    - kibana.{{ cluster_name}}.{{ cluster_domain }}
+    - kibana.{{ cluster_fqdn }}
     secretName: elastic-cloud-ingress-cert

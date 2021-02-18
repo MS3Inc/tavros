@@ -7,13 +7,13 @@ data:
   1-casc.yaml: |
     unclassified:
       location:
-        url: https://ci.{{ cluster_name}}.{{ cluster_domain }}/
+        url: https://ci.{{ cluster_fqdn }}/
         adminAddress: {{ cluster_admin_email }}
       keycloakSecurityRealm:
         keycloakJson: |-
           {
             "realm": "{{ jenkins.keycloak.realm }}",
-            "auth-server-url": "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/",
+            "auth-server-url": "https://auth.{{ cluster_fqdn }}/auth/",
 {%  if 'test-run' in ansible_run_tags %}
             "disable-trust-manager": true,
             "allow-any-hostname": true,
@@ -28,7 +28,7 @@ data:
         - credentialsId: "gitea-credentials"
           displayName: "gitea"
           manageHooks: true
-          serverUrl: "https://code.{{ cluster_name}}.{{ cluster_domain }}"
+          serverUrl: "https://code.{{ cluster_fqdn }}"
     jenkins:
       securityRealm: keycloak
 
@@ -43,7 +43,7 @@ data:
             configure { node ->
                 // todo: setup auto scan every 30 mins
                 node / navigators << 'org.jenkinsci.plugin.gitea.GiteaSCMNavigator' {
-                    serverUrl("https://code.{{ cluster_name }}.{{ cluster_domain }}")
+                    serverUrl("https://code.{{ cluster_fqdn }}")
                     repoOwner("tavros")
                     credentialsId("gitea-credentials")
                     traits {

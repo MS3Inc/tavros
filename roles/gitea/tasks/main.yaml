@@ -1,19 +1,19 @@
 ---
 - name: Create directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/gitea
+    path: /tmp/{{ cluster_fqdn }}/platform/gitea
     state: directory
 
 - name: Copy Gitea ns
   copy:
     src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/ns.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/gitea/ns.yaml
 
 - name: Copy ca-certs-config
   when: ('test-run' in ansible_run_tags)
   copy:
     src: ca-certs-config.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/ca-certs-config.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/gitea/ca-certs-config.yaml
 
 - name: Generate Admin pass for Gitea
   when: gitea.admin.password is not defined
@@ -23,38 +23,38 @@
 - name: Process values-secret template
   template:
     src: values-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/gitea/values-secret.yaml
 
 - name: Convert values-secret to SealedSecrets
   when: ('dry-run' not in ansible_run_tags)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml >/tmp/{{ cluster_domain }}/platform/gitea/values-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/gitea/values-secret.tmp /tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/gitea/values-secret.yaml >/tmp/{{ cluster_fqdn }}/platform/gitea/values-secret.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/gitea/values-secret.tmp /tmp/{{ cluster_fqdn }}/platform/gitea/values-secret.yaml
 
 - name: Process gitea kustomization template
   template:
     src: kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/kustomization.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/gitea/kustomization.yaml
 
 - name: Copy gitea helm source
   copy:
     src: helm-source.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/helm-source.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/gitea/helm-source.yaml
 
 - name: Copy gitea release
   copy:
     src: release.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/release.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/gitea/release.yaml
 
 - name: Process ingress template
   template:
     src: ingress.j2
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/ingress.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/gitea/ingress.yaml
 
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/gitea.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/gitea.yaml
 
 - name: Generate Keycloak Client Secret
   when: gitea.keycloak.client_secret is not defined
@@ -66,11 +66,11 @@
 - name: Process instance keycloak-client templates
   template:
     src: keycloak-client.j2
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/keycloak-client.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/gitea/keycloak-client.yaml
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_domain + '/platform/gitea/', reorder='none') }}"
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/gitea/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -83,7 +83,7 @@
 - name: Add tavros organization
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/orgs
+    url: https://code.{{ cluster_fqdn }}/api/v1/orgs
     method: POST
     force_basic_auth: true
     follow_redirects: all

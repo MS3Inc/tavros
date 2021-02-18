@@ -5,7 +5,7 @@ metadata:
   namespace: cert-manager
 spec:
   acme:
-    email: ops@{{ cluster_name }}.{{ cluster_domain }}
+    email: {{ cluster_admin_email }}
     server: {{ ('https://acme-v02.api.letsencrypt.org/directory') if ('test-run' not in ansible_run_tags) else ('https://acme-staging-v02.api.letsencrypt.org/directory') }}
     preferredChain: "ISRG Root X1"
     privateKeySecretRef:
@@ -14,13 +14,13 @@ spec:
 {% for item in kong.instances %}
     - selector:
         dnsZones:
-        - '{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}'
+        - '{{ item.name }}.{{ cluster_fqdn }}'
 {%  if (item.ingress_class == kong.default_ingress_class) %}
-        - '{{ cluster_name }}.{{ cluster_domain }}'
-        - 'apps.{{ cluster_name }}.{{ cluster_domain }}'
+        - '{{ cluster_fqdn }}'
+        - 'apps.{{ cluster_fqdn }}'
 {% else  %}
-        - '{{ item.ingress_class }}.{{ cluster_name }}.{{ cluster_domain }}'
-        - 'apps.{{ item.ingress_class }}.{{ cluster_name }}.{{ cluster_domain }}'
+        - '{{ item.ingress_class }}.{{ cluster_fqdn }}'
+        - 'apps.{{ item.ingress_class }}.{{ cluster_fqdn }}'
 {% endif  %}
       http01:
         ingress:

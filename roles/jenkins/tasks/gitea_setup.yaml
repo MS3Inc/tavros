@@ -8,7 +8,7 @@
 - name: Add local jenkins user with password
   when: "'dry-run' not in ansible_run_tags"
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/admin/users
+    url: https://code.{{ cluster_fqdn }}/api/v1/admin/users
     method: POST
     force_basic_auth: true
     follow_redirects: all
@@ -17,8 +17,7 @@
     url_password: '{{ gitea.admin.password }}'
     body:
       username: jenkins-ci
-      # todo: should be configurable because we'll want to send emails from jenkins
-      email: jenkins-ci@{{ cluster_domain }}.com
+      email: "{{ cluster_admin_email }}"
       login_name: jenkins-ci
       must_change_password: false
       # todo: change to dynamic
@@ -35,7 +34,7 @@
   # when: gitea_login.cookies_string is not defined
   when: "'dry-run' not in ansible_run_tags"
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/user/login
+    url: https://code.{{ cluster_fqdn }}/user/login
     method: POST
     follow_redirects: all
     body_format: form-urlencoded
@@ -49,7 +48,7 @@
 - name: Add jenkinsci as owner to tavros/platform
   when: "'dry-run' not in ansible_run_tags"
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/org/tavros/teams/owners/action/add
+    url: https://code.{{ cluster_fqdn }}/org/tavros/teams/owners/action/add
     method: POST
     follow_redirects: all
     body_format: form-urlencoded

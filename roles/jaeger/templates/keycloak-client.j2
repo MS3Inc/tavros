@@ -15,7 +15,7 @@ spec:
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     redirectUris:
-    - "https://jaeger.{{ cluster_name}}.{{ cluster_domain }}/*"
+    - "https://jaeger.{{ cluster_fqdn }}/*"
     directAccessGrantsEnabled: false
     standardFlowEnabled: True
     enabled: True

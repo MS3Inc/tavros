@@ -5,7 +5,7 @@ metadata:
   namespace: cert-manager
 spec:
   acme:
-    email: ops@tavros.example.com
+    email: ops@example.com
     server: https://acme-v02.api.letsencrypt.org/directory
     preferredChain: "ISRG Root X1"
     privateKeySecretRef:

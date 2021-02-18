@@ -7,13 +7,13 @@ metadata:
     kubernetes.io/ingress.class: {{ kong.default_ingress_class }}
 disabled: True
 config:  
-  issuer: "https://auth.{{ cluster_name}}.{{ cluster_domain }}/auth/realms/{{ nexus.keycloak.realm }}"
+  issuer: "https://auth.{{ cluster_fqdn }}/auth/realms/{{ nexus.keycloak.realm }}"
   client_id: 
   - nexus
   client_secret: 
   - "{{ nexus.keycloak.client_secret }}"
   redirect_uri: 
-  - https://artifacts.{{ cluster_name}}.{{ cluster_domain }}
+  - https://artifacts.{{ cluster_fqdn }}
   ssl_verify: false
 
   upstream_headers_claims: 

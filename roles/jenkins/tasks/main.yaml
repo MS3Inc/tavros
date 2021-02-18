@@ -1,62 +1,62 @@
 ---
 - name: Create directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/jenkins/default
+    path: /tmp/{{ cluster_fqdn }}/platform/jenkins/default
     state: directory
 
 - name: Copy operator
   copy:
     src: operator
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/
 
 - name: Copy jenkins ns
   copy:
     src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/ns.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/ns.yaml
 
 - name: Copy base kustomization
   copy:
     src: base-kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/kustomization.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/kustomization.yaml
 
 - name: Copy instance kustomization
   copy:
     src: instance-kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/kustomization.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/kustomization.yaml
 
 - name: Copy gitea credentials
   copy:
     src: gitea-credentials.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/gitea-credentials.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/gitea-credentials.yaml
 
 - name: Process ingress template
   template:
     src: ingress.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/ingress.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/ingress.yaml
 
 - name: Process configuration template
   template:
     src: config.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/config.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/config.yaml
 
 - name: Process keycloak client template
   template:
     src: keycloak-client.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/keycloak-client.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/keycloak-client.yaml
 
 - name: Process keycloak user template
   template:
     src: keycloak-user.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/keycloak-user.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/keycloak-user.yaml
 
 - name: Copy jenkins instance
   copy:
     src: default-instance.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/instance.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/instance.yaml
 
 - name: Apply operator manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_domain }}/platform/jenkins/operator/0.5.0
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins/operator/0.5.0
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -65,7 +65,7 @@
     
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_domain }}/platform/jenkins
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -85,6 +85,6 @@
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/jenkins.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/jenkins.yaml
 
 - include_tasks: gitea_setup.yaml

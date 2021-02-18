@@ -1,7 +1,7 @@
 ---
 - name: Create directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/postgresql/
+    path: /tmp/{{ cluster_fqdn }}/platform/postgresql/
     state: directory
 
 - name: Generate postgresql password
@@ -39,48 +39,48 @@
 - name: Process config-secret template
   template:
     src: config-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/postgresql/config-secret.yaml
 
 - name: Convert config-secret to SealedSecret
   when: "'dry-run' not in ansible_run_tags"
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml >/tmp/{{ cluster_domain }}/platform/postgresql/config-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.tmp /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/postgresql/config-secret.yaml >/tmp/{{ cluster_fqdn }}/platform/postgresql/config-secret.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/postgresql/config-secret.tmp /tmp/{{ cluster_fqdn }}/platform/postgresql/config-secret.yaml
 
 - name: Copy postgresql schema-init-job
   copy:
     src: schema-init-job.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-job.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/postgresql/schema-init-job.yaml
 
 - name: Process schema-init-sql-secret template
   template:
     src: schema-init-sql-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/postgresql/schema-init-sql-secret.yaml
 
 - name: Convert schema-init-sql-secret to SealedSecret
   when: ('dry-run' not in ansible_run_tags)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.yaml >/tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.tmp /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/postgresql/schema-init-sql-secret.yaml >/tmp/{{ cluster_fqdn }}/platform/postgresql/schema-init-sql-secret.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/postgresql/schema-init-sql-secret.tmp /tmp/{{ cluster_fqdn }}/platform/postgresql/schema-init-sql-secret.yaml
 
 - name: Copy postgresql namespace
   copy:
     src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/ns.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/postgresql/ns.yaml
 
 - name: Copy postgresql default release
   copy:
     src: default-release.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/default-release.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/postgresql/default-release.yaml
 
 - name: Copy postgresql kustomization
   copy:
     src: kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/kustomization.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/postgresql/kustomization.yaml
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_domain + '/platform/postgresql/', reorder='none') }}"
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/postgresql/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -90,4 +90,4 @@
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/postgresql.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/postgresql.yaml

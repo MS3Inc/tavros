@@ -3,20 +3,20 @@
   when: (item.ee.enabled)
   template:
     src: keycloak-client.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-client.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/keycloak-client.yaml
   loop: "{{ kong.instances }}"
 
 - name: Add keycloak-client to EE Instance Kustomizations
   when: (item.ee.enabled)
   lineinfile:
-    path: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/kustomization.yaml
+    path: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/kustomization.yaml
     line: "  - keycloak-client.yaml"
     insertafter: "resources:"
   loop: "{{ kong.instances }}"
 
 - name: Re Apply updated manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/kong/
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kong/
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -41,7 +41,7 @@
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   loop: "{{ kong.instances }}"
   ms3_inc.tavros.keycloak_client_roles:
-    auth_keycloak_url: 'https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth'
+    auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
     validate_certs: false
     auth_realm: master
     auth_username: admin
@@ -57,7 +57,7 @@
   blockinfile:
     marker_begin: "Begin {{ item.name }} Kong"
     marker_end: "End {{ item.name }} Kong"
-    path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}-user.yaml
+    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}-user.yaml
     insertafter: "    clientRoles:"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |2
@@ -69,12 +69,12 @@
   loop: "{{ kong.instances }}"
   community.kubernetes.k8s:
     state: present
-    src: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}-user.yaml
+    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}-user.yaml
 
 - name: Create Kong EE Admins
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}"
+    url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}"
     method: POST
     status_code: 200
     headers:
@@ -89,7 +89,7 @@
 - name: Give super-admin role Kong EE Admins
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}/admins/{{ cluster_admin_email }}/roles?roles=super-admin"
+    url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins/{{ cluster_admin_email }}/roles?roles=super-admin"
     method: POST
     status_code: 201
     headers:

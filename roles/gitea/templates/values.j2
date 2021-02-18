@@ -18,8 +18,8 @@ gitea:
       ENABLE_OPENID_SIGNUP: false
 
     server:
-      ROOT_URL: 'https://code.{{ cluster_name}}.{{ cluster_domain }}/'
-      SSH_DOMAIN: 'code.{{ cluster_name}}.{{ cluster_domain }}'
+      ROOT_URL: 'https://code.{{ cluster_fqdn }}/'
+      SSH_DOMAIN: 'code.{{ cluster_fqdn }}'
 
     database:
       DB_TYPE: postgres

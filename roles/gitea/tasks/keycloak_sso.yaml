@@ -1,7 +1,7 @@
 ---
 - name: Register gitea login cookies
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/user/login
+    url: https://code.{{ cluster_fqdn }}/user/login
     method: POST
     follow_redirects: all
     body_format: form-urlencoded
@@ -17,7 +17,7 @@
 
 - name: Add keycloak sso
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/admin/auths/new
+    url: https://code.{{ cluster_fqdn }}/admin/auths/new
     method: POST
     follow_redirects: all
     body_format: form-urlencoded
@@ -30,7 +30,7 @@
       oauth2_provider: openidConnect
       oauth2_key: gitea
       oauth2_secret: "{{ gitea.keycloak.client_secret }}"
-      open_id_connect_auto_discovery_url: https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ gitea.keycloak.realm }}/.well-known/openid-configuration
+      open_id_connect_auto_discovery_url: https://auth.{{ cluster_fqdn }}/auth/realms/{{ gitea.keycloak.realm }}/.well-known/openid-configuration
       is_sync_enabled: on
       is_active: on
     status_code: 200

@@ -1,38 +1,38 @@
 ---
 - name: Create directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/nexus/
+    path: /tmp/{{ cluster_fqdn }}/platform/nexus/
     state: directory
 
 - name: Copy NS
   copy:
     src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/nexus/ns.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/nexus/ns.yaml
 
 - name: Copy Release
   copy:
     src: default-release.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/nexus/default-release.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/nexus/default-release.yaml
 
 - name: Copy kustomization
   copy:
     src: kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/nexus/kustomization.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/nexus/kustomization.yaml
 
 - name: Copy nexus-properties-config
   copy:
     src: nexus-properties-config.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/nexus/nexus-properties-config.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/nexus/nexus-properties-config.yaml
 
 - name: Process ingress template
   template:
     src: ingress.j2
-    dest: /tmp/{{ cluster_domain }}/platform/nexus/ingress.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/nexus/ingress.yaml
 
 - name: Copy Deploy PVC
   copy:
     src: nexus-deploy-pvc.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/nexus/nexus-deploy-pvc.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/nexus/nexus-deploy-pvc.yaml
 
 - name: Generate Keycloak Client Secret
   when: (nexus.keycloak.client_secret is not defined)
@@ -44,40 +44,40 @@
 - name: Process oidc-plugin template
   template:
     src: oidc-plugin.j2
-    dest: /tmp/{{ cluster_domain }}/platform/nexus/oidc-plugin.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/nexus/oidc-plugin.yaml
 
 - name: Process keycloak-client template
   template:
     src: keycloak-client.j2
-    dest: /tmp/{{ cluster_domain }}/platform/nexus/keycloak-client.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/nexus/keycloak-client.yaml
 
 - name: Process keycloak-config template
   template:
     src: keycloak-config.j2
-    dest: /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.json
+    dest: /tmp/{{ cluster_fqdn }}/platform/nexus/keycloak-config.json
 
 - name: Process keycloak-config secret template
   template:
     src: keycloak-config-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/nexus/keycloak-config.yaml
   vars:
-    config: "{{ lookup('file', '/tmp/' + cluster_domain + '/platform/nexus/keycloak-config.json') }}"
+    config: "{{ lookup('file', '/tmp/' + cluster_fqdn + '/platform/nexus/keycloak-config.json') }}"
 
 - name: Kubeseal keycloak-config.yaml
   when: ('dry-run' not in ansible_run_tags)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.yaml >/tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.tmp
-    mv /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.tmp /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.yaml
-    rm /tmp/{{ cluster_domain }}/platform/nexus/keycloak-config.json
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/nexus/keycloak-config.yaml >/tmp/{{ cluster_fqdn }}/platform/nexus/keycloak-config.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/nexus/keycloak-config.tmp /tmp/{{ cluster_fqdn }}/platform/nexus/keycloak-config.yaml
+    rm /tmp/{{ cluster_fqdn }}/platform/nexus/keycloak-config.json
 
 - name: Process flux-kustomization Template
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/nexus.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/nexus.yaml
 
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/nexus/
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/nexus/
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -128,7 +128,7 @@
 - name: Create Keycloak Nexus client roles
   when: ('dry-run' not in ansible_run_tags)
   ms3_inc.tavros.keycloak_client_roles:
-    auth_keycloak_url: 'https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth'
+    auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
     validate_certs: false
     auth_realm: master
     auth_username: admin
@@ -149,7 +149,7 @@
   blockinfile:
     marker_begin: "Begin nexus"
     marker_end: "End nexus"
-    path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ nexus.keycloak.realm }}-user.yaml
+    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ nexus.keycloak.realm }}-user.yaml
     insertafter: "    clientRoles:"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |2
@@ -160,12 +160,12 @@
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s:
     state: present
-    src: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ nexus.keycloak.realm }}-user.yaml
+    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ nexus.keycloak.realm }}-user.yaml
 
 - name: Add dockerhub-proxy repository
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/beta/repositories/docker/proxy"
+    url: "https://artifacts.{{ cluster_fqdn }}/service/rest/beta/repositories/docker/proxy"
     method: POST
     status_code: 201
     headers:
@@ -202,7 +202,7 @@
 - name: Add internal container image repository
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/beta/repositories/docker/hosted"
+    url: "https://artifacts.{{ cluster_fqdn }}/service/rest/beta/repositories/docker/hosted"
     method: POST
     status_code: 201
     headers:
@@ -229,7 +229,7 @@
 - name: Add container registry group repository
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/beta/repositories/docker/group"
+    url: "https://artifacts.{{ cluster_fqdn }}/service/rest/beta/repositories/docker/group"
     method: POST
     status_code: 201
     headers:
@@ -268,7 +268,7 @@
 - name: Add Keycloak Nexus Realm
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/realms/active"
+    url: "https://artifacts.{{ cluster_fqdn }}/service/rest/v1/security/realms/active"
     method: PUT
     status_code: 204
     headers:
@@ -287,7 +287,7 @@
 - name: Add Keycloak admin Role Mapping
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
+    url: "https://artifacts.{{ cluster_fqdn }}/service/rest/v1/security/roles"
     method: POST
     status_code: 200
     headers:
@@ -308,7 +308,7 @@
 - name: Add Keycloak developer Role
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
+    url: "https://artifacts.{{ cluster_fqdn }}/service/rest/v1/security/roles"
     method: POST
     status_code: 200
     headers:
@@ -345,7 +345,7 @@
 - name: Add Keycloak developer Role Mapping
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: "https://artifacts.{{ cluster_name }}.{{ cluster_domain }}/service/rest/v1/security/roles"
+    url: "https://artifacts.{{ cluster_fqdn }}/service/rest/v1/security/roles"
     method: POST
     status_code: 200
     headers:
@@ -365,14 +365,14 @@
 
 - name: Enabled OIDC
   lineinfile:
-    path: /tmp/{{ cluster_domain }}/platform/nexus/oidc-plugin.yaml
+    path: /tmp/{{ cluster_fqdn }}/platform/nexus/oidc-plugin.yaml
     line: "disabled: False"
     regexp: '^disabled: True'
     backrefs: True
 
 - name: Apply Enabled OIDC
   when: ('dry-run' not in ansible_run_tags)
-  loop: "{{ lookup('file', '/tmp/' +  cluster_domain + '/platform/nexus/oidc-plugin.yaml') | from_yaml_all | list | difference([None]) }}"
+  loop: "{{ lookup('file', '/tmp/' + cluster_fqdn + '/platform/nexus/oidc-plugin.yaml') | from_yaml_all | list | difference([None]) }}"
   k8s:
     definition: "{{ item }}"
     wait: true

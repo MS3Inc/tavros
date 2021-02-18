@@ -1,17 +1,17 @@
 ---
 - name: Create directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/keycloak/default
+    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default
     state: directory
 
 - name: Copy operator
   copy:
     src: operator
-    dest: /tmp/{{ cluster_domain }}/platform/keycloak/
+    dest: /tmp/{{ cluster_fqdn }}/platform/keycloak/
 
 - name: Apply operator manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/operator/12.0.1
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/keycloak/operator/12.0.1
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -34,28 +34,28 @@
 - name: Process keycloak-db-secret template
   template:
     src: keycloak-db-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/keycloak-db-secret.yaml
 
 - name: Convert keycloak-db-secret to SealedSecret
   when: ('dry-run' not in ansible_run_tags)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.yaml >/tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.tmp /tmp/{{ cluster_domain }}/platform/keycloak/default/keycloak-db-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/keycloak/default/keycloak-db-secret.yaml >/tmp/{{ cluster_fqdn }}/platform/keycloak/default/keycloak-db-secret.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/keycloak/default/keycloak-db-secret.tmp /tmp/{{ cluster_fqdn }}/platform/keycloak/default/keycloak-db-secret.yaml
 
 - name: Process ingress template
   template:
     src: ingress.j2
-    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/ingress.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/ingress.yaml
 
 - name: Copy default keycloak release
   copy:
     src: release.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/release.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/release.yaml
 
 - name: Process Realm templates
   template:
     src: realm.j2
-    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.name }}-realm.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.name }}-realm.yaml
   loop: "{{ keycloak.realms }}"
 
 - name: Generate admin credentials for keycloak realms
@@ -70,22 +70,22 @@
 - name: Process User templates
   template:
     src: user.j2
-    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.name }}-user.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.name }}-user.yaml
   loop: "{{ keycloak.realms }}"
 
 - name: Process default keycloak kustomization
   template:
     src: instance-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/keycloak/default/kustomization.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/kustomization.yaml
 
 - name: Copy base keycloak kustomization
   copy:
     src: base-kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/keycloak/kustomization.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/keycloak/kustomization.yaml
 
 - name: Apply keycloak manifests
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_domain }}/platform/keycloak/
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/keycloak/
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -109,4 +109,4 @@
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/keycloak.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/keycloak.yaml

@@ -3,8 +3,7 @@
 # THE DIFF IS EXPLICITLY ADDING PASSWORDS SO THEY'RE NOT GENERATED IN ORDER TO ASSERT THE RESULT
 all:
   vars:
-    cluster_name: ''
-    cluster_domain: ''
+    cluster_fqdn: ''
     cluster_admin_email: ''
     kubernetes_cluster:
       cloud: 'aws'
@@ -94,4 +93,3 @@ all:
       keycloak:
         realm: 'prod'
     flux: {}
-

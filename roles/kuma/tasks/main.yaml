@@ -1,39 +1,39 @@
 ---
 - name: Create directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/
+    path: /tmp/{{ cluster_fqdn }}/platform/kuma-system/meshes/
     state: directory
 
 - name: Process mesh template
   with_list: '{{ kuma.meshes }}'
   template:
     src: mesh.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.name }}.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/kuma-system/meshes/{{ item.name }}.yaml
 
 - name: Process tracing template
   with_list: '{{ kuma.meshes }}'
   template:
     src: traffictrace.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.name }}-traffictrace.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/kuma-system/meshes/{{ item.name }}-traffictrace.yaml
 
 - name: Process kuma kustomization template
   template:
     src: kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/kustomization.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/kuma-system/kustomization.yaml
 
 - name: Copy kuma namespace
   copy:
     src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/ns.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/kuma-system/ns.yaml
 
 - name: Copy kuma default release
   copy:
     src: default-release.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/default-release.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/kuma-system/default-release.yaml
 
 - name: Apply Kuma release
   when: "'dry-run' not in ansible_run_tags"
-  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/kuma-system/
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kuma-system/
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -43,4 +43,4 @@
 - name: Process flux-kustomization template
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/kuma-system.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/kuma-system.yaml

@@ -9,14 +9,14 @@
     kubectl create secret generic flux-repo-secret --dry-run=client -n flux-system \
     --from-literal=username=flux-cd \
     --from-literal=password="{{ gitea_flux_pass }}" \
-    -o yaml >/tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
+    -o yaml >/tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.yaml
 
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml >/tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.tmp /tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.yaml >/tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.tmp /tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.yaml
 
 - name: Create flux-cd User
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/admin/users
+    url: https://code.{{ cluster_fqdn }}/api/v1/admin/users
     method: POST
     force_basic_auth: true
     follow_redirects: all
@@ -25,7 +25,7 @@
     url_password: '{{ gitea.admin.password }}'
     body:
       username: flux-cd
-      email: flux-cd@{{ cluster_domain }}.com
+      email: "{{ cluster_admin_email }}"
       login_name: flux-cd
       must_change_password: false
       password: "{{ gitea_flux_pass }}"
@@ -36,7 +36,7 @@
 
 - name: Create Tavros Platform Repo
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/orgs/tavros/repos
+    url: https://code.{{ cluster_fqdn }}/api/v1/orgs/tavros/repos
     method: POST
     force_basic_auth: true
     follow_redirects: all
@@ -60,7 +60,7 @@
   # beware a simple `when` with a `register` will ovewrite the variable with the skipped task dict
   # when: gitea_login.cookies_string is not defined
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/user/login
+    url: https://code.{{ cluster_fqdn }}/user/login
     method: POST
     follow_redirects: all
     body_format: form-urlencoded
@@ -73,7 +73,7 @@
 
 - name: Add flux-cd as owner to tavros/platform
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/org/tavros/teams/owners/action/add
+    url: https://code.{{ cluster_fqdn }}/org/tavros/teams/owners/action/add
     method: POST
     follow_redirects: all
     body_format: form-urlencoded
@@ -89,16 +89,16 @@
 
 - name: Add/Commit/Push to the Platform Tavros Repo
   args:
-    chdir: /tmp/{{ cluster_domain }}/
+    chdir: /tmp/{{ cluster_fqdn }}/
   shell: |
     git init
     git checkout -b main
     git add .
     git commit -m "Initial platform state"
-    git push --set-upstream https://flux-cd:{{ gitea_flux_pass }}@code.{{ cluster_name }}.{{ cluster_domain }}/tavros/platform.git main
+    git push --set-upstream https://flux-cd:{{ gitea_flux_pass }}@code.{{ cluster_fqdn }}/tavros/platform.git main
 
   # todo: change to k8s and enable dry-run
 - name: Apply Remaining Flux manifests to activate Repo Sync
   shell: |
-    kubectl apply -f /tmp/{{ cluster_domain }}/platform/flux-system/flux-repo-secret.yaml
-    kubectl apply -f /tmp/{{ cluster_domain }}/platform/flux-system/gotk-sync.yaml
+    kubectl apply -f /tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.yaml
+    kubectl apply -f /tmp/{{ cluster_fqdn }}/platform/flux-system/gotk-sync.yaml

@@ -1,8 +1,7 @@
 ---
 all:
   vars:
-    cluster_name: ''
-    cluster_domain: ''
+    cluster_fqdn: ''
     cluster_admin_email: ''
     kubernetes_cluster:
       cloud: 'aws'

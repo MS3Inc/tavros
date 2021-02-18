@@ -11,7 +11,7 @@ metadata:
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: auth.{{ cluster_name}}.{{ cluster_domain }}
+  - host: auth.{{ cluster_fqdn }}
     http:
       paths:
       - path: /
@@ -20,5 +20,5 @@ spec:
           servicePort: 8080
   tls:
   - hosts:
-    - auth.{{ cluster_name}}.{{ cluster_domain }}
+    - auth.{{ cluster_fqdn }}
     secretName: auth-ingress-cert
