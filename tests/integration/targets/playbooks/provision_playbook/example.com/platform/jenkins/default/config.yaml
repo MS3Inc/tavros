@@ -74,12 +74,12 @@ data:
                     scm {
                       git {
                         remote {
-                          url('https://code.tavros.example.com/tavros/jenkins-quickstarts.git')
-                          credentials('gitea-credentials')
+                          url("https://code.tavros.example.com/tavros/jenkins-quickstarts.git")
+                          credentials("gitea-credentials")
                         }
                       }
                     }
-                    scriptPath('openapi.jenkinsfile')
+                    scriptPath("openapi.jenkinsfile")
                 }
             }
         }
@@ -90,12 +90,12 @@ data:
                     scm {
                       git {
                         remote {
-                          url('https://code.tavros.example.com/tavros/jenkins-quickstarts.git')
-                          credentials('gitea-credentials')
+                          url("https://code.tavros.example.com/tavros/jenkins-quickstarts.git")
+                          credentials("gitea-credentials")
                         }
                       }
                     }
-                    scriptPath('camel-web-service.jenkinsfile')
+                    scriptPath("camel-web-service.jenkinsfile")
                 }
             }
         }
