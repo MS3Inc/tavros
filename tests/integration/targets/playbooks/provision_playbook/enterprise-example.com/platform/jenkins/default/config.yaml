@@ -74,8 +74,8 @@ data:
                     scm {
                       git {
                         remote {
-                          url("https://code.tavros.enterprise-example.com/tavros/jenkins-quickstarts.git")
-                          credentials("gitea-credentials")
+                          url("https://github.com/MS3Inc/tavros-jenkins-quickstarts.git")
+                          refspec("refs/tags/v1.0")
                         }
                       }
                     }
@@ -90,8 +90,8 @@ data:
                     scm {
                       git {
                         remote {
-                          url("https://code.tavros.enterprise-example.com/tavros/jenkins-quickstarts.git")
-                          credentials("gitea-credentials")
+                          url("https://github.com/MS3Inc/tavros-jenkins-quickstarts.git")
+                          refspec("refs/tags/v1.0")
                         }
                       }
                     }

@@ -97,37 +97,6 @@
     git commit -m "Initial platform state"
     git push --set-upstream https://flux-cd:{{ gitea_flux_pass }}@code.{{ cluster_name }}.{{ cluster_domain }}/tavros/platform.git main
 
-- name: Create Tavros Jenkins Quickstarts Repo
-  uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/orgs/tavros/repos
-    method: POST
-    force_basic_auth: true
-    follow_redirects: all
-    body_format: json
-    url_username: gitea_admin
-    url_password: '{{ gitea.admin.password }}'
-    body:
-      auto_init: false
-      default_branch: main
-      description: Quickstarts for Camel applications.
-      name: jenkins-quickstarts
-      private: false
-      template: false
-      trust_model: default
-    status_code: 201
-    validate_certs: False
-
-- name: Add/Commit/Push to the Jenkins Quickstarts Tavros Repo
-  args:
-    chdir: /tmp/{{ cluster_domain }}
-  shell: |
-    git clone https://github.com/MS3Inc/tavros-jenkins-quickstarts.git
-    cd tavros-jenkins-quickstarts
-    find ./ -type f -exec sed -i "s|tavros.ms3-inc.com|{{ cluster_name }}.{{ cluster_domain }}/|g" {} \;
-    git add .
-    git commit -m "Update gitea url for cluster"
-    git push --set-upstream https://flux-cd:{{ gitea_flux_pass }}@code.{{ cluster_name }}.{{ cluster_domain }}/tavros/jenkins-quickstarts.git main
-
   # todo: change to k8s and enable dry-run
 - name: Apply Remaining Flux manifests to activate Repo Sync
   shell: |
