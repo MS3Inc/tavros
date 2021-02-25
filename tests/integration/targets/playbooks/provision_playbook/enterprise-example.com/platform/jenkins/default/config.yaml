@@ -27,6 +27,15 @@ data:
           serverUrl: "https://code.tavros.enterprise-example.com"
     jenkins:
       securityRealm: keycloak
+      globalNodeProperties:
+      - envVars:
+          env:
+          - key: TAVROS_SCM_HOST
+            value: code.tavros.enterprise-example.com
+          - key: TAVROS_SCM_PROVIDER
+            value: gitea
+          - key: TAVROS_SCM_CREDS
+            value: gitea-credentials
 
     unclassified: 
       globalLibraries:
