@@ -5,6 +5,18 @@ metadata:
   namespace: jenkins
 data:
   1-casc.yaml: |
+    jenkins:
+      securityRealm: keycloak
+      globalNodeProperties:
+      - envVars:
+          env:
+          - key: TAVROS_GIT_HOST
+            value: code.{{ cluster_name }}.{{ cluster_domain }}
+          - key: TAVROS_GIT_PROVIDER
+            value: gitea
+          - key: TAVROS_GIT_CREDS
+            value: gitea-credentials
+
     unclassified:
       location:
         url: https://ci.{{ cluster_name }}.{{ cluster_domain }}/
@@ -29,19 +41,6 @@ data:
           displayName: "gitea"
           manageHooks: true
           serverUrl: "https://code.{{ cluster_name }}.{{ cluster_domain }}"
-    jenkins:
-      securityRealm: keycloak
-      globalNodeProperties:
-      - envVars:
-          env:
-          - key: TAVROS_SCM_HOST
-            value: code.{{ cluster_name }}.{{ cluster_domain }}
-          - key: TAVROS_SCM_PROVIDER
-            value: gitea
-          - key: TAVROS_SCM_CREDS
-            value: gitea-credentials
-
-    unclassified: 
       globalLibraries:
         libraries:
           - name: "tavros-library"

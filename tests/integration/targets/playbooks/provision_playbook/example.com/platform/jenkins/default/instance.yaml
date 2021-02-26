@@ -5,14 +5,29 @@ metadata:
   namespace: jenkins
 spec:
   master:
+    basePlugins:
+    - name: kubernetes
+      version: "1.28.6"
+    - name: workflow-job
+      version: "2.40"
+    - name: workflow-aggregator
+      version: "2.6"
+    - name: git
+      version: "4.5.0"
+    - name: job-dsl
+      version: "1.77"
+    - name: configuration-as-code
+      version: "1.47"
+    - name: kubernetes-credentials-provider
+      version: "0.15"
     plugins:
-      - name: keycloak
-        version: 2.3.0
-      # should be conditional of gitea enabled
-      - name: gitea
-        version: 1.2.1
-      - name: build-user-vars
-        version: 1.7
+    - name: keycloak
+      version: "2.3.0"
+    # should be conditional of gitea enabled
+    - name: gitea
+      version: "1.2.1"
+    - name: build-user-vars-plugin
+      version: "1.7"
   configurationAsCode:
     configurations:
     - name: jenkins-configuration
