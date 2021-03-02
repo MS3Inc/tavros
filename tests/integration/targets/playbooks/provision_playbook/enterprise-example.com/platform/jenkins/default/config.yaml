@@ -40,6 +40,7 @@ data:
       globalLibraries:
         libraries:
           - name: "tavros-library"
+            defaultVersion: "main"
             retriever:
               modernSCM:
                 scm:
@@ -77,33 +78,23 @@ data:
         }
     - script: >
         pipelineJob('Quickstart \u2212 OpenAPI Project') {
-            definition {
-                cpsScm {
-                    scm {
-                      git {
-                        remote {
-                          url("https://github.com/MS3Inc/tavros-jenkins-quickstarts.git")
-                          refspec("refs/tags/v1.0")
-                        }
-                      }
-                    }
-                    scriptPath("openapi.jenkinsfile")
-                }
+          definition {
+            cps {
+              sandbox(true)
+              script("""@Library("tavros-library") _
+                        |
+                        |openapi_quickstart()""".stripMargin())
             }
+          }
         }
     - script: >
         pipelineJob('Quickstart \u2212 Camel Web Service Project') {
-            definition {
-                cpsScm {
-                    scm {
-                      git {
-                        remote {
-                          url("https://github.com/MS3Inc/tavros-jenkins-quickstarts.git")
-                          refspec("refs/tags/v1.0")
-                        }
-                      }
-                    }
-                    scriptPath("camel-web-service.jenkinsfile")
-                }
+          definition {
+            cps {
+              sandbox(true)
+              script("""@Library("tavros-library") _
+                        |
+                        |camelwebservice_quickstart()""".stripMargin())
             }
+          }
         }
