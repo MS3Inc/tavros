@@ -49,6 +49,14 @@
     src: keycloak-user.j2
     dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/keycloak-user.yaml
 
+- name: Process artifacts-registry-secret template
+  template:
+    src: artifacts-registry-secret.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/artifacts-registry-secret.yaml
+  vars:
+    config:
+      auths: "{{ { 'registry.' + cluster_fqdn : { 'auth' : 'jenkins-ci:jenkins-ci' | b64encode } } }}"
+
 - name: Copy jenkins instance
   copy:
     src: default-instance.yaml
@@ -62,7 +70,7 @@
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 900
-    
+
 - name: Apply manifests
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins

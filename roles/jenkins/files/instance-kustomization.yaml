@@ -7,3 +7,4 @@ resources:
   - gitea-credentials.yaml
   - instance.yaml
   - ingress.yaml
+  - artifacts-registry-secret.yaml
