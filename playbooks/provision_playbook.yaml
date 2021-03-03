@@ -82,6 +82,7 @@
 
       - include_role:
           name: ms3_inc.tavros.jenkins
+        when: jenkins.enabled
 
       - include_role:
           name: ms3_inc.tavros.fluxtoolkit

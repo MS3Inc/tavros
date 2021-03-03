@@ -89,7 +89,7 @@ all:
         realm: 'prod'
         client_secret: placeholder15
     jenkins:
-      enabled: false
+      enabled: true
       keycloak:
         realm: 'prod'
     flux: {}
