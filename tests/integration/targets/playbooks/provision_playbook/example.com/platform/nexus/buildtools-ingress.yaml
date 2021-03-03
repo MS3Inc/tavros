@@ -1,0 +1,35 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: nexus-buildtools
+  namespace: nexus
+  annotations:
+    cert-manager.io/cluster-issuer: tavros
+    kubernetes.io/ingress.class: prod
+    konghq.com/strip-path: 'true'
+    konghq.com/protocols: https
+    konghq.com/https-redirect-status-code: '302'
+    konghq.com/plugins: nexus-oidc
+spec:
+  rules:
+  - host: artifacts.tavros.example.com
+    http:
+      paths:
+      - path: /nosso
+        backend:
+          serviceName: tavros-nexus-repository-manager
+          servicePort: 8081
+  - host: registry.tavros.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tavros-nexus-repository-manager-docker-internal
+          servicePort: 5002
+  tls:
+  - hosts:
+    - artifacts.tavros.example.com
+    secretName: nexus-ingress-cert
+  - hosts:
+    - registry.tavros.example.com
+    secretName: nexus-registry-ingress-cert

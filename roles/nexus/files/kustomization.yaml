@@ -5,8 +5,9 @@ resources:
   - nexus-properties-config.yaml
   - default-release.yaml
   - oidc-plugin.yaml
+  - registry-service.yaml
   - ingress.yaml
+  - buildtools-ingress.yaml
   - keycloak-config.yaml
   - keycloak-client.yaml
   - nexus-deploy-pvc.yaml
-  
