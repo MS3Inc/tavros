@@ -4,12 +4,15 @@
     path: /tmp/{{ cluster_fqdn }}/platform/kubeseal
     state: directory
 
-- name: Copy kubeseal kustomization
+- name: Copy Files
   copy:
-    src: kustomization.yaml
-    dest: /tmp/{{ cluster_fqdn }}/platform/kubeseal/kustomization.yaml
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kubeseal/{{ item.name }}
+  when: item.condition | default(true)
+  loop:
+    - name: kustomization.yaml
 
-- name: Apply manifests
+- name: Apply Resources
   when: ('dry-run' not in ansible_run_tags)
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/kubeseal/', reorder='none') }}"
   k8s:
@@ -18,7 +21,7 @@
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 900
 
-- name: Process flux-kustomization template
+- name: Template flux-kustomization
   template:
     src: flux-kustomization.j2
     dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/kubeseal.yaml
