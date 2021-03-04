@@ -1,9 +1,9 @@
 apiVersion: kuma.io/v1alpha1
 kind: Mesh
 metadata:
-  name: {{ item.name }}
+  name: {{ item[0].name }}
   namespace: kuma-system
-{%  if item.mtls.enabled is defined and item.mtls.enabled %}
+{%  if item[0].mtls.enabled is defined and item[0].mtls.enabled %}
 spec:
   mtls:
     enabledBackend: ca-1
@@ -18,7 +18,7 @@ spec:
             RSAbits: 2048
             expiration: 10y
 {%  endif %}
-{%  if item.traffictrace.enabled and jaeger.enabled %}
+{%  if item[0].traffictrace.enabled is defined and item[0].traffictrace.enabled and jaeger.enabled %}
   tracing:
     defaultBackend: jaeger-collector
     backends:

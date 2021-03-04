@@ -48,6 +48,7 @@
 
       - include_role:
           name: ms3_inc.tavros.kuma
+        when: kuma.enabled
 
       - include_role:
           name: ms3_inc.tavros.cert_manager

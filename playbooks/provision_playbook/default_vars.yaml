@@ -29,6 +29,7 @@ all:
         ee:
           enabled: false
     kuma:
+      enabled: true
       meshes:
       - name: 'sandbox'
         mtls:
