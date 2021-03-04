@@ -1,5 +1,5 @@
 ---
-- name: Register gitea login cookies
+- name: Register gitea_login Cookies Variable
   uri:
     url: https://code.{{ cluster_fqdn }}/user/login
     method: POST
@@ -15,7 +15,7 @@
   retries: 30
   delay: 30
 
-- name: Add keycloak sso
+- name: Add OIDC Configuration
   uri:
     url: https://code.{{ cluster_fqdn }}/admin/auths/new
     method: POST

@@ -2,11 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ns.yaml
-  - helm-source.yaml
-  - values-secret.yaml
-  - keycloak-client.yaml
+  - helmrepo.yaml
+  - default/keycloakclient.yaml
 {% if ('test-run' in ansible_run_tags) %}
-  - ca-certs-config.yaml
+  - configmap-ca-certs.yaml
 {% endif %}
-  - release.yaml
-  - ingress.yaml
+  - default/release.yaml
+  - default/ingress.yaml
