@@ -1,13 +1,8 @@
 ---
-- name: Create directory
+- name: Create Directory
   file:
-    path: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud
+    path: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/default
     state: directory
-
-- name: Copy kube-state-metrics
-  copy:
-    src: kube-state-metrics
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/
 
 - name: Generate Keycloak Client Secret
   when: (elastic_cloud.ee.enabled) and (elastic_cloud.ee.keycloak.client_secret is not defined)
@@ -16,93 +11,62 @@
   vars:
     uuid: "{{ 1000000 | random | to_uuid }}"
 
-- name: Process elasticsearch template
+- name: Template Files
   template:
-    src: elasticsearch.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/elasticsearch.yaml
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.dest | default(item.name) }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: kustomization
+    - name: elasticsearch
+      dest: default/elasticsearch
+    - name: ingress
+      dest: default/ingress
+    - name: kibana
+      dest: default/kibana
+    - name: keycloakclient
+      dest: default/keycloakclient
+      condition: "{{ elastic_cloud.ee.enabled }}"
+    - name: secret-eck-license
+      condition: "{{ (elastic_cloud.ee.enabled) and (not elastic_cloud.ee.trial) }}"
 
-- name: Process kibana template
-  template:
-    src: kibana.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/kibana.yaml
-
-- name: Copy apm-server
-  when: (elastic_cloud.ee.enabled)
+- name: Copy Files
   copy:
-    src: apm-server.yaml
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/apm-server.yaml
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.dest | default(item.name) }}
+  when: item.condition | default(true)
+  loop:
+    - name: metricbeat-rbac.yaml
+    - name: filebeat.yaml
+      dest: default/filebeat.yaml
+    - name: heartbeat.yaml
+      dest: default/heartbeat.yaml
+    - name: metricbeat-daemonset.yaml
+      dest: default/metricbeat-daemonset.yaml
+    - name: metricbeat-deployment.yaml
+      dest: default/metricbeat-deployment.yaml
+    - name: apmserver.yaml
+      dest: default/apmserver.yaml
+      condition: "{{ elastic_cloud.ee.enabled }}"
+    - name: daemonset-jaeger-agent.yaml
+      dest: default/daemonset-jaeger-agent.yaml
+      condition: "{{ elastic_cloud.ee.enabled }}"
+    - name: secret-eck-license-trial.yaml
+      condition: "{{ (elastic_cloud.ee.enabled) and (elastic_cloud.ee.trial) }}"
+      dest: secret-eck-license.yaml
+    - name: kube-state-metrics
+      dest: ""
 
-- name: Copy jaeger-agent
-  when: (elastic_cloud.ee.enabled)
-  copy:
-    src: jaeger-agent.yaml
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/jaeger-agent.yaml
-
-- name: Copy filebeat
-  copy:
-    src: filebeat.yaml
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/filebeat.yaml
-
-- name: Copy heartbeat
-  copy:
-    src: heartbeat.yaml
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/heartbeat.yaml
-
-- name: Copy metricbeat-perms
-  copy:
-    src: metricbeat-perms.yaml
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/metricbeat-perms.yaml
-
-- name: Copy metricbeat-deployment
-  copy:
-    src: metricbeat-deployment.yaml
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/metricbeat-deployment.yaml
-
-- name: Copy metricbeat-daemonset
-  copy:
-    src: metricbeat-daemonset.yaml
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/metricbeat-daemonset.yaml
-
-- name: Process ingress template
-  template:
-    src: ingress.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/ingress.yaml
-
-- name: Process keycloak-client template
-  when: (elastic_cloud.ee.enabled)
-  template:
-    src: keycloak-client.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/keycloak-client.yaml
-
-- name: Copy trial-ee-secret
-  when: (elastic_cloud.ee.enabled) and (elastic_cloud.ee.trial)
-  copy:
-    src: trial-ee-secret.yaml
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/ee-secret.yaml
-
-- name: Process ee-secret template
-  when: (elastic_cloud.ee.enabled) and (not elastic_cloud.ee.trial)
-  template:
-    src: ee-secret.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/ee-secret.yaml
-
-- name: Convert ee-secret to SealedSecrets
-  when: (elastic_cloud.ee.enabled) and (not elastic_cloud.ee.trial) and ('dry-run' not in ansible_run_tags)
+- name: Seal Secrets
+  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/elastic-cloud/ee-secret.yaml >/tmp/{{ cluster_fqdn }}/platform/elastic-cloud/ee-secret.tmp
-    mv /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/ee-secret.tmp /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/ee-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.yaml
+  loop:
+    - name: secret-eck-license
+      condition: "{{ elastic_cloud.ee.enabled }}"
 
-- name: Process kustomization template
-  template:
-    src: kustomization.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/kustomization.yaml
-
-- name: Process flux-kustomization template
-  template:
-    src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/elastic-cloud.yaml
-
-- name: Apply manifests
+- name: Apply Resources
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/
   k8s:
@@ -137,7 +101,7 @@
   delay: 30
   changed_when: false
 
-- name: Get tavros-es-elastic-user object
+- name: Get tavros-es-elastic-user Resource
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
     api_version: v1
@@ -146,36 +110,38 @@
     namespace: elastic-system
   register: elastic_secret
 
-- name: Set elastic_cloud elastic_secret field
+- name: Set elastic_cloud.elastic_secret Variable
   when: ('dry-run' not in ansible_run_tags)
   set_fact:
     elastic_cloud: "{{ elastic_cloud | combine({'elastic_secret': elastic_pass}, recursive=true) }}"
   vars:
     elastic_pass: "{{ elastic_secret.resources[0].data.elastic | b64decode }}"
 
-- name: Add Role Mapping for Keycloak
+- name: Add RBAC Role Mapping for Keycloak
   when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_exec:
     namespace: elastic-system
     pod: "tavros-es-default-0"
     command: |
-      curl --insecure -X PUT https://localhost:9200/_security/role_mapping/admin?pretty --user elastic:{{ elastic_cloud.elastic_secret }} -H 'Content-Type: application/json' -d'{"roles": [ "superuser" ],"enabled": true,"rules": {"field": { "groups": "admin" }}}'
+      curl --insecure -X PUT https://localhost:9200/_security/role_mapping/admin?pretty \
+        --user elastic:{{ elastic_cloud.elastic_secret }} -H 'Content-Type: application/json' \
+        -d '{ "roles": [ "superuser" ], "enabled": true, "rules": { "field": { "groups": "admin" }}}'
   register: elk_results
 
-- name: Create Elastic Cloud Keycloak Client Roles
+- name: Create Keycloak elastic-cloud Client Roles
   when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
   ms3_inc.tavros.keycloak_client_roles:
     auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
     validate_certs: false
     auth_realm: master
     auth_username: admin
-    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros-keycloak').data.ADMIN_PASSWORD | b64decode }}"
+    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
     realm: "{{ elastic_cloud.ee.keycloak.realm}}"
     clientId: elastic-cloud
     roles:
     - name: "admin"
 
-- name: Add admin client role to realm user
+- name: Add Keycloak elastic-cloud Client Role admin to Realm Admin User
   when: (elastic_cloud.ee.enabled)
   blockinfile:
     marker_begin: "Begin elastic-cloud"
@@ -187,8 +153,13 @@
             elastic-cloud:
               - admin
 
-- name: Apply updated Keycloak User for Realm
+- name: Apply Updated Keycloak Realm Admin User Resource
   when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s:
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak.realm }}/keycloakuser-admin.yaml
+
+- name: Template flux-kustomization
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/elastic-cloud.yaml

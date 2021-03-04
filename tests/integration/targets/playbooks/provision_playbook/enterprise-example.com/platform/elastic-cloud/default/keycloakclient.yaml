@@ -1,7 +1,7 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
-  name: prod-elastic-cloud
+  name: tavros-elastic-cloud
   namespace: keycloak
   labels:
     client: elastic-cloud
