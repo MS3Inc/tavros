@@ -1,0 +1,24 @@
+---
+- name: Generate kong.instances.ee.keycloak.client_secret Variables
+  set_fact:
+    generated_keycloak_secrets: "{{ (generated_keycloak_secrets | default([])) + [ (item | combine(({ 'ee': { 'keycloak': { 'client_secret': uuid } } } if (item.ee.enabled) else {}), recursive=true)) ] }}"
+  vars:
+    uuid: "{{ ( item.ee.keycloak.client_secret | default((1000000 | random | to_uuid)) ) }}"
+  loop: "{{ kong.instances }}"
+
+- name: Merge kong.instances.ee.keycloak.client_secret Variables
+  when: (generated_keycloak_secrets is defined)
+  set_fact:
+    kong: "{{ kong | combine({'instances': generated_keycloak_secrets}, recursive=true) }}"
+
+- name: Generate kong.instances.ee.admin_password Variables
+  loop: "{{ kong.instances }}"
+  set_fact:
+    generated_su_passwords: "{{ (generated_su_passwords | default([])) + [ (item | combine(({ 'ee': { 'admin_password': password } } if (item.ee.enabled) else {}), recursive=true)) ] }}"
+  vars:
+    password: "{{ ( item.ee.admin_password | default(lookup('password', '/dev/null chars=ascii_lowercase,ascii_uppercase,digits length=8')) ) }}"
+
+- name: Merge kong.instances.ee.admin_password Variables
+  when: (generated_su_passwords is defined)
+  set_fact:
+    kong: "{{ kong | combine({'instances': generated_su_passwords}, recursive=true) }}"

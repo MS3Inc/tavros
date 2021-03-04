@@ -2,8 +2,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ns.yaml
-  - source.yaml
-  - default-ee-license-secret.yaml
-  - default-ee-docker-secret.yaml
+  - helmrepo.yaml
+  - default-secret-ee-license.yaml
+  - default-secret-ee-registry.yaml
   - sandbox-kong/
   - prod-kong/

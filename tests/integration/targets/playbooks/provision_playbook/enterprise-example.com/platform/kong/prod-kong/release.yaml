@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: prod-kong
+  name: tavros-prod-kong
   namespace: kong
 spec:
   targetNamespace: kong
@@ -26,7 +26,7 @@ spec:
       repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
       tag: "2.2.1.0-alpine"
       pullSecrets:
-        - default-kong-enterprise-edition-docker
+        - default-ee-registry
     env:
 
       admin_api_uri: "https://admin-api.prod-kong.tavros.enterprise-example.com"
@@ -37,7 +37,7 @@ spec:
       password:
         valueFrom:
           secretKeyRef:
-            name: prod-kong-enterprise-superuser-password
+            name: tavros-prod-kong-ee-admin-creds
             key: password
 
       database: postgres
@@ -46,17 +46,17 @@ spec:
       pg_database:
         valueFrom:
           secretKeyRef:
-            name: prod-kong-config-secret
+            name: tavros-prod-kong-pg-creds
             key: pg_database
       pg_user:
         valueFrom:
           secretKeyRef:
-            name: prod-kong-config-secret
+            name: tavros-prod-kong-pg-creds
             key: pg_user
       pg_password:
         valueFrom:
           secretKeyRef:
-            name: prod-kong-config-secret
+            name: tavros-prod-kong-pg-creds
             key: pg_password
     ingressController:
       ingressClass: prod
@@ -68,7 +68,7 @@ spec:
         kong_admin_token:
           valueFrom:
             secretKeyRef:
-              name: prod-kong-enterprise-superuser-password
+              name: tavros-prod-kong-ee-admin-creds
               key: password
 
 
@@ -84,7 +84,7 @@ spec:
 
     enterprise:
       enabled: true
-      license_secret: default-kong-enterprise-license
+      license_secret: default-ee-license
       vitals:
         enabled: true
       portal:
@@ -92,5 +92,5 @@ spec:
       rbac:
         enabled: true
         admin_gui_auth: openid-connect
-        session_conf_secret: prod-kong-session-config
-        admin_gui_auth_conf_secret: prod-kong-admin-gui-auth-conf
+        session_conf_secret: tavros-prod-kong-ee-admin-gui-session
+        admin_gui_auth_conf_secret: tavros-prod-kong-ee-admin-gui-auth

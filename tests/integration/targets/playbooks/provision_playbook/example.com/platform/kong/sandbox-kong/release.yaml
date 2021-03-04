@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: sandbox-kong
+  name: tavros-sandbox-kong
   namespace: kong
 spec:
   targetNamespace: kong
@@ -33,17 +33,17 @@ spec:
       pg_database:
         valueFrom:
           secretKeyRef:
-            name: sandbox-kong-config-secret
+            name: tavros-sandbox-kong-pg-creds
             key: pg_database
       pg_user:
         valueFrom:
           secretKeyRef:
-            name: sandbox-kong-config-secret
+            name: tavros-sandbox-kong-pg-creds
             key: pg_user
       pg_password:
         valueFrom:
           secretKeyRef:
-            name: sandbox-kong-config-secret
+            name: tavros-sandbox-kong-pg-creds
             key: pg_password
     ingressController:
       ingressClass: sandbox

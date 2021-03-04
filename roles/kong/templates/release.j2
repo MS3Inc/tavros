@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: {{ item.name }}
+  name: tavros-{{ item[0].name }}
   namespace: kong
 spec:
   targetNamespace: kong
@@ -22,28 +22,28 @@ spec:
     remediation:
       retries: 5
   values:
-{%  if item.ee.enabled %}
+{%  if item[0].ee.enabled %}
     image:
       repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
       tag: "2.2.1.0-alpine"
       pullSecrets:
-        - {{ item.ee.creds }}-kong-enterprise-edition-docker
+        - {{ item[0].ee.creds }}-ee-registry
 {% else  %}
     image:
       tag: '2.2'
 {% endif  %}
     env:
 
-{%  if item.ee.enabled %}
-      admin_api_uri: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}"
-      admin_gui_url: "https://admin.{{ item.name }}.{{ cluster_fqdn }}"
-      portal_api-url: "https://dev-portal-api{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
-      portal_gui_host: "dev-portal{{ ('.' + item.ingress_class) if (item.ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
+{%  if item[0].ee.enabled %}
+      admin_api_uri: "https://admin-api.{{ item[0].name }}.{{ cluster_fqdn }}"
+      admin_gui_url: "https://admin.{{ item[0].name }}.{{ cluster_fqdn }}"
+      portal_api-url: "https://dev-portal-api{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
+      portal_gui_host: "dev-portal{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
       portal_gui_protocol: "https"
       password:
         valueFrom:
           secretKeyRef:
-            name: {{ item.name }}-enterprise-superuser-password
+            name: tavros-{{ item[0].name }}-ee-admin-creds
             key: password
 {% endif  %}
 
@@ -53,38 +53,38 @@ spec:
       pg_database:
         valueFrom:
           secretKeyRef:
-            name: {{ item.name }}-config-secret
+            name: tavros-{{ item[0].name }}-pg-creds
             key: pg_database
       pg_user:
         valueFrom:
           secretKeyRef:
-            name: {{ item.name }}-config-secret
+            name: tavros-{{ item[0].name }}-pg-creds
             key: pg_user
       pg_password:
         valueFrom:
           secretKeyRef:
-            name: {{ item.name }}-config-secret
+            name: tavros-{{ item[0].name }}-pg-creds
             key: pg_password
     ingressController:
-      ingressClass: {{ item.ingress_class }}
+      ingressClass: {{ item[0].ingress_class }}
       installCRDs: false
       env:
       # see https://github.com/Kong/charts/issues/224
         kong_admin_tls_skip_verify: 'true'
 
-{%  if item.ee.enabled %}
+{%  if item[0].ee.enabled %}
         kong_admin_token:
           valueFrom:
             secretKeyRef:
-              name: {{ item.name }}-enterprise-superuser-password
+              name: tavros-{{ item[0].name }}-ee-admin-creds
               key: password
 {% endif  %}
 
-{%  if item.kuma_mesh_name is defined %}
+{%  if item[0].kuma_mesh_name is defined %}
     podAnnotations:
       kuma.io/sidecar-injection: enabled
       kuma.io/gateway: enabled
-      kuma.io/mesh: {{ item.kuma_mesh_name }}
+      kuma.io/mesh: {{ item[0].kuma_mesh_name }}
 {% endif  %}
 
     admin:
@@ -99,10 +99,10 @@ spec:
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
 {% endif  %}
 
-{%  if item.ee.enabled %}
+{%  if item[0].ee.enabled %}
     enterprise:
       enabled: true
-      license_secret: {{ item.ee.creds }}-kong-enterprise-license
+      license_secret: {{ item[0].ee.creds }}-ee-license
       vitals:
         enabled: true
       portal:
@@ -110,6 +110,6 @@ spec:
       rbac:
         enabled: true
         admin_gui_auth: openid-connect
-        session_conf_secret: {{ item.name }}-session-config
-        admin_gui_auth_conf_secret: {{ item.name }}-admin-gui-auth-conf
+        session_conf_secret: tavros-{{ item[0].name }}-ee-admin-gui-session
+        admin_gui_auth_conf_secret: tavros-{{ item[0].name }}-ee-admin-gui-auth
 {% endif  %}

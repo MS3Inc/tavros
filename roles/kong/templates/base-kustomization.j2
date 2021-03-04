@@ -2,10 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ns.yaml
-  - source.yaml
+  - helmrepo.yaml
 {% for item in kong.ee_creds %}
-  - {{ item.name }}-ee-license-secret.yaml
-  - {{ item.name }}-ee-docker-secret.yaml
+  - {{ item.name }}-secret-ee-license.yaml
+  - {{ item.name }}-secret-ee-registry.yaml
 {% endfor %}
 {% for item in kong.instances %}
   - {{ item.name }}/

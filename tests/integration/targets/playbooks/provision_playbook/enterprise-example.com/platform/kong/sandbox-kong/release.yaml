@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: sandbox-kong
+  name: tavros-sandbox-kong
   namespace: kong
 spec:
   targetNamespace: kong
@@ -26,7 +26,7 @@ spec:
       repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
       tag: "2.2.1.0-alpine"
       pullSecrets:
-        - default-kong-enterprise-edition-docker
+        - default-ee-registry
     env:
 
       admin_api_uri: "https://admin-api.sandbox-kong.tavros.enterprise-example.com"
@@ -37,7 +37,7 @@ spec:
       password:
         valueFrom:
           secretKeyRef:
-            name: sandbox-kong-enterprise-superuser-password
+            name: tavros-sandbox-kong-ee-admin-creds
             key: password
 
       database: postgres
@@ -46,17 +46,17 @@ spec:
       pg_database:
         valueFrom:
           secretKeyRef:
-            name: sandbox-kong-config-secret
+            name: tavros-sandbox-kong-pg-creds
             key: pg_database
       pg_user:
         valueFrom:
           secretKeyRef:
-            name: sandbox-kong-config-secret
+            name: tavros-sandbox-kong-pg-creds
             key: pg_user
       pg_password:
         valueFrom:
           secretKeyRef:
-            name: sandbox-kong-config-secret
+            name: tavros-sandbox-kong-pg-creds
             key: pg_password
     ingressController:
       ingressClass: sandbox
@@ -68,7 +68,7 @@ spec:
         kong_admin_token:
           valueFrom:
             secretKeyRef:
-              name: sandbox-kong-enterprise-superuser-password
+              name: tavros-sandbox-kong-ee-admin-creds
               key: password
 
 
@@ -84,7 +84,7 @@ spec:
 
     enterprise:
       enabled: true
-      license_secret: default-kong-enterprise-license
+      license_secret: default-ee-license
       vitals:
         enabled: true
       portal:
@@ -92,5 +92,5 @@ spec:
       rbac:
         enabled: true
         admin_gui_auth: openid-connect
-        session_conf_secret: sandbox-kong-session-config
-        admin_gui_auth_conf_secret: sandbox-kong-admin-gui-auth-conf
+        session_conf_secret: tavros-sandbox-kong-ee-admin-gui-session
+        admin_gui_auth_conf_secret: tavros-sandbox-kong-ee-admin-gui-auth

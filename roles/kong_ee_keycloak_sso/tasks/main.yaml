@@ -1,20 +1,20 @@
 ---
-- name: Process instance keycloak-client templates
+- name: Template Keycloak Client File
   when: (item.ee.enabled)
   template:
-    src: keycloak-client.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/keycloak-client.yaml
+    src: keycloakclient.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/keycloakclient.yaml
   loop: "{{ kong.instances }}"
 
-- name: Add keycloak-client to EE Instance Kustomizations
+- name: Add Keycloak Client Resource to Kong Resources
   when: (item.ee.enabled)
   lineinfile:
     path: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/kustomization.yaml
-    line: "  - keycloak-client.yaml"
+    line: "  - keycloakclient.yaml"
     insertafter: "resources:"
   loop: "{{ kong.instances }}"
 
-- name: Re Apply updated manifests
+- name: Apply Updated Resources
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kong/
   k8s:
@@ -28,7 +28,7 @@
   community.kubernetes.k8s_info:
     api_version: keycloak.org/v1alpha1
     kind: Keycloak
-    name: tavros-keycloak
+    name: tavros
     namespace: keycloak
   register: keycloak_def
   # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
@@ -37,7 +37,7 @@
   delay: 30
   changed_when: false
 
-- name: Create Keycloak Kong client roles
+- name: Create Keycloak kong.name Client Roles
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   loop: "{{ kong.instances }}"
   ms3_inc.tavros.keycloak_client_roles:
@@ -45,33 +45,33 @@
     validate_certs: false
     auth_realm: master
     auth_username: admin
-    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros-keycloak').data.ADMIN_PASSWORD | b64decode }}"
+    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
     realm: "{{ item.ee.keycloak.realm }}"
     clientId: "{{ item.name }}"
     roles:
     - name: "super-admin"
 
-- name: Add super-admin client role to realm user
+- name: Add Keycloak kong.name Client Role super-admin to Realm Admin User
   when: (item.ee.enabled)
   loop: "{{ kong.instances }}"
   blockinfile:
     marker_begin: "Begin {{ item.name }} Kong"
     marker_end: "End {{ item.name }} Kong"
-    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}-user.yaml
+    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}/keycloakuser-admin.yaml
     insertafter: "    clientRoles:"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |2
             {{ item.name }}:
               - super-admin
 
-- name: Apply updated Keycloak User for Realm
+- name: Apply Updated Keycloak Realm Admin User Resource
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   loop: "{{ kong.instances }}"
   community.kubernetes.k8s:
     state: present
-    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}-user.yaml
+    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}/keycloakuser-admin.yaml
 
-- name: Create Kong EE Admins
+- name: Create Kong Admins
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}"
@@ -82,11 +82,11 @@
     validate_certs: False
   register: _result
   until: _result.status == 200
-  retries: 30
+  retries: 5
   delay: 30
   loop: "{{ kong.instances }}"
 
-- name: Give super-admin role Kong EE Admins
+- name: Add Kong super-admin Role to Admins
   when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins/{{ cluster_admin_email }}/roles?roles=super-admin"
@@ -97,6 +97,6 @@
     validate_certs: False
   register: _result
   until: _result.status == 201
-  retries: 30
+  retries: 5
   delay: 30
   loop: "{{ kong.instances }}"
