@@ -1,23 +1,19 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: jenkins-configuration
+  name: tavros-jenkins-config
   namespace: jenkins
 data:
   1-casc.yaml: |
     unclassified:
       location:
-        url: https://ci.{{ cluster_fqdn }}/
-        adminAddress: {{ cluster_admin_email }}
+        url: https://ci.tavros.example.com/
+        adminAddress: ops@example.com
       keycloakSecurityRealm:
         keycloakJson: |-
           {
-            "realm": "{{ jenkins.keycloak.realm }}",
-            "auth-server-url": "https://auth.{{ cluster_fqdn }}/auth/",
-{%  if 'test-run' in ansible_run_tags %}
-            "disable-trust-manager": true,
-            "allow-any-hostname": true,
-{% endif  %}
+            "realm": "prod",
+            "auth-server-url": "https://auth.tavros.example.com/auth/",
             "ssl-required": "external",
             "resource": "jenkins",
             "public-client": true,
@@ -28,7 +24,7 @@ data:
         - credentialsId: "gitea-credentials"
           displayName: "gitea"
           manageHooks: true
-          serverUrl: "https://code.{{ cluster_fqdn }}"
+          serverUrl: "https://code.tavros.example.com"
     jenkins:
       securityRealm: keycloak
 
@@ -43,7 +39,7 @@ data:
             configure { node ->
                 // todo: setup auto scan every 30 mins
                 node / navigators << 'org.jenkinsci.plugin.gitea.GiteaSCMNavigator' {
-                    serverUrl("https://code.{{ cluster_fqdn }}")
+                    serverUrl("https://code.tavros.example.com")
                     repoOwner("tavros")
                     credentialsId("gitea-credentials")
                     traits {
