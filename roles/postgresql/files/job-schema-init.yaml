@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: schema-init
+  name: tavros-schema-init
   namespace: postgresql
 spec:
   template:
@@ -9,7 +9,7 @@ spec:
       containers:
         - name: schema-init
           image: docker.io/bitnami/postgresql:11.9.0-debian-10-r73
-          command: 
+          command:
             - "bin/bash"
             - "-c"
             - |
@@ -18,22 +18,22 @@ spec:
                 echo "Waiting for postgres at: $PG_HOST"
                 sleep 5;
               done
-              echo 'Running PSQL setup.sql'
-              psql -h $PG_HOST -U postgres -f /tmp/setup/setup.sql || { echo 'PSQL Setup failure' ; exit 1; }
+              echo 'Running PSQL schema-init/script.sql'
+              psql -h $PG_HOST -U postgres -f /tmp/schema-init/script.sql || { echo 'PSQL Setup failure' ; exit 1; }
           env:
             - name: PG_HOST
               value: tavros-postgresql.postgresql.svc.cluster.local
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: config-secret
+                  name: tavros-pg-creds
                   key: postgresql-password
           volumeMounts:
-            - name: setup-volume
-              mountPath: /tmp/setup
+            - name: schema-init-script
+              mountPath: /tmp/schema-init
       volumes:
-      - name: setup-volume
+      - name: schema-init-script
         secret:
-          secretName: schema-init-sql
+          secretName: tavros-schema-init-script
       restartPolicy: OnFailure
   backoffLimit: 4

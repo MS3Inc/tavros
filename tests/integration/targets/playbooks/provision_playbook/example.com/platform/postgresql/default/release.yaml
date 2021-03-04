@@ -21,4 +21,4 @@ spec:
   # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
   values:
     postgresqlDatabase: postgres
-    existingSecret: config-secret
+    existingSecret: tavros-pg-creds
