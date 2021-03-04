@@ -1,52 +1,53 @@
-- name: Create directory
+- name: Create Directory
   file:
     path: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches
     state: directory
 
-- name: Generate Flux manifests
+- name: Generate Flux GitOps Toolkit Resources
   shell: |
     flux install --version=v0.4.3 \
       --arch=amd64 \
       --export > /tmp/{{ cluster_fqdn }}/platform/flux-system/gotk-components.yaml
 
-- name: Process gotk-sync template
+- name: Template Files
   template:
-    src: gotk-sync.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/gotk-sync.yaml
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: gotk-sync
+    - name: alert-slack
+      condition: "{{ flux.alerts.slack.address is defined }}"
 
-- name: Apply Flux manifests
+- name: Copy Files
+  copy:
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}
+  when: item.condition | default(true)
+  loop:
+    # todo: add single source in each role instead of all at once
+    - name: helmrepos.yaml
+
+- name: Apply Resources
   when: ('dry-run' not in ansible_run_tags)
-  # difference(...) because flux generates an extra document marker at the end
-  # https://curtisshoward.com/post/multi-document-yaml-files-and-the-ansible-k8s-module/
+  # difference(...) is added here because flux generates an extraneous yaml document marker at the end
+  # see: https://curtisshoward.com/post/multi-document-yaml-files-and-the-ansible-k8s-module/
   loop: "{{ lookup('file', '/tmp/' + cluster_fqdn + '/platform/flux-system/gotk-components.yaml') | from_yaml_all | list | difference([None]) }}"
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_timeout: 900
-    
-# todo: add single source in each role instead of all at once
-- name: Copy sources
-  copy:
-    src: sources.yaml
-    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/sources.yaml
 
-- name: Apply Flux Source manifests
+- name: Apply Sources Resources
   when: ('dry-run' not in ansible_run_tags)
-  loop: "{{ lookup('file', '/tmp/' + cluster_fqdn + '/platform/flux-system/sources.yaml') | from_yaml_all | list | difference([None]) }}"
+  loop: "{{ lookup('file', '/tmp/' + cluster_fqdn + '/platform/flux-system/helmrepos.yaml') | from_yaml_all | list | difference([None]) }}"
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_timeout: 900
 
-- name: Process slack-alert template
-  when: (flux.alerts.slack.address is defined)
-  template:
-    src: slack-alert.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/slack-alert.yaml
-
-- name: Apply Flux slack-alert manifest
+- name: Apply Slack Alert Resource
   when: (flux.alerts.slack.address is defined) and ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s:
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/flux-system/slack-alert.yaml
-    

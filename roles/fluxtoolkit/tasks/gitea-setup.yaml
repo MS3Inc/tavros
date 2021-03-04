@@ -25,7 +25,7 @@
     url_password: '{{ gitea.admin.password }}'
     body:
       username: flux-cd
-      email: "{{ cluster_admin_email }}"
+      email: "flux-cd@{{ cluster_fqdn }}"
       login_name: flux-cd
       must_change_password: false
       password: "{{ gitea_flux_pass }}"
