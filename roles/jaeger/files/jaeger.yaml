@@ -30,7 +30,7 @@ spec:
           all: true
         tls:
           ca: /es/certificates/ca.crt
-    secretName: jaeger-es-secret
+    secretName: tavros-es-creds
   volumeMounts:
     - name: certificates
       mountPath: /es/certificates/
@@ -38,4 +38,4 @@ spec:
   volumes:
     - name: certificates
       secret:
-        secretName: es-http-certs
+        secretName: tavros-es-http-certs

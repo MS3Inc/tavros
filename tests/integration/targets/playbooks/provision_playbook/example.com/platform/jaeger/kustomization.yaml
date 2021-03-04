@@ -2,10 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - operator/
-  - jaeger.yaml
-  - jaeger-es-secret.yaml
-  - es-http-certs.yaml
-  - ingress.yaml
-  - keycloak-client.yaml
-  - oidc-plugin.yaml
-  - spark-dependencies.yaml
+  - default/jaeger.yaml
+  - default/cronjob-spark-dependencies.yaml
+  - default/ingress.yaml
+  - default/keycloakclient.yaml
+  - default/kongplugin-oidc.yaml
+  - default/secret-es-creds.yaml
+  - default/secret-es-http-certs.yaml

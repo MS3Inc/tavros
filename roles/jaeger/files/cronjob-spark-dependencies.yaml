@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/name: tavros-spark-dependencies
     app.kubernetes.io/part-of: jaeger
 spec:
-  schedule: {{ cron_schedule }}
+  schedule: "55 23 * * *"
   concurrencyPolicy: Forbid
   suspend: false
   jobTemplate:
@@ -49,7 +49,7 @@ spec:
                   mountPath: /var/run/secrets/java.io/keystores
           containers:
             - name: tavros-spark-dependencies
-              image: '{{ spark_image }}'
+              image: quay.io/jam01/jaeger-spark-dependencies:0.0.1-SNAPSHOT-001
               envFrom:
                 - secretRef:
                     name: jaeger-es-secret

@@ -1,21 +1,21 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakClient
 metadata:
-  name: jaeger
+  name: tavros-jaeger
   namespace: keycloak
   labels:
     client: jaeger
 spec:
   realmSelector:
     matchLabels:
-        realm: {{ jaeger.keycloak.realm }}
+        realm: prod
   client:
     clientId: jaeger
-    secret: {{ jaeger.keycloak.client_secret }}
+    secret: placeholder15
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     redirectUris:
-    - "https://jaeger.{{ cluster_fqdn }}/*"
+    - "https://jaeger.tavros.example.com/*"
     directAccessGrantsEnabled: false
     standardFlowEnabled: True
     enabled: True
