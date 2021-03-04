@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nexus-properties
+  name: tavros-properties
   namespace: nexus
 data:
   nexus.properties: |

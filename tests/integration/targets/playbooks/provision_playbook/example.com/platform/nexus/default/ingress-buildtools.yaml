@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: nexus-buildtools
+  name: tavros-buildtools
   namespace: nexus
   annotations:
     cert-manager.io/cluster-issuer: tavros
