@@ -2,16 +2,16 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakRealm
 metadata:
-  name: prod
+  name: tavros-{{ item[0].name }}
   namespace: keycloak
   labels:
-    realm: prod
+    realm: {{ item[0].name }}
 spec:
   instanceSelector:
     matchLabels:
       app.tavros/component: auth
   realm:
-    id: prod
-    realm: prod
+    id: {{ item[0].name }}
+    realm: {{ item[0].name }}
     enabled: True
-    displayName: prod
+    displayName: {{ item[0].name }}

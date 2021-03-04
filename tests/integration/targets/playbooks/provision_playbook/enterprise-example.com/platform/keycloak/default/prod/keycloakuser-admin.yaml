@@ -1,14 +1,14 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
-  name: sandbox
+  name: tavros-prod-admin
   namespace: keycloak
   labels:
     app: sso
 spec:
   realmSelector:
     matchLabels:
-      realm: sandbox
+      realm: prod
   user:
     username: ops@example.com
     firstName: Tavros
@@ -19,11 +19,19 @@ spec:
     credentials:
       - type: "password"
         # todo: should be a secret?
-        value: "placeholder4"
+        value: "placeholder7"
         temporary: False
     realmRoles:
       - "offline_access"
     clientRoles:
+# Begin elastic-cloud ANSIBLE MANAGED BLOCK
+      elastic-cloud:
+        - admin
+# End elastic-cloud ANSIBLE MANAGED BLOCK
+# Begin prod-kong Kong ANSIBLE MANAGED BLOCK
+      prod-kong:
+        - super-admin
+# End prod-kong Kong ANSIBLE MANAGED BLOCK
       account:
         - "manage-account"
         - "view-profile"

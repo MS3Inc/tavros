@@ -1,33 +1,29 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
-  name: sandbox
+  name: tavros-{{ item[0].name }}-admin
   namespace: keycloak
   labels:
     app: sso
 spec:
   realmSelector:
     matchLabels:
-      realm: sandbox
+      realm: {{ item[0].name }}
   user:
-    username: ops@example.com
+    username: {{ cluster_admin_email }}
     firstName: Tavros
     lastName: Admin
-    email: ops@example.com
+    email: {{ cluster_admin_email }}
     enabled: True
     emailVerified: True
     credentials:
       - type: "password"
         # todo: should be a secret?
-        value: "placeholder6"
+        value: "{{ item[0].admin_password }}"
         temporary: False
     realmRoles:
       - "offline_access"
     clientRoles:
-# Begin sandbox-kong Kong ANSIBLE MANAGED BLOCK
-      sandbox-kong:
-        - super-admin
-# End sandbox-kong Kong ANSIBLE MANAGED BLOCK
       account:
         - "manage-account"
         - "view-profile"

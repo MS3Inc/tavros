@@ -2,7 +2,7 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakRealm
 metadata:
-  name: sandbox
+  name: tavros-sandbox
   namespace: keycloak
   labels:
     realm: sandbox

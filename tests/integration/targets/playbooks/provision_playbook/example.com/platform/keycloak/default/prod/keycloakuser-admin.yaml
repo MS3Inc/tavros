@@ -1,7 +1,7 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
-  name: prod
+  name: tavros-prod-admin
   namespace: keycloak
   labels:
     app: sso
@@ -19,19 +19,19 @@ spec:
     credentials:
       - type: "password"
         # todo: should be a secret?
-        value: "placeholder7"
+        value: "placeholder5"
         temporary: False
     realmRoles:
       - "offline_access"
     clientRoles:
-# Begin elastic-cloud ANSIBLE MANAGED BLOCK
-      elastic-cloud:
+# Begin jaeger ANSIBLE MANAGED BLOCK
+      jaeger:
+        - user
+# End jaeger ANSIBLE MANAGED BLOCK
+# Begin nexus ANSIBLE MANAGED BLOCK
+      nexus:
         - admin
-# End elastic-cloud ANSIBLE MANAGED BLOCK
-# Begin prod-kong Kong ANSIBLE MANAGED BLOCK
-      prod-kong:
-        - super-admin
-# End prod-kong Kong ANSIBLE MANAGED BLOCK
+# End nexus ANSIBLE MANAGED BLOCK
       account:
         - "manage-account"
         - "view-profile"

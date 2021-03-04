@@ -1,25 +1,25 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
-  name: {{ item.name }}
+  name: tavros-sandbox-admin
   namespace: keycloak
   labels:
     app: sso
 spec:
   realmSelector:
     matchLabels:
-      realm: {{ item.name }}
+      realm: sandbox
   user:
-    username: {{ cluster_admin_email }}
+    username: ops@example.com
     firstName: Tavros
     lastName: Admin
-    email: {{ cluster_admin_email }}
+    email: ops@example.com
     enabled: True
     emailVerified: True
     credentials:
       - type: "password"
         # todo: should be a secret?
-        value: "{{ item.admin_password }}"
+        value: "placeholder4"
         temporary: False
     realmRoles:
       - "offline_access"

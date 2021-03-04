@@ -180,7 +180,7 @@
   blockinfile:
     marker_begin: "Begin elastic-cloud"
     marker_end: "End elastic-cloud"
-    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak.realm }}-user.yaml
+    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak.realm }}/keycloakuser-admin.yaml
     insertafter: "    clientRoles:"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |2
@@ -191,4 +191,4 @@
   when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s:
     state: present
-    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak.realm }}-user.yaml
+    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak.realm }}/keycloakuser-admin.yaml

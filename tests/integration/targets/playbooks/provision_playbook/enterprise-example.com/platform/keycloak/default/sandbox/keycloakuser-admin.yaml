@@ -1,14 +1,14 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakUser
 metadata:
-  name: prod
+  name: tavros-sandbox-admin
   namespace: keycloak
   labels:
     app: sso
 spec:
   realmSelector:
     matchLabels:
-      realm: prod
+      realm: sandbox
   user:
     username: ops@example.com
     firstName: Tavros
@@ -19,19 +19,15 @@ spec:
     credentials:
       - type: "password"
         # todo: should be a secret?
-        value: "placeholder5"
+        value: "placeholder6"
         temporary: False
     realmRoles:
       - "offline_access"
     clientRoles:
-# Begin jaeger ANSIBLE MANAGED BLOCK
-      jaeger:
-        - user
-# End jaeger ANSIBLE MANAGED BLOCK
-# Begin nexus ANSIBLE MANAGED BLOCK
-      nexus:
-        - admin
-# End nexus ANSIBLE MANAGED BLOCK
+# Begin sandbox-kong Kong ANSIBLE MANAGED BLOCK
+      sandbox-kong:
+        - super-admin
+# End sandbox-kong Kong ANSIBLE MANAGED BLOCK
       account:
         - "manage-account"
         - "view-profile"

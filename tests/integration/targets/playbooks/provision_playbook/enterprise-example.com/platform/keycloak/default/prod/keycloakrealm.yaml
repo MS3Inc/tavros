@@ -2,7 +2,7 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakRealm
 metadata:
-  name: prod
+  name: tavros-prod
   namespace: keycloak
   labels:
     realm: prod

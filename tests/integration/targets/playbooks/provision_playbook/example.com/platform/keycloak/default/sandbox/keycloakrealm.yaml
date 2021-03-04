@@ -2,16 +2,16 @@
 apiVersion: keycloak.org/v1alpha1
 kind: KeycloakRealm
 metadata:
-  name: {{ item.name }}
+  name: tavros-sandbox
   namespace: keycloak
   labels:
-    realm: {{ item.name }}
+    realm: sandbox
 spec:
   instanceSelector:
     matchLabels:
       app.tavros/component: auth
   realm:
-    id: {{ item.name }}
-    realm: {{ item.name }}
+    id: sandbox
+    realm: sandbox
     enabled: True
-    displayName: {{ item.name }}
+    displayName: sandbox

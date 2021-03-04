@@ -2,10 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: keycloak
 resources:
-  - keycloak-db-secret.yaml
+  - secret-keycloak-db.yaml
   - ingress.yaml
-  - release.yaml
+  - keycloak.yaml
 {% for item in keycloak.realms %}
-  - {{ item.name }}-realm.yaml
-  - {{ item.name }}-user.yaml
+  - {{ item.name }}/keycloakrealm.yaml
+  - {{ item.name }}/keycloakuser-admin.yaml
 {% endfor %}

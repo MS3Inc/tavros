@@ -71,7 +71,7 @@
   template:
     src: spark-dependencies.j2
     dest: /tmp/{{ cluster_fqdn }}/platform/jaeger/spark-dependencies.yaml
-  vars: 
+  vars:
     cron_schedule: '55 23 * * *'
     spark_image:  'quay.io/jam01/jaeger-spark-dependencies:0.0.1-SNAPSHOT-001'
 
@@ -115,7 +115,7 @@
   blockinfile:
     marker_begin: "Begin jaeger"
     marker_end: "End jaeger"
-    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ jaeger.keycloak.realm }}-user.yaml
+    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ jaeger.keycloak.realm }}/keycloakuser-admin.yaml
     insertafter: "    clientRoles:"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |2
@@ -126,4 +126,9 @@
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s:
     state: present
-    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ jaeger.keycloak.realm }}-user.yaml
+    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ jaeger.keycloak.realm }}/keycloakuser-admin.yaml
+
+- name: Process flux-kustomization template
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/jaeger.yaml
