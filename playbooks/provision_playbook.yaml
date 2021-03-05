@@ -3,34 +3,12 @@
   connection: local
   gather_facts: no
   tasks:
-  - name: Assert binaries are available
-    shell: |
-      kubectl version
-      kustomize version
-      flux --version
-      kubeseal --version
-    changed_when: false
-
-  - name: Install dependencies with pip3 module
-    pip:
-      name:
-        - boto3
-        - botocore
-        - openshift
-        - boto
-      extra_args: --user
+  - include_tasks: tasks/pre-flight.yaml
 
   - import_role:
       name: ms3_inc.tavros.kubernetes_cluster
     vars:
       cluster_state: present
-
-  - set_fact:
-      wait_conditions:
-        HelmRelease:
-          type: Ready
-          status: true
-          reason: ReconciliationSucceeded
 
   - name: Install and configure components
     block:
