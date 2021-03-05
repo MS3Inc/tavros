@@ -21,7 +21,7 @@
   loop: "{{ kong.ee_creds }}"
 
 - name: Seal EE Creds Secrets
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}-{{ item[1].name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}-{{ item[1].name }}.tmp
     mv /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}-{{ item[1].name }}.tmp /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}-{{ item[1].name }}.yaml

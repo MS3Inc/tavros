@@ -1,6 +1,6 @@
 ---
 - name: Install Keycloak plugin
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_exec:
     namespace: nexus
     pod: "{{ lookup('k8s', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
@@ -10,7 +10,7 @@
     nexus_pod_name: "app.kubernetes.io/name=nexus-repository-manager"
 
 - name: Add Nexus Keycloak Realm
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/realms/active"
     method: PUT
@@ -29,7 +29,7 @@
   delay: 30
 
 - name: Add Nexus Keycloak admin Role Mapping
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/roles"
     method: POST
@@ -50,7 +50,7 @@
   delay: 30
 
 - name: Add Nexus developer Role
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/roles"
     method: POST
@@ -87,7 +87,7 @@
   delay: 30
 
 - name: Add Nexus Keycloak developer Role Mapping
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/roles"
     method: POST

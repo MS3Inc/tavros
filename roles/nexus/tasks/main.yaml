@@ -46,7 +46,8 @@
       dest: default/pvc-deploy.yaml
 
 - name: Seal Secrets
-  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
+  tags: [ requires_cluster ]
+  when: item.condition | default(true)
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/nexus/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/nexus/{{ item.name }}.tmp
     mv /tmp/{{ cluster_fqdn }}/platform/nexus/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/nexus/{{ item.name }}.yaml
@@ -54,7 +55,7 @@
     - name: default/secret-keycloak-config
 
 - name: Apply Resources
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/nexus/
   k8s:
     definition: "{{ item }}"
@@ -63,7 +64,7 @@
     wait_timeout: 900
 
 - name: Wait for Nexus
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
     kind: Pod
     label_selectors:
@@ -74,7 +75,7 @@
   changed_when: false
 
 - name: Retreive admin.password
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_exec:
     namespace: nexus
     pod: "{{ lookup('k8s', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
@@ -85,12 +86,12 @@
   register: nexus_creds
 
 - name: Set nexus.admin_password Variable
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   set_fact:
     nexus: "{{ nexus | combine({ 'generated': { 'admin_password': nexus_creds.stdout } }, recursive=True) }}"
 
 - name: Wait for Keycloak Client
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
     api_version: keycloak.org/v1alpha1
     kind: KeycloakClient
@@ -104,7 +105,7 @@
   changed_when: false
 
 - name: Create Keycloak nexus Client Roles
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   ms3_inc.tavros.keycloak_client_roles:
     auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
     validate_certs: false
@@ -135,14 +136,16 @@
               - admin
 
 - name: Apply Updated Keycloak Realm Admin User Resource
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s:
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ nexus.keycloak.realm }}/keycloakuser-admin.yaml
 
 - include_tasks: create-repositories.yaml
+  tags: [ requires_cluster ]
 
 - include_tasks: configure-auth.yaml
+  tags: [ requires_cluster ]
 
 - name: Template flux-kustomization
   template:

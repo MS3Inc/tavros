@@ -1,6 +1,6 @@
 ---
 - name: Create DockerHub Proxy Repository
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/beta/repositories/docker/proxy"
     method: POST
@@ -37,7 +37,7 @@
   delay: 30
 
 - name: Create Interal Container Registry Hosted Repository
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/beta/repositories/docker/hosted"
     method: POST
@@ -64,7 +64,7 @@
   delay: 30
 
 - name: Create Container Registry Group Repository
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/beta/repositories/docker/group"
     method: POST

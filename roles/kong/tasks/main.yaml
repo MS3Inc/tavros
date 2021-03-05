@@ -32,7 +32,7 @@
   when: kong.ee_creds
 
 - name: Apply Resources
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/kong/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
@@ -41,7 +41,7 @@
     wait_timeout: 900
 
 - name: Set DNS for Tavros Apps
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.aws.route53:
     state: present
     zone: "{{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }}"
@@ -55,7 +55,7 @@
     prod_kong_proxy: "kong-tavros-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}-kong-proxy"
 
 - name: Set DNS for Kongs by Name
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.aws.route53:
     state: present
     zone: "{{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }}"
@@ -70,7 +70,8 @@
   loop: "{{ kong.instances }}"
 
 - name: Set DNS for non Prod Kongs by Ingress Class
-  when: (item.ingress_class != kong.default_ingress_class) and ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
+  when: item.ingress_class != kong.default_ingress_class
   community.aws.route53:
     state: present
     zone: "{{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }}"

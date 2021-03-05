@@ -28,7 +28,7 @@
     - name: helmrepos.yaml
 
 - name: Apply Resources
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   # difference(...) is added here because flux generates an extraneous yaml document marker at the end
   # see: https://curtisshoward.com/post/multi-document-yaml-files-and-the-ansible-k8s-module/
   loop: "{{ lookup('file', '/tmp/' + cluster_fqdn + '/platform/flux-system/gotk-components.yaml') | from_yaml_all | list | difference([None]) }}"
@@ -37,8 +37,8 @@
     wait: true
     wait_timeout: 900
 
-- name: Apply Sources Resources
-  when: ('dry-run' not in ansible_run_tags)
+- name: Apply HelmRepo Resources
+  tags: [ requires_cluster ]
   loop: "{{ lookup('file', '/tmp/' + cluster_fqdn + '/platform/flux-system/helmrepos.yaml') | from_yaml_all | list | difference([None]) }}"
   k8s:
     definition: "{{ item }}"
@@ -46,7 +46,8 @@
     wait_timeout: 900
 
 - name: Apply Slack Alert Resource
-  when: (flux.alerts.slack.address is defined) and ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
+  when: flux.alerts.slack.address is defined
   community.kubernetes.k8s:
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/flux-system/slack-alert.yaml

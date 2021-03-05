@@ -1,13 +1,13 @@
 ---
 - name: Template Keycloak Client File
-  when: (item.ee.enabled)
+  when: item.ee.enabled
   template:
     src: keycloakclient.j2
     dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/keycloakclient.yaml
   loop: "{{ kong.instances }}"
 
 - name: Add Keycloak Client Resource to Kong Resources
-  when: (item.ee.enabled)
+  when: item.ee.enabled
   lineinfile:
     path: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/kustomization.yaml
     line: "  - keycloakclient.yaml"
@@ -15,7 +15,7 @@
   loop: "{{ kong.instances }}"
 
 - name: Apply Updated Resources
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kong/
   k8s:
     definition: "{{ item }}"
@@ -24,7 +24,7 @@
     wait_timeout: 900
 
 - name: Wait for Keycloak
-  when: "'dry-run' not in ansible_run_tags"
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
     api_version: keycloak.org/v1alpha1
     kind: Keycloak
@@ -38,7 +38,8 @@
   changed_when: false
 
 - name: Create Keycloak kong.name Client Roles
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
+  when: item.ee.enabled
   loop: "{{ kong.instances }}"
   ms3_inc.tavros.keycloak_client_roles:
     auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
@@ -52,7 +53,7 @@
     - name: "super-admin"
 
 - name: Add Keycloak kong.name Client Role super-admin to Realm Admin User
-  when: (item.ee.enabled)
+  when: item.ee.enabled
   loop: "{{ kong.instances }}"
   blockinfile:
     marker_begin: "Begin {{ item.name }} Kong"
@@ -65,14 +66,16 @@
               - super-admin
 
 - name: Apply Updated Keycloak Realm Admin User Resource
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
+  when: item.ee.enabled
   loop: "{{ kong.instances }}"
   community.kubernetes.k8s:
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}/keycloakuser-admin.yaml
 
 - name: Create Kong Admins
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
+  when: item.ee.enabled
   uri:
     url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}"
     method: POST
@@ -87,7 +90,8 @@
   loop: "{{ kong.instances }}"
 
 - name: Add Kong super-admin Role to Admins
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
+  when: item.ee.enabled
   uri:
     url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins/{{ cluster_admin_email }}/roles?roles=super-admin"
     method: POST

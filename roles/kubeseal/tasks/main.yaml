@@ -13,7 +13,7 @@
     - name: kustomization.yaml
 
 - name: Apply Resources
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/kubeseal/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"

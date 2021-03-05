@@ -31,7 +31,7 @@
     - ['mesh', 'traffictrace']
 
 - name: Apply Resources
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kuma-system/
   k8s:
     definition: "{{ item }}"

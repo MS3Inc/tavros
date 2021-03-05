@@ -1,5 +1,6 @@
 ---
 - name: Register gitea_login Cookies Variable
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: https://code.{{ cluster_fqdn }}/user/login
     method: POST
@@ -16,6 +17,7 @@
   delay: 30
 
 - name: Add OIDC Configuration
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: https://code.{{ cluster_fqdn }}/admin/auths/new
     method: POST

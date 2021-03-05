@@ -14,7 +14,8 @@
     - name: secret-git-creds
 
 - name: Seal Secrets
-  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
+  tags: [ requires_cluster ]
+  when: item.condition | default(true)
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.tmp
     mv /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.yaml
@@ -22,7 +23,7 @@
     - name: secret-git-creds
 
 - name: Create flux-cd User
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: https://code.{{ cluster_fqdn }}/api/v1/admin/users
     method: POST
@@ -43,7 +44,7 @@
     validate_certs: False
 
 - name: Create Tavros Platform Repo
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: https://code.{{ cluster_fqdn }}/api/v1/orgs/tavros/repos
     method: POST
@@ -65,7 +66,7 @@
 
 
 - name: Register gitea_login Variable
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   # todo: figure out how to re-use gitea_login if available
   # beware a simple `when` with a `register` will ovewrite the variable with the skipped task dict
   # when: gitea_login.cookies_string is not defined
@@ -82,7 +83,7 @@
   register: gitea_login
 
 - name: Add flux-cd as Owner of tavros/platform Repo
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: https://code.{{ cluster_fqdn }}/org/tavros/teams/owners/action/add
     method: POST
@@ -99,7 +100,7 @@
     validate_certs: False
 
 - name: Add/Commit/Push tavros/platform Repo
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
   args:
     chdir: /tmp/{{ cluster_fqdn }}/
   shell: |
@@ -115,7 +116,7 @@
     git push --set-upstream https://flux-cd:{{ gitea_flux_pass }}@code.{{ cluster_fqdn }}/tavros/platform.git main
 
 - name: Apply Resources
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   k8s:
     src: "{{ item }}"
     wait: true

@@ -7,7 +7,7 @@
 # Import Elasticsearch certificates
 # https://www.elastic.co/guide/en/cloud-on-k8s/1.3/k8s-tls-certificates.html#k8s-default-self-signed-certificate
 - name: Get tavros-es-cert-public Resource from elastic-system Namespace
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
     api_version: v1
     kind: Secret
@@ -54,7 +54,8 @@
       dest: ""
 
 - name: Seal Secrets
-  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
+  tags: [ requires_cluster ]
+  when: item.condition | default(true)
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.tmp
     mv /tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.yaml
@@ -63,7 +64,7 @@
     - name: default/secret-es-http-certs
 
 - name: Apply Resources
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/jaeger/
   k8s:
     definition: "{{ item }}"
@@ -72,7 +73,7 @@
     wait_timeout: 900
 
 - name: Wait for Keycloak Client
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
     api_version: keycloak.org/v1alpha1
     kind: KeycloakClient
@@ -85,8 +86,8 @@
   delay: 30
   changed_when: false
 
-- name: Create Keycloak Jaeger Client Roles
-  when: ('dry-run' not in ansible_run_tags)
+- name: Create Keycloak jaeger Client Roles
+  tags: [ requires_cluster ]
   ms3_inc.tavros.keycloak_client_roles:
     auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
     validate_certs: false
@@ -110,7 +111,7 @@
               - user
 
 - name: Apply Updated Keycloak Realm Admin User Resource
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s:
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ jaeger.keycloak.realm }}/keycloakuser-admin.yaml

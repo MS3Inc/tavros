@@ -12,7 +12,7 @@
     dest: /tmp/{{ cluster_fqdn }}/{{ item.name }}/ns.yaml
 
 - name: Apply Resources
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   loop: "{{ namespaces }}"
   community.kubernetes.k8s:
     state: present

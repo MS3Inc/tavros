@@ -1,6 +1,5 @@
 ---
 - name: Delete Cluster
-  when: (cluster_state == 'absent') and ('dry-run' not in ansible_run_tags)
   register: result
   changed_when: result.rc == 101
   failed_when: (result.rc != 100) and (result.rc != 101)
@@ -21,7 +20,6 @@
     exit 100
 
 - name: Delete kOps S3 Bucket
-  when: (cluster_state == 'absent') and ('dry-run' not in ansible_run_tags)
   amazon.aws.aws_s3:
     bucket: "{{ kubernetes_cluster.state_bucket }}"
     mode: delete

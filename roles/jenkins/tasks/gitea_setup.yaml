@@ -6,7 +6,7 @@
 # see: https://www.jenkins.io/doc/developer/extensions/kubernetes-credentials-provider/
 # https://github.com/jenkinsci/gitea-plugin/blob/gitea-1.2.1/src/main/java/org/jenkinsci/plugin/gitea/credentials/PersonalAccessToken.java
 - name: Create Local Gitea jenkins-ci User
-  when: "'dry-run' not in ansible_run_tags"
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: https://code.{{ cluster_fqdn }}/api/v1/admin/users
     method: POST
@@ -32,7 +32,7 @@
   # todo: figure out how to re-use gitea_login if available
   # beware a simple `when` with a `register` will ovewrite the variable with the skipped task dict
   # when: gitea_login.cookies_string is not defined
-  when: "'dry-run' not in ansible_run_tags"
+  tags: [ requires_cluster ]
   uri:
     url: https://code.{{ cluster_fqdn }}/user/login
     method: POST
@@ -46,7 +46,7 @@
   register: gitea_login
 
 - name: Add jenkins-ci as Owner of tavros/platform Repository
-  when: "'dry-run' not in ansible_run_tags"
+  tags: [ requires_cluster, non_idempotent ]
   uri:
     url: https://code.{{ cluster_fqdn }}/org/tavros/teams/owners/action/add
     method: POST

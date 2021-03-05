@@ -58,7 +58,8 @@
       dest: ""
 
 - name: Seal Secrets
-  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
+  tags: [ requires_cluster ]
+  when: item.condition | default(true)
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.tmp
     mv /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.yaml
@@ -67,7 +68,7 @@
       condition: "{{ elastic_cloud.ee.enabled }}"
 
 - name: Apply Resources
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/
   k8s:
     definition: "{{ item }}"
@@ -76,7 +77,7 @@
     wait_timeout: 900
 
 - name: Wait for Elasticsearch
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
     api_version: elasticsearch.k8s.elastic.co/v1
     kind: Elasticsearch
@@ -89,7 +90,7 @@
   changed_when: false
 
 - name: Wait for Kibana
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
     api_version: kibana.k8s.elastic.co/v1
     kind: Kibana
@@ -102,7 +103,7 @@
   changed_when: false
 
 - name: Get tavros-es-elastic-user Resource
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
     api_version: v1
     kind: Secret
@@ -111,14 +112,15 @@
   register: elastic_secret
 
 - name: Set elastic_cloud.elastic_secret Variable
-  when: ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
   set_fact:
     elastic_cloud: "{{ elastic_cloud | combine({'elastic_secret': elastic_pass}, recursive=true) }}"
   vars:
     elastic_pass: "{{ elastic_secret.resources[0].data.elastic | b64decode }}"
 
 - name: Add RBAC Role Mapping for Keycloak
-  when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster, non_idempotent ]
+  when: elastic_cloud.ee.enabled
   community.kubernetes.k8s_exec:
     namespace: elastic-system
     pod: "tavros-es-default-0"
@@ -129,7 +131,8 @@
   register: elk_results
 
 - name: Create Keycloak elastic-cloud Client Roles
-  when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
+  when: elastic_cloud.ee.enabled
   ms3_inc.tavros.keycloak_client_roles:
     auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
     validate_certs: false
@@ -142,7 +145,7 @@
     - name: "admin"
 
 - name: Add Keycloak elastic-cloud Client Role admin to Realm Admin User
-  when: (elastic_cloud.ee.enabled)
+  when: elastic_cloud.ee.enabled
   blockinfile:
     marker_begin: "Begin elastic-cloud"
     marker_end: "End elastic-cloud"
@@ -154,7 +157,8 @@
               - admin
 
 - name: Apply Updated Keycloak Realm Admin User Resource
-  when: (elastic_cloud.ee.enabled) and ('dry-run' not in ansible_run_tags)
+  tags: [ requires_cluster ]
+  when: elastic_cloud.ee.enabled
   community.kubernetes.k8s:
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak.realm }}/keycloakuser-admin.yaml
