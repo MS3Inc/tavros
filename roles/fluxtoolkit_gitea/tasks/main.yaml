@@ -1,20 +1,28 @@
-
-- name: Create gitea_flux_pass
+---
+- name: Generate and Merge flux.gitea.password Variable
+  when: flux.gitea.password is not defined
   set_fact:
-    gitea_flux_pass: "{{ lookup('password', '/dev/null') }}"
+    flux: "{{ flux | combine({ 'gitea': { 'password': lookup('password', '/dev/null') } }, recursive=true) }}"
 
-  # todo: change to template to enable dry-run
-- name: Create flux-repo-secret SealedSecret for Flux Gitea Creds
+- name: Template Files
+  template:
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.dest | default(item.name) }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: gotk-sync
+    - name: secret-git-creds
+
+- name: Seal Secrets
+  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
   shell: |
-    kubectl create secret generic flux-repo-secret --dry-run=client -n flux-system \
-    --from-literal=username=flux-cd \
-    --from-literal=password="{{ gitea_flux_pass }}" \
-    -o yaml >/tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.yaml
-
-    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.yaml >/tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.tmp
-    mv /tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.tmp /tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.yaml
+  loop:
+    - name: secret-git-creds
 
 - name: Create flux-cd User
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://code.{{ cluster_fqdn }}/api/v1/admin/users
     method: POST
@@ -35,6 +43,7 @@
     validate_certs: False
 
 - name: Create Tavros Platform Repo
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://code.{{ cluster_fqdn }}/api/v1/orgs/tavros/repos
     method: POST
@@ -55,7 +64,8 @@
     validate_certs: False
 
 
-- name: Register gitea login cookies
+- name: Register gitea_login Variable
+  when: ('dry-run' not in ansible_run_tags)
   # todo: figure out how to re-use gitea_login if available
   # beware a simple `when` with a `register` will ovewrite the variable with the skipped task dict
   # when: gitea_login.cookies_string is not defined
@@ -71,7 +81,8 @@
     validate_certs: False
   register: gitea_login
 
-- name: Add flux-cd as owner to tavros/platform
+- name: Add flux-cd as Owner of tavros/platform Repo
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://code.{{ cluster_fqdn }}/org/tavros/teams/owners/action/add
     method: POST
@@ -87,18 +98,29 @@
     status_code: 200
     validate_certs: False
 
-- name: Add/Commit/Push to the Platform Tavros Repo
+- name: Add/Commit/Push tavros/platform Repo
+  when: ('dry-run' not in ansible_run_tags)
   args:
     chdir: /tmp/{{ cluster_fqdn }}/
   shell: |
+    git config --global user.email
+    if [ $? -ne 0 ]; then
+      git config --global user.email "{{ cluster_admin_email }}"
+      git config --global user.name "tavros/provision_playbook"
+    fi
     git init
     git checkout -b main
     git add .
     git commit -m "Initial platform state"
     git push --set-upstream https://flux-cd:{{ gitea_flux_pass }}@code.{{ cluster_fqdn }}/tavros/platform.git main
 
-  # todo: change to k8s and enable dry-run
-- name: Apply Remaining Flux manifests to activate Repo Sync
-  shell: |
-    kubectl apply -f /tmp/{{ cluster_fqdn }}/platform/flux-system/flux-repo-secret.yaml
-    kubectl apply -f /tmp/{{ cluster_fqdn }}/platform/flux-system/gotk-sync.yaml
+- name: Apply Resources
+  when: ('dry-run' not in ansible_run_tags)
+  k8s:
+    src: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
+  loop:
+    - /tmp/{{ cluster_fqdn }}/platform/flux-system/secret-git-creds.yaml
+    - /tmp/{{ cluster_fqdn }}/platform/flux-system/gotk-sync.yaml

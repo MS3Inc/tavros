@@ -14,7 +14,7 @@
     follow_redirects: all
     body_format: json
     url_username: gitea_admin
-    url_password: '{{ gitea.admin.password }}'
+    url_password: '{{ gitea.admin_password }}'
     body:
       username: jenkins-ci
       email: "jenkins-ci@{{ cluster_fqdn }}"
@@ -40,7 +40,7 @@
     body_format: form-urlencoded
     body:
       user_name: gitea_admin
-      password: '{{ gitea.admin.password }}'
+      password: '{{ gitea.admin_password }}'
     status_code: 200
     validate_certs: False
   register: gitea_login

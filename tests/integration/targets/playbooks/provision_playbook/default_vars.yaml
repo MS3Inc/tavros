@@ -69,11 +69,13 @@ all:
     cert_manager:
       enabled: true
     gitea:
-      enabled: false
+      enabled: true
+      admin_password: placeholder16
       pg:
         password: placeholder8
       keycloak:
         realm: 'prod'
+        client_secret: placeholder17
     nexus:
       enabled: true
       keycloak:
@@ -93,4 +95,6 @@ all:
       enabled: true
       keycloak:
         realm: 'prod'
-    flux: {}
+    flux:
+      gitea:
+        password: placeholder18

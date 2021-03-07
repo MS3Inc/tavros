@@ -7,7 +7,7 @@
     body_format: form-urlencoded
     body:
       user_name: gitea_admin
-      password: '{{ gitea.admin.password }}'
+      password: '{{ gitea.admin_password }}'
     status_code: 200
     validate_certs: False
   register: gitea_login

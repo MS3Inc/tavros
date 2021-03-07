@@ -4,12 +4,12 @@
     path: /tmp/{{ cluster_fqdn }}/platform/gitea/default
     state: directory
 
-- name: Generate gitea.admin.password Variable
-  when: gitea.admin.password is not defined
+- name: Generate and Merge gitea.admin_password Variable
+  when: gitea.admin_password is not defined
   set_fact:
-    gitea: "{{ gitea | combine({ 'admin': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
+    gitea: "{{ gitea | combine({ 'admin_password': lookup('password', '/dev/null') }, recursive=true) }}"
 
-- name: Generate Keycloak Client Secret
+- name: Generate and Merge gitea.keycloak.client_secret Variable
   when: gitea.keycloak.client_secret is not defined
   set_fact:
     gitea: "{{ gitea | combine({ 'keycloak': { 'client_secret': uuid } } , recursive=true) }}"
@@ -62,7 +62,7 @@
     follow_redirects: all
     body_format: json
     url_username: gitea_admin
-    url_password: '{{ gitea.admin.password }}'
+    url_password: '{{ gitea.admin_password }}'
     body:
       username: tavros
       visibility: limited

@@ -15,7 +15,6 @@
     dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.yaml
   when: item.condition | default(true)
   loop:
-    - name: gotk-sync
     - name: alert-slack
       condition: "{{ flux.alerts.slack.address is defined }}"
 

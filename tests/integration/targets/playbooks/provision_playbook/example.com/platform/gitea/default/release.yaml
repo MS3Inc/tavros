@@ -27,8 +27,8 @@ spec:
     gitea:
       admin:
         username: 'gitea_admin'
-        password: '{{ gitea.admin_password }}'
-        email: '{{ cluster_admin_email }}'
+        password: 'placeholder16'
+        email: 'ops@example.com'
 
       config:
         service:
@@ -42,15 +42,15 @@ spec:
           ENABLE_OPENID_SIGNUP: false
 
         server:
-          ROOT_URL: 'https://code.{{ cluster_fqdn }}/'
-          SSH_DOMAIN: 'code.{{ cluster_fqdn }}'
+          ROOT_URL: 'https://code.tavros.example.com/'
+          SSH_DOMAIN: 'code.tavros.example.com'
 
         database:
           DB_TYPE: postgres
           HOST: 'tavros-postgresql.postgresql.svc.cluster.local:5432'
           NAME: 'gitea'
           USER: 'gitea'
-          PASSWD: '{{ gitea.pg.password }}'
+          PASSWD: 'placeholder8'
 
         security:
           PASSWORD_COMPLEXITY: 'off'
@@ -60,12 +60,4 @@ spec:
           postgresql:
             enabled: false
 
-    {% if ('test-run' in ansible_run_tags) %}
-    extraVolumes:
-    - name: ca-certs
-      configMap:
-        name: ca-certs
-    extraVolumeMounts:
-    - name: ca-certs
-      mountPath: /etc/ssl/certs/
-    {% endif %}
+    
