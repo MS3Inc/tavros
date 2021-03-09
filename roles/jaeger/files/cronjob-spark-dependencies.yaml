@@ -32,7 +32,7 @@ spec:
           volumes:
             - name: certificates
               secret:
-                secretName: es-http-certs
+                secretName: tavros-es-http-certs
                 defaultMode: 420
             - name: keystore-volume
               emptyDir: {}
@@ -52,7 +52,7 @@ spec:
               image: quay.io/jam01/jaeger-spark-dependencies:0.0.1-SNAPSHOT-001
               envFrom:
                 - secretRef:
-                    name: jaeger-es-secret
+                    name: tavros-es-creds
               env:
                 - name: STORAGE
                   value: elasticsearch
