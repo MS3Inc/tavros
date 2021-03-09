@@ -42,4 +42,4 @@
 - name: Template flux-kustomization
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/cert_manager.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/cert-manager.yaml
