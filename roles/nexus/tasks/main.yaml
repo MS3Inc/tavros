@@ -58,7 +58,7 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/nexus/
-  k8s:
+  community.kubernetes.k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
@@ -81,7 +81,7 @@
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_exec:
     namespace: nexus
-    pod: "{{ lookup('k8s', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
+    pod: "{{ lookup('community.kubernetes.k8s', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
     command: |
       cat nexus-data/admin.password
   vars:
@@ -117,7 +117,7 @@
     validate_certs: false
     auth_realm: master
     auth_username: admin
-    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
+    auth_password: "{{ lookup('community.kubernetes.k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
     realm: "{{ nexus.keycloak.realm }}"
     clientId: "nexus"
     roles:

@@ -118,7 +118,7 @@
 - name: Apply Resources
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  k8s:
+  community.kubernetes.k8s:
     src: "{{ item }}"
     wait: true
     wait_timeout: 900
