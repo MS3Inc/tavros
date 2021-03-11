@@ -117,7 +117,7 @@
 
 - name: Apply Resources
   tags: [ requires_cluster ]
-  k8s:
+  community.kubernetes.k8s:
     src: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"

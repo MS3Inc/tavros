@@ -34,7 +34,7 @@
 - name: Apply Resources
   tags: [ requires_cluster ]
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/kong/', reorder='none') }}"
-  k8s:
+  community.kubernetes.k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
@@ -47,7 +47,7 @@
     zone: "{{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }}"
     type: CNAME
     record: "*.{{ cluster_fqdn }}"
-    value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    value: "{{ lookup('community.kubernetes.k8s', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
@@ -61,7 +61,7 @@
     zone: "{{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }}"
     type: CNAME
     record: "*.{{ item.name }}.{{ cluster_fqdn }}"
-    value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    value: "{{ lookup('community.kubernetes.k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
@@ -77,7 +77,7 @@
     zone: "{{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }}"
     type: CNAME
     record: "*.{{ item.ingress_class }}.{{ cluster_fqdn }}"
-    value: "{{ lookup('k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    value: "{{ lookup('community.kubernetes.k8s', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
     wait_timeout: 900

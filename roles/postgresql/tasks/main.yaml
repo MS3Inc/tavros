@@ -43,7 +43,7 @@
 - name: Apply Resources
   tags: [ requires_cluster]
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/postgresql/', reorder='none') }}"
-  k8s:
+  community.kubernetes.k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"

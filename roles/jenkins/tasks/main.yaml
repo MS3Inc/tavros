@@ -57,7 +57,7 @@
 - name: Apply Operator Resources
   tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins/operator/0.5.0
-  k8s:
+  community.kubernetes.k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
@@ -66,7 +66,7 @@
 - name: Apply Resources
   tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins
-  k8s:
+  community.kubernetes.k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
