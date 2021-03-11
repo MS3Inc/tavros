@@ -16,6 +16,14 @@
       - botocore
       - openshift
 
+- name: Configure git user email
+  shell: |
+    git config --global user.email
+    if [ $? -ne 0 ]; then
+      git config --global user.email "{{ cluster_admin_email }}"
+      git config --global user.name "Tavros Installer"
+    fi
+
 - set_fact:
     wait_conditions:
       HelmRelease:
