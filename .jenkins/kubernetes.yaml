@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    some-label: tavros-install
+  namespace: jenkins
+spec:
+  containers:
+  - name: tavros-install
+    image: srodin/tavros-install
+    securityContext:
+      privileged: false
+    tty: true
+    command: ['cat']
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
