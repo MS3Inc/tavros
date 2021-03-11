@@ -1,4 +1,23 @@
 ---
+- name: Disable Anonymous Access
+  tags: [ requires_cluster ]
+  uri:
+    url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/realms/active"
+    method: PUT
+    status_code: 204
+    headers:
+      Authorization: "Basic {{ ('admin:' + nexus.generated.admin_password ) | b64encode }}"
+    validate_certs: False
+    body_format: json
+    body:
+      enabled: false
+      userId: anonymous
+      realmName: NexusAuthorizingRealm
+  register: _result
+  until: _result.status == 204
+  retries: 5
+  delay: 30
+
 - name: Install Keycloak plugin
   tags: [ requires_cluster ]
   community.kubernetes.k8s_exec:
@@ -10,7 +29,7 @@
     nexus_pod_name: "app.kubernetes.io/name=nexus-repository-manager"
 
 - name: Add Nexus Keycloak Realm
-  tags: [ requires_cluster, non_idempotent ]
+  tags: [ requires_cluster ]
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/realms/active"
     method: PUT
@@ -25,7 +44,7 @@
       - 'org.github.flytreeleft.nexus3.keycloak.plugin.KeycloakAuthenticatingRealm'
   register: _result
   until: _result.status == 204
-  retries: 30
+  retries: 5
   delay: 30
 
 - name: Add Nexus Keycloak admin Role Mapping
@@ -46,7 +65,7 @@
       - 'nx-admin'
   register: _result
   until: _result.status == 200
-  retries: 30
+  retries: 5
   delay: 30
 
 - name: Add Nexus developer Role
@@ -83,7 +102,7 @@
       - nx-repository-view-docker-container-registry-read
   register: _result
   until: _result.status == 200
-  retries: 30
+  retries: 5
   delay: 30
 
 - name: Add Nexus Keycloak developer Role Mapping
@@ -104,5 +123,5 @@
       - 'developer'
   register: _result
   until: _result.status == 200
-  retries: 30
+  retries: 5
   delay: 30
