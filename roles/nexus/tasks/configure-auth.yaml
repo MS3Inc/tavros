@@ -23,8 +23,9 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_exec:
+    kubeconfig: '~/.kube/config'
     namespace: nexus
-    pod: "{{ lookup('community.kubernetes.k8s', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
+    pod: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
     command: |
       curl -LJo /opt/sonatype/nexus/deploy/nexus3-keycloak-plugin-bundle.kar https://github.com/flytreeleft/nexus3-keycloak-plugin/releases/download/0.4.1-prev2-SNAPSHOT/nexus3-keycloak-plugin-0.4.1-SNAPSHOT-bundle.kar
   vars:

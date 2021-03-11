@@ -59,6 +59,7 @@
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins/operator/0.5.0
   community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
@@ -69,6 +70,7 @@
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins
   community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
@@ -78,6 +80,7 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
+    kubeconfig: '~/.kube/config'
     kind: Pod
     name: jenkins-tavros
     namespace: jenkins

@@ -59,6 +59,7 @@
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/nexus/
   community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
@@ -68,6 +69,7 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
+    kubeconfig: '~/.kube/config'
     kind: Pod
     label_selectors:
     - "app.kubernetes.io/name = nexus-repository-manager"
@@ -80,8 +82,9 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_exec:
+    kubeconfig: '~/.kube/config'
     namespace: nexus
-    pod: "{{ lookup('community.kubernetes.k8s', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
+    pod: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
     command: |
       cat nexus-data/admin.password
   vars:
@@ -98,6 +101,7 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
+    kubeconfig: '~/.kube/config'
     api_version: keycloak.org/v1alpha1
     kind: KeycloakClient
     name: tavros-nexus
@@ -117,7 +121,7 @@
     validate_certs: false
     auth_realm: master
     auth_username: admin
-    auth_password: "{{ lookup('community.kubernetes.k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
+    auth_password: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
     realm: "{{ nexus.keycloak.realm }}"
     clientId: "nexus"
     roles:
@@ -145,6 +149,7 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ nexus.keycloak.realm }}/keycloakuser-admin.yaml
 

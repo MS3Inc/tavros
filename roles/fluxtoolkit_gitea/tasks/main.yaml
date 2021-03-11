@@ -119,6 +119,7 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
     src: "{{ item }}"
     wait: true
     wait_timeout: 900
