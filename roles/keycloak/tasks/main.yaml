@@ -65,6 +65,7 @@
   tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/keycloak/operator/12.0.1
   community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
@@ -73,6 +74,7 @@
 - name: Wait for Keycloak Operator
   tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
+    kubeconfig: '~/.kube/config'
     api_version: apps/v1
     kind: Deployment
     name: keycloak-operator
@@ -87,6 +89,7 @@
   tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/keycloak/
   community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
@@ -95,6 +98,7 @@
 - name: Wait for Keycloak
   tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
+    kubeconfig: '~/.kube/config'
     api_version: keycloak.org/v1alpha1
     kind: Keycloak
     name: tavros

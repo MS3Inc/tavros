@@ -15,6 +15,7 @@
   tags: [ requires_cluster ]
   loop: "{{ namespaces }}"
   community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
     state: present
     src: /tmp/{{ cluster_fqdn }}/{{ item.name }}/ns.yaml
 

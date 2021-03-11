@@ -58,6 +58,7 @@
   tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins/operator/0.5.0
   community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
@@ -67,6 +68,7 @@
   tags: [ requires_cluster ]
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins
   community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
@@ -75,6 +77,7 @@
 - name: Wait for Jenkins
   tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
+    kubeconfig: '~/.kube/config'
     kind: Pod
     name: jenkins-tavros
     namespace: jenkins
