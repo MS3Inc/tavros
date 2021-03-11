@@ -35,6 +35,10 @@
     fi
     exit 100
 
+- name: Wait for DNS zone propagation
+  wait_for:
+    host: api.{{ cluster_fqdn }}
+
 - name: Export Kube Context
   shell: |
     kops export kubecfg --admin \
