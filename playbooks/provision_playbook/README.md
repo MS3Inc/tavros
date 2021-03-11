@@ -88,7 +88,7 @@ To use the default configuration:
 
 ``` bash
 ansible-playbook playbooks/provision_playbook.yaml \
-  --extra-vars '{"cluster_name":"tavros","cluster_domain":"example.com","cluster_admin_email":"ops@example.com"}' \
+  --extra-vars '{"cluster_fqdn":"tavros.example.com","cluster_admin_email":"ops@example.com"}' \
   --inventory "playbooks/provision_playbook/default_vars.yaml"
 ```
 
@@ -96,8 +96,7 @@ ansible-playbook playbooks/provision_playbook.yaml \
 
 | Field Name | Type | Description | Default Value |
 | ---------- | ---- | ----------- | ------------- |
-cluster_name | String | **Required** The name of the Tavros Kubernetes cluster
-cluster_domain | String | **Required** The domain name to use for the platform. This should be managed by the cloud provider chosen in order to setup routes and certificates
+cluster_fqdn | String | **Required** Fully qualified domain name of the Tavros Kubernetes cluster
 cluster_admin_email | String | **Required** The email for alerts and general notifications. |
 kubernetes_cluster | [Kubernetes Cluster Object](#kubernetes-cluster-object) | **Required** Configuration for the Kubernetes Cluster to be provisioned
 kong | [Kong Object](#kong-object) | Configuration for Kong

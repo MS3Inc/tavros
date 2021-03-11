@@ -1,9 +1,7 @@
 ---
 type: object
 properties:
-  cluster_name:
-    type: string
-  cluster_domain:
+  cluster_fqdn:
     type: string
   cluster_admin_email:
     type: string
