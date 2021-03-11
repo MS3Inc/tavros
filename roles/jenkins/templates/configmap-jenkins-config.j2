@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tavros-jenkins-config
+  namespace: jenkins
+data:
+  1-casc.yaml: |
+    unclassified:
+      location:
+        url: https://ci.{{ cluster_fqdn }}/
+        adminAddress: {{ cluster_admin_email }}
+      keycloakSecurityRealm:
+        keycloakJson: |-
+          {
+            "realm": "{{ jenkins.keycloak.realm }}",
+            "auth-server-url": "https://auth.{{ cluster_fqdn }}/auth/",
+{%  if 'test-run' in ansible_run_tags %}
+            "disable-trust-manager": true,
+            "allow-any-hostname": true,
+{% endif  %}
+            "ssl-required": "external",
+            "resource": "jenkins",
+            "public-client": true,
+            "confidential-port": 0
+          }
+      giteaServers:
+        servers:
+        - credentialsId: "gitea-credentials"
+          displayName: "gitea"
+          manageHooks: true
+          serverUrl: "https://code.{{ cluster_fqdn }}"
+    jenkins:
+      securityRealm: keycloak
+
+    jobs:
+    - script: >
+        organizationFolder('Gitea Tavros Folder') {
+            description("Track Tavros Gitea repositories and events")
+            displayName('Gitea Tavros')
+            organizations {
+            }
+
+            configure { node ->
+                // todo: setup auto scan every 30 mins
+                node / navigators << 'org.jenkinsci.plugin.gitea.GiteaSCMNavigator' {
+                    serverUrl("https://code.{{ cluster_fqdn }}")
+                    repoOwner("tavros")
+                    credentialsId("gitea-credentials")
+                    traits {
+                        'org.jenkinsci.plugin.gitea.BranchDiscoveryTrait'() {
+                            strategyId('1')
+                        }
+                        'org.jenkinsci.plugin.gitea.OriginPullRequestDiscoveryTrait'() {
+                            strategyId('1')
+                        }
+                        'org.jenkinsci.plugin.gitea.ForkPullRequestDiscoveryTrait'() {
+                            strategyId('1')
+                            trust(class: 'org.jenkinsci.plugin.gitea.ForkPullRequestDiscoveryTrait\$TrustContributors')
+                        }
+                    }
+                }
+            }
+        }

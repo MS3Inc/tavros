@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: nexus
+  name: tavros
   namespace: nexus
   annotations:
     cert-manager.io/cluster-issuer: tavros
@@ -9,10 +9,10 @@ metadata:
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
     konghq.com/https-redirect-status-code: '302'
-    konghq.com/plugins: nexus-oidc
+    konghq.com/plugins: tavros-oidc-nexus
 spec:
   rules:
-  - host: artifacts.{{ cluster_name}}.{{ cluster_domain }}
+  - host: artifacts.{{ cluster_fqdn }}
     http:
       paths:
       - path: /
@@ -21,5 +21,5 @@ spec:
           servicePort: 8081
   tls:
   - hosts:
-    - artifacts.{{ cluster_name}}.{{ cluster_domain }}
+    - artifacts.{{ cluster_fqdn }}
     secretName: nexus-ingress-cert

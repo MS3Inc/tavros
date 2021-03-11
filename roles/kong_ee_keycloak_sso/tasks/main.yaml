@@ -1,22 +1,22 @@
 ---
-- name: Process instance keycloak-client templates
-  when: (item.ee.enabled)
+- name: Template Keycloak Client File
+  when: item.ee.enabled
   template:
-    src: keycloak-client.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/keycloak-client.yaml
+    src: keycloakclient.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/keycloakclient.yaml
   loop: "{{ kong.instances }}"
 
-- name: Add keycloak-client to EE Instance Kustomizations
-  when: (item.ee.enabled)
+- name: Add Keycloak Client Resource to Kong Resources
+  when: item.ee.enabled
   lineinfile:
-    path: /tmp/{{ cluster_domain }}/platform/kong/{{ item.name }}/kustomization.yaml
-    line: "  - keycloak-client.yaml"
+    path: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/kustomization.yaml
+    line: "  - keycloakclient.yaml"
     insertafter: "resources:"
   loop: "{{ kong.instances }}"
 
-- name: Re Apply updated manifests
-  when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/kong/
+- name: Apply Updated Resources
+  tags: [ requires_cluster ]
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kong/
   k8s:
     definition: "{{ item }}"
     wait: true
@@ -24,11 +24,11 @@
     wait_timeout: 900
 
 - name: Wait for Keycloak
-  when: "'dry-run' not in ansible_run_tags"
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
     api_version: keycloak.org/v1alpha1
     kind: Keycloak
-    name: tavros-keycloak
+    name: tavros
     namespace: keycloak
   register: keycloak_def
   # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
@@ -37,44 +37,47 @@
   delay: 30
   changed_when: false
 
-- name: Create Keycloak Kong client roles
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+- name: Create Keycloak kong.name Client Roles
+  tags: [ requires_cluster ]
+  when: item.ee.enabled
   loop: "{{ kong.instances }}"
   ms3_inc.tavros.keycloak_client_roles:
-    auth_keycloak_url: 'https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth'
+    auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
     validate_certs: false
     auth_realm: master
     auth_username: admin
-    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros-keycloak').data.ADMIN_PASSWORD | b64decode }}"
+    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
     realm: "{{ item.ee.keycloak.realm }}"
     clientId: "{{ item.name }}"
     roles:
     - name: "super-admin"
 
-- name: Add super-admin client role to realm user
-  when: (item.ee.enabled)
+- name: Add Keycloak kong.name Client Role super-admin to Realm Admin User
+  when: item.ee.enabled
   loop: "{{ kong.instances }}"
   blockinfile:
     marker_begin: "Begin {{ item.name }} Kong"
     marker_end: "End {{ item.name }} Kong"
-    path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}-user.yaml
+    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}/keycloakuser-admin.yaml
     insertafter: "    clientRoles:"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |2
             {{ item.name }}:
               - super-admin
 
-- name: Apply updated Keycloak User for Realm
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+- name: Apply Updated Keycloak Realm Admin User Resource
+  tags: [ requires_cluster ]
+  when: item.ee.enabled
   loop: "{{ kong.instances }}"
   community.kubernetes.k8s:
     state: present
-    src: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}-user.yaml
+    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}/keycloakuser-admin.yaml
 
-- name: Create Kong EE Admins
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+- name: Create Kong Admins
+  tags: [ requires_cluster, non_idempotent ]
+  when: item.ee.enabled
   uri:
-    url: "https://admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}"
+    url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}"
     method: POST
     status_code: 200
     headers:
@@ -82,14 +85,15 @@
     validate_certs: False
   register: _result
   until: _result.status == 200
-  retries: 30
+  retries: 5
   delay: 30
   loop: "{{ kong.instances }}"
 
-- name: Give super-admin role Kong EE Admins
-  when: (item.ee.enabled) and ('dry-run' not in ansible_run_tags)
+- name: Add Kong super-admin Role to Admins
+  tags: [ requires_cluster, non_idempotent ]
+  when: item.ee.enabled
   uri:
-    url: "https://admin-api.{{ item.name }}.{{ cluster_name }}.{{ cluster_domain }}/admins/{{ cluster_admin_email }}/roles?roles=super-admin"
+    url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins/{{ cluster_admin_email }}/roles?roles=super-admin"
     method: POST
     status_code: 201
     headers:
@@ -97,6 +101,6 @@
     validate_certs: False
   register: _result
   until: _result.status == 201
-  retries: 30
+  retries: 5
   delay: 30
   loop: "{{ kong.instances }}"

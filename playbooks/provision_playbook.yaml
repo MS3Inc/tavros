@@ -3,96 +3,91 @@
   connection: local
   gather_facts: no
   tasks:
-  - name: Assert binaries are available
-    shell: |
-      kubectl version
-      kustomize version
-      flux --version
-      kubeseal --version
-    changed_when: false
+  - include_tasks: tasks/pre-flight.yaml
 
-  - name: Install dependencies with pip3 module
-    pip:
-      name:
-        - boto3
-        - botocore
-        - openshift
-        - boto
-      extra_args: --user
-
-  - import_role:
+  - include_role:
       name: ms3_inc.tavros.kubernetes_cluster
     vars:
       cluster_state: present
+    tags: [ kubernetes_cluster ]
 
-  - set_fact:
-      wait_conditions:
-        HelmRelease:
-          type: Ready
-          status: true
-          reason: ReconciliationSucceeded
-
-  - name: Install and configure components
+  - name: Install and Configure Components
     block:
       - include_role:
           name: ms3_inc.tavros.fluxtoolkit
+        tags: [ fluxtoolkit ]
 
       - include_role:
           name: ms3_inc.tavros.kubeseal
+        tags: [ kubeseal ]
 
       - include_role:
           name: ms3_inc.tavros.postgresql
+        tags: [ postgresql ]
 
       - include_role:
           name: ms3_inc.tavros.namespace
+        tags: [ namespace ]
 
       - include_role:
           name: ms3_inc.tavros.kuma
+        when: kuma.enabled
+        tags: [ kuma ]
 
       - include_role:
           name: ms3_inc.tavros.cert_manager
         when: cert_manager.enabled
+        tags: [ cert_manager ]
 
       - include_role:
           name: ms3_inc.tavros.kong
+        tags: [ kong ]
 
       - include_role:
           name: ms3_inc.tavros.keycloak
         when: keycloak.enabled
+        tags: [ keycloak ]
 
       - include_role:
           name: ms3_inc.tavros.kong_ee_keycloak_sso
         when: keycloak.enabled
+        tags: [ kong_ee_keycloak_sso ]
 
       - include_role:
           name: ms3_inc.tavros.nexus
         when: nexus.enabled
+        tags: [ nexus ]
 
       - include_role:
           name: ms3_inc.tavros.elastic_cloud
         when: elastic_cloud.enabled
+        tags: [ elastic_cloud ]
 
       - include_role:
           name: ms3_inc.tavros.jaeger
         when: jaeger.enabled and keycloak.enabled and not elastic_cloud.ee.enabled
+        tags: [ jaeger ]
 
       - include_role:
           name: ms3_inc.tavros.gitea
         when: gitea.enabled
+        tags: [ gitea ]
 
       - include_role:
           name: ms3_inc.tavros.jenkins
+        when: jenkins.enabled
+        tags: [ jenkins ]
 
       - include_role:
-          name: ms3_inc.tavros.fluxtoolkit
-          tasks_from: gitea-setup
-        when: gitea.enabled and ('dry-run' not in ansible_run_tags)
+          name: ms3_inc.tavros.fluxtoolkit_gitea
+        when: gitea.enabled
+        tags: [ fluxtoolkit_gitea ]
 
     always:
       - copy:
-          content: "{{ { 'all': { 'vars': { 'flux': flux, 'cluster_name': cluster_name, 'cluster_domain': cluster_domain, 'cluster_admin_email': cluster_admin_email, 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql, 'elastic_cloud': elastic_cloud, 'cert_manager': cert_manager, 'gitea': gitea, 'jaeger': jaeger, 'jenkins': jenkins }}} | to_nice_yaml(indent=2) }}"
-          dest: /tmp/{{ cluster_domain }}_vars.yaml
+          content: "{{ { 'all': { 'vars': { 'flux': flux, 'cluster_fqdn': cluster_fqdn, 'cluster_admin_email': cluster_admin_email, 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql, 'elastic_cloud': elastic_cloud, 'cert_manager': cert_manager, 'gitea': gitea, 'jaeger': jaeger, 'jenkins': jenkins }}} | to_nice_yaml(indent=2) }}"
+          dest: /tmp/{{ cluster_fqdn }}_vars.yaml
       - include_role:
           name: ms3_inc.tavros.kubernetes_cluster
           tasks_from: tavros_config_backup
-        when: ('dry-run' not in ansible_run_tags)
+        tags: [ requires_cluster]

@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: gitea
+  name: tavros
   namespace: gitea
   annotations:
     cert-manager.io/cluster-issuer: tavros
@@ -11,7 +11,7 @@ metadata:
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: code.{{ cluster_name}}.{{ cluster_domain }}
+  - host: code.{{ cluster_fqdn }}
     http:
       paths:
       - path: /
@@ -20,5 +20,5 @@ spec:
           servicePort: 3000
   tls:
   - hosts:
-    - code.{{ cluster_name}}.{{ cluster_domain }}
+    - code.{{ cluster_fqdn }}
     secretName: gitea-ingress-cert

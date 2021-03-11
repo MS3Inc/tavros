@@ -3,7 +3,7 @@ kind: Kustomization
 namespace: postgresql
 resources:
   - ns.yaml
-  - config-secret.yaml
-  - schema-init-sql-secret.yaml
-  - default-release.yaml
-  - schema-init-job.yaml
+  - default/secret-pg-creds.yaml
+  - default/secret-schema-init-script.yaml
+  - default/release.yaml
+  - default/job-schema-init.yaml

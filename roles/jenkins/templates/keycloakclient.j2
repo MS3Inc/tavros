@@ -1,0 +1,24 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: tavros-jenkins
+  namespace: keycloak
+  labels:
+    client: jenkins
+spec:
+  realmSelector:
+    matchLabels:
+        realm: {{ jenkins.keycloak.realm }}
+  client:
+    clientId: jenkins
+    rootUrl: https://ci.{{ cluster_fqdn }}
+    enabled: true
+    clientAuthenticatorType: client-secret
+    redirectUris:
+    - https://ci.{{ cluster_fqdn }}/*
+    standardFlowEnabled: true
+    implicitFlowEnabled: false
+    directAccessGrantsEnabled: true
+    serviceAccountsEnabled: false
+    publicClient: true
+    protocol: openid-connect

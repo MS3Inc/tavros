@@ -1,11 +1,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-{%  if item.ee.enabled %}
-  - ee-superuser-secret.yaml
-  - ee-session-secret.yaml
-  - ee-admin-gui-auth-secret.yaml
+{%  if item[0].ee.enabled %}
+  - secret-ee-admin-creds.yaml
+  - secret-ee-admin-gui-auth.yaml
+  - secret-ee-admin-gui-session.yaml
 {% endif  %}
-  - config-secret.yaml
+  - secret-pg-creds.yaml
   - release.yaml
-  - ingresses.yaml
+  - ingress.yaml

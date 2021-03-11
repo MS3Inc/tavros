@@ -1,0 +1,24 @@
+---
+- name: Assert Required Binaries are Available
+  shell: |
+    kubectl version
+    kustomize version
+    flux --version
+    kubeseal --version
+  changed_when: false
+
+- name: Install Required Python Modules
+  pip:
+    extra_args: --user
+    name:
+      - boto
+      - boto3
+      - botocore
+      - openshift
+
+- set_fact:
+    wait_conditions:
+      HelmRelease:
+        type: Ready
+        status: true
+        reason: ReconciliationSucceeded

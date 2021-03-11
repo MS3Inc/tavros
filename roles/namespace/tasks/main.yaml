@@ -1,24 +1,25 @@
 ---
-- name: Create directory
-  with_list: '{{ namespaces }}'
+- name: Create Directories
+  loop: "{{ namespaces }}"
   file:
-    path: /tmp/{{ cluster_domain }}/{{ item.name }}/
+    path: /tmp/{{ cluster_fqdn }}/{{ item.name }}
     state: directory
 
-- name: Create namespace
-  with_list: '{{ namespaces }}'
+- name: Template Files
+  loop: "{{ namespaces }}"
   template:
     src: ns.j2
-    dest: /tmp/{{ cluster_domain }}/{{ item.name }}/ns.yaml
+    dest: /tmp/{{ cluster_fqdn }}/{{ item.name }}/ns.yaml
 
-- name: Apply manifests
-  when: "'dry-run' not in ansible_run_tags"
-  with_list: '{{ namespaces }}'
-  shell: |
-    kubectl apply -f /tmp/{{ cluster_domain }}/{{ item.name }}/ns.yaml
+- name: Apply Resources
+  tags: [ requires_cluster ]
+  loop: "{{ namespaces }}"
+  community.kubernetes.k8s:
+    state: present
+    src: /tmp/{{ cluster_fqdn }}/{{ item.name }}/ns.yaml
 
-- name: Process flux-kustomization template
-  with_list: '{{ namespaces }}'
+- name: Template flux-kustomization
+  loop: "{{ namespaces }}"
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/{{ item.name }}.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/{{ item.name }}.yaml

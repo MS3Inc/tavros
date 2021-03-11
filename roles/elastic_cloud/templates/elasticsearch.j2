@@ -25,14 +25,14 @@ spec:
         order: 2
         rp.client_id: "elastic-cloud"
         rp.response_type: code
-        rp.redirect_uri: "https://kibana.{{ cluster_name }}.{{ cluster_domain }}/api/security/oidc/callback"
-        rp.post_logout_redirect_uri: "https://kibana.{{ cluster_name }}.{{ cluster_domain }}" # /logged_out
-        op.issuer: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}"
-        op.authorization_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/auth"
-        op.token_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/token"
-        op.jwkset_path: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/certs"
-        op.userinfo_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/userinfo"
-        op.endsession_endpoint: "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/logout"
+        rp.redirect_uri: "https://kibana.{{ cluster_fqdn }}/api/security/oidc/callback"
+        rp.post_logout_redirect_uri: "https://kibana.{{ cluster_fqdn }}" # /logged_out
+        op.issuer: "https://auth.{{ cluster_fqdn }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}"
+        op.authorization_endpoint: "https://auth.{{ cluster_fqdn }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/auth"
+        op.token_endpoint: "https://auth.{{ cluster_fqdn }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/token"
+        op.jwkset_path: "https://auth.{{ cluster_fqdn }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/certs"
+        op.userinfo_endpoint: "https://auth.{{ cluster_fqdn }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/userinfo"
+        op.endsession_endpoint: "https://auth.{{ cluster_fqdn }}/auth/realms/{{ elastic_cloud.ee.keycloak.realm }}/protocol/openid-connect/logout"
         claims.principal: sub
         claims.name: name
         claims.mail: email

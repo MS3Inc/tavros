@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: tavros-sandbox-kong
+  namespace: kong
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: https
+    kubernetes.io/ingress.class: sandbox
+    cert-manager.io/cluster-issuer: tavros
+    konghq.com/https-redirect-status-code: '302'
+spec:
+  tls:
+  - hosts:
+    - "apps.sandbox.tavros.example.com"
+    secretName: sandbox-kong-ingress-certs
+  rules:
+  - host: "apps.sandbox.tavros.example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-tavros-sandbox-kong-kong-proxy
+          servicePort: 80

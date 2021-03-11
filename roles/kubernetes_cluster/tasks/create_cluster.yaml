@@ -1,0 +1,48 @@
+---
+- name: Create kOps S3 Bucket
+  amazon.aws.s3_bucket:
+    name: "{{ kubernetes_cluster.state_bucket }}"
+    state: present
+
+- name: Create Cluster
+  register: result
+  changed_when: result.rc == 101
+  failed_when: (result.rc != 100) and (result.rc != 101)
+  shell: |
+    kops get cluster \
+        --name {{ cluster_fqdn }} \
+        --state s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_fqdn }}/kops
+
+    if [[ $? -ne 0 ]]; then
+      kops create cluster \
+        --name="{{ cluster_fqdn }}" \
+        --cloud="{{ kubernetes_cluster.cloud }}" \
+        --state="s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_fqdn }}/kops" \
+        --master-count={{ kubernetes_cluster.master_count }} \
+        --master-size={{ kubernetes_cluster.master_size }} \
+        --node-count={{ kubernetes_cluster.node_count }} \
+        --node-size={{ kubernetes_cluster.node_size }} \
+        --container-runtime docker \
+        --topology private \
+        --networking weave \
+        --dns-zone={{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }} \
+        --zones={{ kubernetes_cluster.zones }} \
+        --bastion \
+        --authorization RBAC \
+        --yes
+      if [ $? -ne 0 ]; then { echo "Failed to create cluster"; exit 1; } fi
+      exit 101
+    fi
+    exit 100
+
+- name: Export Kube Context
+  shell: |
+    kops export kubecfg --admin \
+        --name={{ cluster_fqdn }} \
+        --state s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_fqdn }}/kops
+
+- name: Validate Cluster
+  shell: |
+    kops validate cluster --wait 1h \
+        --name={{ cluster_fqdn }} \
+        --state s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_fqdn }}/kops

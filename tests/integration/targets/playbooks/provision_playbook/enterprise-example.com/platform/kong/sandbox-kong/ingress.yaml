@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: tavros-sandbox-kong
+  namespace: kong
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: https
+    kubernetes.io/ingress.class: sandbox
+    cert-manager.io/cluster-issuer: tavros
+    konghq.com/https-redirect-status-code: '302'
+spec:
+  tls:
+  - hosts:
+    - "admin-api.sandbox-kong.tavros.enterprise-example.com"
+    - "admin.sandbox-kong.tavros.enterprise-example.com"
+    - "dev-portal-api.sandbox.tavros.enterprise-example.com"
+    - "dev-portal.sandbox.tavros.enterprise-example.com"
+    - "apps.sandbox.tavros.enterprise-example.com"
+    secretName: sandbox-kong-ingress-certs
+  rules:
+  - host: "admin-api.sandbox-kong.tavros.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-tavros-sandbox-kong-kong-admin
+          servicePort: 8001
+  - host: "admin.sandbox-kong.tavros.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-tavros-sandbox-kong-kong-manager
+          servicePort: 8002
+  - host: "dev-portal.sandbox.tavros.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-tavros-sandbox-kong-kong-portal
+          servicePort: 8003
+  - host: "dev-portal-api.sandbox.tavros.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-tavros-sandbox-kong-kong-portalapi
+          servicePort: 8004
+  - host: "apps.sandbox.tavros.enterprise-example.com"
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kong-tavros-sandbox-kong-kong-proxy
+          servicePort: 80

@@ -3,10 +3,10 @@ kind: Kustomization
 namespace: kuma-system
 resources:
   - ns.yaml
-  - default-release.yaml
+  - release.yaml
 {% for item in kuma.meshes %}
-  - meshes/{{ item.name }}.yaml
+  - {{ item.name }}/mesh.yaml
 {% if item.traffictrace.enabled and jaeger.enabled %}
-  - meshes/{{ item.name }}-traffictrace.yaml
+  - {{ item.name }}/traffictrace.yaml
 {% endif %}
 {% endfor %}

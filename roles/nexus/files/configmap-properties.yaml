@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tavros-properties
+  namespace: nexus
+data:
+  nexus.properties: |
+    nexus.onboarding.enabled=false
+
+    # Jetty section
+    application-port=8081
+    application-host=0.0.0.0
+    nexus-args=${jetty.etc}/jetty.xml,${jetty.etc}/jetty-http.xml,${jetty.etc}/jetty-requestlog.xml
+    nexus-context-path=/${NEXUS_CONTEXT}
+
+    # Nexus section
+    nexus-edition=nexus-pro-edition
+    nexus-features=\
+    nexus-pro-feature
+    nexus.clustered=false
