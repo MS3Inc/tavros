@@ -2,9 +2,9 @@
 - name: Disable Anonymous Access
   tags: [ requires_cluster ]
   uri:
-    url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/realms/active"
+    url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/anonymous"
     method: PUT
-    status_code: 204
+    status_code: 200
     headers:
       Authorization: "Basic {{ ('admin:' + nexus.generated.admin_password ) | b64encode }}"
     validate_certs: False
@@ -14,7 +14,7 @@
       userId: anonymous
       realmName: NexusAuthorizingRealm
   register: _result
-  until: _result.status == 204
+  until: _result.status == 200
   retries: 5
   delay: 30
 
