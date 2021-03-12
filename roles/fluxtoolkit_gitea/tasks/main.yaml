@@ -37,7 +37,7 @@
       email: "flux-cd@{{ cluster_fqdn }}"
       login_name: flux-cd
       must_change_password: false
-      password: "{{ gitea_flux_pass }}"
+      password: "{{ flux.gitea.password }}"
       send_notify: false
       source_id: 0
     status_code: 201
@@ -113,7 +113,7 @@
     git checkout -b main
     git add .
     git commit -m "Initial platform state"
-    git push --set-upstream https://flux-cd:{{ gitea_flux_pass }}@code.{{ cluster_fqdn }}/tavros/platform.git main
+    git push --set-upstream https://flux-cd:{{ flux.gitea.password }}@code.{{ cluster_fqdn }}/tavros/platform.git main
 
 - name: Apply Resources
   tags: [ requires_cluster ]
