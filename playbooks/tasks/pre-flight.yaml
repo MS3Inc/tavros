@@ -14,7 +14,10 @@
       - boto
       - boto3
       - botocore
-      - openshift
+      # see: https://github.com/kubernetes-client/python/issues/1333
+      # https://github.com/openshift/openshift-restclient-python/issues/398
+      - kubernetes==11.0.0
+      - openshift==0.11.2
 
 - set_fact:
     wait_conditions:
