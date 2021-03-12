@@ -13,72 +13,87 @@
 
   - name: Install and Configure Components
     block:
-      - include_role:
+      - name: Flux GitOps Toolkit
+        include_role:
           name: ms3_inc.tavros.fluxtoolkit
         tags: [ fluxtoolkit ]
 
-      - include_role:
+      - name: kubeseal
+        include_role:
           name: ms3_inc.tavros.kubeseal
         tags: [ kubeseal ]
 
-      - include_role:
+      - name: PostgreSQL
+        include_role:
           name: ms3_inc.tavros.postgresql
         tags: [ postgresql ]
 
-      - include_role:
+      - name: Namespace
+        include_role:
           name: ms3_inc.tavros.namespace
         tags: [ namespace ]
 
-      - include_role:
+      - name: Kuma
+        include_role:
           name: ms3_inc.tavros.kuma
         when: kuma.enabled
         tags: [ kuma ]
 
-      - include_role:
+      - name: cert-manager
+        include_role:
           name: ms3_inc.tavros.cert_manager
         when: cert_manager.enabled
         tags: [ cert_manager ]
 
-      - include_role:
+      - name: Kong
+        include_role:
           name: ms3_inc.tavros.kong
         tags: [ kong ]
 
-      - include_role:
+      - name: Keycloak
+        include_role:
           name: ms3_inc.tavros.keycloak
         when: keycloak.enabled
         tags: [ keycloak ]
 
-      - include_role:
+      - name: Kong EE SSO - Keycloak
+        include_role:
           name: ms3_inc.tavros.kong_ee_keycloak_sso
         when: keycloak.enabled
         tags: [ kong_ee_keycloak_sso ]
 
-      - include_role:
+      - name: Nexus
+        include_role:
           name: ms3_inc.tavros.nexus
         when: nexus.enabled
         tags: [ nexus ]
 
-      - include_role:
+      - name: Elastic Cloud
+        include_role:
           name: ms3_inc.tavros.elastic_cloud
         when: elastic_cloud.enabled
         tags: [ elastic_cloud ]
 
-      - include_role:
+      - name: Jaeger
+        include_role:
           name: ms3_inc.tavros.jaeger
         when: jaeger.enabled and keycloak.enabled and not elastic_cloud.ee.enabled
         tags: [ jaeger ]
 
-      - include_role:
+      - name: Gitea
+        include_role:
           name: ms3_inc.tavros.gitea
         when: gitea.enabled
         tags: [ gitea ]
 
-      - include_role:
+      - name: Jenkins
+        include_role:
           name: ms3_inc.tavros.jenkins
         when: jenkins.enabled
         tags: [ jenkins ]
 
-      - include_role:
+      - name: Flux GitOps Toolkit - Gitea
+        include_role:
           name: ms3_inc.tavros.fluxtoolkit_gitea
         when: gitea.enabled
         tags: [ fluxtoolkit_gitea ]
