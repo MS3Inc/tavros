@@ -1,8 +1,8 @@
 apiVersion: kuma.io/v1alpha1
 kind: TrafficTrace
-mesh: {{ item.name }}
+mesh: {{ item[0].name }}
 metadata:
-  name: {{ item.name }}-trace-all-traffic
+  name: {{ item[0].name }}-trace-all-traffic
   namespace: kuma-system
 spec:
   selectors:

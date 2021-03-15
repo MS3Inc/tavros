@@ -4,7 +4,7 @@
   "allow-any-hostname": true,
 {% endif  %}
   "realm": "{{ nexus.keycloak.realm }}",
-  "auth-server-url": "https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth/",
+  "auth-server-url": "https://auth.{{ cluster_fqdn }}/auth/",
   "ssl-required": "external",
   "resource": "nexus",
   "verify-token-audience": true,

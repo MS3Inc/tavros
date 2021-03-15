@@ -1,0 +1,24 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tavros
+  namespace: postgresql
+spec:
+  releaseName: tavros
+  chart:
+    spec:
+      chart: postgresql
+      sourceRef:
+        kind: HelmRepository
+        name: bitnami
+        namespace: flux-system
+      version: 9.8.11
+  interval: 30m
+  install:
+    remediation:
+      retries: 3
+  # Default values
+  # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
+  values:
+    postgresqlDatabase: postgres
+    existingSecret: tavros-pg-creds

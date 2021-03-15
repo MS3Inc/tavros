@@ -1,0 +1,28 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: tavros
+  namespace: cert-manager
+spec:
+  acme:
+    email: {{ cluster_admin_email }}
+    server: {{ ('https://acme-v02.api.letsencrypt.org/directory') if ('test-run' not in ansible_run_tags) else ('https://acme-staging-v02.api.letsencrypt.org/directory') }}
+    preferredChain: "ISRG Root X1"
+    privateKeySecretRef:
+      name: tavros-issuer-account-key
+    solvers:
+{% for item in kong.instances %}
+    - selector:
+        dnsZones:
+        - '{{ item.name }}.{{ cluster_fqdn }}'
+{%  if (item.ingress_class == kong.default_ingress_class) %}
+        - '{{ cluster_fqdn }}'
+        - 'apps.{{ cluster_fqdn }}'
+{% else  %}
+        - '{{ item.ingress_class }}.{{ cluster_fqdn }}'
+        - 'apps.{{ item.ingress_class }}.{{ cluster_fqdn }}'
+{% endif  %}
+      http01:
+        ingress:
+          class: {{ item.ingress_class }}
+{% endfor %}

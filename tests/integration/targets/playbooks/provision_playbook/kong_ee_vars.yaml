@@ -41,6 +41,7 @@ all:
             client_secret: 'placeholder12'
           admin_password: 'placeholder13'
     kuma:
+      enabled: false
       meshes: []
     namespaces: []
     keycloak:

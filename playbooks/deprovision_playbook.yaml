@@ -1,0 +1,11 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_tasks: tasks/pre-flight.yaml
+
+  - import_role:
+      name: ms3_inc.tavros.kubernetes_cluster
+    vars:
+      cluster_state: absent

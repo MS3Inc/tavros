@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: prod-kong
+  name: tavros-prod-kong
   namespace: kong
 spec:
   targetNamespace: kong
@@ -33,17 +33,17 @@ spec:
       pg_database:
         valueFrom:
           secretKeyRef:
-            name: prod-kong-config-secret
+            name: tavros-prod-kong-pg-creds
             key: pg_database
       pg_user:
         valueFrom:
           secretKeyRef:
-            name: prod-kong-config-secret
+            name: tavros-prod-kong-pg-creds
             key: pg_user
       pg_password:
         valueFrom:
           secretKeyRef:
-            name: prod-kong-config-secret
+            name: tavros-prod-kong-pg-creds
             key: pg_password
     ingressController:
       ingressClass: prod

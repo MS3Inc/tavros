@@ -1,23 +1,19 @@
 ---
-- name: Create directory
+- name: Create Directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/jaeger
+    path: /tmp/{{ cluster_fqdn }}/platform/jaeger/default
     state: directory
 
-- name: Copy Jaeger
-  copy:
-    src: jaeger.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jaeger/jaeger.yaml
-
-- name: Process ingress template
-  template:
-    src: ingress.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jaeger/ingress.yaml
-
-- name: Copy kustomization
-  copy:
-    src: kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jaeger/kustomization.yaml
+# Import Elasticsearch certificates
+# https://www.elastic.co/guide/en/cloud-on-k8s/1.3/k8s-tls-certificates.html#k8s-default-self-signed-certificate
+- name: Get tavros-es-cert-public Resource from elastic-system Namespace
+  tags: [ requires_cluster ]
+  community.kubernetes.k8s_info:
+    api_version: v1
+    kind: Secret
+    name: tavros-es-http-certs-public
+    namespace: elastic-system
+  register: elastic_certs
 
 - name: Generate Keycloak Client Secret
   when: jaeger.keycloak.client_secret is not defined
@@ -26,70 +22,62 @@
   vars:
     uuid: "{{ 1000000 | random | to_uuid }}"
 
-- name: Process oidc-plugin template
+- name: Template Files
   template:
-    src: oidc-plugin.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jaeger/oidc-plugin.yaml
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.dest | default(item.name) }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: ingress
+      dest: default/ingress
+    - name: keycloakclient
+      dest: default/keycloakclient
+    - name: kongplugin-oidc
+      dest: default/kongplugin-oidc
+    - name: secret-es-creds
+      dest: default/secret-es-creds
+    - name: secret-es-http-certs
+      dest: default/secret-es-http-certs
 
-- name: Copy operator
+- name: Copy Files
   copy:
-    src: operator
-    dest: /tmp/{{ cluster_domain }}/platform/jaeger/
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.dest | default(item.name) }}
+  when: item.condition | default(true)
+  loop:
+    - name: kustomization.yaml
+    - name: cronjob-spark-dependencies.yaml
+      dest: default/cronjob-spark-dependencies.yaml
+    - name: jaeger.yaml
+      dest: default/jaeger.yaml
+    - name: operator
+      dest: ""
 
-- name: Process flux-kustomization template
-  template:
-    src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/jaeger.yaml
+- name: Seal Secrets
+  tags: [ requires_cluster ]
+  when: item.condition | default(true)
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.yaml
+  loop:
+    - name: default/secret-es-creds
+    - name: default/secret-es-http-certs
 
-- name: Process jaeger-es-secret template
-  template:
-    src: jaeger-es-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jaeger/jaeger-es-secret.yaml
-
-# Certificate info
-# https://www.elastic.co/guide/en/cloud-on-k8s/1.3/k8s-tls-certificates.html#k8s-default-self-signed-certificate
-- name: Get tavros-es-cert-public object
-  when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s_info:
-    api_version: v1
-    kind: Secret
-    name: tavros-es-http-certs-public
-    namespace: elastic-system
-  register: elastic_certs
-
-- name: Process es-http-certs template
-  template:
-    src: es-http-certs.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jaeger/es-http-certs.yaml
-
-- name: Process keycloak-client template
-  template:
-    src: keycloak-client.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jaeger/keycloak-client.yaml
-
-- name: Process spark-dependencies template
-  template:
-    src: spark-dependencies.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jaeger/spark-dependencies.yaml
-  vars: 
-    cron_schedule: '55 23 * * *'
-    spark_image:  'quay.io/jam01/jaeger-spark-dependencies:0.0.1-SNAPSHOT-001'
-
-- name: Apply manifests
-  when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_domain }}/platform/jaeger/
+- name: Apply Resources
+  tags: [ requires_cluster ]
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/jaeger/
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 900
 
-- name: Wait for Client
-  when: ('dry-run' not in ansible_run_tags)
+- name: Wait for Keycloak Client
+  tags: [ requires_cluster ]
   community.kubernetes.k8s_info:
     api_version: keycloak.org/v1alpha1
     kind: KeycloakClient
-    name: jaeger
+    name: tavros-jaeger
     namespace: keycloak
   register: keycloak_def
   # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
@@ -98,32 +86,37 @@
   delay: 30
   changed_when: false
 
-- name: Create Jaeger Keycloak Client Roles
-  when: ('dry-run' not in ansible_run_tags)
+- name: Create Keycloak jaeger Client Roles
+  tags: [ requires_cluster ]
   ms3_inc.tavros.keycloak_client_roles:
-    auth_keycloak_url: 'https://auth.{{ cluster_name }}.{{ cluster_domain }}/auth'
+    auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
     validate_certs: false
     auth_realm: master
     auth_username: admin
-    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros-keycloak').data.ADMIN_PASSWORD | b64decode }}"
+    auth_password: "{{ lookup('k8s', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
     realm: "{{ jaeger.keycloak.realm}}"
     clientId: jaeger
     roles:
     - name: "user"
 
-- name: Add user client role to realm user
+- name: Add Keycloak jaeger Client Role user to Realm Admin User
   blockinfile:
     marker_begin: "Begin jaeger"
     marker_end: "End jaeger"
-    path: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ jaeger.keycloak.realm }}-user.yaml
+    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ jaeger.keycloak.realm }}/keycloakuser-admin.yaml
     insertafter: "    clientRoles:"
     marker: "# {mark} ANSIBLE MANAGED BLOCK"
     block: |2
             jaeger:
               - user
 
-- name: Apply updated Keycloak User for Realm
-  when: ('dry-run' not in ansible_run_tags)
+- name: Apply Updated Keycloak Realm Admin User Resource
+  tags: [ requires_cluster ]
   community.kubernetes.k8s:
     state: present
-    src: /tmp/{{ cluster_domain }}/platform/keycloak/default/{{ jaeger.keycloak.realm }}-user.yaml
+    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ jaeger.keycloak.realm }}/keycloakuser-admin.yaml
+
+- name: Process flux-kustomization template
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/jaeger.yaml

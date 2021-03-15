@@ -1,0 +1,24 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: tavros-nexus
+  namespace: keycloak
+  labels:
+    client: nexus
+spec:
+  realmSelector:
+    matchLabels:
+        realm: prod
+  client:
+    clientId: "nexus"
+    secret: "placeholder10"
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect
+    redirectUris:
+    - "https://artifacts.tavros.example.com/*"
+    directAccessGrantsEnabled: True
+    standardFlowEnabled: True
+    authorizationEnabled: True
+    authorizationServicesEnabled: True
+    serviceAccountsEnabled: True
+    enabled: True

@@ -1,0 +1,32 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: tavros-elastic-cloud
+  namespace: keycloak
+  labels:
+    client: elastic-cloud
+spec:
+  realmSelector:
+    matchLabels:
+        realm: prod
+  client:
+    clientId: elastic-cloud
+    secret: placeholder15
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect
+    redirectUris:
+    - "https://kibana.tavros.enterprise-example.com/*"
+    standardFlowEnabled: True
+    enabled: True
+    protocolMappers:
+    - name: groups
+      protocol: openid-connect
+      protocolMapper: "oidc-usermodel-client-role-mapper"
+      config:
+        id.token.claim: "true"
+        claim.name: groups
+        multivalued: "true"
+        userinfo.token.claim: "true"
+        jsonType.label: string
+        access.token.claim: "false"
+        usermodel.clientRoleMapping.clientId: elastic-cloud

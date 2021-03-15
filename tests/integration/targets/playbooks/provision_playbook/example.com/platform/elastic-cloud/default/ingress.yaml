@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: tavros
+  namespace: elastic-system
+  annotations:
+    cert-manager.io/cluster-issuer: tavros
+    kubernetes.io/ingress.class: prod
+    konghq.com/strip-path: 'true'
+    konghq.com/protocols: https
+    konghq.com/https-redirect-status-code: '302'
+spec:
+  rules:
+  - host: kibana.tavros.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tavros-kb-http
+          servicePort: 5601
+  tls:
+  - hosts:
+    - kibana.tavros.example.com
+    secretName: elastic-cloud-ingress-cert

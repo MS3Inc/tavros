@@ -1,10 +1,10 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - keycloak-client.yaml
-  - ee-superuser-secret.yaml
-  - ee-session-secret.yaml
-  - ee-admin-gui-auth-secret.yaml
-  - config-secret.yaml
+  - keycloakclient.yaml
+  - secret-ee-admin-creds.yaml
+  - secret-ee-admin-gui-auth.yaml
+  - secret-ee-admin-gui-session.yaml
+  - secret-pg-creds.yaml
   - release.yaml
-  - ingresses.yaml
+  - ingress.yaml

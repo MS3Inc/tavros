@@ -1,93 +1,55 @@
 ---
-- name: Create directory
+- name: Create Directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/postgresql/
+    path: /tmp/{{ cluster_fqdn }}/platform/postgresql/default
     state: directory
 
-- name: Generate postgresql password
-  when: postgresql.password is not defined
-  set_fact:
-    postgresql: "{{ { 'password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
+- include_tasks: generate-variables.yaml
 
-- name: Generate postgres password
-  when: "'postgres_password' not in postgresql"
-  set_fact:
-    postgresql: "{{ { 'postgres_password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
-
-- name: Generate PG Passwords
-  loop: "{{ kong.instances }}"
-  set_fact:
-    generated_pg_passwords: "{{ (generated_pg_passwords | default([])) + [ (item | combine({ 'pg': { 'password': password } }, recursive=true)) ] }}"
-  vars:
-    password: "{{ ( item.pg.password | default(lookup('password', '/dev/null')) ) }}"
-
-- name: Combine kong with generated passwords
-  when: (generated_pg_passwords is defined)
-  set_fact:
-    kong: "{{ kong | combine({'instances': generated_pg_passwords}, recursive=true) }}"
-
-- name: Generate PG credentials for Gitea
-  when: gitea.pg.password is not defined
-  set_fact:
-    gitea: "{{ gitea | combine({ 'pg': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
-
-- name: Generate PG credentials for Keycloak
-  when: keycloak.pg.password is not defined
-  set_fact:
-    keycloak: "{{ keycloak | combine({ 'pg': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
-
-- name: Process config-secret template
+- name: Template Files
   template:
-    src: config-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.dest | default(item.name) }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: secret-pg-creds
+      dest: default/secret-pg-creds
+    - name: secret-schema-init-script
+      dest: default/secret-schema-init-script
 
-- name: Convert config-secret to SealedSecret
-  when: "'dry-run' not in ansible_run_tags"
+- name: Copy Files
+  copy:
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.dest | default(item.name) }}
+  when: item.condition | default(true)
+  loop:
+    - name: kustomization.yaml
+    - name: ns.yaml
+    - name: job-schema-init.yaml
+      dest: default/job-schema-init.yaml
+    - name: release.yaml
+      dest: default/release.yaml
+
+- name: Seal Secrets
+  tags: [ requires_cluster]
+  when: item.condition | default(true)
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml >/tmp/{{ cluster_domain }}/platform/postgresql/config-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.tmp /tmp/{{ cluster_domain }}/platform/postgresql/config-secret.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.name }}.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.name }}.yaml
+  loop:
+    - name: default/secret-pg-creds
+    - name: default/secret-schema-init-script
 
-- name: Copy postgresql schema-init-job
-  copy:
-    src: schema-init-job.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-job.yaml
-
-- name: Process schema-init-sql-secret template
-  template:
-    src: schema-init-sql-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.yaml
-
-- name: Convert schema-init-sql-secret to SealedSecret
-  when: ('dry-run' not in ansible_run_tags)
-  shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.yaml >/tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.tmp /tmp/{{ cluster_domain }}/platform/postgresql/schema-init-sql-secret.yaml
-
-- name: Copy postgresql namespace
-  copy:
-    src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/ns.yaml
-
-- name: Copy postgresql default release
-  copy:
-    src: default-release.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/default-release.yaml
-
-- name: Copy postgresql kustomization
-  copy:
-    src: kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/postgresql/kustomization.yaml
-
-- name: Apply manifests
-  when: ('dry-run' not in ansible_run_tags)
-  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_domain + '/platform/postgresql/', reorder='none') }}"
+- name: Apply Resources
+  tags: [ requires_cluster]
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/postgresql/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 900
 
-- name: Process flux-kustomization template
+- name: Template flux-kustomization
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/postgresql.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/postgresql.yaml

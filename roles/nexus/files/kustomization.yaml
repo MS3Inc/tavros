@@ -2,11 +2,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ns.yaml
-  - nexus-properties-config.yaml
-  - default-release.yaml
-  - oidc-plugin.yaml
-  - ingress.yaml
-  - keycloak-config.yaml
-  - keycloak-client.yaml
-  - nexus-deploy-pvc.yaml
-  
+  - default/configmap-properties.yaml
+  - default/secret-keycloak-config.yaml
+  - default/release.yaml
+  - default/kongplugin-oidc.yaml
+  - default/service-container-registry.yaml
+  - default/ingress.yaml
+  - default/ingress-buildtools.yaml
+  - default/keycloakclient.yaml
+  - default/pvc-deploy.yaml

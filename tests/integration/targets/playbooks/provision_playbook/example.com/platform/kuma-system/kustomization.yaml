@@ -3,8 +3,8 @@ kind: Kustomization
 namespace: kuma-system
 resources:
   - ns.yaml
-  - default-release.yaml
-  - meshes/sandbox.yaml
-  - meshes/sandbox-traffictrace.yaml
-  - meshes/prod.yaml
-  - meshes/prod-traffictrace.yaml
+  - release.yaml
+  - sandbox/mesh.yaml
+  - sandbox/traffictrace.yaml
+  - prod/mesh.yaml
+  - prod/traffictrace.yaml

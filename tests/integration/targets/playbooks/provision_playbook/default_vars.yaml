@@ -3,8 +3,7 @@
 # THE DIFF IS EXPLICITLY ADDING PASSWORDS SO THEY'RE NOT GENERATED IN ORDER TO ASSERT THE RESULT
 all:
   vars:
-    cluster_name: ''
-    cluster_domain: ''
+    cluster_fqdn: ''
     cluster_admin_email: ''
     kubernetes_cluster:
       cloud: 'aws'
@@ -36,6 +35,7 @@ all:
         ee:
           enabled: false
     kuma:
+      enabled: true
       meshes:
       - name: 'sandbox'
         mtls:
@@ -69,11 +69,13 @@ all:
     cert_manager:
       enabled: true
     gitea:
-      enabled: false
+      enabled: true
+      admin_password: placeholder16
       pg:
         password: placeholder8
       keycloak:
         realm: 'prod'
+        client_secret: placeholder17
     nexus:
       enabled: true
       keycloak:
@@ -90,8 +92,9 @@ all:
         realm: 'prod'
         client_secret: placeholder15
     jenkins:
-      enabled: false
+      enabled: true
       keycloak:
         realm: 'prod'
-    flux: {}
-
+    flux:
+      gitea:
+        password: placeholder18

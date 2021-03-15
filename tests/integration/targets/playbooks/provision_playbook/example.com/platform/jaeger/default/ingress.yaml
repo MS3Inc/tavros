@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: tavros
+  namespace: jaeger
+  annotations:
+    cert-manager.io/cluster-issuer: tavros
+    kubernetes.io/ingress.class: prod
+    konghq.com/strip-path: 'true'
+    konghq.com/protocols: https
+    konghq.com/https-redirect-status-code: '302'
+    konghq.com/plugins: tavros-oidc-jaeger
+spec:
+  rules:
+  - host: jaeger.tavros.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: tavros-query
+          servicePort: http-query
+  tls:
+  - hosts:
+    - jaeger.tavros.example.com
+    secretName: jaeger-ingress-cert

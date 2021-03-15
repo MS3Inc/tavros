@@ -1,0 +1,42 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tavros
+  namespace: nexus
+spec:
+  releaseName: tavros
+  chart:
+    spec:
+      chart: nexus-repository-manager
+      sourceRef:
+        kind: HelmRepository
+        name: sonatype
+        namespace: flux-system
+      version: 29.1.0
+  interval: 30m
+  install:
+    remediation:
+      retries: 3
+  # Default values
+  # https://github.com/sonatype/helm3-charts/blob/master/charts/nexus-repository-manager/values.yaml
+  values:
+    deployment:
+      additionalVolumes:
+      - name: keycloak-config
+        secret:
+          secretName: tavros-keycloak-config
+      - name: nexus-properties
+        configMap:
+          name: tavros-properties
+      - name: nexus-deploy
+        persistentVolumeClaim:
+          claimName: tavros-deploy
+      additionalVolumeMounts:
+      - mountPath: /opt/sonatype/nexus/deploy/
+        name: nexus-deploy
+      - mountPath: /opt/sonatype/nexus/etc/keycloak.json
+        name: keycloak-config
+        subPath: keycloak-config.json
+      - mountPath: /opt/sonatype/nexus/etc/nexus-default.properties
+        name: nexus-properties
+        subPath: nexus.properties
