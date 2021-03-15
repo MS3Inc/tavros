@@ -28,7 +28,7 @@ data:
       globalLibraries:
         libraries:
           - name: "tavros-library"
-            defaultVersion: "main"
+            defaultVersion: "v0.2"
             retriever:
               modernSCM:
                 scm:
