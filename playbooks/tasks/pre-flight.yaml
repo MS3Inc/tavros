@@ -25,3 +25,16 @@
         type: Ready
         status: true
         reason: ReconciliationSucceeded
+
+- name: Configure Git User
+  shell: |
+    git config --global user.email
+    if [ $? -ne 0 ]; then
+      git config --global user.email "{{ cluster_admin_email }}"
+      git config --global user.name "tavros/provision_playbook"
+    fi
+
+- name: Configure Git SSL-Verify
+  when: 'test-run' in ansible_run_tags
+  shell: |
+    git config --global http.sslVerify false

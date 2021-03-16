@@ -104,11 +104,6 @@
   args:
     chdir: /tmp/{{ cluster_fqdn }}/
   shell: |
-    git config --global user.email
-    if [ $? -ne 0 ]; then
-      git config --global user.email "{{ cluster_admin_email }}"
-      git config --global user.name "tavros/provision_playbook"
-    fi
     git init
     git checkout -b main
     git add .
@@ -120,7 +115,6 @@
   k8s:
     src: "{{ item }}"
     wait: true
-    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 900
   loop:
     - /tmp/{{ cluster_fqdn }}/platform/flux-system/secret-git-creds.yaml
