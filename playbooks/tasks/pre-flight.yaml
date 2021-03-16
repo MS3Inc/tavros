@@ -35,6 +35,6 @@
     fi
 
 - name: Configure Git SSL-Verify
-  when: 'test-run' in ansible_run_tags
+  when: "'test-run' in ansible_run_tags"
   shell: |
     git config --global http.sslVerify false

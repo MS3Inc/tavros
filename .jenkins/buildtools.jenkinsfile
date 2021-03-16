@@ -1,0 +1,36 @@
+pipeline {
+  agent {
+    kubernetes {
+      defaultContainer 'buildah'
+      yaml """
+        kind: Pod
+        spec:
+          containers:
+          - name: buildah
+            image: quay.io/buildah/stable
+            imagePullPolicy: Always
+            securityContext:
+                privileged: true
+            command:
+            - cat
+            tty: true
+            volumeMounts:
+              - name: libcon
+                mountPath: /var/lib/containers
+          volumes:
+          - name: libcon
+            emptyDir: {}
+        """
+    }
+  }
+  stages {
+    stage('Build with Buildah') {
+      environment {
+        REGISTRY = credentials('jam01-gh-pat')
+      }
+      steps {
+        sh './.jenkins/buildtools-image.sh'
+      }
+    }
+  }
+}
