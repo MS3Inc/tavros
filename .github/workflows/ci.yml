@@ -2,9 +2,6 @@ name: Tavros CI
 on:
   push:
     branches: [ main ]
-    paths:
-    - 'requirements.txt'
-    - '**/buildtools-build.sh'
 jobs:
   buildtools-image:
     runs-on: ubuntu-latest
@@ -17,7 +14,11 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
-      run: buildah unshare ./.github/workflows/buildtools-build.sh
+      run: |
+        if (git diff --name-only HEAD~1 | grep -qE "requirements.txt|buildtools-build.sh|ci.yml"); then
+            buildah unshare ./.github/workflows/buildtools-build.sh
+        fi
+
   test:
     needs: [ buildtools-image ]
     runs-on: ubuntu-latest
