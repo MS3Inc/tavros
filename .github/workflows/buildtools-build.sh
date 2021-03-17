@@ -33,7 +33,7 @@ function pip_install {
     pip install --quiet --user --upgrade --ignore-installed --no-cache-dir ${packages}"
 }
 
-echo "Creating new container from scratch"
+echo "Creating new container from scratch..."
 container=$(buildah from scratch)
 mount=$(buildah mount $container)
 
@@ -42,7 +42,7 @@ podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw -
 podman exec installer bash -c "yum upgrade -y --quiet"
 
 echo "Installing tools with package managers..."
-dnf_install "python awscli git"
+dnf_install "make python awscli git"
 pip_install "-r requirements.txt"
 
 echo "Cleaning up installer container..."
