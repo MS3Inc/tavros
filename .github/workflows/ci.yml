@@ -8,6 +8,9 @@ on:
 jobs:
   buildtools-image:
     runs-on: ubuntu-latest
+    container:
+      image: quay.io/buildah/stable
+      options: --device /dev/fuse --security-opt seccomp=unconfined --security-opt apparmor=unconfined
     steps:
     - uses: actions/checkout@v2
     - name: Build tavros-buildtools:latest image
