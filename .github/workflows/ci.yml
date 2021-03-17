@@ -1,0 +1,25 @@
+name: Tavros CI
+on:
+  push:
+    branches: [ main ]
+    paths:
+    - 'requirements.txt'
+    - '**/buildtools-build.sh'
+jobs:
+  buildtools-image:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build tavros-buildtools:latest image
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
+      run: buildah unshare ./.github/workflows/buildtools-build.sh
+  test:
+    needs: [ buildtools-image ]
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/ms3inc/tavros-buildtools:latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: make install test

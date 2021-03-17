@@ -1,0 +1,12 @@
+name: Tavros Pull Request CI
+on:
+  pull_request:
+    branches: [ main ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/ms3inc/tavros-buildtools:latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: make install test
