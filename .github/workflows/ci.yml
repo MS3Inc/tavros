@@ -21,12 +21,25 @@ jobs:
         IMAGE_TAG: ghcr.io/ms3inc/tavros-buildtools:latest
       run: buildah unshare ./.github/workflows/buildtools-build.sh
     - name: Run make install test
-      run: podman run -it --rm -v $PWD:$PWD -w $PWD ghcr.io/ms3inc/tavros-buildtools:latest bash -c "make install test"
+      env:
+        IMAGE_TAG: ghcr.io/ms3inc/tavros-collection:latest
+      run: |
+        container=$(buildah from ghcr.io/ms3inc/tavros-buildtools:latest)
+        buildah run -v $PWD:$PWD $container -- cd $PWD && make install test && rm -rf /tmp
+        buildah config --label name=tavros-collection $container
+        buildah commit --rm $container $IMAGE_TAG
     - name: Push tavros-buildtools:latest image
       if: steps.filter.outputs.buildtools == 'true'
       env:
         REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
-        IMAGE: ghcr.io/ms3inc/tavros-buildtools:latest
+        IMAGE_TAG: ghcr.io/ms3inc/tavros-buildtools:latest
       run: |
-        buildah login --username git --password $REGISTRY_PSW $IMAGE
-        buildah push $IMAGE
+        buildah login --username git --password $REGISTRY_PSW $IMAGE_TAG
+        buildah push $IMAGE_TAG
+    - name: Push tavros-collection:latest image
+      env:
+        REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
+        IMAGE_TAG: ghcr.io/ms3inc/tavros-collection:latest
+      run: |
+        buildah login --username git --password $REGISTRY_PSW $IMAGE_TAG
+        buildah push $IMAGE_TAG

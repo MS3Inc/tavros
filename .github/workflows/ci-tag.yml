@@ -15,3 +15,12 @@ jobs:
         podman pull $IMAGE:latest
         podman tag $IMAGE:latest $IMAGE:${{ GITHUB_REF#refs/tags/ }}
         podman push $IMAGE:${{ GITHUB_REF#refs/tags/ }}
+    - name: Push Versioned ghcr.io/ms3inc/tavros-collection
+      env:
+        REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
+        IMAGE: ghcr.io/ms3inc/tavros-collection
+      run: |
+        podman login --username git --password $REGISTRY_PSW $IMAGE
+        podman pull $IMAGE:latest
+        podman tag $IMAGE:latest $IMAGE:${{ GITHUB_REF#refs/tags/ }}
+        podman push $IMAGE:${{ GITHUB_REF#refs/tags/ }}
