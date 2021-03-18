@@ -31,23 +31,23 @@ function pip_install {
     pip install --quiet --user --upgrade --ignore-installed --no-cache-dir ${packages}"
 }
 
-echo "Creating new container from scratch..."
+echo "\nCreating new container from scratch..."
 container=$(buildah from scratch)
 mount=$(buildah mount $container)
 
-echo "Setting up installer container..."
+echo "\nSetting up installer container..."
 podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw --volume $PWD:$PWD --workdir $PWD fedora:latest
 podman exec installer bash -c "yum upgrade -y --quiet"
 
-echo "Installing tools with package managers..."
+echo "\nInstalling tools with package managers..."
 dnf_install "make diffutils python awscli git"
 pip_install "-r requirements.txt"
 
-echo "Cleaning up installer container..."
+echo "\nCleaning up installer container..."
 podman stop installer
 podman rm installer
 
-echo "Installing other tools..."
+echo "\nInstalling other tools..."
 curl -sSLO "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
 chmod u+x kubectl
 buildah copy $container "kubectl" /usr/local/bin/
@@ -79,10 +79,10 @@ curl -sSL0 "https://github.com/Kong/deck/releases/download/v${DECK_VERSION}/deck
 chmod +x deck
 buildah copy $container "deck" /usr/local/bin/
 
-echo "Cleaning up..."
+echo "\nCleaning up..."
 buildah unmount $container
 
-echo "Committing and pushing..."
+echo "\nCommitting..."
 buildah config --cmd /bin/bash ${container}
 buildah config --label name=tavros-buildtools ${container}
 buildah commit --rm $container $IMAGE_TAG

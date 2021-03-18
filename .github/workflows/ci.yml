@@ -23,6 +23,7 @@ jobs:
     - name: Run make install test
       run: podman run -it --rm -v $PWD:$PWD -w $PWD ghcr.io/ms3inc/tavros-buildtools:latest bash -c "make install test"
     - name: Push tavros-buildtools:latest image
+      if: steps.filter.outputs.buildtools == 'true'
       env:
         REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
         IMAGE: ghcr.io/ms3inc/tavros-buildtools:latest
