@@ -1,6 +1,7 @@
 ---
 - name: Disable Anonymous Access
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/anonymous"
     method: PUT
@@ -20,6 +21,7 @@
 
 - name: Install Keycloak plugin
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_exec:
     namespace: nexus
     pod: "{{ lookup('k8s', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
@@ -30,6 +32,7 @@
 
 - name: Add Nexus Keycloak Realm
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/realms/active"
     method: PUT
@@ -49,6 +52,7 @@
 
 - name: Add Nexus Keycloak admin Role Mapping
   tags: [ requires_cluster, non_idempotent ]
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/roles"
     method: POST
@@ -70,6 +74,7 @@
 
 - name: Add Nexus developer Role
   tags: [ requires_cluster, non_idempotent ]
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/roles"
     method: POST
@@ -107,6 +112,7 @@
 
 - name: Add Nexus Keycloak developer Role Mapping
   tags: [ requires_cluster, non_idempotent ]
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/roles"
     method: POST

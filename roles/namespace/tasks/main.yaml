@@ -13,6 +13,7 @@
 
 - name: Apply Resources
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
   loop: "{{ namespaces }}"
   community.kubernetes.k8s:
     state: present

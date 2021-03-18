@@ -106,3 +106,4 @@
           name: ms3_inc.tavros.kubernetes_cluster
           tasks_from: tavros_config_backup
         tags: [ requires_cluster]
+        when: ('dry-run' not in ansible_run_tags)

@@ -43,6 +43,7 @@
 
 - name: Apply Resources
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/gitea/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
@@ -52,9 +53,11 @@
 
 - include_tasks: keycloak_sso.yaml
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
 
 - name: Add tavros organization
   tags: [ requires_cluster, non_idempotent ]
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://code.{{ cluster_fqdn }}/api/v1/orgs
     method: POST

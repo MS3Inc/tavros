@@ -46,7 +46,7 @@
 
 - name: Seal Secrets
   tags: [ requires_cluster ]
-  when: item.condition | default(true)
+  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/jenkins/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/jenkins/{{ item.name }}.tmp
     mv /tmp/{{ cluster_fqdn }}/platform/jenkins/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/jenkins/{{ item.name }}.yaml
@@ -56,6 +56,7 @@
 
 - name: Apply Operator Resources
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins/operator/0.5.0
   k8s:
     definition: "{{ item }}"
@@ -65,6 +66,7 @@
 
 - name: Apply Resources
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins
   k8s:
     definition: "{{ item }}"
@@ -74,6 +76,7 @@
 
 - name: Wait for Jenkins
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_info:
     kind: Pod
     name: jenkins-tavros

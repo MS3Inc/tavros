@@ -1,6 +1,7 @@
 ---
 - name: Register gitea_login Cookies Variable
   tags: [ requires_cluster, non_idempotent ]
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://code.{{ cluster_fqdn }}/user/login
     method: POST
@@ -18,6 +19,7 @@
 
 - name: Add OIDC Configuration
   tags: [ requires_cluster, non_idempotent ]
+  when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://code.{{ cluster_fqdn }}/admin/auths/new
     method: POST

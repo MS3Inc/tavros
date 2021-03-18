@@ -1,8 +1,8 @@
 ---
 - include_tasks: create_cluster.yaml
-  when: cluster_state == 'present'
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags) and (cluster_state == 'present')
 
 - include_tasks: delete_cluster.yaml
-  when: cluster_state == 'absent'
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags) and (cluster_state == 'absent')

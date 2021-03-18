@@ -14,7 +14,7 @@
 
 - name: Seal Instance Secrets
   tags: [ requires_cluster ]
-  when: item[1].condition | default(true)
+  when: ('dry-run' not in ansible_run_tags) and (item[1].condition | default(true))
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.tmp
     mv /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.tmp /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.yaml
@@ -22,7 +22,6 @@
     - "{{ kong.instances }}"
     -
       - name: secret-pg-creds
-
 
 - name: Template Instance EE Files
   template:
@@ -38,7 +37,7 @@
 
 - name: Seal Instance EE Secrets
   tags: [ requires_cluster ]
-  when: item[0].ee.enabled
+  when: ('dry-run' not in ansible_run_tags) and (item[0].ee.enabled)
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.tmp
     mv /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.tmp /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.yaml

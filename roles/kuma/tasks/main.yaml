@@ -32,6 +32,7 @@
 
 - name: Apply Resources
   tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kuma-system/
   k8s:
     definition: "{{ item }}"

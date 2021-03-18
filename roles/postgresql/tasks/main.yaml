@@ -32,7 +32,7 @@
 
 - name: Seal Secrets
   tags: [ requires_cluster]
-  when: item.condition | default(true)
+  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.name }}.tmp
     mv /tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.name }}.yaml
@@ -42,6 +42,7 @@
 
 - name: Apply Resources
   tags: [ requires_cluster]
+  when: ('dry-run' not in ansible_run_tags)
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/postgresql/', reorder='none') }}"
   k8s:
     definition: "{{ item }}"
