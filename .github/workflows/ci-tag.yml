@@ -6,21 +6,25 @@ jobs:
   tavros-ci:
     runs-on: ubuntu-latest
     steps:
+    - name: Login to  ghcr.io
+      env:
+        REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
+      run: podman login --username git --password $REGISTRY_PSW $IMAGE
     - name: Push Versioned ghcr.io/ms3inc/tavros-buildtools
+      shell: bash
       env:
         REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
         IMAGE: ghcr.io/ms3inc/tavros-buildtools
       run: |
-        podman login --username git --password $REGISTRY_PSW $IMAGE
         podman pull $IMAGE:latest
         podman tag $IMAGE:latest $IMAGE:${{ GITHUB_REF#refs/tags/ }}
         podman push $IMAGE:${{ GITHUB_REF#refs/tags/ }}
     - name: Push Versioned ghcr.io/ms3inc/tavros-collection
+      shell: bash
       env:
         REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
         IMAGE: ghcr.io/ms3inc/tavros-collection
       run: |
-        podman login --username git --password $REGISTRY_PSW $IMAGE
         podman pull $IMAGE:latest
         podman tag $IMAGE:latest $IMAGE:${{ GITHUB_REF#refs/tags/ }}
         podman push $IMAGE:${{ GITHUB_REF#refs/tags/ }}
