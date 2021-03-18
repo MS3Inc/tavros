@@ -3,8 +3,6 @@
 set -o nounset
 set -o errexit
 
-IMAGE_NAME=ghcr.io/ms3inc/tavros-buildtools
-
 KUBECTL_VERSION=1.18.14
 KUSTOMIZE_VERSION=3.8.7
 KUBESEAL_VERSION=0.13.1
@@ -38,7 +36,7 @@ container=$(buildah from scratch)
 mount=$(buildah mount $container)
 
 echo "Setting up installer container..."
-podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw --volume $PWD:$PWD:Z --workdir $PWD fedora:latest
+podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw --volume $PWD:$PWD --workdir $PWD fedora:latest
 podman exec installer bash -c "yum upgrade -y --quiet"
 
 echo "Installing tools with package managers..."
@@ -87,6 +85,4 @@ buildah unmount $container
 echo "Committing and pushing..."
 buildah config --cmd /bin/bash ${container}
 buildah config --label name=tavros-buildtools ${container}
-buildah commit --rm $container $IMAGE_NAME:latest
-buildah login --username git --password $REGISTRY_PSW $IMAGE_NAME
-buildah push $IMAGE_NAME:latest
+buildah commit --rm $container $IMAGE_TAG

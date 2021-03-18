@@ -3,7 +3,7 @@ on:
   push:
     branches: [ main ]
 jobs:
-  buildtools-image:
+  tavros-ci:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -18,13 +18,14 @@ jobs:
     - name: Build tavros-buildtools:latest image
       if: steps.filter.outputs.buildtools == 'true'
       env:
-        REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
+        IMAGE_TAG: ghcr.io/ms3inc/tavros-buildtools:latest
       run: buildah unshare ./.github/workflows/buildtools-build.sh
-  test:
-    needs: [ buildtools-image ]
-    runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ms3inc/tavros-buildtools:latest
-    steps:
-    - uses: actions/checkout@v2
-    - run: make install test
+    - name: Run make install test
+      run: podman run -it --rm -v $PWD:$PWD -w $PWD ghcr.io/ms3inc/tavros-buildtools:latest bash -c "make install test"
+    - name: Push tavros-buildtools:latest image
+      env:
+        REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
+        IMAGE: ghcr.io/ms3inc/tavros-buildtools:latest
+      run: |
+        buildah login --username git --password $REGISTRY_PSW $IMAGE
+        buildah push $IMAGE

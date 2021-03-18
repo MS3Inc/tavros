@@ -1,0 +1,17 @@
+name: Tavros Tag CI
+on:
+  push:
+    tags: [ v* ]
+jobs:
+  tavros-ci:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Push Versioned ghcr.io/ms3inc/tavros-buildtools
+      env:
+        REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
+        IMAGE: ghcr.io/ms3inc/tavros-buildtools
+      run: |
+        podman login --username git --password $REGISTRY_PSW $IMAGE
+        podman pull $IMAGE:latest
+        podman tag $IMAGE:latest $IMAGE:${{ GITHUB_REF#refs/tags/ }}
+        podman push $IMAGE:${{ GITHUB_REF#refs/tags/ }}
