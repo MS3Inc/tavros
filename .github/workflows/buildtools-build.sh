@@ -13,41 +13,43 @@ KOPS_VERSION=1.20.0-alpha.2
 YQ_VERSION=4.2.0
 DECK_VERSION=1.5.0
 
-function dnf_install_on {
-  local container=${1}
-  local packages=${2}
-  local mount=$(buildah mount $container)
-  source /etc/os-release
+function dnf_install {
+  local packages=${1}
+  export $(podman exec installer grep VERSION_ID /etc/os-release)
 
-  yum install -y --quiet ${packages} \
-      --installroot $mount --releasever $VERSION_ID \
+  podman exec installer bash -c "yum install --quiet -y ${packages} \
+      --installroot /mnt/container --releasever $VERSION_ID \
       --setopt install_weak_deps=false --setopt tsflags=nodocs \
       --setopt override_install_langs=en_US.utf8 \
-    && yum clean all -y --installroot $mount --releasever $VERSION_ID
-  rm -rf "${mount}/var/cache/yum"
-  rm -rf "${mount}/var/cache/dnf"
-
-  buildah unmount $container
+    && yum clean all -y --installroot /mnt/container --releasever $VERSION_ID
+  rm -rf /mnt/container/var/cache/yum
+  rm -rf /mnt/container/var/cache/dnf"
 }
 
-function pip_install_on {
-  local container=${1}
-  local packages=${2}
-  local mount=$(buildah mount $container)
+function pip_install {
+  local packages=${1}
 
-  PYTHONUSERBASE=$mount/usr/local pip install --quiet $packages --user --upgrade --ignore-installed --no-cache-dir
-
-  buildah unmount $container
+  podman exec installer bash -c "PYTHONUSERBASE=/mnt/container/usr/local \
+    pip install --quiet --user --upgrade --ignore-installed --no-cache-dir ${packages}"
 }
 
 echo "Creating new container from scratch..."
 container=$(buildah from scratch)
+mount=$(buildah mount $container)
+
+echo "Setting up installer container..."
+podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw --volume $PWD:$PWD:Z --workdir $PWD fedora:latest
+podman exec installer bash -c "yum upgrade -y --quiet"
 
 echo "Installing tools with package managers..."
-dnf_install_on $container "make diffutils python awscli git"
-pip_install_on $container "-r requirements.txt"
+dnf_install "make diffutils python awscli git"
+pip_install "-r requirements.txt"
 
-echo "Installing binaries..."
+echo "Cleaning up installer container..."
+podman stop installer
+podman rm installer
+
+echo "Installing other tools..."
 curl -sSLO "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
 chmod u+x kubectl
 buildah copy $container "kubectl" /usr/local/bin/
@@ -78,6 +80,9 @@ buildah copy $container "yq" /usr/local/bin/
 curl -sSL0 "https://github.com/Kong/deck/releases/download/v${DECK_VERSION}/deck_${DECK_VERSION}_linux_amd64.tar.gz" | tar -zx -C ./
 chmod +x deck
 buildah copy $container "deck" /usr/local/bin/
+
+echo "Cleaning up..."
+buildah unmount $container
 
 echo "Committing and pushing..."
 buildah config --cmd /bin/bash ${container}
