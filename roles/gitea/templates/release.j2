@@ -60,7 +60,7 @@ spec:
           postgresql:
             enabled: false
 
-    {% if ('test-run' in ansible_run_tags) %}
+{% if ('test-run' in ansible_run_tags) %}
     extraVolumes:
     - name: ca-certs
       configMap:
@@ -68,4 +68,4 @@ spec:
     extraVolumeMounts:
     - name: ca-certs
       mountPath: /etc/ssl/certs/
-    {% endif %}
+{% endif %}
