@@ -25,8 +25,26 @@ data:
           displayName: "gitea"
           manageHooks: true
           serverUrl: "https://code.tavros.example.com"
+      globalLibraries:
+        libraries:
+          - name: "tavros-library"
+            defaultVersion: "v0.2"
+            retriever:
+              modernSCM:
+                scm:
+                  git:
+                    remote: "https://github.com/MS3Inc/tavros-jenkins-libraries.git"
     jenkins:
       securityRealm: keycloak
+      globalNodeProperties:
+      - envVars:
+          env:
+          - key: TAVROS_GIT_HOST
+            value: code.tavros.example.com
+          - key: TAVROS_GIT_PROVIDER
+            value: gitea
+          - key: TAVROS_GIT_CREDS
+            value: gitea-credentials
 
     jobs:
     - script: >
@@ -56,4 +74,26 @@ data:
                     }
                 }
             }
+        }
+    - script: >
+        pipelineJob('Quickstart \u2212 OpenAPI Project') {
+          definition {
+            cps {
+              sandbox(true)
+              script("""@Library("tavros-library") _
+                        |
+                        |openapi_quickstart()""".stripMargin())
+            }
+          }
+        }
+    - script: >
+        pipelineJob('Quickstart \u2212 Camel Web Service Project') {
+          definition {
+            cps {
+              sandbox(true)
+              script("""@Library("tavros-library") _
+                        |
+                        |camelwebservice_quickstart()""".stripMargin())
+            }
+          }
         }
