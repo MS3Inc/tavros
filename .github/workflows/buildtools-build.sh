@@ -40,7 +40,7 @@ podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw -
 podman exec installer bash -c "yum upgrade -y --quiet"
 
 echo "\nInstalling tools with package managers..."
-dnf_install "vi make diffutils python awscli git"
+dnf_install "vi make openssl bind-utils diffutils python awscli git"
 pip_install "-r requirements.txt"
 
 echo "\nCleaning up installer container..."
