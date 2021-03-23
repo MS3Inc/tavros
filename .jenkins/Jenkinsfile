@@ -1,0 +1,59 @@
+pipeline {
+  agent {
+    kubernetes {
+      label 'node'
+      yamlFile '.jenkins/kubernetes.yaml'
+    }
+  }
+  stages {
+    stage('Build') {
+      steps {
+        container('tavros-tools') {
+          sh 'yes ""| ssh-keygen -N "" >&- 2>&-'
+          sh 'make install'
+          sh ".jenkins/update-default-vars.sh cluster_fqdn=${cluster_fqdn}"
+          sh ".jenkins/update-default-vars.sh cluster_admin_email=${cluster_admin_email}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.master_count=${cluster_master_count}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.node_count=${cluster_node_count}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.state_bucket=${cluster_state_bucket}"
+        }
+      }
+    }
+    stage('Plan') {
+      steps {
+        container('tavros-tools') {
+          sh 'cat /root/.ssh/id_rsa'
+          sh 'cat playbooks/provision_playbook/default_vars.yaml'
+        }
+      }
+    }
+    stage("Create Tavros") {
+      when {
+        expression {
+          env.DESTROY != 'yes'
+        }
+      }
+      steps {
+        withAWS(credentials:"${aws_creds}", region:"${aws_region}") {
+          container('tavros-tools') {
+            sh 'ansible-playbook playbooks/provision_playbook.yaml --inventory playbooks/provision_playbook/default_vars.yaml --tags all,test-run'
+          }
+        }
+      }
+    }
+    stage("Destroy Tavros") {
+      when {
+        expression {
+          env.DESTROY != 'no'
+        }
+      }
+      steps {
+        withAWS(credentials:"${aws_creds}", region:"${aws_region}") {
+          container('tavros-tools') {
+            sh 'ansible-playbook playbooks/deprovision_playbook.yaml --extra-vars "cluster_state=absent" --inventory playbooks/provision_playbook/default_vars.yaml'
+          }
+        }
+      }
+    }
+  }
+}
