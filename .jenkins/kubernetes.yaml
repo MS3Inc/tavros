@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    some-label: tavros-tools
+  namespace: jenkins
+spec:
+  containers:
+  - name: tavros-tools
+    image: ghcr.io/ms3inc/tavros-buildtools
+    securityContext:
+      privileged: false
+    tty: true
+    command: ['cat']
+  resources:
+    limits:
+      cpu: "1"
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
