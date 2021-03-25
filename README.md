@@ -15,18 +15,19 @@ The provision playbook provisions a Kubernetes cluster and configures Tavros's p
 
 ## Supported Platform Components
 
-| Concern | Component | Current Version | Since Trou. Version |
-| ------- | --------- | ------- | ------------------ |
-| Platform GitOps | Flux v2 | 0.4.3 | 0.1.0 |
-| API Gateway and Manager | Kong | 2.2.0 | 0.1.0 |
-| API Portal | Kong Enterprise Edition | 2.2.0 | 0.1.0 |
-| Service Mesh | Kuma | 1.0.0 | 0.1.0 |
-| Identity and Access Management | Keycloak | 11.0.2 | 0.1.0 |
-| Artifact Management | Nexus Repository Manager | 3.28.1 | 0.2.0 |
-| Continuous Delivery | Jenkins | 2.249.2 | 0.4.0 |
-| Observability | Elastic Cloud | 7.9.3 | 0.4.0 |
-| Observability | Jaeger | 1.20.0 | 0.4.0 |
-| Static Code Qualitative Analysis | Sonarqube | 8.5 | na |
+| Concern | Component | Version |
+| ------- | --------- | ------- |
+| Platform GitOps | Flux v2 | 0.4.3 |
+| Platform GitOps | Sealed Secrets | 0.13.1 |
+| API Gateway and Manager | Kong | 2.2.0 |
+| API Portal | Kong Enterprise Edition | 2.2.0 |
+| Service Mesh | Kuma | 1.0.0 |
+| Identity and Access Management | Keycloak | 11.0.2 |
+| Artifact Management | Nexus Repository Manager | 3.28.1 |
+| Continuous Delivery | Jenkins | 2.249.2 |
+| Observability | Elastic Cloud | 7.9.3 |
+| Observability | Jaeger | 1.20.0 |
+| Static Code Qualitative Analysis | Sonarqube | 8.5 |
 
 ## Roadmap
 
