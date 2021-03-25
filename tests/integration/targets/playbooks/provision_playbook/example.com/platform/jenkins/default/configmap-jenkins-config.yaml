@@ -21,7 +21,7 @@ data:
           }
       giteaServers:
         servers:
-        - credentialsId: "gitea-credentials"
+        - credentialsId: "tavros-gitea-creds"
           displayName: "gitea"
           manageHooks: true
           serverUrl: "https://code.tavros.example.com"
@@ -44,7 +44,7 @@ data:
           - key: TAVROS_GIT_PROVIDER
             value: gitea
           - key: TAVROS_GIT_CREDS
-            value: gitea-credentials
+            value: tavros-gitea-creds
 
     jobs:
     - script: >
@@ -59,7 +59,7 @@ data:
                 node / navigators << 'org.jenkinsci.plugin.gitea.GiteaSCMNavigator' {
                     serverUrl("https://code.tavros.example.com")
                     repoOwner("tavros")
-                    credentialsId("gitea-credentials")
+                    credentialsId("tavros-gitea-creds")
                     traits {
                         'org.jenkinsci.plugin.gitea.BranchDiscoveryTrait'() {
                             strategyId('1')
