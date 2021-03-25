@@ -47,7 +47,7 @@
   when: ('dry-run' not in ansible_run_tags)
   community.aws.route53:
     state: present
-    zone: "{{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }}"
+    zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ cluster_fqdn }}"
     value: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
@@ -62,7 +62,7 @@
   when: ('dry-run' not in ansible_run_tags)
   community.aws.route53:
     state: present
-    zone: "{{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }}"
+    zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ item.name }}.{{ cluster_fqdn }}"
     value: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
@@ -78,7 +78,7 @@
   when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
   community.aws.route53:
     state: present
-    zone: "{{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }}"
+    zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ item.ingress_class }}.{{ cluster_fqdn }}"
     value: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"

@@ -1,7 +1,7 @@
 ---
 - name: Create kOps S3 Bucket
   amazon.aws.s3_bucket:
-    name: "{{ kubernetes_cluster.state_bucket }}"
+    name: "{{ kops.state_bucket }}"
     state: present
 
 - name: Create Cluster Configuration
@@ -9,22 +9,23 @@
   changed_when: result.rc == 101
   failed_when: result.rc not in [100, 101]
   environment:
-    KOPS_STATE_STORE: s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_fqdn }}/kops
+    KOPS_STATE_STORE: s3://{{ kops.state_bucket }}
   shell: |
     kops get cluster {{ cluster_fqdn }}
     if [[ $? -eq 0 ]]; then { exit 100; } fi
 
     kops create cluster {{ cluster_fqdn }} \
-      --cloud={{ kubernetes_cluster.cloud }} \
+      --cloud={{ kubernetes_cluster.cloud_provider }} \
       --master-count={{ kubernetes_cluster.master_count }} \
-      --master-size={{ kubernetes_cluster.master_size }} \
-      --node-count={{ kubernetes_cluster.node_count }} \
-      --node-size={{ kubernetes_cluster.node_size }} \
+      --master-size={{ kubernetes_cluster.master_instance_type }} \
+      --master-zones={{ kubernetes_cluster.master_azs }} \
+      --node-count={{ kubernetes_cluster.worker_count }} \
+      --node-size={{ kubernetes_cluster.worker_instance_type }} \
+      --zones={{ kubernetes_cluster.worker_azs }} \
       --container-runtime docker \
       --topology private \
       --networking weave \
-      --dns-zone={{ kubernetes_cluster.dns_zone | default(cluster_fqdn) }} \
-      --zones={{ kubernetes_cluster.zones }} \
+      --dns-zone={{ kubernetes_cluster.dns_zone }} \
       --bastion \
       --authorization RBAC
     if [ $? -eq 0 ]; then { exit 101; } fi
@@ -36,8 +37,8 @@
   when: result.changed
   changed_when: false
   shell: |
-    aws s3 cp s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_fqdn }}/kops/{{ cluster_fqdn }}/cluster.spec /tmp/kops/cluster.spec
-    aws s3 cp s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_fqdn }}/kops/{{ cluster_fqdn }}/instancegroup /tmp/kops/instancegroup --recursive
+    aws s3 cp s3://{{ kops.state_bucket }}/{{ cluster_fqdn }}/cluster.spec /tmp/kops/cluster.spec
+    aws s3 cp s3://{{ kops.state_bucket }}/{{ cluster_fqdn }}/instancegroup /tmp/kops/instancegroup --recursive
 
 - name: Add Extra Cluster Configurations
   when: result.changed
@@ -60,7 +61,7 @@
   changed_when: result.rc == 101
   failed_when: result.rc not in [100, 101]
   environment:
-    KOPS_STATE_STORE: s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_fqdn }}/kops
+    KOPS_STATE_STORE: s3://{{ kops.state_bucket }}
   shell: |
     kops replace -f /tmp/kops/cluster.spec
     if [ $? -ne 0 ]; then { echo "Failed to replace cluster config"; exit 1; } fi
@@ -77,13 +78,13 @@
 
 - name: Export Kube Context
   environment:
-    KOPS_STATE_STORE: s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_fqdn }}/kops
+    KOPS_STATE_STORE: s3://{{ kops.state_bucket }}
   shell: |
     kops export kubecfg --admin --name={{ cluster_fqdn }}
 
 - name: Validate Cluster
   changed_when: false
   environment:
-    KOPS_STATE_STORE: s3://{{ kubernetes_cluster.state_bucket }}/{{ cluster_fqdn }}/kops
+    KOPS_STATE_STORE: s3://{{ kops.state_bucket }}
   shell: |
     kops validate cluster {{ cluster_fqdn }} --wait 30m

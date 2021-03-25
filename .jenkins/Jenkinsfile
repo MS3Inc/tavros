@@ -15,7 +15,6 @@ pipeline {
           sh ".jenkins/update-default-vars.sh cluster_admin_email=${cluster_admin_email}"
           sh ".jenkins/update-default-vars.sh kubernetes_cluster.master_count=${cluster_master_count}"
           sh ".jenkins/update-default-vars.sh kubernetes_cluster.node_count=${cluster_node_count}"
-          sh ".jenkins/update-default-vars.sh kubernetes_cluster.state_bucket=${cluster_state_bucket}"
         }
       }
     }

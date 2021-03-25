@@ -6,10 +6,10 @@
   - include_tasks: tasks/pre-flight.yaml
 
   - include_role:
-      name: ms3_inc.tavros.kubernetes_cluster
+      name: ms3_inc.tavros.kops
     vars:
       cluster_state: present
-    tags: [ kubernetes_cluster ]
+    tags: [ kops ]
 
   - name: Install and Configure Components
     block:
@@ -103,7 +103,7 @@
           content: "{{ { 'all': { 'vars': { 'flux': flux, 'cluster_fqdn': cluster_fqdn, 'cluster_admin_email': cluster_admin_email, 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql, 'elastic_cloud': elastic_cloud, 'cert_manager': cert_manager, 'gitea': gitea, 'jaeger': jaeger, 'jenkins': jenkins }}} | to_nice_yaml(indent=2) }}"
           dest: /tmp/{{ cluster_fqdn }}_vars.yaml
       - include_role:
-          name: ms3_inc.tavros.kubernetes_cluster
+          name: ms3_inc.tavros.kops
           tasks_from: tavros_config_backup
         tags: [ requires_cluster]
-        when: ('dry-run' not in ansible_run_tags)
+        when: ('dry-run' not in ansible_run_tags) and kops.enabled

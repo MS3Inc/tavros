@@ -4,16 +4,18 @@ all:
     cluster_fqdn: ''
     cluster_admin_email: ''
     kubernetes_cluster:
-      cloud: 'aws'
+      cloud_provider: 'aws'
       master_count: 3
-      master_size: 't2.large'
-      node_count: 2
-      node_size: 't2.xlarge'
-      zones: 'us-east-1a,us-east-1b'
-      state_bucket: 'tavros'
-      ssh_public_key_path: ''
-      aws_access_key_id: ''
-      aws_secret_access_key: ''
+      master_instance_type: 't2.large'
+      master_azs: 'us-east-1a,us-east-1b'
+      worker_count: 2
+      worker_instance_type: 't2.xlarge'
+      worker_azs: 'us-east-1a,us-east-1b'
+      dns_zone: "{{ cluster_fqdn }}"
+    kops:
+      enabled: true
+      state_bucket: "{{ cluster_fqdn }}-tavros"
+      state_bucket_region: "us-east-1"
     kong:
       default_ingress_class: 'prod'
       ee_creds: []
@@ -35,12 +37,12 @@ all:
         mtls:
           enabled: true
         traffictrace:
-            enabled: true
+          enabled: true
       - name: 'prod'
         mtls:
           enabled: true
         traffictrace:
-            enabled: true
+          enabled: true
     namespaces:
     - name: 'dev'
       kuma_mesh_name: 'sandbox'
