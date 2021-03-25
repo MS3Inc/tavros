@@ -4,6 +4,16 @@
     path: /tmp/{{ cluster_fqdn }}/platform/jenkins/default
     state: directory
 
+- name: Generate and Merge jenkins.gitea.password Variable
+  when: jenkins.gitea.password is not defined
+  set_fact:
+    jenkins: "{{ jenkins | combine({ 'gitea': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
+
+- name: Generate and Merge jenkins.keycloak.password Variable
+  when: jenkins.keycloak.password is not defined
+  set_fact:
+    jenkins: "{{ jenkins | combine({ 'keycloak': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
+
 - name: Template Files
   template:
     src: "{{ item.name }}.j2"
@@ -18,6 +28,8 @@
       dest: default/keycloakclient
     - name: keycloakuser-jenkins-ci
       dest: default/keycloakuser-jenkins-ci
+    - name: secret-gitea-creds
+      dest: default/secret-gitea-creds
 
 - name: Template secret-artifacts-registry File
   template:
@@ -25,7 +37,7 @@
     dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/secret-artifacts-registry.yaml
   vars:
     config:
-      auths: "{{ { 'registry.' + cluster_fqdn : { 'auth' : 'jenkins-ci:jenkins-ci' | b64encode } } }}"
+      auths: "{{ { 'registry.' + cluster_fqdn : { 'auth' : ('jenkins-ci:' + jenkins.keycloak.password) | b64encode } } }}"
 
 - name: Copy Files
   copy:
@@ -39,8 +51,6 @@
       dest: default/kustomization.yaml
     - name: jenkins.yaml
       dest: default/jenkins.yaml
-    - name: secret-gitea-creds.yaml
-      dest: default/secret-gitea-creds.yaml
     - name: operator
       dest: ""
 

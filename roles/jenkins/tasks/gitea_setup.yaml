@@ -21,8 +21,7 @@
       email: "jenkins-ci@{{ cluster_fqdn }}"
       login_name: jenkins-ci
       must_change_password: false
-      # todo: change to dynamic
-      password: jenkins-ci
+      password: "{{ jenkins.gitea.password }}"
       send_notify: false
       # this points to Keycloak as local is source_id 0
       source_id: 1

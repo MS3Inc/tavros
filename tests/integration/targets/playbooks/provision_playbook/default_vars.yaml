@@ -95,6 +95,9 @@ all:
       enabled: true
       keycloak:
         realm: 'prod'
+        password: 'placeholder19'
+      gitea:
+        password: 'placeholder20'
     flux:
       gitea:
         password: placeholder18
