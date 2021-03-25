@@ -30,7 +30,9 @@ The provision playbook provisions a Kubernetes cluster and configures Tavros's p
 
 ## Roadmap
 
-The Tavros team will publish a roadmap for each major and minor release based on product strategy and business objectives. See our [Tavros Roadmap](docs/roadmap/index.md).
+The Tavros team will maintain an up to date roadmap for major and minor releases through its [Milestones](https://github.com/MS3Inc/tavros/milestones).
+
+For items that are not yet targeting a milestone, you can see our [Backlog](https://github.com/MS3Inc/tavros/issues?q=is%3Aopen+is%3Aissue+no%3Amilestone)
 
 ## Architectural Decision Log
 
