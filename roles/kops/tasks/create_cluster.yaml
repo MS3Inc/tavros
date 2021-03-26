@@ -3,6 +3,12 @@
   amazon.aws.s3_bucket:
     name: "{{ kops.state_bucket }}"
     state: present
+    encryption: AES256
+    public_access:
+      BlockPublicAcls: true
+      IgnorePublicAcls: true
+      BlockPublicPolicy: true
+      RestrictPublicBuckets: true
 
 - name: Create Cluster Configuration
   register: result
