@@ -92,11 +92,11 @@
         when: jenkins.enabled
         tags: [ jenkins ]
 
-      - name: Flux GitOps Toolkit - Gitea
+      - name: Flux GitOps Toolkit Sync
         include_role:
-          name: ms3_inc.tavros.fluxtoolkit_gitea
+          name: ms3_inc.tavros.fluxtoolkit_sync
         when: gitea.enabled
-        tags: [ fluxtoolkit_gitea ]
+        tags: [ fluxtoolkit_sync ]
 
     always:
       - copy:
