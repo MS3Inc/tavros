@@ -56,11 +56,11 @@
         when: keycloak.enabled
         tags: [ keycloak ]
 
-      - name: Kong EE SSO - Keycloak
+      - name: Kong EE SSO
         include_role:
-          name: ms3_inc.tavros.kong_ee_keycloak_sso
+          name: ms3_inc.tavros.kong_ee_sso
         when: keycloak.enabled
-        tags: [ kong_ee_keycloak_sso ]
+        tags: [ kong_ee_sso ]
 
       - name: Nexus
         include_role:
