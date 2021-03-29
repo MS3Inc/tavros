@@ -5,8 +5,8 @@ set -o errexit
 
 KUBECTL_VERSION=1.20.5
 
-https://github.com/fluxcd/kustomize-controller/blob/v0.10.0/go.mod#L34
-https://github.com/kubernetes-sigs/kustomize/blob/kustomize/v3.9.4/kustomize/go.mod#L11
+# https://github.com/fluxcd/kustomize-controller/blob/v0.10.0/go.mod#L34
+# https://github.com/kubernetes-sigs/kustomize/blob/kustomize/v3.9.4/kustomize/go.mod#L11
 FLUX_VERSION=0.10.0
 KUSTOMIZE_VERSION=3.9.4
 
