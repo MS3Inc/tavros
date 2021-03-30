@@ -44,7 +44,7 @@ podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw -
 podman exec installer bash -c "yum upgrade -y --quiet"
 
 printf "\nInstalling tools with package managers...\n"
-dnf_install "vi make curl telnet openssl bind-utils diffutils python awscli git"
+dnf_install "vi make curl telnet openssl bind-utils diffutils python awscli git jq"
 pip_install "-r requirements.txt"
 
 printf "\nCleaning up installer container...\n"
