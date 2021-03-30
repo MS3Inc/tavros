@@ -40,7 +40,7 @@ container=$(buildah from scratch)
 mount=$(buildah mount $container)
 
 echo "\nSetting up installer container..."
-podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw --volume $PWD:$PWD --workdir $PWD fedora:latest
+podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw --volume $PWD:$PWD:Z --workdir $PWD fedora:latest
 podman exec installer bash -c "yum upgrade -y --quiet"
 
 echo "\nInstalling tools with package managers..."
