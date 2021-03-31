@@ -4,11 +4,12 @@
     name: "{{ kops.state_bucket }}"
     state: present
     encryption: AES256
+    region: "{{ kops.state_bucket_region }}"
     public_access:
-      BlockPublicAcls: true
-      IgnorePublicAcls: true
-      BlockPublicPolicy: true
-      RestrictPublicBuckets: true
+      block_public_acls: true
+      ignore_public_acls: true
+      block_public_policy: true
+      restrict_public_buckets: true
 
 - name: Create Cluster Configuration
   register: result
