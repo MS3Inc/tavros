@@ -12,21 +12,16 @@ pipeline {
           sh 'yes ""| ssh-keygen -N "" >&- 2>&-'
           sh 'make install'
           sh ".jenkins/update-default-vars.sh cluster_fqdn=${cluster_fqdn}"
-          sh ".jenkins/update-default-vars.sh cluster_admin_email=${cluster_admin_email}"
-          sh ".jenkins/update-default-vars.sh kubernetes_cluster.master_count=${cluster_master_count}"
-          sh ".jenkins/update-default-vars.sh kubernetes_cluster.worker_count=${cluster_node_count}"
-        }
-      }
-    }
-    stage('Plan') {
-      steps {
-        container('tavros-tools') {
-          sh 'cat /root/.ssh/id_rsa'
+          sh ".jenkins/update-default-vars.sh cluster_admin_email=${admin_email}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.master_count=${master_count}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.master_azs=${master_azs}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.worker_count=${worker_count}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.worker_azs=${worker_azs}"
           sh 'cat playbooks/provision_playbook/default_vars.yaml'
         }
       }
     }
-    stage("Create Tavros") {
+    stage("Provision") {
       when {
         expression {
           env.DESTROY != 'yes'
@@ -35,12 +30,14 @@ pipeline {
       steps {
         withAWS(credentials:"${aws_creds}", region:"${aws_region}") {
           container('tavros-tools') {
-            sh 'ansible-playbook playbooks/provision_playbook.yaml --inventory playbooks/provision_playbook/default_vars.yaml --tags all,test-run'
+            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+              sh 'ansible-playbook playbooks/provision_playbook.yaml --inventory playbooks/provision_playbook/default_vars.yaml --tags all,test-run'
+            }
           }
         }
       }
     }
-    stage("Destroy Tavros") {
+    stage("Deprovision") {
       when {
         expression {
           env.DESTROY != 'no'
