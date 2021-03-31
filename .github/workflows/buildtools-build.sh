@@ -52,36 +52,33 @@ podman stop installer
 podman rm installer
 
 printf "\nInstalling other tools...\n"
-curl -sSLO "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl"
-chmod u+x kubectl
-buildah copy $container "kubectl" /usr/local/bin/
+curl -sSL "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /tmp/kubectl
+chmod u+x /tmp/kubectl
+buildah copy $container "/tmp/kubectl" /usr/local/bin/
 
-curl -sSL0 "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" | tar -zx -C ./
-chmod +x kustomize
-buildah copy $container "kustomize" /usr/local/bin/
+curl -sSL0 "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${KUSTOMIZE_VERSION}/kustomize_v${KUSTOMIZE_VERSION}_linux_amd64.tar.gz" | tar -zx -C /tmp/
+chmod +x /tmp/kustomize
+buildah copy $container "/tmp/kustomize" /usr/local/bin/
 
-curl -sSLO "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-linux-amd64"
-mv kubeseal-linux-amd64 kubeseal
-chmod u+x kubeseal
-buildah copy $container "kubeseal" /usr/local/bin/
+curl -sSL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-linux-amd64" -o /tmp/kubeseal
+chmod u+x /tmp/kubeseal
+buildah copy $container "/tmp/kubeseal" /usr/local/bin/
 
-curl -sSL0 "https://github.com/fluxcd/flux2/releases/download/v${FLUX_VERSION}/flux_${FLUX_VERSION}_linux_amd64.tar.gz" | tar -zx -C ./
-chmod +x flux
-buildah copy $container "flux" /usr/local/bin/
+curl -sSL0 "https://github.com/fluxcd/flux2/releases/download/v${FLUX_VERSION}/flux_${FLUX_VERSION}_linux_amd64.tar.gz" | tar -zx -C /tmp/
+chmod +x /tmp/flux
+buildah copy $container "/tmp/flux" /usr/local/bin/
 
-curl -sSLO "https://github.com/kubernetes/kops/releases/download/v${KOPS_VERSION}/kops-linux-amd64"
-mv kops-linux-amd64 kops
-chmod +x kops
-buildah copy $container "kops" /usr/local/bin/
+curl -sSL "https://github.com/kubernetes/kops/releases/download/v${KOPS_VERSION}/kops-linux-amd64" -o /tmp/kops
+chmod +x /tmp/kops
+buildah copy $container "/tmp/kops" /usr/local/bin/
 
-curl -sSLO "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64"
-mv yq_linux_amd64 yq
-chmod +x yq
-buildah copy $container "yq" /usr/local/bin/
+curl -sSL "https://github.com/mikefarah/yq/releases/download/v${YQ_VERSION}/yq_linux_amd64" -o /tmp/yq
+chmod +x /tmp/yq
+buildah copy $container "/tmp/yq" /usr/local/bin/
 
-curl -sSL0 "https://github.com/Kong/deck/releases/download/v${DECK_VERSION}/deck_${DECK_VERSION}_linux_amd64.tar.gz" | tar -zx -C ./
-chmod +x deck
-buildah copy $container "deck" /usr/local/bin/
+curl -sSL0 "https://github.com/Kong/deck/releases/download/v${DECK_VERSION}/deck_${DECK_VERSION}_linux_amd64.tar.gz" | tar -zx -C /tmp/
+chmod +x /tmp/deck
+buildah copy $container "/tmp/deck" /usr/local/bin/
 
 printf "\nCleaning up...\n"
 buildah unmount $container
