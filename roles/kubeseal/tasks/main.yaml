@@ -15,7 +15,7 @@
 - name: Apply Resources
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/kubeseal/', reorder='none') }}"
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/kubeseal/', reorder='none') | ms3_inc.tavros.k8s_sort }}"
   community.kubernetes.k8s:
     kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
