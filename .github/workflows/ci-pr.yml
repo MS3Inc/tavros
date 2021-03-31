@@ -10,6 +10,6 @@ jobs:
     - name: Build tavros-buildtools:latest image
       env:
         IMAGE_TAG: ghcr.io/ms3inc/tavros-buildtools:latest
-      run: buildah unshare ./.github/workflows/buildtools-build.sh
+      run: podman unshare ./.github/workflows/buildtools-build.sh
     - name: Run make install test
       run: podman run -it --rm -v $PWD:$PWD -w $PWD ghcr.io/ms3inc/tavros-buildtools:latest bash -c "make install test"
