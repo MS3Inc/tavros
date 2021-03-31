@@ -1,0 +1,95 @@
+---
+- name: Create Directories
+  file:
+    path: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}
+    state: directory
+  loop: "{{ kong.instances }}"
+
+- include_tasks: generate-variables.yaml
+
+- name: Template Files
+  template:
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.dest | default(item.name) }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: base-kustomization
+      dest: kustomization
+
+- name: Copy Files
+  copy:
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.dest | default(item.name) }}
+  when: item.condition | default(true)
+  loop:
+    - name: ns.yaml
+    - name: helmrepo.yaml
+
+- include_tasks: process-instances.yaml
+  when: kong.instances
+
+- include_tasks: process-ee-creds.yaml
+  when: kong.ee_creds
+
+- name: Apply Resources
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/kong/', reorder='none') }}"
+  community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
+
+- name: Set DNS for Tavros Apps
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  community.aws.route53:
+    state: present
+    zone: "{{ kubernetes_cluster.dns_zone }}"
+    type: CNAME
+    record: "*.{{ cluster_fqdn }}"
+    value: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+    wait_timeout: 900
+  vars:
+    prod_kong_proxy: "kong-tavros-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}-kong-proxy"
+
+- name: Set DNS for Kongs by Name
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  community.aws.route53:
+    state: present
+    zone: "{{ kubernetes_cluster.dns_zone }}"
+    type: CNAME
+    record: "*.{{ item.name }}.{{ cluster_fqdn }}"
+    value: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+    wait_timeout: 900
+  vars:
+    instance_kong_proxy: "kong-tavros-{{ item.name }}-kong-proxy"
+  loop: "{{ kong.instances }}"
+
+- name: Set DNS for non Prod Kongs by Ingress Class
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
+  community.aws.route53:
+    state: present
+    zone: "{{ kubernetes_cluster.dns_zone }}"
+    type: CNAME
+    record: "*.{{ item.ingress_class }}.{{ cluster_fqdn }}"
+    value: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+    wait_timeout: 900
+  vars:
+    instance_kong_proxy: "kong-tavros-{{ item.name }}-kong-proxy"
+  loop: "{{ kong.instances }}"
+
+- name: Template flux-kustomization
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/kong.yaml
