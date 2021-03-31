@@ -38,7 +38,6 @@ function pip_install {
 printf "\nCreating new container from scratch...\n"
 container=$(buildah from scratch)
 mount=$(buildah mount $container)
-buildah run $container mkdir /tmp
 
 printf "\nSetting up installer container...\n"
 podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw --volume $PWD:$PWD:Z --workdir $PWD fedora:latest

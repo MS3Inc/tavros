@@ -25,7 +25,7 @@ jobs:
       run: |
         buildah pull --policy missing ghcr.io/ms3inc/tavros-buildtools:latest
         container=$(buildah from --pull-never ghcr.io/ms3inc/tavros-buildtools:latest)
-        buildah run -v $PWD:$PWD $container bash -c "cd $PWD && make install test && rm -rf /tmp"
+        buildah run -v $PWD:$PWD $container bash -c "cd $PWD && make install test && rm -rf /tmp/*"
         buildah config --label name=tavros-collection $container
         buildah commit --rm $container ghcr.io/ms3inc/tavros-collection:latest
     - name: Login to ghcr.io
