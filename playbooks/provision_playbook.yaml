@@ -48,6 +48,8 @@
       - name: Kong
         include_role:
           name: ms3_inc.tavros.kong
+        vars:
+          cluster_state: present
         tags: [ kong ]
 
       - name: Keycloak

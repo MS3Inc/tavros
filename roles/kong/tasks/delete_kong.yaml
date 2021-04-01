@@ -1,0 +1,20 @@
+---
+- name: Delete Tavros Wildcard
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  script: "{{ role_path }}/files/delete-route53-record.sh '{{ cluster_fqdn }}' '*.{{ cluster_fqdn }}'"
+
+- name: Delete Tavros Sandbox Wildcard
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  script: "{{ role_path }}/files/delete-route53-record.sh '{{ cluster_fqdn }}' '*.sandbox.{{ cluster_fqdn }}'"
+
+- name: Delete Kong DNS
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  script: "{{ role_path }}/files/delete-route53-record.sh '{{ cluster_fqdn }}' '*.prod-kong.{{ cluster_fqdn }}'"
+
+- name: Delete Kong Sandbox DNS
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  script: "{{ role_path }}/files/delete-route53-record.sh '{{ cluster_fqdn }}' '*.sandbox-kong.{{ cluster_fqdn }}'"

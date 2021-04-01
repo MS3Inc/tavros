@@ -6,6 +6,11 @@
   - include_tasks: tasks/pre-flight.yaml
 
   - import_role:
+      name: ms3_inc.tavros.kong
+    vars:
+      cluster_state: absent
+
+  - import_role:
       name: ms3_inc.tavros.kops
     vars:
       cluster_state: absent
