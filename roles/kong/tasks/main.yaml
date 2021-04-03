@@ -1,8 +1,8 @@
 ---
 - include_tasks: create_kong.yaml
   tags: [ requires_cluster ]
-  when: ('dry-run' not in ansible_run_tags) and (cluster_state == 'present')
+  when: cluster_state == 'present'
 
 - include_tasks: delete_kong.yaml
   tags: [ requires_cluster ]
-  when: ('dry-run' not in ansible_run_tags) and (cluster_state == 'absent')
+  when: cluster_state == 'absent'
