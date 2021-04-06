@@ -9,7 +9,6 @@ pipeline {
     stage('Build') {
       steps {
         container('tavros-tools') {
-          sh 'yes ""| ssh-keygen -N "" >&- 2>&-'
           sh 'make install'
           sh ".jenkins/update-default-vars.sh cluster_fqdn=${cluster_fqdn}"
           sh ".jenkins/update-default-vars.sh cluster_admin_email=${admin_email}"

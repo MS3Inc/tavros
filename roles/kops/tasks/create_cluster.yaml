@@ -1,4 +1,9 @@
 ---
+- name: Create Directory
+  file:
+    path: /tmp/kops
+    state: directory
+
 - name: Create kOps S3 Bucket
   amazon.aws.s3_bucket:
     name: "{{ kops.state_bucket }}"
@@ -10,6 +15,10 @@
       ignore_public_acls: true
       block_public_policy: true
       restrict_public_buckets: true
+
+- name: Generate an OpenSSH Key Pair
+  community.crypto.openssh_keypair:
+    path: /tmp/kops/id_rsa
 
 - name: Create Cluster Configuration
   register: result
@@ -34,7 +43,8 @@
       --networking weave \
       --dns-zone={{ kubernetes_cluster.dns_zone }} \
       --bastion \
-      --authorization RBAC
+      --authorization RBAC \
+      --ssh-public-key /tmp/kops/id_rsa.pub
     if [ $? -eq 0 ]; then { exit 101; } fi
 
     echo "Failed to create cluster"
