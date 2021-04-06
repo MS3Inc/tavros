@@ -1,5 +1,13 @@
 ---
-- set_fact:
+- name: Set kubernetes_cluster Default Variables
+  set_fact:
+    kubernetes_cluster: "{{ defaults | combine(kubernetes_cluster, recursive=true)  }}"
+  vars:
+    defaults:
+      dns_zone: "{{ cluster_fqdn }}"
+
+- name: Add Custom wait_conditions
+  set_fact:
     wait_conditions:
       HelmRelease:
         type: Ready

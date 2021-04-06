@@ -1,11 +1,4 @@
 ---
-- name: Set kubernetes_cluster Default Variables
-  set_fact:
-    kubernetes_cluster: "{{ defaults | combine(kubernetes_cluster, recursive=true)  }}"
-  vars:
-    defaults:
-      dns_zone: "{{ cluster_fqdn }}"
-
 - name: Set kops Default Variables
   set_fact:
     kops: "{{ defaults | combine(kops, recursive=true)  }}"
