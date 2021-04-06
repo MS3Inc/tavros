@@ -10,6 +10,9 @@ pipeline {
       steps {
         container('tavros-tools') {
           sh 'make install'
+          sh 'cat /etc/resolv.conf | sed \'/^nameserver/d\' > /etc/resolv.conf'
+          sh 'echo \'nameserver 1.1.1.1\' >> /etc/resolv.conf'
+          sh 'echo \'nameserver 1.0.0.1\' >> /etc/resolv.conf'
           sh ".jenkins/update-default-vars.sh cluster_fqdn=${cluster_fqdn}"
           sh ".jenkins/update-default-vars.sh cluster_admin_email=${admin_email}"
           sh ".jenkins/update-default-vars.sh kubernetes_cluster.master_count=${master_count}"
