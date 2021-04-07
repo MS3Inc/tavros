@@ -9,7 +9,6 @@ pipeline {
     stage('Build') {
       steps {
         container('tavros-tools') {
-          sh 'env'
           sh 'make install'
           sh ".jenkins/update-default-vars.sh cluster_fqdn=${cluster_fqdn}"
           sh ".jenkins/update-default-vars.sh cluster_admin_email=${admin_email}"
@@ -31,7 +30,11 @@ pipeline {
         withAWS(credentials:"${aws_creds}", region:"${aws_region}") {
           container('tavros-tools') {
             catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-              sh 'ansible-playbook playbooks/provision_playbook.yaml --inventory playbooks/provision_playbook/default_vars.yaml --tags all,test-run'
+              sh '''
+                for i in $(set | grep "KUBERNETES" | cut -f1 -d=); do unset $i; done
+                env
+                ansible-playbook playbooks/provision_playbook.yaml --inventory playbooks/provision_playbook/default_vars.yaml --tags all,test-run
+              '''
             }
           }
         }
