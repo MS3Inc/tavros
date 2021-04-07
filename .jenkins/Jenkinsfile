@@ -9,6 +9,7 @@ pipeline {
     stage('Build') {
       steps {
         container('tavros-tools') {
+          sh 'env'
           sh 'make install'
           sh 'cat /etc/resolv.conf | sed \'/^nameserver/d\' > /etc/resolv.conf'
           sh 'echo \'nameserver 1.1.1.1\' >> /etc/resolv.conf'
