@@ -5,6 +5,11 @@ metadata:
     some-label: tavros-tools
   namespace: jenkins
 spec:
+  enableServiceLinks: false
+  dnsConfig:
+    nameservers:
+      - 1.1.1.1
+      - 8.8.8.8
   containers:
   - name: tavros-tools
     image: ghcr.io/ms3inc/tavros-buildtools
