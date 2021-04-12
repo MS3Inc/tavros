@@ -41,10 +41,10 @@
       dest: default/filebeat.yaml
     - name: heartbeat.yaml
       dest: default/heartbeat.yaml
-    - name: metricbeat-daemonset.yaml
-      dest: default/metricbeat-daemonset.yaml
-    - name: metricbeat-deployment.yaml
-      dest: default/metricbeat-deployment.yaml
+    - name: metricbeat-nodes.yaml
+      dest: default/metricbeat-nodes.yaml
+    - name: metricbeat-kube-state-metrics.yaml
+      dest: default/metricbeat-kube-state-metrics.yaml
     - name: apmserver.yaml
       dest: default/apmserver.yaml
       condition: "{{ elastic_cloud.ee.enabled }}"

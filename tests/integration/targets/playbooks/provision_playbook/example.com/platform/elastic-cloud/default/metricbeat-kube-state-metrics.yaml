@@ -1,11 +1,11 @@
 apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
 metadata:
-  name: tavros-metricbeat-deployment
+  name: tavros-metricbeat-kube-state-metrics
   namespace: elastic-system
 spec:
   type: metricbeat
-  version: 7.10.1
+  version: 7.12.0
   elasticsearchRef:
     name: tavros
   kibanaRef:
