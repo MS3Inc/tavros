@@ -8,9 +8,9 @@ spec:
   interval: 10m
   chart:
     spec:
-      # https://github.com/Kong/charts/tree/kong-1.14.0/charts/kong
+      # https://github.com/Kong/charts/tree/kong-1.15.2/charts/kong
       chart: kong
-      version: 1.14.0
+      version: 1.15.2
       sourceRef:
         kind: HelmRepository
         name: kong
@@ -23,12 +23,9 @@ spec:
       retries: 5
   values:
     image:
-      repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-      tag: "2.2.1.0-alpine"
-      pullSecrets:
-        - default-ee-registry
+      repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
+      tag: '2.3.3.0-alpine'
     env:
-
       admin_api_uri: "https://admin-api.sandbox-kong.tavros.enterprise-example.com"
       admin_gui_url: "https://admin.sandbox-kong.tavros.enterprise-example.com"
       portal_api-url: "https://dev-portal-api.sandbox.tavros.enterprise-example.com"
@@ -39,7 +36,6 @@ spec:
           secretKeyRef:
             name: tavros-sandbox-kong-ee-admin-creds
             key: password
-
       database: postgres
       pg_host: tavros-postgresql.postgresql
       pg_port: '5432'
@@ -64,14 +60,11 @@ spec:
       env:
       # see https://github.com/Kong/charts/issues/224
         kong_admin_tls_skip_verify: 'true'
-
         kong_admin_token:
           valueFrom:
             secretKeyRef:
               name: tavros-sandbox-kong-ee-admin-creds
               key: password
-
-
     admin:
       enabled: true
       http:
@@ -81,7 +74,6 @@ spec:
       annotations:
         service.beta.kubernetes.io/aws-load-balancer-type: nlb
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-
     enterprise:
       enabled: true
       license_secret: default-ee-license

@@ -8,9 +8,9 @@ spec:
   interval: 10m
   chart:
     spec:
-      # https://github.com/Kong/charts/tree/kong-1.14.0/charts/kong
+      # https://github.com/Kong/charts/tree/kong-1.15.2/charts/kong
       chart: kong
-      version: 1.14.0
+      version: 1.15.2
       sourceRef:
         kind: HelmRepository
         name: kong
@@ -24,16 +24,13 @@ spec:
   values:
 {%  if item[0].ee.enabled %}
     image:
-      repository: kong-docker-kong-enterprise-edition-docker.bintray.io/kong-enterprise-edition
-      tag: "2.2.1.0-alpine"
-      pullSecrets:
-        - {{ item[0].ee.creds }}-ee-registry
+      repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
+      tag: '2.3.3.0-alpine'
 {% else  %}
     image:
-      tag: '2.2'
+      tag: '2.3'
 {% endif  %}
     env:
-
 {%  if item[0].ee.enabled %}
       admin_api_uri: "https://admin-api.{{ item[0].name }}.{{ cluster_fqdn }}"
       admin_gui_url: "https://admin.{{ item[0].name }}.{{ cluster_fqdn }}"
@@ -46,7 +43,6 @@ spec:
             name: tavros-{{ item[0].name }}-ee-admin-creds
             key: password
 {% endif  %}
-
       database: postgres
       pg_host: tavros-postgresql.postgresql
       pg_port: '5432'
@@ -71,7 +67,6 @@ spec:
       env:
       # see https://github.com/Kong/charts/issues/224
         kong_admin_tls_skip_verify: 'true'
-
 {%  if item[0].ee.enabled %}
         kong_admin_token:
           valueFrom:
@@ -79,14 +74,12 @@ spec:
               name: tavros-{{ item[0].name }}-ee-admin-creds
               key: password
 {% endif  %}
-
 {%  if item[0].kuma_mesh_name is defined %}
     podAnnotations:
       kuma.io/sidecar-injection: enabled
       kuma.io/gateway: enabled
       kuma.io/mesh: {{ item[0].kuma_mesh_name }}
 {% endif  %}
-
     admin:
       enabled: true
       http:
@@ -98,7 +91,6 @@ spec:
         service.beta.kubernetes.io/aws-load-balancer-type: nlb
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
 {% endif  %}
-
 {%  if item[0].ee.enabled %}
     enterprise:
       enabled: true
