@@ -3,8 +3,8 @@ kind: Kustomization
 namespace: jaeger
 resources:
   - ns.yaml
-  - https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.21.2/deploy/crds/jaegertracing.io_jaegers_crd.yaml
-  - https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.21.2/deploy/service_account.yaml
-  - https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.21.2/deploy/role.yaml
-  - https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.21.2/deploy/role_binding.yaml
-  - https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.21.2/deploy/operator.yaml
+  - https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.22.0/deploy/crds/jaegertracing.io_jaegers_crd.yaml
+  - https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.22.0/deploy/service_account.yaml
+  - https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.22.0/deploy/role.yaml
+  - https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.22.0/deploy/role_binding.yaml
+  - https://raw.githubusercontent.com/jaegertracing/jaeger-operator/v1.22.0/deploy/operator.yaml
