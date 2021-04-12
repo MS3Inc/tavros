@@ -67,7 +67,7 @@
 - name: Apply Operator Resources
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins/operator/0.5.0
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins/operator
   community.kubernetes.k8s:
     kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
