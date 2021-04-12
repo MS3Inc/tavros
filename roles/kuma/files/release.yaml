@@ -12,7 +12,8 @@ spec:
         kind: HelmRepository
         name: kuma
         namespace: flux-system
-      version: 0.4.0
+      # https://github.com/kumahq/kuma/blob/1.1.2/deployments/charts/kuma/values.yaml
+      version: 0.5.2
   interval: 30m
   install:
     remediation:
