@@ -18,10 +18,10 @@
           name: ms3_inc.tavros.fluxtoolkit
         tags: [ fluxtoolkit ]
 
-      - name: kubeseal
+      - name: sealed-secrets
         include_role:
-          name: ms3_inc.tavros.kubeseal
-        tags: [ kubeseal ]
+          name: ms3_inc.tavros.sealed_secrets
+        tags: [ sealed_secrets ]
 
       - name: PostgreSQL
         include_role:
