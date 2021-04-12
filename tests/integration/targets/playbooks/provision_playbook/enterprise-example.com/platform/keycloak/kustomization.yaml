@@ -3,5 +3,5 @@ kind: Kustomization
 namespace: keycloak
 resources:
   # - ns.yaml
-  - operator/12.0.1/
+  - operator/
   - default/
