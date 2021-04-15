@@ -1,0 +1,71 @@
+---
+- name: Generate and Merge jaeger.es.password Variable
+  when: jaeger.es.password is not defined
+  set_fact:
+    jaeger: "{{ jaeger | combine({ 'es': { 'password': lookup('password', '/dev/null') } }, recursive=true) }}"
+
+- name: Add Elasticsearch Host to Inventory
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  add_host:
+    name: 'tavros-es-default-0'
+    ansible_kubectl_namespace: elastic-system
+    ansible_connection: kubectl
+
+- name: Add jaeger_writer Role
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  delegate_to: 'tavros-es-default-0'
+  uri:
+    url: https://localhost:9200/_security/role/jaeger_writer
+    method: POST
+    force_basic_auth: true
+    follow_redirects: all
+    body_format: json
+    url_username: elastic
+    url_password: '{{ elastic_cloud.elastic_secret }}'
+    body:
+      cluster:
+      - monitor
+      - manage_index_templates
+      indices:
+      - names:
+        - tavros-jaeger-*
+        privileges:
+        - create
+        - create_index
+        - write
+        - monitor
+        - delete_index
+        - read
+        field_security:
+          grant:
+          - "*"
+        allow_restricted_indices: false
+      applications: []
+      run_as: []
+      metadata: {}
+      transient_metadata:
+        enabled: true
+    status_code: 200
+    validate_certs: False
+
+- name: Add jaeger User
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  delegate_to: 'tavros-es-default-0'
+  uri:
+    url: https://localhost:9200/_security/user/jaeger
+    method: POST
+    force_basic_auth: true
+    follow_redirects: all
+    body_format: json
+    url_username: elastic
+    url_password: '{{ elastic_cloud.elastic_secret }}'
+    body:
+      password: '{{ jaeger.es.password }}'
+      roles:
+      - jaeger_writer
+      full_name: Jaeger User
+    status_code: 200
+    validate_certs: False

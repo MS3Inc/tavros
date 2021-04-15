@@ -93,6 +93,8 @@ all:
       keycloak:
         realm: 'prod'
         client_secret: placeholder15
+      es:
+        password: 'placeholder21'
     jenkins:
       enabled: true
       keycloak:
