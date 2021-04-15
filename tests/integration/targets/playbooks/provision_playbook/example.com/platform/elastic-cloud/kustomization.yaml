@@ -8,6 +8,6 @@ resources:
   - default/kibana.yaml
   - default/filebeat.yaml
   - default/heartbeat.yaml
-  - default/metricbeat-nodes.yaml
+  - default/metricbeat-node-exporter.yaml
   - default/metricbeat-kube-state-metrics.yaml
   - default/ingress.yaml
