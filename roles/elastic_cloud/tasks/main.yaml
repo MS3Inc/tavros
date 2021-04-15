@@ -1,7 +1,7 @@
 ---
 - name: Create Directory
   file:
-    path: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/default
+    path: /tmp/{{ cluster_fqdn }}/platform/elastic-system/default
     state: directory
 
 - name: Generate Keycloak Client Secret
@@ -14,7 +14,7 @@
 - name: Template Files
   template:
     src: "{{ item.name }}.j2"
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.dest | default(item.name) }}.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-system/{{ item.dest | default(item.name) }}.yaml
   when: item.condition | default(true)
   loop:
     - name: kustomization
@@ -33,7 +33,7 @@
 - name: Copy Files
   copy:
     src: "{{ item.name }}"
-    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.dest | default(item.name) }}
+    dest: /tmp/{{ cluster_fqdn }}/platform/elastic-system/{{ item.dest | default(item.name) }}
   when: item.condition | default(true)
   loop:
     - name: metricbeat-rbac.yaml
@@ -61,8 +61,8 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
   shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.tmp
-    mv /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/{{ item.name }}.yaml
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/elastic-system/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/elastic-system/{{ item.name }}.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/elastic-system/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/elastic-system/{{ item.name }}.yaml
   loop:
     - name: secret-eck-license
       condition: "{{ elastic_cloud.ee.enabled }}"
@@ -70,7 +70,7 @@
 - name: Apply Resources
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/elastic-cloud/
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/elastic-system/
   community.kubernetes.k8s:
     kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
