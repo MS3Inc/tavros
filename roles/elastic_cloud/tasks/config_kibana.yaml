@@ -1,0 +1,31 @@
+---
+- name: Copy kibana-objects.ndjson to /tmp
+  copy:
+    src: kibana-objects.ndjson
+    dest: /tmp/kibana-objects.ndjson
+
+- name: Import Kibana Objects
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    curl --insecure --fail -X POST https://kibana.{{ cluster_fqdn }}/api/saved_objects/_import?createNewCopies=true \
+     -u elastic:{{ elastic_cloud.elastic_secret }} \
+     -H kbn-xsrf:true \
+     --form file=@/tmp/kibana-objects.ndjson
+
+  # Leaving this here in case we can figure how to do the import this way to forego the file copy
+  # Elastic complains about the file being a String and not a Stream
+  # uri:
+  #   url: https://kibana.{{ cluster_fqdn }}/api/saved_objects/_import
+  #   method: POST
+  #   force_basic_auth: true
+  #   follow_redirects: all
+  #   body_format: form-multipart
+  #   url_username: elastic
+  #   url_password: "{{ elastic_cloud.elastic_secret }}"
+  #   headers:
+  #     kbn-xsrf: 'true'
+  #   body:
+  #     file: "{{ lookup('file', 'kibana-objects.ndjson') }}"
+  #   status_code: 200
+  #   validate_certs: False
