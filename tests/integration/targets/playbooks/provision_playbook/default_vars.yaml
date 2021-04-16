@@ -43,12 +43,12 @@ all:
         mtls:
           enabled: true
         traffictrace:
-            enabled: true
+          enabled: true
       - name: 'prod'
         mtls:
           enabled: true
         traffictrace:
-            enabled: true
+          enabled: true
     namespaces:
     - name: 'dev'
       kuma_mesh_name: 'sandbox'
@@ -87,7 +87,6 @@ all:
       ee:
         enabled: false
       enabled: true
-      elastic_secret: placeholder9
     jaeger:
       enabled: true
       keycloak:

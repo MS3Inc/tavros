@@ -119,11 +119,11 @@
     namespace: elastic-system
   register: elastic_secret
 
-- name: Set elastic_cloud.elastic_secret Variable
+- name: Set elastic_cloud.generated.elastic_password Variable
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   set_fact:
-    elastic_cloud: "{{ elastic_cloud | combine({'elastic_secret': elastic_pass}, recursive=true) }}"
+    elastic_cloud: "{{ elastic_cloud | combine({ 'generated': {'elastic_password': elastic_pass} }, recursive=true) }}"
   vars:
     elastic_pass: "{{ elastic_secret.resources[0].data.elastic | b64decode }}"
 
@@ -136,7 +136,7 @@
     pod: "tavros-es-default-0"
     command: |
       curl --insecure -X PUT https://localhost:9200/_security/role_mapping/admin?pretty \
-        --user elastic:{{ elastic_cloud.elastic_secret }} -H 'Content-Type: application/json' \
+        --user elastic:{{ elastic_cloud.generated.elastic_password }} -H 'Content-Type: application/json' \
         -d '{ "roles": [ "superuser" ], "enabled": true, "rules": { "field": { "groups": "admin" }}}'
   register: elk_results
 

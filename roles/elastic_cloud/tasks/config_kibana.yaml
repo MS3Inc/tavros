@@ -9,7 +9,7 @@
   when: ('dry-run' not in ansible_run_tags)
   shell: |
     curl --insecure --fail -X POST https://kibana.{{ cluster_fqdn }}/api/saved_objects/_import?createNewCopies=true \
-     -u elastic:{{ elastic_cloud.elastic_secret }} \
+     -u elastic:{{ elastic_cloud.generated.elastic_password }} \
      -H kbn-xsrf:true \
      --form file=@/tmp/kibana-objects.ndjson
 
@@ -22,7 +22,7 @@
   #   follow_redirects: all
   #   body_format: form-multipart
   #   url_username: elastic
-  #   url_password: "{{ elastic_cloud.elastic_secret }}"
+  #   url_password: "{{ elastic_cloud.generated.elastic_password }}"
   #   headers:
   #     kbn-xsrf: 'true'
   #   body:
