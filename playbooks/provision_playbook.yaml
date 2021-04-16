@@ -7,6 +7,7 @@
 
   - include_role:
       name: ms3_inc.tavros.kops
+    when: kops.enabled
     vars:
       cluster_state: present
     tags: [ kops ]
@@ -79,7 +80,7 @@
       - name: Jaeger
         include_role:
           name: ms3_inc.tavros.jaeger
-        when: jaeger.enabled and keycloak.enabled and not elastic_cloud.ee.enabled
+        when: jaeger.enabled and not elastic_cloud.ee.enabled
         tags: [ jaeger ]
 
       - name: Gitea
@@ -102,7 +103,27 @@
 
     always:
       - copy:
-          content: "{{ { 'all': { 'vars': { 'flux': flux, 'cluster_fqdn': cluster_fqdn, 'cluster_admin_email': cluster_admin_email, 'kubernetes_cluster': kubernetes_cluster, 'kong': kong, 'kuma': kuma, 'namespaces': namespaces, 'keycloak': keycloak, 'nexus': nexus, 'postgresql': postgresql, 'elastic_cloud': elastic_cloud, 'cert_manager': cert_manager, 'gitea': gitea, 'jaeger': jaeger, 'jenkins': jenkins }}} | to_nice_yaml(indent=2) }}"
+          content: >
+                     {{
+                      { 'all': { 'vars': {
+                        'kops': kops,
+                        'flux': flux,
+                        'cluster_fqdn': cluster_fqdn,
+                        'cluster_admin_email': cluster_admin_email,
+                        'kubernetes_cluster': kubernetes_cluster,
+                        'kong': kong,
+                        'kuma': kuma,
+                        'namespaces': namespaces,
+                        'keycloak': keycloak,
+                        'nexus': nexus,
+                        'postgresql': postgresql,
+                        'elastic_cloud': elastic_cloud,
+                        'cert_manager': cert_manager,
+                        'gitea': gitea,
+                        'jaeger': jaeger,
+                        'jenkins': jenkins }}
+                      } | to_nice_yaml(indent=2)
+                     }}
           dest: /tmp/{{ cluster_fqdn }}_vars.yaml
       - include_role:
           name: ms3_inc.tavros.kops
