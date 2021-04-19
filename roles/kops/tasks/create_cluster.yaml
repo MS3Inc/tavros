@@ -32,12 +32,12 @@
 
     kops create cluster {{ cluster_fqdn }} \
       --cloud={{ kubernetes_cluster.cloud_provider }} \
-      --master-count={{ kubernetes_cluster.master_count }} \
-      --master-size={{ kubernetes_cluster.master_instance_type }} \
-      --master-zones={{ kubernetes_cluster.master_azs }} \
-      --node-count={{ kubernetes_cluster.worker_count }} \
-      --node-size={{ kubernetes_cluster.worker_instance_type }} \
-      --zones={{ kubernetes_cluster.worker_azs }} \
+      --master-count={{ kops.master_count }} \
+      --master-size={{ kops.master_size }} \
+      --master-zones={{ kops.master_zones }} \
+      --node-count={{ kops.node_count }} \
+      --node-size={{ kops.node_size }} \
+      --zones={{ kops.node_zones }} \
       --container-runtime docker \
       --topology private \
       --networking weave \

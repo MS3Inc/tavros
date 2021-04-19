@@ -1,38 +1,45 @@
 ---
 type: object
 properties:
-  cluster_name:
-    type: string
-  cluster_domain:
+  cluster_fqdn:
     type: string
   cluster_admin_email:
     type: string
   kubernetes_cluster:
     type: object
     properties:
-      cloud:
+      cloud_provider:
         type: string
+      dns_zone:
+        type: string
+  kops:
+    type: object
+    properties:
+      enabled:
+        type: boolean
       master_count:
         type: integer
       master_size:
+        type: string
+      master_zones:
         type: string
       node_count:
         type: integer
       node_size:
         type: string
-      zones:
+      node_zones:
         type: string
       state_bucket:
         type: string
-      ssh_public_key_path:
+      state_bucket_region:
         type: string
-      aws_access_key_id:
-        type: string
-      aws_secret_access_key:
-        type: string
+    required:
+    - enabled
   kong:
     type: object
     properties:
+      enabled:
+        type: boolean
       default_ingress_class:
         type: string
       ee_creds:
@@ -62,6 +69,11 @@ properties:
               type: string
             kuma_mesh_name:
               type: string
+            pg:
+              type: object
+              properties:
+                password:
+                  type: string
             ee:
               type: object
               properties:
@@ -69,23 +81,18 @@ properties:
                   type: boolean
                 creds:
                   type: string
-                admin_password:
-                  type: string
-                keycloak:
-                  type: object
-                  properties:
-                    realm:
-                      type: string
-                    client_secret:
-                      type: string
-            pg:
-              type: object
-              properties:
-                password:
-                  type: string
+              required:
+              - enabled
+          required:
+          - name
+          - ingress_class
+    required:
+    - enabled
   kuma:
     type: object
     properties:
+      enabled:
+        type: boolean
       meshes:
         type: array
         items:
@@ -98,11 +105,19 @@ properties:
               properties:
                 enabled:
                   type: boolean
+              required:
+              - enabled
             traffictrace:
               type: object
               properties:
                 enabled:
                   type: boolean
+              required:
+              - enabled
+          required:
+          - name
+    required:
+    - enabled
   namespaces:
     type: array
     items:
@@ -112,6 +127,8 @@ properties:
           type: string
         kuma_mesh_name:
           type: string
+      required:
+      - name
   keycloak:
     type: object
     properties:
@@ -131,6 +148,10 @@ properties:
               type: string
             admin_password:
               type: string
+          required:
+          - name
+    required:
+    - enabled
   postgresql:
     type: object
     properties:
@@ -143,11 +164,20 @@ properties:
     properties:
       enabled:
         type: boolean
+    required:
+    - enabled
   gitea:
     type: object
     properties:
       enabled:
         type: boolean
+      admin_password:
+        type: string
+      pg:
+        type: object
+        properties:
+          password:
+            type: string
       keycloak:
         type: object
         properties:
@@ -155,6 +185,10 @@ properties:
             type: string
           client_secret:
             type: string
+        required:
+        - realm
+    required:
+    - enabled
   nexus:
     type: object
     properties:
@@ -167,13 +201,15 @@ properties:
             type: string
           client_secret:
             type: string
+        required:
+        - realm
+    required:
+    - enabled
   elastic_cloud:
     type: object
     properties:
       enabled:
         type: boolean
-      elastic_secret:
-        type: string
       ee:
         type: object
         properties:
@@ -188,8 +224,14 @@ properties:
                 type: string
               client_secret:
                 type: string
-          licnese:
+            required:
+            - realm
+          license:
             type: string
+        required:
+        - enabled
+    required:
+    - enabled
   jaeger:
     type: object
     properties:
@@ -202,6 +244,15 @@ properties:
             type: string
           client_secret:
             type: string
+        required:
+        - realm
+      es:
+        type: object
+        properties:
+          password:
+            type: string
+    required:
+    - enabled
   jenkins:
     type: object
     properties:
@@ -212,3 +263,25 @@ properties:
         properties:
           realm:
             type: string
+          password:
+            type: string
+        required:
+        - realm
+      gitea:
+        type: object
+        properties:
+          password:
+            type: string
+    required:
+    - enabled
+  flux:
+    type: object
+    properties:
+      gitea:
+        type: object
+        properties:
+          password:
+            type: string
+required:
+- cluster_fqdn
+- cluster_admin_email

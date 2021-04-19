@@ -7,18 +7,19 @@ all:
     cluster_admin_email: ''
     kubernetes_cluster:
       cloud_provider: 'aws'
-      master_count: 3
-      master_instance_type: 't2.large'
-      master_azs: 'us-east-1a,us-east-1b'
-      worker_count: 2
-      worker_instance_type: 't2.xlarge'
-      worker_azs: 'us-east-1a,us-east-1b'
       dns_zone: "{{ cluster_fqdn }}"
     kops:
       enabled: true
+      master_count: 3
+      master_size: 't2.large'
+      master_zones: 'us-east-1a,us-east-1b'
+      node_count: 2
+      node_size: 't2.xlarge'
+      node_zones: 'us-east-1a,us-east-1b'
       state_bucket: "{{ cluster_fqdn }}-tavros"
       state_bucket_region: "us-east-1"
     kong:
+      enabled: true
       default_ingress_class: 'prod'
       ee_creds: []
       instances:
