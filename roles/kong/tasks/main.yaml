@@ -1,8 +1,48 @@
 ---
-- include_tasks: create_kong.yaml
-  tags: [ requires_cluster ]
-  when: cluster_state == 'present'
+- name: Create Directories
+  file:
+    path: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}
+    state: directory
+  loop: "{{ kong.instances }}"
 
-- include_tasks: delete_kong.yaml
+- include_tasks: generate-variables.yaml
+
+- name: Template Files
+  template:
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.dest | default(item.name) }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: base-kustomization
+      dest: kustomization
+
+- name: Copy Files
+  copy:
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.dest | default(item.name) }}
+  when: item.condition | default(true)
+  loop:
+    - name: ns.yaml
+    - name: helmrepo.yaml
+
+- include_tasks: process-instances.yaml
+  when: kong.instances
+
+- include_tasks: process-ee-creds.yaml
+  when: kong.ee_creds
+
+- name: Apply Resources
   tags: [ requires_cluster ]
-  when: cluster_state == 'absent'
+  when: ('dry-run' not in ansible_run_tags)
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/kong/', reorder='none') }}"
+  community.kubernetes.k8s:
+    kubeconfig: '~/.kube/config'
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
+
+- name: Template flux-kustomization
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/kong.yaml
