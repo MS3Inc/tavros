@@ -32,7 +32,9 @@
   # difference(...) is added here because flux generates an extraneous yaml document marker at the end
   # see: https://curtisshoward.com/post/multi-document-yaml-files-and-the-ansible-k8s-module/
   loop: "{{ lookup('file', '/tmp/' + cluster_fqdn + '/platform/flux-system/gotk-components.yaml') | from_yaml_all | list | difference([None]) }}"
-  community.kubernetes.k8s:
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
     kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
@@ -42,7 +44,9 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   loop: "{{ lookup('file', '/tmp/' + cluster_fqdn + '/platform/flux-system/helmrepos.yaml') | from_yaml_all | list | difference([None]) }}"
-  community.kubernetes.k8s:
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
     kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
@@ -51,7 +55,7 @@
 - name: Apply Slack Alert Resource
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags) and (flux.alerts.slack.address is defined)
-  community.kubernetes.k8s:
+  ms3_inc.tavros.kube:
     kubeconfig: '~/.kube/config'
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/flux-system/slack-alert.yaml

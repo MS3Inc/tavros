@@ -69,7 +69,9 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/jaeger/
-  community.kubernetes.k8s:
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
     kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
@@ -120,7 +122,7 @@
 - name: Apply Updated Keycloak Realm Admin User Resource
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s:
+  ms3_inc.tavros.kube:
     kubeconfig: '~/.kube/config'
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ jaeger.keycloak.realm }}/keycloakuser-admin.yaml

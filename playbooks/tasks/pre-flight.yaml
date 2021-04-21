@@ -13,6 +13,10 @@
         type: Ready
         status: true
         reason: ReconciliationSucceeded
+      CustomResourceDefinition:
+        type: Established
+        status: true
+        reason: InitialNamesAccepted
 
 - name: Configure Git User
   shell: |

@@ -15,7 +15,7 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   loop: "{{ namespaces }}"
-  community.kubernetes.k8s:
+  ms3_inc.tavros.kube:
     kubeconfig: '~/.kube/config'
     state: present
     src: /tmp/{{ cluster_fqdn }}/{{ item.name }}/ns.yaml

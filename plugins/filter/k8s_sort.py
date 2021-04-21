@@ -1,7 +1,9 @@
 # https://docs.ansible.com/ansible/latest/dev_guide/developing_plugins.html#filter-plugins
 # https://github.com/kubernetes-sigs/kustomize/blob/kustomize/v3.9.4/api/resid/gvk.go#L116
 from __future__ import (absolute_import, division, print_function)
+
 __metaclass__ = type
+
 
 class FilterModule(object):
     def filters(self):
@@ -57,8 +59,8 @@ class FilterModule(object):
 
         orderLast = [
             # Other
-        	"MutatingWebhookConfiguration",
-        	"ValidatingWebhookConfiguration"
+            "MutatingWebhookConfiguration",
+            "ValidatingWebhookConfiguration"
         ]
 
         order = {}
@@ -69,4 +71,4 @@ class FilterModule(object):
         for index, res in enumerate(orderLast):
             order[res] = index + 1
 
-        return sorted(resources, key = lambda res: order.get(res["kind"], 0))
+        return sorted(resources, key=lambda obj: order.get(obj["kind"], 0))

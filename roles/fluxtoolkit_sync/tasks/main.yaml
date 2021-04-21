@@ -117,7 +117,7 @@
 - name: Apply Resources
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s:
+  ms3_inc.tavros.kube:
     kubeconfig: '~/.kube/config'
     src: "{{ item }}"
     wait: true

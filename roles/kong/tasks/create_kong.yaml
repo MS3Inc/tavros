@@ -35,12 +35,31 @@
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/kong/', reorder='none') }}"
-  community.kubernetes.k8s:
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
     kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 900
+
+- name: Wait for LoadBalancer IPs
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_info:
+    kubeconfig: '~/.kube/config'
+    kind: Service
+    name: "{{ instance_kong_proxy }}"
+    namespace: kong
+  register: _proxy_services
+  until: (_proxy_services.resources) and ('status' in _proxy_services.resources[0]) and ('ip' in _proxy_services.resources[0].status.loadBalancer.ingress[0] or 'hostname' in _proxy_services.resources[0].status.loadBalancer.ingress[0])
+  retries: 30
+  delay: 30
+  changed_when: false
+  vars:
+    instance_kong_proxy: "kong-tavros-{{ item.name }}-kong-proxy"
+  loop: "{{ kong.instances }}"
 
 - name: Set DNS for Tavros Apps
   tags: [ requires_cluster ]

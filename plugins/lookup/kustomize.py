@@ -26,7 +26,6 @@ import yaml
 
 display = Display()
 
-
 class LookupModule(LookupBase):
 
     def run(self, terms, variables=None, **kwargs):
@@ -36,25 +35,19 @@ class LookupModule(LookupBase):
         for term in terms:
             display.debug("Kustomize lookup term: %s" % term)
             args = ['kustomize', 'build']
+            #-enable_kyaml=false --allow_id_changes=false --load_restrictor=LoadRestrictionsNone
 
             if self.reorder is not None:
                 args.extend(['--reorder', self.reorder])
 
             args.append(term)
 
-            # https://docs.python.org/3/library/subprocess.html#subprocess.run
-            # https://github.com/painless-software/kustomize-wrapper/blob/master/kustomize/helpers/binaries.py
             try:
-                result = run(args,
-                         check=True,
-                         input=None,
-                         stderr=PIPE,
-                         stdout=PIPE,
-                         universal_newlines=True)
+                result = run(args, check=True, stderr=PIPE, stdout=PIPE)
+                resources = yaml.safe_load_all(result.stdout)
+                ret.extend(resources)
 
-                manifests = yaml.load_all(result.stdout)
-                ret.extend(manifests)
             except CalledProcessError as err:
-                raise AnsibleError(err.stderr)
+                raise AnsibleError('error running kustomize (%s) command: %s' % (' '.join(args), err.stderr))
 
         return ret
