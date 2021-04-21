@@ -53,6 +53,13 @@
           cluster_state: present
         tags: [ kong ]
 
+      - name: Kong DNS
+        include_role:
+          name: ms3_inc.tavros.kong_dns
+        vars:
+          cluster_state: present
+        tags: [ kong_dns ]
+
       - name: Keycloak
         include_role:
           name: ms3_inc.tavros.keycloak
