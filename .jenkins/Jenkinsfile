@@ -33,7 +33,7 @@ pipeline {
               sh '''
                 for i in $(set | grep "KUBERNETES" | cut -f1 -d=); do unset $i; done
                 env
-                ansible-playbook playbooks/provision_playbook.yaml --inventory playbooks/provision_playbook/default_vars.yaml --tags all,test-run -vvv
+                ansible-playbook playbooks/provision_playbook.yaml --inventory playbooks/provision_playbook/default_vars.yaml --tags all,test-run
               '''
             }
           }
