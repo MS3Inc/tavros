@@ -93,7 +93,7 @@
 - name: Wait for Jenkins
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s_info:
+  ms3_inc.tavros.kube_info:
     kubeconfig: '~/.kube/config'
     kind: Pod
     name: jenkins-tavros

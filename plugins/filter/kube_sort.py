@@ -7,9 +7,9 @@ __metaclass__ = type
 
 class FilterModule(object):
     def filters(self):
-        return {'k8s_sort': self.k8s_sort}
+        return {'kube_sort': self.kube_sort}
 
-    def k8s_sort(self, resources):
+    def kube_sort(self, resources):
         orderFirst = [
             "Namespace",
             "CustomResourceDefinition",

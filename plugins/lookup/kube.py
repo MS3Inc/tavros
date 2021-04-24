@@ -34,18 +34,6 @@ DOCUMENTATION = """
       field_selector:
         description:
         - Specific fields on which to query. Ignored when I(resource_name) is provided.
-      resource_definition:
-        description:
-        - "Provide a YAML configuration for an object. NOTE: I(kind), I(api_version), I(resource_name),
-          and I(namespace) will be overwritten by corresponding values found in the provided I(resource_definition)."
-      src:
-        description:
-        - "Provide a path to a file containing a valid YAML definition of an object dated. Mutually
-          exclusive with I(resource_definition). NOTE: I(kind), I(api_version), I(resource_name), and I(namespace)
-          will be overwritten by corresponding values found in the configuration read in from the I(src) file."
-        - Reads from the local file system. To read from the Ansible controller's file system, use the file lookup
-          plugin or template lookup plugin, combined with the from_yaml filter, and pass the result to
-          I(resource_definition). See Examples below.
       host:
         description:
         - Provide a URL for accessing the API. Can also be specified via K8S_AUTH_HOST environment variable.
@@ -66,52 +54,36 @@ import yaml
 display = Display()
 
 class KubeLookup(KubeBase):
-    def __init__(self):
-        self.kind = None
-        self.name = None
-        self.namespace = None
-        self.api_version = None
-        self.label_selector = None
-        self.field_selector = None
-        self.resource_definition = None
-
     def _fail(self, msg=None, **kwargs):
         raise AnsibleError(msg)
 
     def run(self, terms, variables=None, **kwargs):
         self._set_base_params(kwargs)
 
-        self.kind = kwargs.get('kind')
-        self.name = kwargs.get('resource_name')
-        self.namespace = kwargs.get('namespace')
-        self.api_version = kwargs.get('api_version', 'v1')
-        self.label_selector = kwargs.get('label_selector')
-        self.field_selector = kwargs.get('field_selector')
+        kind = kwargs.get('kind')
+        name = kwargs.get('resource_name')
+        namespace = kwargs.get('namespace')
+        api_version = kwargs.get('api_version', 'v1')
+        label_selector = kwargs.get('label_selector')
+        field_selector = kwargs.get('field_selector')
 
-        resource_definition = kwargs.get('resource_definition')
-        src = kwargs.get('src')
-        if src:
-            resource_definition = self.load_resource_definitions(src)[0]
-        if resource_definition:
-            self.kind = resource_definition.get('kind', self.kind)
-            self.api_version = resource_definition.get('apiVersion', self.api_version)
-            self.name = resource_definition.get('metadata', {}).get('name', self.name)
-            self.namespace = resource_definition.get('metadata', {}).get('namespace', self.namespace)
-
-        if not self.kind:
+        if not kind:
             raise AnsibleError(
                 "Error: no Kind specified. Use the 'kind' parameter, or provide an object YAML configuration "
                 "using the 'resource_definition' parameter."
             )
 
-        k8s_obj = self._get_resource(self.kind,
-                        name=self.name,
-                        api_version=self.api_version,
-                        namespace=self.namespace,
-                        label_selector=self.label_selector,
-                        field_selector=self.field_selector)
+        k8s_obj = self._get_resource(kind,
+                        name=name,
+                        api_version=api_version,
+                        namespace=namespace,
+                        label_selector=label_selector,
+                        field_selector=field_selector)
 
-        if self.name:
+        if k8s_obj is None:
+            return None
+
+        if name:
             return [k8s_obj]
 
         return k8s_obj.get('items')

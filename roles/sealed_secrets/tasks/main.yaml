@@ -15,7 +15,7 @@
 - name: Apply Resources
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/sealed-secrets/', reorder='none') | ms3_inc.tavros.k8s_sort }}"
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/sealed-secrets/', reorder='none') | ms3_inc.tavros.kube_sort }}"
   loop_control:
     label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
   ms3_inc.tavros.kube:

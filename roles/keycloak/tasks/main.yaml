@@ -77,7 +77,7 @@
 - name: Wait for Keycloak Operator
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s_info:
+  ms3_inc.tavros.kube_info:
     kubeconfig: '~/.kube/config'
     api_version: apps/v1
     kind: Deployment
@@ -105,7 +105,7 @@
 - name: Wait for Keycloak
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s_info:
+  ms3_inc.tavros.kube_info:
     kubeconfig: '~/.kube/config'
     api_version: keycloak.org/v1alpha1
     kind: Keycloak

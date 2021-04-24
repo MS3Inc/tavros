@@ -96,11 +96,9 @@ EXAMPLES = """
 import os
 import yaml
 
-from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible.module_utils.six import iteritems, string_types
-from ansible.module_utils._text import to_native, to_bytes, to_text
-from ansible.module_utils.common.dict_transformations import dict_merge
-from ansible.module_utils.parsing.convert_bool import boolean
+from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.six import  string_types
+
 from ansible_collections.ms3_inc.tavros.plugins.module_utils.kube_common import KubeBase
 
 class KubeManager(KubeBase):
@@ -149,7 +147,7 @@ class KubeManager(KubeBase):
 
         wait_sleep = self.module.params.get('wait_sleep')
         wait_timeout = self.module.params.get('wait_timeout')
-        wait_condition = None
+        wait_condition = self.module.params.get('wait_condition')
 
         for definition in self.resource_definitions:
             if definition is None:
@@ -160,7 +158,7 @@ class KubeManager(KubeBase):
             if self.wait:
                 success, res, duration = self._wait(definition, wait_sleep, wait_timeout, condition=wait_condition)
                 if not success:
-                    self.module.fail_json(fail_json(msg="Resource apply timed out"))
+                    self.module.fail_json(msg="Resource apply timed out")
 
             results.extend(result)
 

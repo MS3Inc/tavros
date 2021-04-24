@@ -34,7 +34,6 @@ class KubeBase(object):
         self.module.fail_json(msg=msg, **kwargs)
 
     def _get_resource(self, kind, name=None, api_version=None, namespace=None, label_selector=[], field_selector=[]):
-        # TODO: assert params
         cmd = ['get', kind]
 
         if name:
@@ -78,7 +77,6 @@ class KubeBase(object):
             # Scaling up means that we also need to check that we're not in a
             # situation where status.replicas == status.availableReplicas
             # but spec.replicas != status.replicas
-            # raise Exception(deployment.get('status'))
             return (deployment.status
                     and deployment.spec.replicas == (deployment.status.replicas or 0)
                     and deployment.status.availableReplicas == deployment.status.replicas
@@ -87,7 +85,7 @@ class KubeBase(object):
 
         def _pod_ready(pod):
             return (pod.status and pod.status.containerStatuses is not None
-                    and all([container.ready for container in pod.status.containerStatuses]))
+                    and all([container.get('ready') for container in pod.status.containerStatuses]))
 
         def _daemonset_ready(daemonset):
             return (daemonset.status and daemonset.status.desiredNumberScheduled is not None
@@ -103,10 +101,10 @@ class KubeBase(object):
                 return True
 
             return (service.status.loadBalancer.ingress
-                and True in (ing.get('hostname') is not None or ing.get('ip') is not None for ing in service.status.loadBalancer.ingress))
+                and all(ing.get('hostname') is not None or ing.get('ip') is not None for ing in service.status.loadBalancer.ingress))
 
         def _custom_condition(resource):
-            if not resource.status or not resource.status.conditions:
+            if not resource.status or not resource.status.conditions or not all(x.type for x in resource.status.conditions):
                 return False
             match = [x for x in resource.status.conditions if x.type == condition['type']]
             if not match:

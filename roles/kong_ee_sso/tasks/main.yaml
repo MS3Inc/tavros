@@ -30,7 +30,7 @@
 - name: Wait for Keycloak
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s_info:
+  ms3_inc.tavros.kube_info:
     kubeconfig: '~/.kube/config'
     api_version: keycloak.org/v1alpha1
     kind: Keycloak
@@ -52,7 +52,7 @@
     validate_certs: false
     auth_realm: master
     auth_username: admin
-    auth_password: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
+    auth_password: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
     realm: "{{ item.ee.keycloak.realm }}"
     clientId: "{{ item.name }}"
     roles:

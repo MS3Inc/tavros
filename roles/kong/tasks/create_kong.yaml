@@ -47,13 +47,12 @@
 - name: Wait for LoadBalancer IPs
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s_info:
+  ms3_inc.tavros.kube_info:
     kubeconfig: '~/.kube/config'
     kind: Service
     name: "{{ instance_kong_proxy }}"
     namespace: kong
-  register: _proxy_services
-  until: (_proxy_services.resources) and ('status' in _proxy_services.resources[0]) and ('ip' in _proxy_services.resources[0].status.loadBalancer.ingress[0] or 'hostname' in _proxy_services.resources[0].status.loadBalancer.ingress[0])
+    wait: true
   retries: 30
   delay: 30
   changed_when: false
@@ -69,7 +68,7 @@
     zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ cluster_fqdn }}"
-    value: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    value: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
@@ -84,7 +83,7 @@
     zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ item.name }}.{{ cluster_fqdn }}"
-    value: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    value: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
@@ -100,7 +99,7 @@
     zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ item.ingress_class }}.{{ cluster_fqdn }}"
-    value: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    value: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
