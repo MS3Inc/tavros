@@ -104,13 +104,13 @@ class KubeBase(object):
                 and all(ing.get('hostname') is not None or ing.get('ip') is not None for ing in service.status.loadBalancer.ingress))
 
         def _custom_condition(resource):
-            if not resource.status or not resource.status.conditions or not all(x.type for x in resource.status.conditions):
+            if not resource.status or not resource.status.conditions or not all('type' in x for x in resource.status.conditions):
                 return False
-            match = [x for x in resource.status.conditions if x.type == condition['type']]
+            match = [x for x in resource.status.conditions if x.get('type') == condition['type']]
             if not match:
                 return False
             # There should never be more than one condition of a specific type
-            match = match[0]
+            match = attr_dict(match[0])
             if match.status == 'Unknown':
                 if match.status == condition['status']:
                     if 'reason' not in condition:
