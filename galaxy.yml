@@ -7,10 +7,10 @@ authors:
 - Jose Montoya <jmontoya@ms3-inc.com>
 description: A collection to provision MS3's Tavros Platform
 dependencies:
-  amazon.aws: '~=1.4'
-  community.aws: '~=1.4'
-  community.kubernetes: '~=1.2'
-  community.general: '~=2.5'
+  amazon.aws: '==1.4.0'
+  community.aws: '==1.4.0'
+  community.kubernetes: '==1.2.0'
+  community.general: '==2.5.1'
 repository: https://github.com/MS3Inc/tavros
 documentation: https://github.com/MS3Inc/tavros
 homepage: https://github.com/MS3Inc/tavros
