@@ -105,26 +105,27 @@
       - copy:
           content: >
                      {{
-                      { 'all': { 'vars': {
-                        'kops': kops,
-                        'flux': flux,
-                        'cluster_fqdn': cluster_fqdn,
-                        'cluster_admin_email': cluster_admin_email,
-                        'kubernetes_cluster': kubernetes_cluster,
-                        'kong': kong,
-                        'kuma': kuma,
-                        'namespaces': namespaces,
-                        'keycloak': keycloak,
-                        'nexus': nexus,
-                        'postgresql': postgresql,
-                        'elastic_cloud': elastic_cloud,
-                        'cert_manager': cert_manager,
-                        'gitea': gitea,
-                        'jaeger': jaeger,
-                        'jenkins': jenkins }}
-                      } | to_nice_yaml(indent=2)
+                      { 'all': { 'vars': vars | dict2items | selectattr("key", "in", components) | list | items2dict } } | to_nice_yaml(indent=2)
                      }}
           dest: /tmp/{{ cluster_fqdn }}_vars.yaml
+        vars:
+          components:
+          - 'kops'
+          - 'flux'
+          - 'cluster_fqdn'
+          - 'cluster_admin_email'
+          - 'kubernetes_cluster'
+          - 'kong'
+          - 'kuma'
+          - 'namespaces'
+          - 'keycloak'
+          - 'nexus'
+          - 'postgresql'
+          - 'elastic_cloud'
+          - 'cert_manager'
+          - 'gitea'
+          - 'jaeger'
+          - 'jenkins'
       - include_role:
           name: ms3_inc.tavros.kops
           tasks_from: tavros_config_backup
