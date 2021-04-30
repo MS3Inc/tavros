@@ -34,8 +34,8 @@ class LookupModule(LookupBase):
 
         for term in terms:
             display.debug("Kustomize lookup term: %s" % term)
-            args = ['kustomize', 'build']
-            #-enable_kyaml=false --allow_id_changes=false --load_restrictor=LoadRestrictionsNone
+            # See: https://github.com/fluxcd/flux2/discussions/1304#discussioncomment-638319
+            args = ['kustomize', '--enable_kyaml=false', '--allow_id_changes=false', '--load_restrictor=LoadRestrictionsNone', 'build']
 
             if self.reorder is not None:
                 args.extend(['--reorder', self.reorder])
