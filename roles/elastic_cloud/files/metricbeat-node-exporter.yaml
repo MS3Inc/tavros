@@ -11,6 +11,10 @@ spec:
   kibanaRef:
     name: tavros
   config:
+    setup.template.enabled: false
+    setup.ilm.enabled: false
+    output.elasticsearch:
+      index: "metrics-%{[data_stream.dataset]}-%{[data_stream.namespace]}"
     metricbeat:
       autodiscover:
         providers:
@@ -75,9 +79,22 @@ spec:
         period: 30s
     processors:
     - add_fields:
-        target: kubernetes
+        target: data_stream
         fields:
-          name: tavros
+          type: metrics
+          dataset: generic
+          namespace: default
+    - script:
+        lang: javascript
+        id: dataset_override
+        source: >
+          function process(event) {
+            var ns = event.Get("kubernetes.namespace");
+            if (ns != null) event.Put("data_stream.namespace", "k8s." + ns);
+            var mod = event.Get("event.module");
+            var ms = event.Get("metricset.name");
+            if (mod != null && ms != null) event.Put("data_stream.dataset", mod + "." + ms);
+          }
     - add_cloud_metadata: {}
     - add_host_metadata: {}
     - add_kubernetes_metadata: {}

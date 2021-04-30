@@ -1,3 +1,8 @@
+# See: https://github.com/elastic/cloud-on-k8s/blob/1.5.0/config/recipes/beats/filebeat_autodiscover.yaml
+# https://www.elastic.co/blog/how-to-manage-elasticsearch-data-multiple-indices-filebeat-ilm-data-streams
+# https://www.elastic.co/guide/en/fleet/master/dynamic-input-configuration.html
+# https://github.com/elastic/logstash/issues/12178
+# https://discuss.elastic.co/t/filebeat-logs-unauthorized-when-addressing-old-namespaces/243220/3
 apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
 metadata:
@@ -11,6 +16,10 @@ spec:
   kibanaRef:
     name: tavros
   config:
+    setup.template.enabled: false
+    setup.ilm.enabled: false
+    output.elasticsearch:
+      index: "logs-%{[data_stream.dataset]}-%{[data_stream.namespace]}"
     filebeat:
       autodiscover:
         providers:
@@ -24,9 +33,23 @@ spec:
               - /var/log/containers/*${data.kubernetes.container.id}.log
     processors:
     - add_fields:
-        target: event
+        target: data_stream
         fields:
-          dataset: tavros
+          type: logs
+          dataset: generic
+          namespace: default
+    - script:
+        lang: javascript
+        id: dataset_override
+        source: >
+          function process(event) {
+            var ns = event.Get("kubernetes.namespace");
+            if (ns != null) event.Put("data_stream.namespace", "k8s." + ns);
+
+            var ds = event.Get("event.dataset");
+            if (ds != null) event.Put("data_stream.dataset", ds);
+            else event.Put("event.dataset", "generic");
+          }
     - add_cloud_metadata: {}
     - add_host_metadata: {}
   daemonSet:
