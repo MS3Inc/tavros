@@ -12,6 +12,7 @@ rules:
   - namespaces
   - events
   - pods
+  - services
   verbs:
   - get
   - list
@@ -63,29 +64,3 @@ roleRef:
   kind: ClusterRole
   name: metricbeat
   apiGroup: rbac.authorization.k8s.io
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: kube-controller-manager
-  namespace: kube-system
-spec:
-  selector:
-    k8s-app: kube-controller-manager
-  ports:
-    - protocol: TCP
-      port: 10252
-      targetPort: 10252
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: kube-scheduler
-  namespace: kube-system
-spec:
-  selector:
-    k8s-app: kube-scheduler
-  ports:
-    - protocol: TCP
-      port: 10251
-      targetPort: 10251

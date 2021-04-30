@@ -1,3 +1,4 @@
+---
 apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
 metadata:
@@ -21,8 +22,8 @@ spec:
             enabled: "true"
       modules:
       - module: kubernetes
-        hosts: ["kube-state-metrics.kube-system.svc.cluster.local:8080"]
-        period: 30s
+        hosts: ["kube-state-metrics.kube-system:8080"]
+        period: 10s
         add_metadata: true
         metricsets:
         - state_node
@@ -52,14 +53,14 @@ spec:
         enabled: true
         metricsets:
         - controllermanager
-        hosts: ["kube-controller-manager.kube-system.svc.cluster.local:10252"]
-        period: 30s
+        hosts: ["kube-controller-manager.kube-system:10252"]
+        period: 10s
       - module: kubernetes
         enabled: true
         metricsets:
         - scheduler
-        hosts: ["kube-scheduler.kube-system.svc.cluster.local:10251"]
-        period: 30s
+        hosts: ["kube-scheduler.kube-system:10251"]
+        period: 10s
     processors:
     - add_fields:
         target: kubernetes
@@ -107,3 +108,29 @@ spec:
         - hostPath:
             path: /proc
           name: proc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-controller-manager
+  namespace: kube-system
+spec:
+  selector:
+    k8s-app: kube-controller-manager
+  ports:
+    - protocol: TCP
+      port: 10252
+      targetPort: 10252
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-scheduler
+  namespace: kube-system
+spec:
+  selector:
+    k8s-app: kube-scheduler
+  ports:
+    - protocol: TCP
+      port: 10251
+      targetPort: 10251

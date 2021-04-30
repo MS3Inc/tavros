@@ -4,10 +4,10 @@ resources:
   - kube-state-metrics/
   - https://download.elastic.co/downloads/eck/1.5.0/all-in-one.yaml
   - metricbeat-rbac.yaml
+  - filebeat-rbac.yaml
   - default/elasticsearch.yaml
   - default/kibana.yaml
   - default/filebeat.yaml
-  - default/heartbeat.yaml
   - default/metricbeat-node-exporter.yaml
   - default/metricbeat-kube-state-metrics.yaml
   - default/ingress.yaml

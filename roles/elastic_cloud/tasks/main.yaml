@@ -37,6 +37,7 @@
   when: item.condition | default(true)
   loop:
     - name: metricbeat-rbac.yaml
+    - name: filebeat-rbac.yaml
     - name: filebeat.yaml
       dest: default/filebeat.yaml
     - name: heartbeat.yaml
