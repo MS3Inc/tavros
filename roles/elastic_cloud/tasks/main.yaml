@@ -41,6 +41,8 @@
   loop:
     - name: metricbeat-rbac.yaml
     - name: filebeat-rbac.yaml
+    - name: secret-beats-role-override.yaml
+      dest: default/secret-beats-role-override.yaml
     - name: filebeat.yaml
       dest: default/filebeat.yaml
     - name: heartbeat.yaml

@@ -5,6 +5,9 @@ metadata:
   namespace: elastic-system
 spec:
   version: 7.12.0
+  auth:
+    roles:
+    - secretName: tavros-beats-role-override
   nodeSets:
   - name: default
     count: 3
