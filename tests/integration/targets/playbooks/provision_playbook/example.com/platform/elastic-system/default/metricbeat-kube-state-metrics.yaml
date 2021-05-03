@@ -14,6 +14,7 @@ spec:
   config:
     setup.template.enabled: false
     setup.ilm.enabled: false
+    setup.dashboards.enabled: false
     output.elasticsearch:
       index: "metrics-%{[data_stream.dataset]}-%{[data_stream.namespace]}"
     metricbeat:
@@ -23,7 +24,7 @@ spec:
           scope: cluster
           hints:
             default_config: {}
-            enabled: "true"
+            enabled: true
       modules:
       - module: kubernetes
         hosts: ["kube-state-metrics.kube-system:8080"]
