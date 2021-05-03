@@ -16,6 +16,8 @@
       dest: default/secret-pg-creds
     - name: secret-schema-init-script
       dest: default/secret-schema-init-script
+    - name: release
+      dest: default/release
 
 - name: Copy Files
   copy:
@@ -27,8 +29,6 @@
     - name: ns.yaml
     - name: job-schema-init.yaml
       dest: default/job-schema-init.yaml
-    - name: release.yaml
-      dest: default/release.yaml
 
 - name: Seal Secrets
   tags: [ requires_cluster]

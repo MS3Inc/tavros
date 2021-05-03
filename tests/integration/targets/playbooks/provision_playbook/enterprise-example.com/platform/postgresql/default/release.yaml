@@ -22,3 +22,7 @@ spec:
   values:
     postgresqlDatabase: postgres
     existingSecret: tavros-pg-creds
+    primary:
+      podAnnotations:
+        co.elastic.logs.tavros-postgresql/enabled: "true"
+        co.elastic.logs.tavros-postgresql/module: "postgresql"

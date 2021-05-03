@@ -74,12 +74,17 @@ spec:
               name: tavros-{{ item[0].name }}-ee-admin-creds
               key: password
 {% endif  %}
-{%  if item[0].kuma_mesh_name is defined %}
-    podAnnotations:
-      kuma.io/sidecar-injection: enabled
-      kuma.io/gateway: enabled
-      kuma.io/mesh: {{ item[0].kuma_mesh_name }}
+    podAnnotations: {
+{% if item[0].kuma_mesh_name is defined %}
+      kuma.io/sidecar-injection: enabled,
+      kuma.io/gateway: enabled,
+      kuma.io/mesh: {{ item[0].kuma_mesh_name }},
 {% endif  %}
+{% if elastic_cloud.enabled is defined and elastic_cloud.enabled %}
+      co.elastic.logs/enabled: "true",
+      co.elastic.logs/module: nginx,
+{% endif  %}
+    }
     admin:
       enabled: true
       http:

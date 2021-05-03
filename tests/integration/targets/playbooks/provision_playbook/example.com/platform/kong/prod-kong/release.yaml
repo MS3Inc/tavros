@@ -49,10 +49,13 @@ spec:
       env:
       # see https://github.com/Kong/charts/issues/224
         kong_admin_tls_skip_verify: 'true'
-    podAnnotations:
-      kuma.io/sidecar-injection: enabled
-      kuma.io/gateway: enabled
-      kuma.io/mesh: prod
+    podAnnotations: {
+      kuma.io/sidecar-injection: enabled,
+      kuma.io/gateway: enabled,
+      kuma.io/mesh: prod,
+      co.elastic.logs/enabled: "true",
+      co.elastic.logs/module: nginx,
+    }
     admin:
       enabled: true
       http:
