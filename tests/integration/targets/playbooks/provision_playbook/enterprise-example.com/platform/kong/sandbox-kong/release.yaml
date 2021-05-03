@@ -65,6 +65,10 @@ spec:
             secretKeyRef:
               name: tavros-sandbox-kong-ee-admin-creds
               key: password
+    podAnnotations: {
+      co.elastic.logs/enabled: "true",
+      co.elastic.logs/module: nginx,
+    }
     admin:
       enabled: true
       http:

@@ -28,9 +28,7 @@ spec:
           hints:
             enabled: true
             default_config:
-              type: container
-              paths:
-              - /var/log/containers/*${data.kubernetes.container.id}.log
+              enabled: false
     processors:
     - add_fields:
         target: data_stream
