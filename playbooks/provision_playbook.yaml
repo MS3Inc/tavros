@@ -49,9 +49,14 @@
       - name: Kong
         include_role:
           name: ms3_inc.tavros.kong
+        tags: [ kong ]
+
+      - name: Kong DNS
+        include_role:
+          name: ms3_inc.tavros.kong_dns
         vars:
           cluster_state: present
-        tags: [ kong ]
+        tags: [ kong_dns ]
 
       - name: Keycloak
         include_role:

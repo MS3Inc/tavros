@@ -1,0 +1,63 @@
+---
+- name: Get Kong external IP
+  set_fact:
+    kong_external_ip: "{{
+      lookup(
+        'ms3_inc.tavros.kube'
+        kubeconfig='~/.kube/config',
+        kind='Service',
+        namespace='kong',
+        resource_name=prod_kong_proxy
+      ).status.loadBalancer.ingress[0].ip }}"
+  vars:
+    prod_kong_proxy: "kong-tavros-{{
+      (kong.instances |
+        selectattr(
+          'ingress_class', 'equalto',kong.default_ingress_class
+        ) | first
+      ).name }}-kong-proxy"
+  tags: [ kong_dns, route53 requires_cluster ]
+
+- name: Set wildcard record for Tavros apps
+  when: ('dry-run' not in ansible_run_tags)
+  set_fact:
+    kong_dns_records: "{{ kong_dns_records + '*.' + cluster_fqdn + '\t\t\t IN\t A\t ' + kong_external_ip + '\n' }}"
+  vars:
+      kong_dns_records: ""
+  tags: [ kong_dns, requires_cluster ]
+
+- name: Set wildcard for Kong mesh
+  when: ('dry-run' not in ansible_run_tags)
+  set_fact:
+    kong_dns_records: "{{ kong_dns_records + '*.' + item.name  + '.' + cluster_fqdn + '\t\t IN\t A\t ' + kong_external_ip + '\n' }}"
+  vars:
+      kong_dns_records: ""
+  with_items: "{{ kong.instances }}"
+  tags: [ kong_dns, requires_cluster ]
+
+- name: Set wildcard for non prod Kongs by ingress class
+  when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
+  set_fact:
+    kong_dns_records: "{{ kong_dns_records + '*.' + item.name  + '.' + cluster_fqdn + '\t IN\t A\t ' + kong_external_ip + '\n' }}"
+  vars:
+      kong_dns_records: ""
+  with_items: "{{ kong.instances }}"
+  tags: [ kong_dns, requires_cluster ]
+
+- name: Please provision the following records
+  when: ('dry-run' not in ansible_run_tags)
+  debug:
+    msg: "{{ kong_dns_records }}"
+  tags: [ kong_dns, requires_cluster ]
+
+- name: Print the confirmation prompt
+  when: ('dry-run' not in ansible_run_tags)
+  pause:
+    prompt: "{{ item }}"
+  with_items: |
+     :::::::::::::::::::::::::::::::::::::::::::::::::::::
+     :                                                   :
+     :  Press enter when DNS is configured as requested  :
+     :                                                   :
+     ::::::::::::::::::::::::::::::::::::::::::::::::::::
+  tags: [ kong_dns, requires_cluster ]
