@@ -60,7 +60,7 @@
     instance_kong_proxy: "kong-tavros-{{ item.name }}-kong-proxy"
   loop: "{{ kong.instances }}"
 
-- name: Set DNS for Tavros Apps
+- name: Set DNS for Default Ingress Class
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   community.aws.route53:
@@ -91,7 +91,7 @@
     instance_kong_proxy: "kong-tavros-{{ item.name }}-kong-proxy"
   loop: "{{ kong.instances }}"
 
-- name: Set DNS for non Prod Kongs by Ingress Class
+- name: Set DNS for Non-Default Ingress Classes
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
   community.aws.route53:
