@@ -3,7 +3,7 @@
   set_fact:
     kong_external_ip: "{{
       lookup(
-        'ms3_inc.tavros.kube'
+        'ms3_inc.tavros.kube',
         kubeconfig='~/.kube/config',
         kind='Service',
         namespace='kong',
