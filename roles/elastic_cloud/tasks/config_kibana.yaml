@@ -3,9 +3,10 @@
   copy:
     src: kibana-objects.ndjson
     dest: /tmp/kibana-objects.ndjson
+  tags: [ elastic_cloud ]
 
 - name: Import Kibana Objects
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, elastic_cloud ]
   when: ('dry-run' not in ansible_run_tags)
   shell: |
     curl --insecure --fail -X POST https://kibana.{{ cluster_fqdn }}/api/saved_objects/_import?createNewCopies=true \

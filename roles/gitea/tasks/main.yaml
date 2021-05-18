@@ -3,11 +3,13 @@
   file:
     path: /tmp/{{ cluster_fqdn }}/platform/gitea/default
     state: directory
+  tags: [ gitea ]
 
 - name: Generate and Merge gitea.admin_password Variable
   when: gitea.admin_password is not defined
   set_fact:
     gitea: "{{ gitea | combine({ 'admin_password': lookup('password', '/dev/null') }, recursive=true) }}"
+  tags: [ gitea ]
 
 - name: Generate and Merge gitea.keycloak.client_secret Variable
   when: gitea.keycloak.client_secret is not defined
@@ -15,6 +17,7 @@
     gitea: "{{ gitea | combine({ 'keycloak': { 'client_secret': uuid } } , recursive=true) }}"
   vars:
     uuid: "{{ 1000000 | random | to_uuid }}"
+  tags: [ gitea ]
 
 - name: Template Files
   template:
@@ -29,6 +32,7 @@
       dest: default/ingress
     - name: keycloakclient
       dest: default/keycloakclient
+  tags: [ gitea ]
 
 - name: Copy Files
   copy:
@@ -40,9 +44,10 @@
     - name: helmrepo.yaml
     - name: configmap-ca-certs.yaml
       condition: "{{ 'test-run' in ansible_run_tags }}"
+  tags: [ gitea ]
 
 - name: Apply Resources
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, gitea ]
   when: ('dry-run' not in ansible_run_tags)
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/gitea/', reorder='none') }}"
   loop_control:
@@ -55,11 +60,11 @@
     wait_timeout: 900
 
 - include_tasks: keycloak_sso.yaml
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, gitea ]
   when: ('dry-run' not in ansible_run_tags)
 
 - name: Add tavros organization
-  tags: [ requires_cluster, non_idempotent ]
+  tags: [ requires_cluster, non_idempotent, gitea ]
   when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://code.{{ cluster_fqdn }}/api/v1/orgs
@@ -80,3 +85,4 @@
   template:
     src: flux-kustomization.j2
     dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/gitea.yaml
+  tags: [ gitea ]
