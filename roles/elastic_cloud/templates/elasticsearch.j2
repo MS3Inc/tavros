@@ -17,7 +17,11 @@ spec:
         resources:
           requests:
             storage: 50Gi
+{% if kops.enabled %}
         storageClassName: kops-ssd-1-17
+{% else %}
+        storageClassName: default
+{% endif %}
 {% if elastic_cloud.ee.enabled %}
     config:
       xpack.security.authc.token.enabled: true
