@@ -5,7 +5,6 @@ resources:
   - helmrepo.yaml
 {% for item in kong.ee_creds %}
   - {{ item.name }}-secret-ee-license.yaml
-  - {{ item.name }}-secret-ee-registry.yaml
 {% endfor %}
 {% for item in kong.instances %}
   - {{ item.name }}/

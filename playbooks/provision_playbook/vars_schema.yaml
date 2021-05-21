@@ -51,13 +51,6 @@ properties:
               type: string
             license:
               type: string
-            image_registry:
-              type: object
-              properties:
-                username:
-                  type: string
-                password:
-                  type: string
       instances:
         type: array
         items:

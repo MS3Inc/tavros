@@ -29,11 +29,6 @@
           name: ms3_inc.tavros.postgresql
         tags: [ postgresql ]
 
-      - name: Namespace
-        include_role:
-          name: ms3_inc.tavros.namespace
-        tags: [ namespace ]
-
       - name: Kuma
         include_role:
           name: ms3_inc.tavros.kuma
@@ -94,6 +89,11 @@
           name: ms3_inc.tavros.jenkins
         when: jenkins.enabled
         tags: [ jenkins ]
+
+      - name: Namespace
+        include_role:
+          name: ms3_inc.tavros.namespace
+        tags: [ namespace ]
 
       - name: Flux GitOps Toolkit Sync
         include_role:

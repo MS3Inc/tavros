@@ -23,8 +23,8 @@ spec:
       retries: 5
   values:
     image:
-      repository: kong-docker-kong-gateway-docker.bintray.io/kong-enterprise-edition
-      tag: '2.3.3.0-alpine'
+      repository: kong/kong-gateway
+      tag: '2.3.3.2-alpine'
     env:
       admin_api_uri: "https://admin-api.prod-kong.tavros.enterprise-example.com"
       admin_gui_url: "https://admin.prod-kong.tavros.enterprise-example.com"
