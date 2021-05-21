@@ -4,6 +4,5 @@ resources:
   - ns.yaml
   - helmrepo.yaml
   - default-secret-ee-license.yaml
-  - default-secret-ee-registry.yaml
   - sandbox-kong/
   - prod-kong/

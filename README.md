@@ -38,3 +38,36 @@ For items that are not yet targeting a milestone, you can see our [Backlog](http
 ## Architectural Decision Log
 
 This project documents significant architectural decisions in MADR, a lightweight format for recording architectural decisions in Markdown. See our [Architectural Decision Log](docs/adr/index.md).
+
+## DNS Cache
+
+Subsequent Tavros re installs will cause your DNS Cache to be invalid and prevent Hosts from being resolved for various API calls. You can flush the Cache diffferently based on your system. Below are some common examples:
+
+Mac: 
+```bash
+# Newer MacOs
+sudo killall -HUP mDNSResponder
+
+#10.11 and 10.9
+sudo dscacheutil -flushcache
+sudo killall -HUP mDNSResponder
+
+#10.10
+sudo discoveryutil mdnsflushcache
+sudo discoveryutil udnsflushcaches
+
+#10.6 and 10.5
+sudo dscacheutil -flushcache
+```
+
+Linux 
+```bash
+# If using Systemd Resolved
+sudo systemd-resolve --flush-caches
+
+# Or if using DNSMasq
+sudo service dnsmasq restart
+
+# OR IF USING Nscd
+sudo service nscd restart
+``` 

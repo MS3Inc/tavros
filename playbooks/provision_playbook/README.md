@@ -133,14 +133,7 @@ instances | [[Kong Instance Object](#kong-instance-object)] | An array of Kong i
 | Field Name | Type | Description | Default Value |
 | ---------- | ---- | ----------- | ------------- |
 license | String | **Required** The Enterprise Edition license |
-image_registry | [Image Registry Object](#image-registry-object) | **Required** The image registry configuration to use |
-
-### Image Registry Object
-
-| Field Name | Type | Description | Default Value |
-| ---------- | ---- | ----------- | ------------- |
-username | String | **Required** The username |
-password | String | **Required** The password |
+name | String | **Required** Identifier for EE Kong Instance |
 
 ### Kong Instance Object
 

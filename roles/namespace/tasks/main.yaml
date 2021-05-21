@@ -11,6 +11,23 @@
     src: ns.j2
     dest: /tmp/{{ cluster_fqdn }}/{{ item.name }}/ns.yaml
 
+- name: Template Docker Registry Secrets
+  loop: "{{ namespaces }}"
+  template:
+    src: secret-artifacts-registry.j2
+    dest: /tmp/{{ cluster_fqdn }}/{{ item.name }}/secret-artifacts-registry.yaml
+  vars:
+    config:
+      auths: "{{ { 'registry.' + cluster_fqdn : { 'auth' : ('jenkins-ci:' + jenkins.keycloak.password) | b64encode } } }}"
+
+- name: Seal Docker Registry Secrets
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/{{ item.name }}/secret-artifacts-registry.yaml >/tmp/{{ cluster_fqdn }}/{{ item.name }}/secret-artifacts-registry.tmp
+    mv /tmp/{{ cluster_fqdn }}/{{ item.name }}/secret-artifacts-registry.tmp /tmp/{{ cluster_fqdn }}/{{ item.name }}/secret-artifacts-registry.yaml
+  loop: "{{ namespaces }}"
+
 - name: Apply Resources
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)

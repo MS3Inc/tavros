@@ -8,18 +8,6 @@
     -
       - name: secret-ee-license
 
-  # todo: fit this template into the generic loops above
-- name: Template secret-ee-registry
-  template:
-    src: secret-ee-registry.j2
-    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}-secret-ee-registry.yaml
-  vars:
-    config:
-      auths:
-        kong-docker-kong-enterprise-edition-docker.bintray.io:
-          auth: "{{ (item.image_registry.username + ':' + item.image_registry.password) | b64encode }}"
-  loop: "{{ kong.ee_creds }}"
-
 - name: Seal EE Creds Secrets
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
@@ -30,4 +18,3 @@
     - "{{ kong.ee_creds }}"
     -
       - name: secret-ee-license
-      - name: secret-ee-registry
