@@ -17,7 +17,7 @@ spec:
         resources:
           requests:
             storage: 50Gi
-        storageClassName: kops-ssd-1-17
+        storageClassName: default
     config:
       xpack.security.authc.token.enabled: true
       xpack.security.authc.realms.oidc.oidc1:
