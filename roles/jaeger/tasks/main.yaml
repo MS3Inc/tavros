@@ -3,11 +3,12 @@
   file:
     path: /tmp/{{ cluster_fqdn }}/platform/jaeger/default
     state: directory
+  tags: [ jaeger ]
 
 # Import Elasticsearch certificates
 # https://www.elastic.co/guide/en/cloud-on-k8s/1.3/k8s-tls-certificates.html#k8s-default-self-signed-certificate
 - name: Get tavros-es-cert-public Resource from elastic-system Namespace
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, jaeger ]
   when: ('dry-run' not in ansible_run_tags)
   ms3_inc.tavros.kube_info:
     kubeconfig: '~/.kube/config'
@@ -23,6 +24,7 @@
     jaeger: "{{ jaeger | combine({ 'keycloak': { 'client_secret': uuid } } , recursive=true) }}"
   vars:
     uuid: "{{ 1000000 | random | to_uuid }}"
+  tags: [ jaeger ]
 
 - name: Template Files
   template:
@@ -40,6 +42,7 @@
       dest: default/secret-es-creds
     - name: secret-es-http-certs
       dest: default/secret-es-http-certs
+  tags: [ jaeger ]
 
 - name: Copy Files
   copy:
@@ -54,9 +57,10 @@
       dest: default/jaeger.yaml
     - name: operator
       dest: ""
+  tags: [ jaeger ]
 
 - name: Seal Secrets
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, jaeger ]
   when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.tmp
@@ -66,7 +70,7 @@
     - name: default/secret-es-http-certs
 
 - name: Apply Resources
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, jaeger ]
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/jaeger/
   loop_control:
@@ -79,7 +83,7 @@
     wait_timeout: 900
 
 - name: Wait for Keycloak Client
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, jaeger ]
   when: ('dry-run' not in ansible_run_tags)
   ms3_inc.tavros.kube_info:
     kubeconfig: '~/.kube/config'
@@ -95,7 +99,7 @@
   changed_when: false
 
 - name: Create Keycloak jaeger Client Roles
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, jaeger ]
   when: ('dry-run' not in ansible_run_tags)
   ms3_inc.tavros.keycloak_client_roles:
     auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
@@ -118,9 +122,10 @@
     block: |2
             jaeger:
               - user
+  tags: [ jaeger ]
 
 - name: Apply Updated Keycloak Realm Admin User Resource
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, jaeger ]
   when: ('dry-run' not in ansible_run_tags)
   ms3_inc.tavros.kube:
     kubeconfig: '~/.kube/config'
@@ -131,3 +136,4 @@
   template:
     src: flux-kustomization.j2
     dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/jaeger.yaml
+  tags: [ jaeger ]

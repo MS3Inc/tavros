@@ -1,0 +1,79 @@
+---
+- name: Get Kong prod IP
+  when: ('dry-run' not in ansible_run_tags)
+  set_fact:
+    kong_prod_ip: "{{
+      lookup(
+        'ms3_inc.tavros.kube',
+        kubeconfig='~/.kube/config',
+        kind='Service',
+        namespace='kong',
+        resource_name='kong-tavros-prod-kong-kong-proxy'
+      ).status.loadBalancer.ingress[0].ip }}"
+  tags: [ kong_dns, route53 requires_cluster ]
+
+- name: Get Kong sandbox IP
+  when: ('dry-run' not in ansible_run_tags)
+  set_fact:
+    kong_sandbox_ip: "{{
+      lookup(
+        'ms3_inc.tavros.kube',
+        kubeconfig='~/.kube/config',
+        kind='Service',
+        namespace='kong',
+        resource_name='kong-tavros-sandbox-kong-kong-proxy'
+      ).status.loadBalancer.ingress[0].ip }}"
+  tags: [ kong_dns, route53 requires_cluster ]
+
+- name: Set wildcard record for prod
+  when: ('dry-run' not in ansible_run_tags)
+  set_fact:
+    kong_dns_records: "{{ kong_dns_records + '*.' + cluster_fqdn + '\t\t\t IN\t A\t ' + kong_prod_ip + '\n' }}"
+  vars:
+      kong_dns_records: ""
+  tags: [ kong_dns, requires_cluster ]
+
+- name: Set wildcard for prod ingress name
+  when: ('dry-run' not in ansible_run_tags) and (item.ingress_class == kong.default_ingress_class)
+  set_fact:
+    kong_dns_records: "{{ kong_dns_records + '*.' + item.name  + '.' + cluster_fqdn + '\t\t IN\t A\t ' + kong_prod_ip + '\n' }}"
+  vars:
+      kong_dns_records: ""
+  with_items: "{{ kong.instances }}"
+  tags: [ kong_dns, requires_cluster ]
+
+- name: Set wildcard for sandbox
+  when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
+  set_fact:
+    kong_dns_records: "{{ kong_dns_records + '*.' + item.ingress_class  + '.' + cluster_fqdn + '\t\t IN\t A\t ' + kong_sandbox_ip + '\n' }}"
+  vars:
+      kong_dns_records: ""
+  with_items: "{{ kong.instances }}"
+  tags: [ kong_dns, requires_cluster ]
+
+- name: Set wildcard for sandbox by name
+  when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
+  set_fact:
+    kong_dns_records: "{{ kong_dns_records + '*.' + item.name  + '.' + cluster_fqdn + '\t IN\t A\t ' + kong_sandbox_ip + '\n' }}"
+  vars:
+      kong_dns_records: ""
+  with_items: "{{ kong.instances }}"
+  tags: [ kong_dns, requires_cluster ]
+
+- name: Please provision the following records
+  when: ('dry-run' not in ansible_run_tags)
+  debug:
+    msg: "{{ kong_dns_records }}"
+  tags: [ kong_dns, requires_cluster ]
+
+- name: Print the confirmation prompt
+  when: ('dry-run' not in ansible_run_tags)
+  pause:
+    prompt: "{{ item }}"
+  with_items: |
+     :::::::::::::::::::::::::::::::::::::::::::::::::::::
+     :                                                   :
+     :  Press enter when DNS is configured as requested  :
+     :                                                   :
+     ::::::::::::::::::::::::::::::::::::::::::::::::::::
+  tags: [ kong_dns, requires_cluster ]

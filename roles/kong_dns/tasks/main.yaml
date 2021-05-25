@@ -1,0 +1,15 @@
+---
+- name: Create Route53 records
+  include_tasks: create_kong_route53.yaml
+  when: cluster_state == 'present' and kubernetes_cluster.cloud_provider == 'aws'
+  tags: [ kong_dns, route53, requires_cluster ]
+
+- name: Print Kong DNS records
+  include_tasks: print_kong_records.yaml
+  when: cluster_state == 'present' and kubernetes_cluster.cloud_provider != 'aws'
+  tags: [ kong_dns, requires_cluster ]
+
+- name: Delete Route53 records
+  include_tasks: delete_kong_route53.yaml
+  when: cluster_state == 'absent' and kubernetes_cluster.cloud_provider == 'aws'
+  tags: [ kong_dns, requires_cluster ]

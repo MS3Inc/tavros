@@ -3,9 +3,10 @@
   when: jaeger.es.password is not defined
   set_fact:
     jaeger: "{{ jaeger | combine({ 'es': { 'password': lookup('password', '/dev/null') } }, recursive=true) }}"
+  tags: [ elastic_cloud ]
 
 - name: Add Elasticsearch Host to Inventory
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, elastic_cloud ]
   when: ('dry-run' not in ansible_run_tags)
   add_host:
     name: 'tavros-es-default-0'
@@ -13,7 +14,7 @@
     ansible_connection: kubectl
 
 - name: Add jaeger_writer Role
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, elastic_cloud ]
   when: ('dry-run' not in ansible_run_tags)
   delegate_to: 'tavros-es-default-0'
   uri:
@@ -22,6 +23,7 @@
     force_basic_auth: true
     follow_redirects: all
     body_format: json
+    validate_certs: no
     url_username: elastic
     url_password: '{{ elastic_cloud.generated.elastic_password }}'
     body:
@@ -51,7 +53,7 @@
     validate_certs: False
 
 - name: Add jaeger User
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, elastic_cloud ]
   when: ('dry-run' not in ansible_run_tags)
   delegate_to: 'tavros-es-default-0'
   uri:
@@ -60,6 +62,7 @@
     force_basic_auth: true
     follow_redirects: all
     body_format: json
+    validate_certs: no
     url_username: elastic
     url_password: '{{ elastic_cloud.generated.elastic_password }}'
     body:

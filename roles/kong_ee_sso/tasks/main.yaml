@@ -5,6 +5,7 @@
     src: keycloakclient.j2
     dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/keycloakclient.yaml
   loop: "{{ kong.instances }}"
+  tags: [ kong_ee_sso ]
 
 - name: Add Keycloak Client Resource to Kong Resources
   when: item.ee.enabled
@@ -13,9 +14,10 @@
     line: "  - keycloakclient.yaml"
     insertafter: "resources:"
   loop: "{{ kong.instances }}"
+  tags: [ kong_ee_sso ]
 
 - name: Apply Updated Resources
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, kong_ee_sso ]
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kong/
   loop_control:
@@ -28,7 +30,7 @@
     wait_timeout: 900
 
 - name: Wait for Keycloak
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, kong_ee_sso ]
   when: ('dry-run' not in ansible_run_tags)
   ms3_inc.tavros.kube_info:
     kubeconfig: '~/.kube/config'
@@ -44,7 +46,7 @@
   changed_when: false
 
 - name: Create Keycloak kong.name Client Roles
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, kong_ee_sso ]
   when: ('dry-run' not in ansible_run_tags) and item.ee.enabled
   loop: "{{ kong.instances }}"
   ms3_inc.tavros.keycloak_client_roles:
@@ -70,9 +72,10 @@
     block: |2
             {{ item.name }}:
               - super-admin
+  tags: [ kong_ee_sso ]
 
 - name: Apply Updated Keycloak Realm Admin User Resource
-  tags: [ requires_cluster ]
+  tags: [ requires_cluster, kong_ee_sso ]
   when: ('dry-run' not in ansible_run_tags) and item.ee.enabled
   loop: "{{ kong.instances }}"
   ms3_inc.tavros.kube:
@@ -81,7 +84,7 @@
     src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}/keycloakuser-admin.yaml
 
 - name: Create Kong Admins
-  tags: [ requires_cluster, non_idempotent ]
+  tags: [ requires_cluster, non_idempotent, kong_ee_sso ]
   when: ('dry-run' not in ansible_run_tags) and item.ee.enabled
   uri:
     url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}"
@@ -97,7 +100,7 @@
   loop: "{{ kong.instances }}"
 
 - name: Add Kong super-admin Role to Admins
-  tags: [ requires_cluster, non_idempotent ]
+  tags: [ requires_cluster, non_idempotent, kong_ee_sso ]
   when: ('dry-run' not in ansible_run_tags) and item.ee.enabled
   uri:
     url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins/{{ cluster_admin_email }}/roles?roles=super-admin"
