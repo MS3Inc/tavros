@@ -1,81 +1,47 @@
 ---
-- name: Get Kong prod IP
+- name: Set DNS for Kongs by Name
+  tags: [ kong_dns, route53, requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
-  set_fact:
-    kong_prod_ip: "{{
-      lookup(
-        'ms3_inc.tavros.kube',
-        kubeconfig='~/.kube/config',
-        kind='Service',
-        namespace='kong',
-        resource_name='kong-tavros-prod-kong-kong-proxy'
-      ).status.loadBalancer.ingress[0].hostname }}"
-  tags: [ kong_dns, route53 requires_cluster ]
+  community.aws.route53:
+    state: present
+    zone: "{{ kubernetes_cluster.dns_zone }}"
+    type: CNAME
+    record: "*.{{ item.name }}.{{ cluster_fqdn }}"
+    value: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+    wait_timeout: 900
+  vars:
+    instance_kong_proxy: "kong-tavros-{{ item.name }}-kong-proxy"
+  loop: "{{ kong.instances }}"
 
-- name: Get Kong sandbox IP
-  when: ('dry-run' not in ansible_run_tags)
-  set_fact:
-    kong_sandbox_ip: "{{
-      lookup(
-        'ms3_inc.tavros.kube',
-        kubeconfig='~/.kube/config',
-        kind='Service',
-        namespace='kong',
-        resource_name='kong-tavros-sandbox-kong-kong-proxy'
-      ).status.loadBalancer.ingress[0].hostname }}"
-  tags: [ kong_dns, route53 requires_cluster ]
-
-- name: Set wildcard record for prod
+- name: Set DNS for Default Ingress Class
+  tags: [ kong_dns, route53, requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)
   community.aws.route53:
     state: present
     zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ cluster_fqdn }}"
-    value: "{{ kong_prod_ip }}"
+    value: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
-  tags: [ kong_dns, route53, requires_cluster ]
+  vars:
+    prod_kong_proxy: "kong-tavros-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}-kong-proxy"
 
-- name: Set wildcard for prod ingress name
-  when: ('dry-run' not in ansible_run_tags) and (item.ingress_class == kong.default_ingress_class)
-  community.aws.route53:
-    state: present
-    zone: "{{ kubernetes_cluster.dns_zone }}"
-    type: CNAME
-    record: "*.{{ item.name }}.{{ cluster_fqdn }}"
-    value: "{{ kong_prod_ip }}"
-    overwrite: true
-    wait: yes
-    wait_timeout: 900
-  loop: "{{ kong.instances }}"
+- name: Set DNS for Non-Default Ingress Classes
   tags: [ kong_dns, route53, requires_cluster ]
-
-- name: Set wildcard for sandbox
   when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
   community.aws.route53:
     state: present
     zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ item.ingress_class }}.{{ cluster_fqdn }}"
-    value: "{{ kong_sandbox_ip }}"
+    value: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
+  vars:
+    instance_kong_proxy: "kong-tavros-{{ item.name }}-kong-proxy"
   loop: "{{ kong.instances }}"
-  tags: [ kong_dns, route53, requires_cluster ]
-
-- name: Set wildcard for sandbox by name
-  when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
-  community.aws.route53:
-    state: present
-    zone: "{{ kubernetes_cluster.dns_zone }}"
-    type: CNAME
-    record: "*.{{ item.name }}.{{ cluster_fqdn }}"
-    value: "{{ kong_sandbox_ip }}"
-    overwrite: true
-    wait: yes
-    wait_timeout: 900
-  loop: "{{ kong.instances }}"
-  tags: [ kong_dns, route53, requires_cluster ]
