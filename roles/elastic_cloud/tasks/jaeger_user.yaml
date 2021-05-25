@@ -23,6 +23,7 @@
     force_basic_auth: true
     follow_redirects: all
     body_format: json
+    validate_certs: no
     url_username: elastic
     url_password: '{{ elastic_cloud.generated.elastic_password }}'
     body:
@@ -61,6 +62,7 @@
     force_basic_auth: true
     follow_redirects: all
     body_format: json
+    validate_certs: no
     url_username: elastic
     url_password: '{{ elastic_cloud.generated.elastic_password }}'
     body:
