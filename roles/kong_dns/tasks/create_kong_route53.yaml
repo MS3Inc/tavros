@@ -32,7 +32,7 @@
     zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ cluster_fqdn }}"
-    value: "{{ kong_external_lb }}"
+    value: "{{ kong_prod_ip }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
@@ -45,7 +45,7 @@
     zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ item.name }}.{{ cluster_fqdn }}"
-    value: "{{ kong_external_lb }}"
+    value: "{{ kong_prod_ip }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
@@ -59,7 +59,7 @@
     zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ item.ingress_class }}.{{ cluster_fqdn }}"
-    value: "{{ kong_external_lb }}"
+    value: "{{ kong_sandbox_ip }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
@@ -73,7 +73,7 @@
     zone: "{{ kubernetes_cluster.dns_zone }}"
     type: CNAME
     record: "*.{{ item.name }}.{{ cluster_fqdn }}"
-    value: "{{ kong_external_lb }}"
+    value: "{{ kong_sandbox_ip }}"
     overwrite: true
     wait: yes
     wait_timeout: 900
