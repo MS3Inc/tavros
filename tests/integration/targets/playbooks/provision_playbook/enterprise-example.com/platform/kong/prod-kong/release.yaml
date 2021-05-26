@@ -36,6 +36,12 @@ spec:
           secretKeyRef:
             name: tavros-prod-kong-ee-admin-creds
             key: password
+      # see: https://github.com/elastic/beats/pull/14505
+      # https://docs.konghq.com/gateway-oss/2.4.x/logging/
+      # https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
+      nginx_http_log_format: |
+        extended '$host $remote_addr - $remote_user [$time_local] ' '"$request" $status $body_bytes_sent ' '"$http_referer" "$http_user_agent"'
+      proxy_access_log: /dev/stdout extended
       database: postgres
       pg_host: tavros-postgresql.postgresql
       pg_port: '5432'
@@ -66,8 +72,10 @@ spec:
               name: tavros-prod-kong-ee-admin-creds
               key: password
     podAnnotations: {
-      co.elastic.logs/enabled: "true",
-      co.elastic.logs/module: nginx,
+      co.elastic.logs.proxy/enabled: "true",
+      co.elastic.logs.proxy/module: nginx,
+      co.elastic.logs.proxy/fileset.stdout: access,
+      co.elastic.logs.proxy/fileset.stderr: error
     }
     admin:
       enabled: true
