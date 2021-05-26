@@ -92,6 +92,7 @@ spec:
           function process(event) {
             var ns = event.Get("kubernetes.namespace");
             if (ns != null) event.Put("data_stream.namespace", "k8s." + ns);
+
             var mod = event.Get("event.module");
             var ms = event.Get("metricset.name");
             if (mod != null && ms != null) event.Put("data_stream.dataset", mod + "." + ms);
