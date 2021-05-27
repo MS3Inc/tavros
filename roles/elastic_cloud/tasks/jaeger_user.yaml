@@ -33,6 +33,7 @@
       indices:
       - names:
         - tavros-jaeger-*
+        - tavros:jaeger-*
         privileges:
         - create
         - create_index
@@ -40,6 +41,7 @@
         - monitor
         - delete_index
         - read
+        - view_index_metadata
         field_security:
           grant:
           - "*"
