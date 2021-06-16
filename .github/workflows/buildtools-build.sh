@@ -41,10 +41,17 @@ mount=$(buildah mount $container)
 
 printf "\nSetting up installer container...\n"
 podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw --volume $PWD:$PWD:Z --workdir $PWD fedora:latest
+
+# Add Azure CLI DNF repository
+# See: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=dnf
+podman exec installer bash -c "rpm --import https://packages.microsoft.com/keys/microsoft.asc"
+podman cp .github/workflows/azure-cli.repo installer:/etc/yum.repos.d/azure-cli.repo
+
 podman exec installer bash -c "yum upgrade -y --quiet"
 
-printf "\nInstalling tools with package managers...\n"
-dnf_install "vi make curl telnet openssl bind-utils diffutils python awscli git jq"
+printf "\nInstalling tools with package manager...\n"
+dnf_install "vi make curl telnet openssl bind-utils diffutils python awscli git jq azure-cli"
+
 pip_install "-r requirements.txt"
 
 printf "\nCleaning up installer container...\n"
