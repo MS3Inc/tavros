@@ -45,7 +45,7 @@ podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw -
 # Add Azure CLI DNF repository
 # See: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=dnf
 podman exec installer bash -c "rpm --import https://packages.microsoft.com/keys/microsoft.asc"
-podman cp .github/workflows/azure-cli.repo installer:/etc/yum.repos.d/azure-cli.repo
+podman cp ./.github/workflows/azure-cli.repo installer:/etc/yum.repos.d/azure-cli.repo
 
 podman exec installer bash -c "yum upgrade -y --quiet"
 
