@@ -20,7 +20,7 @@ spec:
         resources:
           requests:
             storage: 50Gi
-        storageClassName: kops-ssd-1-17
+        storageClassName: kops-csi-1-21
     podTemplate:
       spec:
         initContainers:

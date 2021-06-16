@@ -21,7 +21,7 @@ spec:
           requests:
             storage: 50Gi
 {% if kops.enabled %}
-        storageClassName: kops-ssd-1-17
+        storageClassName: kops-csi-1-21
 {% else %}
         storageClassName: default
 {% endif %}
