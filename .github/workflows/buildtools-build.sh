@@ -48,10 +48,11 @@ podman exec installer bash -c "rpm --import https://packages.microsoft.com/keys/
 podman cp ./.github/workflows/azure-cli.repo installer:/etc/yum.repos.d/azure-cli.repo
 
 podman exec installer bash -c "yum upgrade -y --quiet"
-podman exec installer bash -c "yum install pip -y --quiet"
+podman exec installer bash -c "yum install pip -y --quiet --setopt install_weak_deps=false --setopt tsflags=nodocs"
 
 printf "\nInstalling tools with package manager...\n"
-dnf_install "vi make curl telnet openssl bind-utils diffutils python awscli git jq azure-cli procps nano"
+dnf_install "vi make curl telnet openssl bind-utils diffutils python awscli git jq azure-cli procps nano \
+  traceroute iputils iproute"
 
 pip_install "-r requirements.txt"
 
