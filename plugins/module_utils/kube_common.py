@@ -179,9 +179,9 @@ class KubeBase(object):
                     else:
                         self._fail(
                             msg='error running kubectl (%s) command' % ' '.join(args),
-                            rc=result.returncode,
-                            stdout=result.stdout,
-                            stderr=result.stderr
+                            rc=err.returncode,
+                            stdout=err.stdout,
+                            stderr=err.stderr
                         )
                 else:
                     time.sleep(retries)
