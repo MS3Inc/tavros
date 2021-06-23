@@ -21,7 +21,7 @@ The provision playbook provisions a Kubernetes cluster and configures Tavros's p
 | Platform GitOps | Sealed Secrets | 0.15.0 |
 | API Gateway and Manager | Kong | 2.3.3 |
 | API Portal | Kong Enterprise Edition | 2.3.3 |
-| Service Mesh | Kuma | 1.1.2 |
+| Service Mesh | Kuma | 1.2.0 |
 | Identity and Access Management | Keycloak | 12.0.4 |
 | Artifact Management | Nexus Repository Manager | 3.28.1 |
 | Continuous Delivery | Jenkins | 2.249.2 |
@@ -43,7 +43,7 @@ This project documents significant architectural decisions in MADR, a lightweigh
 
 Subsequent Tavros re installs will cause your DNS Cache to be invalid and prevent Hosts from being resolved for various API calls. You can flush the Cache diffferently based on your system. Below are some common examples:
 
-Mac: 
+Mac:
 ```bash
 # Newer MacOs
 sudo killall -HUP mDNSResponder
@@ -60,7 +60,7 @@ sudo discoveryutil udnsflushcaches
 sudo dscacheutil -flushcache
 ```
 
-Linux 
+Linux
 ```bash
 # If using Systemd Resolved
 sudo systemd-resolve --flush-caches
@@ -70,4 +70,4 @@ sudo service dnsmasq restart
 
 # OR IF USING Nscd
 sudo service nscd restart
-``` 
+```
