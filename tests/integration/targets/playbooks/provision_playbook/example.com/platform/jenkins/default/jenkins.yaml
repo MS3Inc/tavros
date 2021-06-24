@@ -4,10 +4,25 @@ metadata:
   name: tavros
   namespace: jenkins
 spec:
+  groovyScripts:
+    configurations: []
+    secret:
+      name: ''
+  jenkinsAPISettings:
+    authorizationStrategy: createUser
   master:
+    disableCSRFProtection: false
     containers:
     - name: jenkins-master
       image: jenkins/jenkins:2.277.4-lts-alpine
+      imagePullPolicy: IfNotPresent
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 2Gi
+        requests:
+          cpu: 500m
+          memory: 1Gi
       livenessProbe:
         failureThreshold: 12
         httpGet:
@@ -56,3 +71,5 @@ spec:
   configurationAsCode:
     configurations:
     - name: tavros-jenkins-config
+    secret:
+      name: ''
