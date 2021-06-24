@@ -5,25 +5,50 @@ metadata:
   namespace: jenkins
 spec:
   master:
+    containers:
+    - name: jenkins-master
+      image: jenkins/jenkins:2.277.4-lts-alpine
+      livenessProbe:
+        failureThreshold: 12
+        httpGet:
+          path: /login
+          port: http
+          scheme: HTTP
+        initialDelaySeconds: 120
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      readinessProbe:
+        failureThreshold: 5
+        httpGet:
+          path: /login
+          port: http
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
     basePlugins:
     - name: kubernetes
-      version: "1.28.6"
+      version: "1.30.0"
     - name: workflow-job
-      version: "2.40"
+      version: "2.41"
     - name: workflow-aggregator
       version: "2.6"
     - name: git
-      version: "4.5.0"
+      version: "4.7.2"
+    # dependency for gitea based on git version above
+    - name: git-client
+      version: "3.7.2"
     - name: job-dsl
       version: "1.77"
     - name: configuration-as-code
       version: "1.51"
     - name: kubernetes-credentials-provider
-      version: "0.15"
+      version: "0.18-1"
     plugins:
     - name: keycloak
       version: "2.3.0"
-    # should be conditional of gitea enabled
     - name: gitea
       version: "1.2.1"
     - name: build-user-vars-plugin

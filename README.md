@@ -24,7 +24,7 @@ The provision playbook provisions a Kubernetes cluster and configures Tavros's p
 | Service Mesh | Kuma | 1.2.0 |
 | Identity and Access Management | Keycloak | 12.0.4 |
 | Artifact Management | Nexus Repository Manager | 3.28.1 |
-| Continuous Delivery | Jenkins | 2.249.2 |
+| Continuous Delivery | Jenkins | 2.277.4 |
 | Observability | Elastic Cloud | 7.12.0 |
 | Observability | Jaeger | 1.22.0 |
 | Static Code Qualitative Analysis | Sonarqube | 8.5 |
