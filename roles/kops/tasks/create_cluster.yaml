@@ -38,7 +38,7 @@
       --node-count={{ kops.node_count }} \
       --node-size={{ kops.node_size }} \
       --zones={{ kops.node_zones }} \
-      --container-runtime docker \
+      --container-runtime containerd \
       --topology private \
       --networking weave \
       --dns-zone={{ kubernetes_cluster.dns_zone }} \
