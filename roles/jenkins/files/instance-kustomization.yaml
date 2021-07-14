@@ -8,3 +8,4 @@ resources:
   - jenkins.yaml
   - ingress.yaml
   - secret-artifacts-registry.yaml
+  - secret-keycloak-creds.yaml

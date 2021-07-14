@@ -28,7 +28,7 @@ data:
       globalLibraries:
         libraries:
           - name: "tavros-library"
-            defaultVersion: "v0.2"
+            defaultVersion: "v0.4"
             retriever:
               modernSCM:
                 scm:
@@ -45,6 +45,10 @@ data:
             value: gitea
           - key: TAVROS_GIT_CREDS
             value: tavros-gitea-creds
+          - key: TAVROS_REG_HOST
+            value: registry.tavros.example.com
+          - key: TAVROS_REG_CREDS
+            value: keycloak-basic-auth
 
     jobs:
     - script: >
