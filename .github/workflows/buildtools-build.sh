@@ -3,7 +3,7 @@
 set -o nounset
 set -o errexit
 
-KUBECTL_VERSION=1.20.5
+KUBECTL_VERSION=1.21
 
 # https://github.com/fluxcd/kustomize-controller/blob/v0.10.0/go.mod#L34
 # https://github.com/kubernetes-sigs/kustomize/blob/kustomize/v3.9.4/kustomize/go.mod#L11
@@ -11,7 +11,7 @@ FLUX_VERSION=0.10.0
 KUSTOMIZE_VERSION=3.9.4
 
 KUBESEAL_VERSION=0.15.0
-KOPS_VERSION=1.21.0-beta.2
+KOPS_VERSION=1.21
 YQ_VERSION=4.6.3
 DECK_VERSION=1.5.1
 
