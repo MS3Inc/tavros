@@ -31,11 +31,9 @@ spec:
             enabled: true
             default_config:
               enabled: false
-          templates:
-            - config:
-                - type: container
-                  paths:
-                    - /var/log/containers/*-${data.kubernetes.container.id}.log
+              type: container
+              paths:
+              - /var/log/containers/*-${data.kubernetes.container.id}.log
     processors:
     - add_fields:
         target: data_stream
