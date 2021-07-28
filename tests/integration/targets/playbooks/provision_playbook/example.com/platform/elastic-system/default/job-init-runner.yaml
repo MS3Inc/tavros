@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tavros-init-runner
+  namespace: elastic-system
+spec:
+  template:
+    spec:
+      containers:
+        - name: fedora
+          image: fedora:latest
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              # run each script, breaking if one fails
+              for script in /tmp/init-scripts/*.sh; do
+                if ! bash "$script"; then exit 1; fi
+              done
+          env:
+            - name: ES_HOST
+              value: https://tavros-es-http.elastic-system.svc.cluster.local
+            - name: ES_PSW
+              valueFrom:
+                secretKeyRef:
+                  name: tavros-es-elastic-user
+                  key: elastic
+          volumeMounts:
+            - name: init-scripts
+              mountPath: /tmp/init-scripts
+      volumes:
+      - name: init-scripts
+        secret:
+          secretName: tavros-init-scripts
+          defaultMode: 0777
+      restartPolicy: OnFailure
+  backoffLimit: 8

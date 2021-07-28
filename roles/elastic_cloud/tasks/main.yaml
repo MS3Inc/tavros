@@ -33,8 +33,10 @@
       condition: "{{ (elastic_cloud.ee.enabled) and (not elastic_cloud.ee.trial) }}"
     - name: secret-init-scripts
       dest: default/secret-init-scripts
+      condition: "{{ jaeger.enabled }}"
     - name: job-init-runner
       dest: default/job-init-runner
+      condition: "{{ jaeger.enabled }}"
   tags: [ elastic_cloud ]
 
 - name: Copy Files
@@ -108,7 +110,7 @@
 
 - name: Wait for init-runner Job
   tags: [ requires_cluster, elastic_cloud ]
-  when: ('dry-run' not in ansible_run_tags)
+  when: ('dry-run' not in ansible_run_tags) and jaeger.enabled
   ms3_inc.tavros.kube_info:
     kubeconfig: '~/.kube/config'
     kind: Job

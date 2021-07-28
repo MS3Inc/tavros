@@ -12,3 +12,5 @@ resources:
   - default/metricbeat-node-exporter.yaml
   - default/metricbeat-kube-state-metrics.yaml
   - default/ingress.yaml
+  - default/secret-init-scripts.yaml
+  - default/job-init-runner.yaml
