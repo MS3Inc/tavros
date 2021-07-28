@@ -31,6 +31,10 @@
       condition: "{{ elastic_cloud.ee.enabled }}"
     - name: secret-eck-license
       condition: "{{ (elastic_cloud.ee.enabled) and (not elastic_cloud.ee.trial) }}"
+    - name: secret-init-scripts
+      dest: default/secret-init-scripts
+    - name: job-init-runner
+      dest: default/job-init-runner
   tags: [ elastic_cloud ]
 
 - name: Copy Files
@@ -139,6 +143,7 @@
     elastic_pass: "{{ elastic_secret.resources[0].data.elastic | b64decode }}"
   tags: [ elastic_cloud ]
 
+  # todo: move into init-scripts
 - name: Add RBAC Role Mapping for Keycloak
   tags: [ requires_cluster, non_idempotent, elastic_cloud ]
   when: ('dry-run' not in ansible_run_tags) and elastic_cloud.ee.enabled
@@ -187,9 +192,10 @@
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak.realm }}/keycloakuser-admin.yaml
 
-- include_tasks: jaeger_user.yaml
-  tags: [ elastic_cloud ]
+# - include_tasks: jaeger_user.yaml
+#   tags: [ elastic_cloud ]
 
+  # todo: move into init-scripts
 - include_tasks: config_kibana.yaml
   tags: [ elastic_cloud ]
 

@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tavros-init-runner
+  namespace: elastic-system
+spec:
+  template:
+    spec:
+      containers:
+        - name: curl
+          image: curlimages/curl:7.78.0
+          command:
+            - "/bin/sh"
+            - "-c"
+            - |
+              export ES_AUTH=$(echo elastic:$ES_PSW | base64)
+              for script in /tmp/init-scripts/*.sh; do
+                bash "$script"
+              done
+          env:
+            - name: ES_HOST
+              value: https://tavros-es-http.elastic-system.svc.cluster.local
+            - name: ES_PSW
+              valueFrom:
+                secretKeyRef:
+                  name: tavros-es-elastic-user
+                  key: elastic
+          volumeMounts:
+            - name: init-scripts
+              mountPath: /tmp/init-scripts
+      volumes:
+      - name: init-scripts
+        secret:
+          secretName: tavros-init-scripts
+          defaultMode: 0777
+      restartPolicy: OnFailure
+  backoffLimit: 4
