@@ -3,8 +3,10 @@
 set -o nounset
 set -o errexit
 
+
+# todo: make operations idempotent
 echo "Create Role"
-curl -X POST -i $ES_HOST:9200/_security/role/jaeger_writer --insecure \
+curl -X POST -s -i --insecure -u elastic:$ES_PSW $ES_HOST:9200/_security/role/jaeger_writer  \
 -d '{
       "cluster": [
           "monitor",
@@ -35,10 +37,9 @@ curl -X POST -i $ES_HOST:9200/_security/role/jaeger_writer --insecure \
       }
   }' \
 -H 'Content-Type: application/json' \
--H "Authorization: Basic $ES_AUTH"
 
 echo "Create User"
-curl -X POST -i $ES_HOST:9200/_security/user/jaeger --insecure \
+curl -X POST -s -i --insecure -u elastic:$ES_PSW $ES_HOST:9200/_security/user/jaeger \
 -d '{
       "password": "{{ jaeger.es.password }}",
       "roles": [
@@ -46,5 +47,4 @@ curl -X POST -i $ES_HOST:9200/_security/user/jaeger --insecure \
       ],
       "full_name": "Jaeger User"
     }' \
--H 'Content-Type: application/json' \
--H "Authorization: Basic $ES_AUTH"
+-H 'Content-Type: application/json'

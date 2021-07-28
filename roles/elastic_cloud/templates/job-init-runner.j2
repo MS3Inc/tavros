@@ -7,15 +7,15 @@ spec:
   template:
     spec:
       containers:
-        - name: curl
-          image: curlimages/curl:7.78.0
+        - name: fedora
+          image: fedora:latest
           command:
             - "/bin/sh"
             - "-c"
             - |
-              export ES_AUTH=$(echo elastic:$ES_PSW | base64)
+              # run each script, breaking if one fails
               for script in /tmp/init-scripts/*.sh; do
-                bash "$script"
+                if ! bash "$script"; then exit 1; fi
               done
           env:
             - name: ES_HOST
@@ -34,4 +34,4 @@ spec:
           secretName: tavros-init-scripts
           defaultMode: 0777
       restartPolicy: OnFailure
-  backoffLimit: 4
+  backoffLimit: 8
