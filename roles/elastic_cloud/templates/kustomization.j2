@@ -12,6 +12,8 @@ resources:
   - default/metricbeat-node-exporter.yaml
   - default/metricbeat-kube-state-metrics.yaml
   - default/ingress.yaml
+  - default/secret-init-scripts.yaml
+  - default/job-init-runner.yaml
 {% if elastic_cloud.ee.enabled %}
   - secret-eck-license.yaml
   - default/keycloakclient.yaml

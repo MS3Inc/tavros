@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+set -o nounset
+set -o errexit
+
+echo "Create Role"
+curl -X POST -i $ES_HOST:9200/_security/role/jaeger_writer --insecure \
+-d '{
+      "cluster": [
+          "monitor",
+          "manage_index_templates"
+      ],
+      "indices": [
+          {
+              "names": [
+                  "tavros-jaeger-*",
+                  "tavros:jaeger-*"
+              ],
+              "privileges": [
+                  "all"
+              ],
+              "field_security": {
+                  "grant": [
+                      "*"
+                  ]
+              },
+              "allow_restricted_indices": false
+          }
+      ],
+      "applications": [],
+      "run_as": [],
+      "metadata": {},
+      "transient_metadata": {
+          "enabled": true
+      }
+  }' \
+-H 'Content-Type: application/json' \
+-H "Authorization: Basic $ES_AUTH"
+
+echo "Create User"
+curl -X POST -i $ES_HOST:9200/_security/user/jaeger --insecure \
+-d '{
+      "password": "{{ jaeger.es.password }}",
+      "roles": [
+        "jaeger_writer"
+      ],
+      "full_name": "Jaeger User"
+    }' \
+-H 'Content-Type: application/json' \
+-H "Authorization: Basic $ES_AUTH"
