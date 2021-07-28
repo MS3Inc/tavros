@@ -206,9 +206,6 @@
     state: present
     src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ elastic_cloud.ee.keycloak.realm }}/keycloakuser-admin.yaml
 
-# - include_tasks: jaeger_user.yaml
-#   tags: [ elastic_cloud ]
-
   # todo: move into init-scripts
 - include_tasks: config_kibana.yaml
   tags: [ elastic_cloud ]
