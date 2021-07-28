@@ -11,7 +11,7 @@ metadata:
   namespace: elastic-system
 spec:
   type: filebeat
-  version: 7.12.0
+  version: 7.13.4
   elasticsearchRef:
     name: tavros
   kibanaRef:

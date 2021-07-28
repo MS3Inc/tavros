@@ -4,7 +4,7 @@ metadata:
   name: tavros
   namespace: elastic-system
 spec:
-  version: 7.12.0
+  version: 7.13.4
   count: 1
   elasticsearchRef:
     name: tavros
