@@ -55,6 +55,13 @@ spec:
       env:
       # see https://github.com/Kong/charts/issues/224
         kong_admin_tls_skip_verify: 'true'
+      resources:
+        limits:
+          cpu: 100m
+          memory: 256Mi
+        requests:
+          cpu: 50m
+          memory: 128Mi
     podAnnotations: {
       kuma.io/sidecar-injection: enabled,
       kuma.io/gateway: enabled,
@@ -73,3 +80,29 @@ spec:
       annotations:
         service.beta.kubernetes.io/aws-load-balancer-type: nlb
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+    topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/instance: kong-tavros-prod-kong
+          app.kubernetes.io/name: kong
+    resources:
+      limits:
+       cpu: 1
+       memory: 1Gi
+      requests:
+       cpu: 1
+       memory: 1Gi
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 4
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 80

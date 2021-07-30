@@ -71,6 +71,9 @@
         cloudConfig:
           awsEBSCSIDriver:
             enabled: true
+        metricsServer:
+          enabled: true
+          insecure: true
 
 - name: Create Cluster
   when: result.changed

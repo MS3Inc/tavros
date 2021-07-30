@@ -82,6 +82,13 @@ spec:
               name: tavros-{{ item[0].name }}-ee-admin-creds
               key: password
 {% endif  %}
+      resources:
+        limits:
+          cpu: 100m
+          memory: 256Mi
+        requests:
+          cpu: 50m
+          memory: 128Mi
     podAnnotations: {
 {% if item[0].kuma_mesh_name is defined %}
       kuma.io/sidecar-injection: enabled,
@@ -119,4 +126,32 @@ spec:
         admin_gui_auth: openid-connect
         session_conf_secret: tavros-{{ item[0].name }}-ee-admin-gui-session
         admin_gui_auth_conf_secret: tavros-{{ item[0].name }}-ee-admin-gui-auth
+{% endif  %}
+    topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/instance: kong-tavros-{{ item[0].name }}
+          app.kubernetes.io/name: kong
+    resources:
+      limits:
+       cpu: 1
+       memory: 1Gi
+      requests:
+       cpu: 1
+       memory: 1Gi
+{%  if item[0].ingress_class == kong.default_ingress_class %}
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 4
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 80
 {% endif  %}

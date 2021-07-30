@@ -71,6 +71,13 @@ spec:
             secretKeyRef:
               name: tavros-sandbox-kong-ee-admin-creds
               key: password
+      resources:
+        limits:
+          cpu: 100m
+          memory: 256Mi
+        requests:
+          cpu: 50m
+          memory: 128Mi
     podAnnotations: {
       co.elastic.logs.proxy/enabled: "true",
       co.elastic.logs.proxy/module: nginx,
@@ -98,3 +105,18 @@ spec:
         admin_gui_auth: openid-connect
         session_conf_secret: tavros-sandbox-kong-ee-admin-gui-session
         admin_gui_auth_conf_secret: tavros-sandbox-kong-ee-admin-gui-auth
+    topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: topology.kubernetes.io/zone
+      whenUnsatisfiable: ScheduleAnyway
+      labelSelector:
+        matchLabels:
+          app.kubernetes.io/instance: kong-tavros-sandbox-kong
+          app.kubernetes.io/name: kong
+    resources:
+      limits:
+       cpu: 1
+       memory: 1Gi
+      requests:
+       cpu: 1
+       memory: 1Gi
