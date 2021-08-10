@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: tavros-sandbox-kong
@@ -19,6 +19,9 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-sandbox-kong-kong-proxy
-          servicePort: 80
+          service:
+            name: kong-tavros-sandbox-kong-kong-proxy
+            port:
+              number: 80

@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: tavros-prod-kong
@@ -23,34 +23,49 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-prod-kong-kong-admin
-          servicePort: 8001
+          service:
+            name: kong-tavros-prod-kong-kong-admin
+            port:
+              number: 8001
   - host: "admin.prod-kong.tavros.enterprise-example.com"
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-prod-kong-kong-manager
-          servicePort: 8002
+          service:
+            name: kong-tavros-prod-kong-kong-manager
+            port:
+              number: 8002
   - host: "dev-portal.tavros.enterprise-example.com"
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-prod-kong-kong-portal
-          servicePort: 8003
+          service:
+            name: kong-tavros-prod-kong-kong-portal
+            port:
+              number: 8003
   - host: "dev-portal-api.tavros.enterprise-example.com"
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-prod-kong-kong-portalapi
-          servicePort: 8004
+          service:
+            name: kong-tavros-prod-kong-kong-portalapi
+            port:
+              number: 8004
   - host: "apps.tavros.enterprise-example.com"
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-prod-kong-kong-proxy
-          servicePort: 80
+          service:
+            name: kong-tavros-prod-kong-kong-proxy
+            port:
+              number: 80

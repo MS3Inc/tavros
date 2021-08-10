@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: tavros
@@ -15,9 +15,12 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: gitea-http
-          servicePort: 3000
+          service:
+            name: gitea-http
+            port:
+              number: 3000
   tls:
   - hosts:
     - code.tavros.example.com
