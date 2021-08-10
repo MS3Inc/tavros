@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: tavros-buildtools
@@ -16,16 +16,22 @@ spec:
     http:
       paths:
       - path: /nosso
+        pathType: ImplementationSpecific
         backend:
-          serviceName: tavros-nexus-repository-manager
-          servicePort: 8081
+          service:
+            name: tavros-nexus-repository-manager
+            port:
+              number: 8081
   - host: registry.tavros.example.com
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: tavros-container-registry
-          servicePort: 5002
+          service:
+            name: tavros-container-registry
+            port:
+              number: 5002
   tls:
   - hosts:
     - artifacts.tavros.example.com

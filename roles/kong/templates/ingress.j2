@@ -1,4 +1,4 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: tavros-{{ item[0].name }}
@@ -26,35 +26,50 @@ spec:
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-{{ item[0].name }}-kong-admin
-          servicePort: 8001
+          service:
+            name: kong-tavros-{{ item[0].name }}-kong-admin
+            port:
+              number: 8001
   - host: "admin.{{ item[0].name }}.{{ cluster_fqdn }}"
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-{{ item[0].name }}-kong-manager
-          servicePort: 8002
+          service:
+            name: kong-tavros-{{ item[0].name }}-kong-manager
+            port:
+              number: 8002
   - host: "dev-portal{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-{{ item[0].name }}-kong-portal
-          servicePort: 8003
+          service:
+            name: kong-tavros-{{ item[0].name }}-kong-portal
+            port:
+              number: 8003
   - host: "dev-portal-api{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-{{ item[0].name }}-kong-portalapi
-          servicePort: 8004
+          service:
+            name: kong-tavros-{{ item[0].name }}-kong-portalapi
+            port:
+              number: 8004
 {% endif  %}
   - host: "apps{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: kong-tavros-{{ item[0].name }}-kong-proxy
-          servicePort: 80
+          service:
+            name: kong-tavros-{{ item[0].name }}-kong-proxy
+            port:
+              number: 80
