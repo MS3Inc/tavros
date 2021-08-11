@@ -13,6 +13,12 @@
     uuid: "{{ 1000000 | random | to_uuid }}"
   tags: [ elastic_cloud ]
 
+- name: Generate and Merge jaeger.es.password Variable
+  when: (jaeger.enabled) and (jaeger.es.password is not defined)
+  set_fact:
+    jaeger: "{{ jaeger | combine({ 'es': { 'password': lookup('password', '/dev/null') } }, recursive=true) }}"
+  tags: [ elastic_cloud, jaeger ]
+
 - name: Template Files
   template:
     src: "{{ item.name }}.j2"
@@ -148,7 +154,6 @@
     name: tavros-es-elastic-user
     namespace: elastic-system
   register: elastic_secret
-  tags: [ elastic_cloud ]
 
 - name: Set elastic_cloud.generated.elastic_password Variable
   tags: [ requires_cluster, elastic_cloud ]
@@ -157,7 +162,6 @@
     elastic_cloud: "{{ elastic_cloud | combine({ 'generated': {'elastic_password': elastic_pass} }, recursive=true) }}"
   vars:
     elastic_pass: "{{ elastic_secret.resources[0].data.elastic | b64decode }}"
-  tags: [ elastic_cloud ]
 
   # todo: move into init-scripts
 - name: Add RBAC Role Mapping for Keycloak
