@@ -5,7 +5,8 @@
   tasks:
   - include_tasks: tasks/pre-flight.yaml
 
-  - include_role:
+  - name: kOps
+    include_role:
       name: ms3_inc.tavros.kops
     when: kops.enabled
     vars:
