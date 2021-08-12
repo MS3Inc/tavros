@@ -13,7 +13,7 @@ spec:
     emailVerified: true
     credentials:
       - type: password
-        value: {{ jenkins.keycloak.password }}
+        value: '{{ jenkins.keycloak.password }}'
         temporary: false
     clientRoles:
       nexus:

@@ -13,7 +13,7 @@ spec:
     emailVerified: true
     credentials:
       - type: password
-        value: placeholder19
+        value: 'placeholder19'
         temporary: false
     clientRoles:
       nexus:
