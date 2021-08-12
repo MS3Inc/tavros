@@ -108,7 +108,8 @@
         tags: [ fluxtoolkit_sync ]
 
     always:
-      - copy:
+      - name: Store Tavros Vars Locally
+        copy:
           content: >
                      {{
                       { 'all': { 'vars': vars | dict2items | selectattr("key", "in", components) | list | items2dict } } | to_nice_yaml(indent=2)
