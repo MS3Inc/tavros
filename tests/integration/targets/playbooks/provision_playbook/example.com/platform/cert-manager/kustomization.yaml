@@ -5,3 +5,4 @@ resources:
   - helmrepo.yaml
   - release.yaml
   - tavros-clusterissuer.yaml
+  - tavros-ca.yaml

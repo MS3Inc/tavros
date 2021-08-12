@@ -29,7 +29,7 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: kong-tavros-{{ item[0].name }}-kong-admin
+            name: kong-tavros-{{ item[0].name }}{{'-cp' if (item[0].hybrid) }}-kong-admin
             port:
               number: 8001
   - host: "admin.{{ item[0].name }}.{{ cluster_fqdn }}"
@@ -39,7 +39,7 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: kong-tavros-{{ item[0].name }}-kong-manager
+            name: kong-tavros-{{ item[0].name }}{{'-cp' if (item[0].hybrid) }}-kong-manager
             port:
               number: 8002
   - host: "dev-portal{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
@@ -49,7 +49,7 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: kong-tavros-{{ item[0].name }}-kong-portal
+            name: kong-tavros-{{ item[0].name }}{{'-cp' if (item[0].hybrid) }}-kong-portal
             port:
               number: 8003
   - host: "dev-portal-api{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
@@ -59,7 +59,7 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: kong-tavros-{{ item[0].name }}-kong-portalapi
+            name: kong-tavros-{{ item[0].name }}{{'-cp' if (item[0].hybrid) }}-kong-portalapi
             port:
               number: 8004
 {% endif  %}
@@ -70,6 +70,6 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: kong-tavros-{{ item[0].name }}-kong-proxy
+            name: kong-tavros-{{ item[0].name }}{{'-dp' if (item[0].hybrid) }}-kong-proxy
             port:
               number: 80

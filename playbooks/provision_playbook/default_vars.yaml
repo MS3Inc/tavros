@@ -22,11 +22,13 @@ all:
       ee_creds: []
       instances:
       - name: 'sandbox-kong'
+        hybrid: false
         ingress_class: 'sandbox'
         kuma_mesh_name: 'sandbox'
         ee:
           enabled: false
       - name: 'prod-kong'
+        hybrid: true
         ingress_class: 'prod'
         kuma_mesh_name: 'prod'
         ee:

@@ -1,16 +1,16 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: tavros-prod-kong
+  name: tavros-prod-kong-cp
   namespace: kong
 spec:
   targetNamespace: kong
   interval: 10m
   chart:
     spec:
-      # https://github.com/Kong/charts/tree/kong-1.15.2/charts/kong
+      # https://github.com/Kong/charts/tree/kong-2.3.0/charts/kong
       chart: kong
-      version: 1.15.2
+      version: 2.3.0
       sourceRef:
         kind: HelmRepository
         name: kong
@@ -22,9 +22,13 @@ spec:
     remediation:
       retries: 5
   values:
-    image:
-      tag: '2.3'
     env:
+      role: control_plane
+      cluster_mtls: pki
+      cluster_ca_cert: /etc/secrets/prod-kong-cp-cert/ca.crt
+      cluster_cert: /etc/secrets/prod-kong-cp-cert/tls.crt
+      cluster_cert_key: /etc/secrets/prod-kong-cp-cert/tls.key
+    
       # see: https://github.com/elastic/beats/pull/14505
       # https://docs.konghq.com/gateway-oss/2.4.x/logging/
       # https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
@@ -50,9 +54,11 @@ spec:
             name: tavros-prod-kong-pg-creds
             key: pg_password
     ingressController:
+      enabled: True
       ingressClass: prod
       installCRDs: false
       env:
+        publish_service: kong/kong-tavros-prod-kong-dp-kong-proxy
       # see https://github.com/Kong/charts/issues/224
         kong_admin_tls_skip_verify: 'true'
       resources:
@@ -62,47 +68,31 @@ spec:
         requests:
           cpu: 50m
           memory: 128Mi
-    podAnnotations: {
-      kuma.io/sidecar-injection: enabled,
-      kuma.io/gateway: enabled,
-      kuma.io/mesh: prod,
-      co.elastic.logs.proxy/enabled: "true",
-      co.elastic.logs.proxy/module: nginx,
-      co.elastic.logs.proxy/fileset.stdout: access,
+    podAnnotations:
+      kuma.io/sidecar-injection: enabled
+      kuma.io/gateway: enabled
+      kuma.io/mesh: prod
+      co.elastic.logs.proxy/enabled: "true"
+      co.elastic.logs.proxy/module: nginx
+      co.elastic.logs.proxy/fileset.stdout: access
       co.elastic.logs.proxy/fileset.stderr: error
-    }
     admin:
-      enabled: true
+      enabled: True
       http:
         enabled: true
     proxy:
+      enabled: False
+    cluster:
       enabled: true
-      annotations:
-        service.beta.kubernetes.io/aws-load-balancer-type: nlb
-        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
-    topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: topology.kubernetes.io/zone
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app.kubernetes.io/instance: kong-tavros-prod-kong
-          app.kubernetes.io/name: kong
-    resources:
-      limits:
-       cpu: 1
-       memory: 1Gi
-      requests:
-       cpu: 1
-       memory: 1Gi
-    autoscaling:
+      tls:
+        enabled: true
+        servicePort: 8005
+        containerPort: 8005
+    clustertelemetry:
       enabled: true
-      minReplicas: 2
-      maxReplicas: 4
-      metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            target:
-              type: Utilization
-              averageUtilization: 80
+      tls:
+        enabled: true
+        servicePort: 8006
+        containerPort: 8006
+    secretVolumes:
+    - prod-kong-cp-cert

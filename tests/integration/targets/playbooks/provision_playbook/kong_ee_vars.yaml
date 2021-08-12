@@ -22,6 +22,7 @@ all:
             password: 'placeholder4'
       instances:
       - name: 'sandbox-kong'
+        hybrid: false
         ingress_class: 'sandbox'
         pg:
           password: placeholder1
@@ -33,6 +34,7 @@ all:
             client_secret: 'placeholder14'
           admin_password: 'placeholder10'
       - name: 'prod-kong'
+        hybrid: true
         ingress_class: 'prod'
         pg:
           password: placeholder2

@@ -58,6 +58,8 @@ properties:
           properties:
             name:
               type: string
+            hybrid:
+              type: boolean
             ingress_class:
               type: string
             kuma_mesh_name:
