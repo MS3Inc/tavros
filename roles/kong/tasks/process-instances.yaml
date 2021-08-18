@@ -7,10 +7,35 @@
     - "{{ kong.instances }}"
     -
       - name: secret-pg-creds
-      - name: release
       - name: instance-kustomization
         dest: kustomization
       - name: ingress
+
+- name: Template Distributed Release
+  when: ( (not item[0].hybrid) | default(false))
+  template:
+    src: "{{ item[1].name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].dest | default(item[1].name) }}.yaml
+  with_nested:
+    - "{{ kong.instances }}"
+    -
+      - name: release
+
+- name: Template Hybrid Release
+  when: (item[0].hybrid | default(false))
+  template:
+    src: "{{ item[1].name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].dest | default(item[1].name) }}.yaml
+  with_nested:
+    - "{{ kong.instances }}"
+    -
+      - name: release
+        dest: release-cp
+        role: control_plane
+      - name: release
+        dest: release-dp
+        role: data_plane
+      - name: hybrid-certs
 
 - name: Seal Instance Secrets
   tags: [ requires_cluster ]

@@ -12,7 +12,7 @@
     wait: yes
     wait_timeout: 900
   vars:
-    instance_kong_proxy: "kong-tavros-{{ item.name }}-kong-proxy"
+    instance_kong_proxy: "kong-tavros-{{ item.name }}{{'-dp' if item.hybrid }}-kong-proxy"
   loop: "{{ kong.instances }}"
 
 - name: Set DNS for Default Ingress Class
@@ -28,7 +28,7 @@
     wait: yes
     wait_timeout: 900
   vars:
-    prod_kong_proxy: "kong-tavros-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}-kong-proxy"
+    prod_kong_proxy: "kong-tavros-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}{{'-dp' if (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).hybrid }}-kong-proxy"
 
 - name: Set DNS for Non-Default Ingress Classes
   tags: [ kong_dns, route53, requires_cluster ]
@@ -43,5 +43,5 @@
     wait: yes
     wait_timeout: 900
   vars:
-    instance_kong_proxy: "kong-tavros-{{ item.name }}-kong-proxy"
+    instance_kong_proxy: "kong-tavros-{{ item.name }}{{'-dp' if item.hybrid }}-kong-proxy"
   loop: "{{ kong.instances }}"

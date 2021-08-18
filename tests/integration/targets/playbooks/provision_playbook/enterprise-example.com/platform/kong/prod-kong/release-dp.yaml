@@ -1,7 +1,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: tavros-sandbox-kong
+  name: tavros-prod-kong-dp
   namespace: kong
 spec:
   targetNamespace: kong
@@ -27,66 +27,31 @@ spec:
       tag: '2.5.0.0-alpine'
     env:
     
-      admin_api_uri: "https://admin-api.sandbox-kong.tavros.enterprise-example.com"
-      admin_gui_url: "https://admin.sandbox-kong.tavros.enterprise-example.com"
-      portal_api-url: "https://dev-portal-api.sandbox.tavros.enterprise-example.com"
-      portal_gui_host: "dev-portal.sandbox.tavros.enterprise-example.com"
-      portal_gui_protocol: "https"
-      password:
-        valueFrom:
-          secretKeyRef:
-            name: tavros-sandbox-kong-ee-admin-creds
-            key: password
+      role: data_plane
+      cluster_mtls: pki
+      cluster_ca_cert: /etc/secrets/prod-kong-dp-cert/ca.crt
+      cluster_cert: /etc/secrets/prod-kong-dp-cert/tls.crt
+      cluster_cert_key: /etc/secrets/prod-kong-dp-cert/tls.key
+      lua_ssl_trusted_certificate: /etc/secrets/prod-kong-dp-cert/tls.crt
+      cluster_server_name: kong-tavros-prod-kong-cp-kong-cluster.kong.svc.cluster.local
+      cluster_control_plane: kong-tavros-prod-kong-cp-kong-cluster.kong.svc.cluster.local:8005
+      cluster_telemetry_endpoint: kong-tavros-prod-kong-cp-kong-clustertelemetry.kong.svc.cluster.local:8006
       # see: https://github.com/elastic/beats/pull/14505
       # https://docs.konghq.com/gateway-oss/2.4.x/logging/
       # https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
       nginx_http_log_format: |
         extended '$host $remote_addr - $remote_user [$time_local] ' '"$request" $status $body_bytes_sent ' '"$http_referer" "$http_user_agent"'
       proxy_access_log: /dev/stdout extended
-      database: postgres
-      pg_host: tavros-postgresql.postgresql
-      pg_port: '5432'
-      pg_database:
-        valueFrom:
-          secretKeyRef:
-            name: tavros-sandbox-kong-pg-creds
-            key: pg_database
-      pg_user:
-        valueFrom:
-          secretKeyRef:
-            name: tavros-sandbox-kong-pg-creds
-            key: pg_user
-      pg_password:
-        valueFrom:
-          secretKeyRef:
-            name: tavros-sandbox-kong-pg-creds
-            key: pg_password
+      database: "off"
     ingressController:
-      enabled: True
-      ingressClass: sandbox
-      installCRDs: false
-      env:
-      # see https://github.com/Kong/charts/issues/224
-        kong_admin_tls_skip_verify: 'true'
-        kong_admin_token:
-          valueFrom:
-            secretKeyRef:
-              name: tavros-sandbox-kong-ee-admin-creds
-              key: password
-      resources:
-        limits:
-          cpu: 100m
-          memory: 256Mi
-        requests:
-          cpu: 50m
-          memory: 128Mi
+      enabled: False
     podAnnotations:
       co.elastic.logs.proxy/enabled: "true"
       co.elastic.logs.proxy/module: nginx
       co.elastic.logs.proxy/fileset.stdout: access
       co.elastic.logs.proxy/fileset.stderr: error
     admin:
-      enabled: True
+      enabled: False
       http:
         enabled: true
     proxy:
@@ -94,25 +59,41 @@ spec:
       annotations:
         service.beta.kubernetes.io/aws-load-balancer-type: nlb
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+    portal:
+      enabled: False
+    portalapi:
+      enabled: False
+    manager:
+      enabled: False
     enterprise:
       enabled: true
       license_secret: default-ee-license
       vitals:
-        enabled: True
+        enabled: False
       portal:
-        enabled: True
+        enabled: False
       rbac:
-        enabled: True
-        admin_gui_auth: openid-connect
-        session_conf_secret: tavros-sandbox-kong-ee-admin-gui-session
-        admin_gui_auth_conf_secret: tavros-sandbox-kong-ee-admin-gui-auth
+        enabled: False
+    secretVolumes:
+    - prod-kong-dp-cert
+    deployment:
+      userDefinedVolumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token
+      userDefinedVolumes:
+      - name: default-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 7200
+              path: token
     topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: topology.kubernetes.io/zone
       whenUnsatisfiable: ScheduleAnyway
       labelSelector:
         matchLabels:
-          app.kubernetes.io/instance: kong-tavros-sandbox-kong
+          app.kubernetes.io/instance: kong-tavros-prod-kong-dp
           app.kubernetes.io/name: kong
     resources:
       limits:
@@ -121,3 +102,14 @@ spec:
       requests:
        cpu: 500m
        memory: 1Gi
+    autoscaling:
+      enabled: true
+      minReplicas: 2
+      maxReplicas: 4
+      metrics:
+        - type: Resource
+          resource:
+            name: cpu
+            target:
+              type: Utilization
+              averageUtilization: 80

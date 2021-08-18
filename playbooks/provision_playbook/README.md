@@ -140,6 +140,7 @@ name | String | **Required** Identifier for EE Kong Instance |
 | Field Name | Type | Description | Default Value |
 | ---------- | ---- | ----------- | ------------- |
 name | String | **Required** The name of the Kong instance |
+hybrid | Boolean | **Required** Deployment Type |
 ingress_class | String | **Required**  The name of the ingress class |
 kuma_mesh_name | String | The name of the Kuma mesh that the Kong instance should be part of |
 ee | [Kong Instance EE Object](#kong-instance-ee-object) | The EE configuration for the Kong instance |

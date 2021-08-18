@@ -1,16 +1,16 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: tavros-prod-kong
+  name: tavros-prod-kong-cp
   namespace: kong
 spec:
   targetNamespace: kong
   interval: 10m
   chart:
     spec:
-      # https://github.com/Kong/charts/tree/kong-1.15.2/charts/kong
+      # https://github.com/Kong/charts/tree/kong-2.3.0/charts/kong
       chart: kong
-      version: 1.15.2
+      version: 2.3.0
       sourceRef:
         kind: HelmRepository
         name: kong
@@ -24,8 +24,14 @@ spec:
   values:
     image:
       repository: kong/kong-gateway
-      tag: '2.3.3.2-alpine'
+      tag: '2.5.0.0-alpine'
     env:
+      role: control_plane
+      cluster_mtls: pki
+      cluster_ca_cert: /etc/secrets/prod-kong-cp-cert/ca.crt
+      cluster_cert: /etc/secrets/prod-kong-cp-cert/tls.crt
+      cluster_cert_key: /etc/secrets/prod-kong-cp-cert/tls.key
+    
       admin_api_uri: "https://admin-api.prod-kong.tavros.enterprise-example.com"
       admin_gui_url: "https://admin.prod-kong.tavros.enterprise-example.com"
       portal_api-url: "https://dev-portal-api.tavros.enterprise-example.com"
@@ -61,9 +67,11 @@ spec:
             name: tavros-prod-kong-pg-creds
             key: pg_password
     ingressController:
+      enabled: True
       ingressClass: prod
       installCRDs: false
       env:
+        publish_service: kong/kong-tavros-prod-kong-dp-kong-proxy
       # see https://github.com/Kong/charts/issues/224
         kong_admin_tls_skip_verify: 'true'
         kong_admin_token:
@@ -78,56 +86,40 @@ spec:
         requests:
           cpu: 50m
           memory: 128Mi
-    podAnnotations: {
-      co.elastic.logs.proxy/enabled: "true",
-      co.elastic.logs.proxy/module: nginx,
-      co.elastic.logs.proxy/fileset.stdout: access,
+    podAnnotations:
+      co.elastic.logs.proxy/enabled: "true"
+      co.elastic.logs.proxy/module: nginx
+      co.elastic.logs.proxy/fileset.stdout: access
       co.elastic.logs.proxy/fileset.stderr: error
-    }
     admin:
-      enabled: true
+      enabled: True
       http:
         enabled: true
     proxy:
-      enabled: true
-      annotations:
-        service.beta.kubernetes.io/aws-load-balancer-type: nlb
-        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+      enabled: False
     enterprise:
       enabled: true
       license_secret: default-ee-license
       vitals:
-        enabled: true
+        enabled: True
       portal:
-        enabled: true
+        enabled: True
       rbac:
-        enabled: true
+        enabled: True
         admin_gui_auth: openid-connect
         session_conf_secret: tavros-prod-kong-ee-admin-gui-session
         admin_gui_auth_conf_secret: tavros-prod-kong-ee-admin-gui-auth
-    topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: topology.kubernetes.io/zone
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app.kubernetes.io/instance: kong-tavros-prod-kong
-          app.kubernetes.io/name: kong
-    resources:
-      limits:
-       cpu: 1
-       memory: 1Gi
-      requests:
-       cpu: 1
-       memory: 1Gi
-    autoscaling:
+    cluster:
       enabled: true
-      minReplicas: 2
-      maxReplicas: 4
-      metrics:
-        - type: Resource
-          resource:
-            name: cpu
-            target:
-              type: Utilization
-              averageUtilization: 80
+      tls:
+        enabled: true
+        servicePort: 8005
+        containerPort: 8005
+    clustertelemetry:
+      enabled: true
+      tls:
+        enabled: true
+        servicePort: 8006
+        containerPort: 8006
+    secretVolumes:
+    - prod-kong-cp-cert

@@ -6,5 +6,7 @@ resources:
   - secret-ee-admin-gui-auth.yaml
   - secret-ee-admin-gui-session.yaml
   - secret-pg-creds.yaml
-  - release.yaml
+  - hybrid-certs.yaml
+  - release-dp.yaml
+  - release-cp.yaml
   - ingress.yaml

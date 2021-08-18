@@ -1,16 +1,16 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: tavros-{{ item[0].name }}
+  name: tavros-{{ item[0].name }}{{'-cp' if (item[0].hybrid) and (item[1].role == 'control_plane') }}{{'-dp' if (item[0].hybrid) and (item[1].role == 'data_plane') }}
   namespace: kong
 spec:
   targetNamespace: kong
   interval: 10m
   chart:
     spec:
-      # https://github.com/Kong/charts/tree/kong-1.15.2/charts/kong
+      # https://github.com/Kong/charts/tree/kong-2.3.0/charts/kong
       chart: kong
-      version: 1.15.2
+      version: 2.3.0
       sourceRef:
         kind: HelmRepository
         name: kong
@@ -25,13 +25,28 @@ spec:
 {%  if item[0].ee.enabled %}
     image:
       repository: kong/kong-gateway
-      tag: '2.3.3.2-alpine'
-{% else  %}
-    image:
-      tag: '2.3'
+      tag: '2.5.0.0-alpine'
 {% endif  %}
     env:
-{%  if item[0].ee.enabled %}
+{%  if ((item[0].hybrid) and (item[1].role == 'control_plane')) %}
+      role: control_plane
+      cluster_mtls: pki
+      cluster_ca_cert: /etc/secrets/{{ item[0].name }}-cp-cert/ca.crt
+      cluster_cert: /etc/secrets/{{ item[0].name }}-cp-cert/tls.crt
+      cluster_cert_key: /etc/secrets/{{ item[0].name }}-cp-cert/tls.key
+{% endif  %}    
+{%  if ((item[0].hybrid) and (item[1].role == 'data_plane')) %}
+      role: data_plane
+      cluster_mtls: pki
+      cluster_ca_cert: /etc/secrets/{{ item[0].name }}-dp-cert/ca.crt
+      cluster_cert: /etc/secrets/{{ item[0].name }}-dp-cert/tls.crt
+      cluster_cert_key: /etc/secrets/{{ item[0].name }}-dp-cert/tls.key
+      lua_ssl_trusted_certificate: /etc/secrets/{{ item[0].name }}-dp-cert/tls.crt
+      cluster_server_name: kong-tavros-{{ item[0].name }}-cp-kong-cluster.kong.svc.cluster.local
+      cluster_control_plane: kong-tavros-{{ item[0].name }}-cp-kong-cluster.kong.svc.cluster.local:8005
+      cluster_telemetry_endpoint: kong-tavros-{{ item[0].name }}-cp-kong-clustertelemetry.kong.svc.cluster.local:8006
+{% endif  %}
+{%  if item[0].ee.enabled and not ((item[0].hybrid) and (item[1].role == 'data_plane')) %}
       admin_api_uri: "https://admin-api.{{ item[0].name }}.{{ cluster_fqdn }}"
       admin_gui_url: "https://admin.{{ item[0].name }}.{{ cluster_fqdn }}"
       portal_api-url: "https://dev-portal-api{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
@@ -51,7 +66,8 @@ spec:
         extended '$host $remote_addr - $remote_user [$time_local] ' '"$request" $status $body_bytes_sent ' '"$http_referer" "$http_user_agent"'
       proxy_access_log: /dev/stdout extended
 {% endif  %}
-      database: postgres
+      database: {{'"off"' if (item[0].hybrid) and (item[1].role == 'data_plane') else 'postgres'}}
+{%  if not ((item[0].hybrid) and (item[1].role == 'data_plane')) %}
       pg_host: tavros-postgresql.postgresql
       pg_port: '5432'
       pg_database:
@@ -69,10 +85,16 @@ spec:
           secretKeyRef:
             name: tavros-{{ item[0].name }}-pg-creds
             key: pg_password
+{% endif  %}
     ingressController:
+      enabled: {{ false if ((item[0].hybrid) and (item[1].role == 'data_plane')) else true }}
+{%  if not ((item[0].hybrid) and (item[1].role == 'data_plane')) %}
       ingressClass: {{ item[0].ingress_class }}
       installCRDs: false
       env:
+{%  if ((item[0].hybrid) and (item[1].role == 'control_plane')) %}
+        publish_service: kong/kong-tavros-{{ item[0].name }}-dp-kong-proxy
+{% endif  %}
       # see https://github.com/Kong/charts/issues/224
         kong_admin_tls_skip_verify: 'true'
 {%  if item[0].ee.enabled %}
@@ -89,58 +111,104 @@ spec:
         requests:
           cpu: 50m
           memory: 128Mi
-    podAnnotations: {
+{% endif  %}
+    podAnnotations:
 {% if item[0].kuma_mesh_name is defined %}
-      kuma.io/sidecar-injection: enabled,
-      kuma.io/gateway: enabled,
-      kuma.io/mesh: {{ item[0].kuma_mesh_name }},
+      kuma.io/sidecar-injection: enabled
+      kuma.io/gateway: {{ 'enabled' if ((item[0].hybrid) and (item[1].role == 'control_plane')) else 'enabled' }}
+      kuma.io/mesh: {{ item[0].kuma_mesh_name }}
 {% endif  %}
 {% if elastic_cloud.enabled is defined and elastic_cloud.enabled %}
-      co.elastic.logs.proxy/enabled: "true",
-      co.elastic.logs.proxy/module: nginx,
-      co.elastic.logs.proxy/fileset.stdout: access,
+      co.elastic.logs.proxy/enabled: "true"
+      co.elastic.logs.proxy/module: nginx
+      co.elastic.logs.proxy/fileset.stdout: access
       co.elastic.logs.proxy/fileset.stderr: error
 {% endif  %}
-    }
     admin:
-      enabled: true
+      enabled: {{ false if ((item[0].hybrid) and (item[1].role == 'data_plane')) else true }}
       http:
         enabled: true
     proxy:
-      enabled: true
-{%  if kubernetes_cluster.cloud_provider == 'aws' %}
+      enabled: {{ false if ((item[0].hybrid) and (item[1].role == 'control_plane')) else true }}
+{%  if kubernetes_cluster.cloud_provider == 'aws' and not ((item[0].hybrid) and (item[1].role == 'control_plane')) %}
       annotations:
         service.beta.kubernetes.io/aws-load-balancer-type: nlb
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+{% endif  %}
+{%  if ((item[0].hybrid) and (item[1].role == 'data_plane')) %}
+    portal:
+      enabled: False
+    portalapi:
+      enabled: False
+    manager:
+      enabled: False
 {% endif  %}
 {%  if item[0].ee.enabled %}
     enterprise:
       enabled: true
       license_secret: {{ item[0].ee.creds }}-ee-license
       vitals:
-        enabled: true
+        enabled: {{ false if ((item[0].hybrid) and (item[1].role == 'data_plane')) else true }}
       portal:
-        enabled: true
+        enabled: {{ false if ((item[0].hybrid) and (item[1].role == 'data_plane')) else true }}
       rbac:
-        enabled: true
+        enabled: {{ false if ((item[0].hybrid) and (item[1].role == 'data_plane')) else true }}
+{%  if not ((item[0].hybrid) and (item[1].role == 'data_plane')) %}
         admin_gui_auth: openid-connect
         session_conf_secret: tavros-{{ item[0].name }}-ee-admin-gui-session
         admin_gui_auth_conf_secret: tavros-{{ item[0].name }}-ee-admin-gui-auth
 {% endif  %}
+{% endif  %}
+{%  if ((item[0].hybrid) and (item[1].role == 'control_plane')) %}
+    cluster:
+      enabled: true
+      tls:
+        enabled: true
+        servicePort: 8005
+        containerPort: 8005
+    clustertelemetry:
+      enabled: true
+      tls:
+        enabled: true
+        servicePort: 8006
+        containerPort: 8006
+{% endif  %}
+{%  if (item[0].hybrid) %}
+    secretVolumes:
+{%  if (item[1].role == 'control_plane') %}
+    - {{ item[0].name }}-cp-cert
+{% else  %}
+    - {{ item[0].name }}-dp-cert
+{% endif  %}
+{% endif  %}
+{%  if ((item[0].hybrid) and (item[1].role == 'data_plane')) %}
+    deployment:
+      userDefinedVolumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: default-token
+      userDefinedVolumes:
+      - name: default-token
+        projected:
+          sources:
+          - serviceAccountToken:
+              expirationSeconds: 7200
+              path: token
+{% endif  %}
+{%  if not ((item[0].hybrid) and (item[1].role == 'control_plane')) %}
     topologySpreadConstraints:
     - maxSkew: 1
       topologyKey: topology.kubernetes.io/zone
       whenUnsatisfiable: ScheduleAnyway
       labelSelector:
         matchLabels:
-          app.kubernetes.io/instance: kong-tavros-{{ item[0].name }}
+          app.kubernetes.io/instance: kong-tavros-{{ item[0].name }}{{'-dp' if (item[0].hybrid) and (item[1].role == 'data_plane') }}
           app.kubernetes.io/name: kong
     resources:
       limits:
        cpu: 1
        memory: 1Gi
       requests:
-       cpu: 1
+       cpu: 500m
        memory: 1Gi
 {%  if item[0].ingress_class == kong.default_ingress_class %}
     autoscaling:
@@ -154,4 +222,5 @@ spec:
             target:
               type: Utilization
               averageUtilization: 80
+{% endif  %}
 {% endif  %}

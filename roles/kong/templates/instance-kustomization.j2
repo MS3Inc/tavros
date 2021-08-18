@@ -7,5 +7,11 @@ resources:
   - secret-ee-admin-gui-session.yaml
 {% endif  %}
   - secret-pg-creds.yaml
+{%  if item[0].hybrid %}
+  - hybrid-certs.yaml
+  - release-dp.yaml
+  - release-cp.yaml
+{% else %}
   - release.yaml
+{% endif  %}
   - ingress.yaml

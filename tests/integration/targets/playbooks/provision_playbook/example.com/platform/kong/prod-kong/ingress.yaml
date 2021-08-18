@@ -22,6 +22,6 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: kong-tavros-prod-kong-kong-proxy
+            name: kong-tavros-prod-kong-dp-kong-proxy
             port:
               number: 80
