@@ -12,6 +12,13 @@ properties:
         type: string
       dns_zone:
         type: string
+      keycloak:
+        type: object
+        properties:
+          realm:
+            type: string
+          client_secret:
+            type: string
   kops:
     type: object
     properties:

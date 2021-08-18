@@ -74,6 +74,13 @@
         metricsServer:
           enabled: true
           insecure: true
+        kubeAPIServer:
+          oidcIssuerURL: https://auth.{{ cluster_fqdn }}/auth/realms/{{ kubernetes_cluster.keycloak.realm }}
+          oidcClientID: kubernetes
+          oidcUsernameClaim: email
+          oidcUsernamePrefix: "oidc:"
+          oidcGroupsClaim: groups
+          oidcGroupsPrefix: "oidc:"
 
 - name: Create Cluster
   when: result.changed

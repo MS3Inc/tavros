@@ -119,6 +119,14 @@ state_bucket | String | The name of the S3 bucket to place the cluster state in 
 ssh_public_key | String | The SSH public key to setup as authorized user on provisioned machines | _read from ~/.ssh/id_rsa.pub_
 aws_access_key_id | String | The AWS IAM AccessKeyId | _uses aws cli logged in user_
 aws_secret_access_key | The AWS IAM SecretAccessKey | _uses aws cli logged in user_
+keycloak | [Kubernetes Cluster Keycloak Object](#kubernetes-cluster-keycloak-object) | Keycloak Config | { "realm": "", "client_secret": "" }
+
+### Kubernetes Cluster Keycloak Object
+
+| Field Name | Type | Description | Default Value |
+| ---------- | ---- | ----------- | ------------- |
+realm | String | Keycloak Realm Name | 
+client_secret | String | Client Secret | 
 
 ### Kong Object
 
