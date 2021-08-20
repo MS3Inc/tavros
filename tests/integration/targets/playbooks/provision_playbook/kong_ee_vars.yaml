@@ -10,6 +10,9 @@ all:
       worker_instance_type: 't2.xlarge'
       worker_azs: 'us-east-1a,us-east-1b'
       dns_zone: "{{ cluster_fqdn }}"
+      keycloak:
+        client_secret: 'placeholder17'
+        realm: prod
     kops:
       enabled: false
     kong:

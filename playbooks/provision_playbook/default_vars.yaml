@@ -6,6 +6,8 @@ all:
     kubernetes_cluster:
       cloud_provider: 'aws'
       dns_zone: "{{ cluster_fqdn }}"
+      keycloak:
+        realm: prod
     kops:
       enabled: true
       master_count: 3

@@ -1,0 +1,34 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: kubernetes
+  namespace: keycloak
+  labels:
+    client: kubernetes
+spec:
+  realmSelector:
+    matchLabels:
+        realm: {{ kubernetes_cluster.keycloak.realm }}
+  client:
+    clientId: kubernetes
+    secret: {{ kubernetes_cluster.keycloak.client_secret }}
+    protocol: openid-connect
+    rootUrl: http://localhost:8000
+    redirectUris:
+    - "http://localhost:8000"
+    - "http://localhost:18000"
+    directAccessGrantsEnabled: True
+    standardFlowEnabled: True
+    enabled: True
+    protocolMappers:
+    - name: roles
+      protocol: openid-connect
+      protocolMapper: "oidc-usermodel-client-role-mapper"
+      config:
+        id.token.claim: "true"
+        claim.name: "groups"
+        multivalued: "true"
+        userinfo.token.claim: "false"
+        jsonType.label: string
+        access.token.claim: "true"
+        usermodel.clientRoleMapping.clientId: kubernetes

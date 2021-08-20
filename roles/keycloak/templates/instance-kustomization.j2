@@ -5,6 +5,8 @@ resources:
   - secret-keycloak-db.yaml
   - ingress.yaml
   - keycloak.yaml
+  - keycloakclient-kubernetes.yaml
+  - clusterrolebinding-oidc-cluster-admin.yaml
 {% for item in keycloak.realms %}
   - {{ item.name }}/keycloakrealm.yaml
   - {{ item.name }}/keycloakuser-admin.yaml

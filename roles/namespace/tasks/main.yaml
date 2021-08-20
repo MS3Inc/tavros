@@ -11,6 +11,12 @@
     src: ns.j2
     dest: /tmp/{{ cluster_fqdn }}/{{ item.name }}/ns.yaml
 
+- name: Template Rolebindings
+  loop: "{{ namespaces }}"
+  template:
+    src: rolebinding-oidc-ns-admin.j2
+    dest: /tmp/{{ cluster_fqdn }}/{{ item.name }}/rolebinding-oidc-ns-admin.yaml
+
 - name: Template Docker Registry Secrets
   loop: "{{ namespaces }}"
   template:
