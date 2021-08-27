@@ -1,0 +1,23 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tavros
+  namespace: gatekeeper-system
+spec:
+  targetNamespace: gatekeeper-system
+  interval: 10m
+  chart:
+    spec:
+      # https://github.com/open-policy-agent/gatekeeper/blob/master/charts/gatekeeper/values.yaml
+      chart: gatekeeper
+      version: 3.5.2
+      sourceRef:
+        kind: HelmRepository
+        name: opa-gatekeeper
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5

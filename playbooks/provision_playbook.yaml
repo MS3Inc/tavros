@@ -20,6 +20,11 @@
           name: ms3_inc.tavros.fluxtoolkit
         tags: [ fluxtoolkit ]
 
+      - name: Opa Gatekeeper
+        include_role:
+          name: ms3_inc.tavros.opa_gatekeeper
+        tags: [ opa_gatekeeper ]
+
       - name: sealed-secrets
         include_role:
           name: ms3_inc.tavros.sealed_secrets
