@@ -36,17 +36,6 @@ spec:
                 defaultMode: 420
             - name: keystore-volume
               emptyDir: {}
-          initContainers:
-            - name: bootstrap-truststore
-              image: 'openjdk:8-jre-slim'
-              command: ['/bin/bash']
-              args: ['-c', 'keytool -noprompt -import -trustcacerts -alias tls -file /es/certificates/tls.crt -keystore /var/run/secrets/java.io/keystores/truststore.jks -storepass password']
-              volumeMounts:
-                - name: certificates
-                  readOnly: true
-                  mountPath: /es/certificates/
-                - name: keystore-volume
-                  mountPath: /var/run/secrets/java.io/keystores
           containers:
             - name: tavros-spark-dependencies
               image: quay.io/jam01/jaeger-spark-dependencies:0.0.1-SNAPSHOT-001
@@ -57,13 +46,9 @@ spec:
                 - name: STORAGE
                   value: elasticsearch
                 - name: ES_NODES
-                  value: 'https://tavros-es-http.elastic-system.svc:9200'
+                  value: 'http://tavros-es-http.elastic-system.svc:9200'
                 - name: ES_INDEX_PREFIX
                   value: tavros
-                - name: JAVA_OPTS
-                  value: >-
-                    -Djavax.net.ssl.trustStore=/var/run/secrets/java.io/keystores/truststore.jks
-                    -Djavax.net.ssl.trustStorePassword=password
                 - name: ES_TAGS_AS_FIELDS_ALL
                   value: 'true'
               resources:
@@ -71,9 +56,6 @@ spec:
                   memory: 2Gi
                 requests:
                   memory: 2Gi
-              volumeMounts:
-                - name: keystore-volume
-                  mountPath: /var/run/secrets/java.io/keystores
           restartPolicy: Never
           terminationGracePeriodSeconds: 30
           dnsPolicy: ClusterFirst

@@ -5,6 +5,10 @@ metadata:
   namespace: elastic-system
 spec:
   version: 7.13.4
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
   auth:
     roles:
     - secretName: tavros-beats-role-override
