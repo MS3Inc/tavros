@@ -19,7 +19,7 @@ spec:
               done
           env:
             - name: ES_HOST
-              value: https://tavros-es-http.elastic-system.svc.cluster.local
+              value: http://tavros-es-http.elastic-system.svc.cluster.local
             - name: ES_PSW
               valueFrom:
                 secretKeyRef:

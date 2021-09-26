@@ -24,7 +24,7 @@ spec:
     type: elasticsearch
     options:
       es:
-        server-urls: https://tavros-es-http.elastic-system.svc:9200
+        server-urls: http://tavros-es-http.elastic-system.svc:9200
         index-prefix: tavros
         tags-as-fields:
           all: true

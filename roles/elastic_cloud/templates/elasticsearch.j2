@@ -5,6 +5,10 @@ metadata:
   namespace: elastic-system
 spec:
   version: 7.13.4
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
   auth:
     roles:
     - secretName: tavros-beats-role-override
@@ -50,6 +54,16 @@ spec:
 {% endif %}
     podTemplate:
       spec:
+        containers:
+        - name: elasticsearch
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms2g -Xmx2g
+          resources:
+            requests:
+              memory: 4Gi
+            limits:
+              memory: 4Gi
         initContainers:
         - name: sysctl
           securityContext:

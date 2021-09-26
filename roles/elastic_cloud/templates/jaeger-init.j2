@@ -6,7 +6,7 @@ set -o errexit
 
 # todo: make operations idempotent
 echo "Create Role"
-curl -X POST -s -i --insecure -u elastic:$ES_PSW $ES_HOST:9200/_security/role/jaeger_writer  \
+curl -X POST -i --insecure -u elastic:$ES_PSW $ES_HOST:9200/_security/role/jaeger_writer  \
 -d '{
       "cluster": [
           "monitor",
@@ -39,7 +39,7 @@ curl -X POST -s -i --insecure -u elastic:$ES_PSW $ES_HOST:9200/_security/role/ja
 -H 'Content-Type: application/json' \
 
 echo "Create User"
-curl -X POST -s -i --insecure -u elastic:$ES_PSW $ES_HOST:9200/_security/user/jaeger \
+curl -X POST -i --insecure -u elastic:$ES_PSW $ES_HOST:9200/_security/user/jaeger \
 -d '{
       "password": "{{ jaeger.es.password }}",
       "roles": [
