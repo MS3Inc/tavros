@@ -27,6 +27,16 @@ spec:
         storageClassName: kops-csi-1-21
     podTemplate:
       spec:
+        containers:
+        - name: elasticsearch
+          env:
+          - name: ES_JAVA_OPTS
+            value: -Xms2g -Xmx2g
+          resources:
+            requests:
+              memory: 4Gi
+            limits:
+              memory: 4Gi
         initContainers:
         - name: sysctl
           securityContext:
