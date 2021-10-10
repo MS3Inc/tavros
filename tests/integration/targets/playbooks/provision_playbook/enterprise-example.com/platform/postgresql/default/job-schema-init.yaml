@@ -22,7 +22,7 @@ spec:
               psql -h $PG_HOST -U postgres -f /tmp/schema-init/script.sql || { echo 'PSQL Setup failure' ; exit 1; }
           env:
             - name: PG_HOST
-              value: tavros-postgresql.postgresql.svc.cluster.local
+              value: tavros-postgresql-ha-pgpool.postgresql.svc.cluster.local
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:

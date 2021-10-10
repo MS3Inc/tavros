@@ -16,6 +16,8 @@
       dest: default/secret-pg-creds
     - name: secret-schema-init-script
       dest: default/secret-schema-init-script
+    - name: secret-pgpool-init-script
+      dest: default/secret-pgpool-init-script
     - name: release
       dest: default/release
 

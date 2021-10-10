@@ -9,6 +9,11 @@
   set_fact:
     postgresql: "{{ { 'postgres_password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
 
+- name: Generate and Merge postgresql.repmgr_password Variable
+  when: postgresql.repmgr_password is not defined
+  set_fact:
+    postgresql: "{{ { 'repmgr_password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
+
 - name: Generate kong.instances.pg.password Variables
   loop: "{{ kong.instances }}"
   set_fact:

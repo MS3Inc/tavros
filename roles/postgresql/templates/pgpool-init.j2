@@ -1,0 +1,5 @@
+pg_md5 -m --config-file="/opt/bitnami/pgpool/conf/pgpool.conf" -u "gitea" "{{ gitea.pg.password }}"
+pg_md5 -m --config-file="/opt/bitnami/pgpool/conf/pgpool.conf" -u "keycloak" "{{ keycloak.pg.password }}"
+{% for item in kong.instances %}
+pg_md5 -m --config-file="/opt/bitnami/pgpool/conf/pgpool.conf" -u "{{ item.name }}" "{{ item.pg.password }}"
+{% endfor %}
