@@ -8,4 +8,3 @@ resources:
   - default/keycloakclient.yaml
   - default/kongplugin-oidc.yaml
   - default/secret-es-creds.yaml
-  - default/secret-es-http-certs.yaml

@@ -5,19 +5,6 @@
     state: directory
   tags: [ jaeger ]
 
-# Import Elasticsearch certificates
-# https://www.elastic.co/guide/en/cloud-on-k8s/1.3/k8s-tls-certificates.html#k8s-default-self-signed-certificate
-- name: Get tavros-es-cert-public Resource from elastic-system Namespace
-  tags: [ requires_cluster, jaeger ]
-  when: ('dry-run' not in ansible_run_tags)
-  ms3_inc.tavros.kube_info:
-    kubeconfig: '~/.kube/config'
-    api_version: v1
-    kind: Secret
-    name: tavros-es-http-certs-public
-    namespace: elastic-system
-  register: elastic_certs
-
 - name: Generate Keycloak Client Secret
   when: jaeger.keycloak.client_secret is not defined
   set_fact:
@@ -40,8 +27,6 @@
       dest: default/kongplugin-oidc
     - name: secret-es-creds
       dest: default/secret-es-creds
-    - name: secret-es-http-certs
-      dest: default/secret-es-http-certs
   tags: [ jaeger ]
 
 - name: Copy Files
@@ -67,7 +52,6 @@
     mv /tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.yaml
   loop:
     - name: default/secret-es-creds
-    - name: default/secret-es-http-certs
 
 - name: Apply Resources
   tags: [ requires_cluster, jaeger ]
