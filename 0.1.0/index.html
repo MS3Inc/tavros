@@ -65,7 +65,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#welcome-to-tavros" class="md-skip">
+        <a href="#tavros" class="md-skip">
           Skip to content
         </a>
       
@@ -97,7 +97,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Welcome to Tavros
+              Home
             
           </span>
         </div>
@@ -220,12 +220,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Welcome to Tavros
+          Home
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="." class="md-nav__link md-nav__link--active">
-        Welcome to Tavros
+        Home
       </a>
       
         
@@ -243,15 +243,42 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
+  <a href="#ansible-collection-ms3_inctavros" class="md-nav__link">
+    Ansible Collection - ms3_inc.tavros
+  </a>
+  
+    <nav class="md-nav" aria-label="Ansible Collection - ms3_inc.tavros">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provision-playbook" class="md-nav__link">
+    Provision Playbook
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-platform-components" class="md-nav__link">
+    Supported Platform Components
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
+  <a href="#roadmap" class="md-nav__link">
+    Roadmap
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-decision-log" class="md-nav__link">
+    Architectural Decision Log
   </a>
   
 </li>
@@ -772,15 +799,42 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#commands" class="md-nav__link">
-    Commands
+  <a href="#ansible-collection-ms3_inctavros" class="md-nav__link">
+    Ansible Collection - ms3_inc.tavros
+  </a>
+  
+    <nav class="md-nav" aria-label="Ansible Collection - ms3_inc.tavros">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#provision-playbook" class="md-nav__link">
+    Provision Playbook
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-platform-components" class="md-nav__link">
+    Supported Platform Components
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#project-layout" class="md-nav__link">
-    Project layout
+  <a href="#roadmap" class="md-nav__link">
+    Roadmap
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architectural-decision-log" class="md-nav__link">
+    Architectural Decision Log
   </a>
   
 </li>
@@ -802,21 +856,86 @@
                   </a>
                 
                 
-                <h1 id="welcome-to-tavros">Welcome to Tavros</h1>
-<p>For full documentation visit <a href="https://www.mkdocs.org">mkdocs.org</a>.</p>
-<h2 id="commands">Commands</h2>
-<ul>
-<li><code>mkdocs new [dir-name]</code> - Create a new project.</li>
-<li><code>mkdocs serve</code> - Start the live-reloading docs server.</li>
-<li><code>mkdocs build</code> - Build the documentation site.</li>
-<li><code>mkdocs -h</code> - Print help message and exit.</li>
-</ul>
-<h2 id="project-layout">Project layout</h2>
-<pre><code>mkdocs.yml    # The configuration file.
-docs/
-    index.md  # The documentation homepage.
-    ...       # Other markdown pages, images and other files.
-</code></pre>
+                <p><img alt="alt text" src="https://www.ms3-inc.com/wp-content/uploads/2021/02/b.png" />
+<a href="https://github.com/Kong/kong/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg" /></a></p>
+<h1 id="tavros">Tavros</h1>
+<p>Tavros is a cost-effective, cloud-native, and modular integration platform composed of best-of-breed, and seamlessly integrated open-source components.</p>
+<h2 id="ansible-collection-ms3_inctavros">Ansible Collection - ms3_inc.tavros</h2>
+<p>The objective of this Ansible Collection is to provide the necessary Ansible Playbooks to configure, provision, and manage the Tavros Kubernetes Cluster and supported components.</p>
+<h3 id="provision-playbook">Provision Playbook</h3>
+<p>The provision playbook provisions a Kubernetes cluster and configures Tavros's platform components, application environments, etc. All of the components are configurable through Ansible variables or the default configuration can be chosen. See the provision playbook's <a href="playbooks/provision_playbook/README.md">documentation</a> for more information.</p>
+<h2 id="supported-platform-components">Supported Platform Components</h2>
+<table>
+<thead>
+<tr>
+<th>Concern</th>
+<th>Component</th>
+<th>Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Platform GitOps</td>
+<td>Flux v2</td>
+<td>0.10.0</td>
+</tr>
+<tr>
+<td>Platform GitOps</td>
+<td>Sealed Secrets</td>
+<td>0.15.0</td>
+</tr>
+<tr>
+<td>API Gateway and Manager</td>
+<td>Kong</td>
+<td>2.3.3</td>
+</tr>
+<tr>
+<td>API Portal</td>
+<td>Kong Enterprise Edition</td>
+<td>2.3.3</td>
+</tr>
+<tr>
+<td>Service Mesh</td>
+<td>Kuma</td>
+<td>1.2.0</td>
+</tr>
+<tr>
+<td>Identity and Access Management</td>
+<td>Keycloak</td>
+<td>12.0.4</td>
+</tr>
+<tr>
+<td>Artifact Management</td>
+<td>Nexus Repository Manager</td>
+<td>3.28.1</td>
+</tr>
+<tr>
+<td>Continuous Delivery</td>
+<td>Jenkins</td>
+<td>2.277.4</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>Elastic Cloud</td>
+<td>7.13.4</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>Jaeger</td>
+<td>1.22.0</td>
+</tr>
+<tr>
+<td>Static Code Qualitative Analysis</td>
+<td>Sonarqube</td>
+<td>8.5</td>
+</tr>
+</tbody>
+</table>
+<h2 id="roadmap">Roadmap</h2>
+<p>The Tavros team will maintain an up to date roadmap for major and minor releases through its <a href="https://github.com/MS3Inc/tavros/milestones">Milestones</a>.</p>
+<p>For items that are not yet targeting a milestone, you can see our <a href="https://github.com/MS3Inc/tavros/issues?q=is%3Aopen+is%3Aissue+no%3Amilestone">Backlog</a></p>
+<h2 id="architectural-decision-log">Architectural Decision Log</h2>
+<p>This project documents significant architectural decisions in MADR, a lightweight format for recording architectural decisions in Markdown. See our <a href="/adr/">Architectural Decision Log</a>.</p>
                 
               
               
