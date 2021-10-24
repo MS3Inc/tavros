@@ -1,0 +1,64 @@
+---
+- name: Create Directory
+  file:
+    path: /tmp/aks
+    state: directory
+
+- name: Generate an OpenSSH Key Pair
+  community.crypto.openssh_keypair:
+    path: /tmp/aks/id_rsa
+
+# https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_aks_module.html
+- name: Create a managed Azure Kubernetes Services (AKS) instance
+  collections:
+    - azure.azcollection
+  azure_rm_aks:
+    name: "{{ aks.name }}"
+    kubernetes_version: 1.21.2
+    location: eastus
+    dns_prefix: "{{ aks.name }}"
+    enable_rbac: true
+    resource_group: "{{ aks.resource_group }}"
+    tenant: "{{ aks.tenant }}"
+    subscription_id: "{{ aks.subscription_id }}"
+    client_id: "{{ aks.client_id }}"
+    secret: "{{ aks.secret }}"
+    network_profile:
+      network_policy: calico
+    linux_profile:
+      admin_username: aks
+      ssh_key: "{{ lookup('file', '/tmp/aks/id_rsa.pub') }}" 
+    agent_pool_profiles:
+      - name: default
+        count: 2
+        availability_zones:
+          - 1
+          - 2
+          - 3
+        vm_size: Standard_B4ms
+        mode: System
+        enable_auto_scaling: false
+        type: VirtualMachineScaleSets
+
+- name: Create Kube Directory
+  file:
+    path: ~/.kube
+    state: directory
+
+- name: Get facts for Azure Kubernetes Service
+  collections:
+    - azure.azcollection
+  azure_rm_aks_info:
+    name: "{{ aks.name }}"
+    resource_group: "{{ aks.resource_group }}"
+    tenant: "{{ aks.tenant }}"
+    subscription_id: "{{ aks.subscription_id }}"
+    client_id: "{{ aks.client_id }}"
+    secret: "{{ aks.secret }}"
+    show_kubeconfig: admin
+  register: result
+
+- name: Set Kube Config
+  copy:
+    content: "{{ result.aks[0].kube_config }}"
+    dest: "~/.kube/config"

@@ -1,0 +1,43 @@
+- name: Delete DNS for Kongs by Name
+  when: ('dry-run' not in ansible_run_tags)
+  tags: [ kong_dns, aks, requires_cluster ]
+  azure_rm_dnsrecordset:
+    resource_group: "{{ aks.resource_group }}"
+    tenant: "{{ aks.tenant }}"
+    subscription_id: "{{ aks.subscription_id }}"
+    client_id: "{{ aks.client_id }}"
+    secret: "{{ aks.secret }}"
+    zone_name: "{{ cluster_fqdn }}"
+    relative_name: "*.{{ item.name }}"
+    record_type: A
+    state: absent
+  loop: "{{ kong.instances }}"
+
+- name: Delete DNS for Default Ingress Class
+  when: ('dry-run' not in ansible_run_tags)
+  tags: [ kong_dns, aks, requires_cluster ]
+  azure_rm_dnsrecordset:
+    resource_group: "{{ aks.resource_group }}"
+    tenant: "{{ aks.tenant }}"
+    subscription_id: "{{ aks.subscription_id }}"
+    client_id: "{{ aks.client_id }}"
+    secret: "{{ aks.secret }}"
+    zone_name: "{{ cluster_fqdn }}"
+    relative_name: "*"
+    record_type: A
+    state: absent
+
+- name: Delete DNS for Non-Default Ingress Classes
+  when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
+  tags: [ kong_dns, aks, requires_cluster ]
+  azure_rm_dnsrecordset:
+    resource_group: "{{ aks.resource_group }}"
+    tenant: "{{ aks.tenant }}"
+    subscription_id: "{{ aks.subscription_id }}"
+    client_id: "{{ aks.client_id }}"
+    secret: "{{ aks.secret }}"
+    zone_name: "{{ cluster_fqdn }}"
+    relative_name: "*.{{ item.ingress_class }}"
+    record_type: A
+    state: absent
+  loop: "{{ kong.instances }}"

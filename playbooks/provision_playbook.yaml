@@ -13,6 +13,14 @@
       cluster_state: present
     tags: [ kops ]
 
+  - name: aks
+    include_role:
+      name: ms3_inc.tavros.aks
+    when: aks.enabled
+    vars:
+      cluster_state: present
+    tags: [ aks ]
+
   - name: Install and Configure Components
     block:
       - name: Flux GitOps Toolkit
@@ -118,6 +126,7 @@
         vars:
           components:
           - 'kops'
+          - 'aks'
           - 'flux'
           - 'cluster_fqdn'
           - 'cluster_admin_email'
@@ -133,8 +142,15 @@
           - 'gitea'
           - 'jaeger'
           - 'jenkins'
+
       - include_role:
           name: ms3_inc.tavros.kops
           tasks_from: tavros_config_backup
         tags: [ requires_cluster]
         when: ('dry-run' not in ansible_run_tags) and kops.enabled
+
+      - include_role:
+          name: ms3_inc.tavros.aks
+          tasks_from: tavros_config_backup
+        tags: [ requires_cluster]
+        when: ('dry-run' not in ansible_run_tags) and aks.enabled

@@ -1,0 +1,16 @@
+---
+- name: Delete a managed Azure Container Services (AKS) instance
+  collections:
+    - azure.azcollection
+  azure_rm_aks:
+    name: "{{ aks.name }}"
+    kubernetes_version: 1.21.2
+    location: eastus
+    dns_prefix: "{{ aks.name }}"
+    enable_rbac: true
+    resource_group: "{{ aks.resource_group }}"
+    tenant: "{{ aks.tenant }}"
+    subscription_id: "{{ aks.subscription_id }}"
+    client_id: "{{ aks.client_id }}"
+    secret: "{{ aks.secret }}"
+    state: absent

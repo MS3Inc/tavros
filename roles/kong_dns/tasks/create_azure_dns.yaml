@@ -1,50 +1,55 @@
----
 - name: Set DNS for Kongs by Name
   when: ('dry-run' not in ansible_run_tags)
-  tags: [ kong_dns, requires_cluster ]
-  set_fact:
-    kong_dns_records: "{{ kong_dns_records + '*.' + item.name + '.' + cluster_fqdn + '\t\t\t IN\t A\t ' + kong_ip + '\n' }}"
+  tags: [ kong_dns, aks, requires_cluster ]
+  azure_rm_dnsrecordset:
+    resource_group: "{{ aks.resource_group }}"
+    tenant: "{{ aks.tenant }}"
+    subscription_id: "{{ aks.subscription_id }}"
+    client_id: "{{ aks.client_id }}"
+    secret: "{{ aks.secret }}"
+    zone_name: "{{ cluster_fqdn }}"
+    relative_name: "*.{{ item.name }}"
+    record_type: A
+    records:
+      - entry: "{{ kong_ip }}"
   vars:
-    kong_dns_records: ""
     instance_kong_proxy: "kong-tavros-{{ item.name }}{{'-dp' if item.hybrid }}-kong-proxy"
     kong_ip: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].ip }}"
   loop: "{{ kong.instances }}"
 
 - name: Set DNS for Default Ingress Class
   when: ('dry-run' not in ansible_run_tags)
-  tags: [ kong_dns, requires_cluster ]
-  set_fact:
-    kong_dns_records: "{{ kong_dns_records + '*.' + cluster_fqdn + '\t\t\t IN\t A\t ' + kong_ip + '\n' }}"
+  tags: [ kong_dns, aks, requires_cluster ]
+  azure_rm_dnsrecordset:
+    resource_group: "{{ aks.resource_group }}"
+    tenant: "{{ aks.tenant }}"
+    subscription_id: "{{ aks.subscription_id }}"
+    client_id: "{{ aks.client_id }}"
+    secret: "{{ aks.secret }}"
+    zone_name: "{{ cluster_fqdn }}"
+    relative_name: "*"
+    record_type: A
+    records:
+      - entry: "{{ kong_ip }}"
   vars:
-    kong_dns_records: ""
     prod_kong_proxy: "kong-tavros-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}{{'-dp' if (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).hybrid }}-kong-proxy"
     kong_ip: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].ip }}"
 
 - name: Set DNS for Non-Default Ingress Classes
   when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
-  tags: [ kong_dns, requires_cluster ]
-  set_fact:
-    kong_dns_records: "{{ kong_dns_records + '*.' + item.ingress_class + '.' + cluster_fqdn + '\t\t\t IN\t A\t ' + kong_ip + '\n' }}"
+  tags: [ kong_dns, aks, requires_cluster ]
+  azure_rm_dnsrecordset:
+    resource_group: "{{ aks.resource_group }}"
+    tenant: "{{ aks.tenant }}"
+    subscription_id: "{{ aks.subscription_id }}"
+    client_id: "{{ aks.client_id }}"
+    secret: "{{ aks.secret }}"
+    zone_name: "{{ cluster_fqdn }}"
+    relative_name: "*.{{ item.ingress_class }}"
+    record_type: A
+    records:
+      - entry: "{{ kong_ip }}"
   vars:
-    kong_dns_records: ""
     instance_kong_proxy: "kong-tavros-{{ item.name }}{{'-dp' if item.hybrid }}-kong-proxy"
     kong_ip: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].ip }}"
   loop: "{{ kong.instances }}"
-
-- name: Please provision the following records
-  when: ('dry-run' not in ansible_run_tags)
-  debug:
-    msg: "{{ kong_dns_records }}"
-  tags: [ kong_dns, requires_cluster ]
-
-- name: Print the confirmation prompt
-  when: ('dry-run' not in ansible_run_tags)
-  pause:
-    prompt: "{{ item }}"
-  with_items: |
-     :::::::::::::::::::::::::::::::::::::::::::::::::::::
-     :                                                   :
-     :  Press enter when DNS is configured as requested  :
-     :                                                   :
-     ::::::::::::::::::::::::::::::::::::::::::::::::::::
-  tags: [ kong_dns, requires_cluster ]
