@@ -156,7 +156,7 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ms3inc.github.io/tavros/0.1.0/adr/0029-troubadour-as-a-single-tenant-platform/</loc>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/adr/0029-tavros-as-a-single-tenant-platform/</loc>
          <lastmod>2021-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
