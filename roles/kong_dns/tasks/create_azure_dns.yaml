@@ -3,10 +3,6 @@
   tags: [ kong_dns, aks, requires_cluster ]
   azure_rm_dnsrecordset:
     resource_group: "{{ aks.resource_group }}"
-    tenant: "{{ aks.tenant }}"
-    subscription_id: "{{ aks.subscription_id }}"
-    client_id: "{{ aks.client_id }}"
-    secret: "{{ aks.secret }}"
     zone_name: "{{ cluster_fqdn }}"
     relative_name: "*.{{ item.name }}"
     record_type: A
@@ -22,10 +18,6 @@
   tags: [ kong_dns, aks, requires_cluster ]
   azure_rm_dnsrecordset:
     resource_group: "{{ aks.resource_group }}"
-    tenant: "{{ aks.tenant }}"
-    subscription_id: "{{ aks.subscription_id }}"
-    client_id: "{{ aks.client_id }}"
-    secret: "{{ aks.secret }}"
     zone_name: "{{ cluster_fqdn }}"
     relative_name: "*"
     record_type: A
@@ -40,10 +32,6 @@
   tags: [ kong_dns, aks, requires_cluster ]
   azure_rm_dnsrecordset:
     resource_group: "{{ aks.resource_group }}"
-    tenant: "{{ aks.tenant }}"
-    subscription_id: "{{ aks.subscription_id }}"
-    client_id: "{{ aks.client_id }}"
-    secret: "{{ aks.secret }}"
     zone_name: "{{ cluster_fqdn }}"
     relative_name: "*.{{ item.ingress_class }}"
     record_type: A

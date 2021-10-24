@@ -9,8 +9,4 @@
     dns_prefix: "{{ aks.name }}"
     enable_rbac: true
     resource_group: "{{ aks.resource_group }}"
-    tenant: "{{ aks.tenant }}"
-    subscription_id: "{{ aks.subscription_id }}"
-    client_id: "{{ aks.client_id }}"
-    secret: "{{ aks.secret }}"
     state: absent

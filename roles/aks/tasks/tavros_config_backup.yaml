@@ -4,10 +4,6 @@
     - azure.azcollection
   azure_rm_storageblob:
     resource_group: "{{ aks.resource_group }}"
-    tenant: "{{ aks.tenant }}"
-    subscription_id: "{{ aks.subscription_id }}"
-    client_id: "{{ aks.client_id }}"
-    secret: "{{ aks.secret }}"
     storage_account_name: "{{ aks.storage_account_name }}"
     container: "vars"
     blob: "{{ cluster_fqdn }}_vars.yaml"
