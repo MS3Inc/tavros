@@ -9,12 +9,14 @@
       
       
       
+        <link rel="canonical" href="https://ms3inc.github.io/tavros/0.1.0/adr/0021-prefer-kong-enterprise-edition/">
+      
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
     
     
       
-        <title>Prefer Kong Enterprise Edition - Tavros Docs</title>
+        <title>Prefer Kong Enterprise Edition - Tavros</title>
       
     
     
@@ -54,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="red" data-md-color-accent="">
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="red" data-md-color-accent="red">
   
     
     <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
@@ -76,12 +78,14 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Tavros Docs" class="md-header__button md-logo" aria-label="Tavros Docs" data-md-component="logo">
+    <a href="../.." title="Tavros" class="md-header__button md-logo" aria-label="Tavros" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 18H6a4 4 0 0 1-4-4 4 4 0 0 1 4-4h.71C7.37 7.69 9.5 6 12 6a5.5 5.5 0 0 1 5.5 5.5v.5H19a3 3 0 0 1 3 3 3 3 0 0 1-3 3m.35-7.97A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.03A6.004 6.004 0 0 0 0 14a6 6 0 0 0 6 6h13a5 5 0 0 0 5-5c0-2.64-2.05-4.78-4.65-4.97z"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -91,7 +95,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Tavros Docs
+            Tavros
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -156,13 +160,133 @@
     
   </nav>
   
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        Welcome
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/installing/" class="md-tabs__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../roles/aks/" class="md-tabs__link">
+        Roles
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../playbooks/provision_playbook/" class="md-tabs__link">
+        Playbooks
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../reference/" class="md-tabs__link">
+      Reference
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../releases/0.1-NOTES/" class="md-tabs__link">
+        Releases
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../" class="md-tabs__link">
+      ADR
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
 </header>
     
     <div class="md-container" data-md-component="container">
       
       
-        
-          
         
       
       <main class="md-main" data-md-component="main">
@@ -175,16 +299,18 @@
                   <div class="md-sidebar__inner">
                     
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Tavros Docs" class="md-nav__button md-logo" aria-label="Tavros Docs" data-md-component="logo">
+    <a href="../.." title="Tavros" class="md-nav__button md-logo" aria-label="Tavros" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 18H6a4 4 0 0 1-4-4 4 4 0 0 1 4-4h.71C7.37 7.69 9.5 6 12 6a5.5 5.5 0 0 1 5.5 5.5v.5H19a3 3 0 0 1 3 3 3 3 0 0 1-3 3m.35-7.97A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.03A6.004 6.004 0 0 0 0 14a6 6 0 0 0 6 6h13a5 5 0 0 0 5-5c0-2.64-2.05-4.78-4.65-4.97z"/></svg>
 
     </a>
-    Tavros Docs
+    Tavros
   </label>
   
     <div class="md-nav__source">
@@ -209,41 +335,24 @@
   
   
   
-    <li class="md-nav__item">
-      <a href="../.." class="md-nav__link">
-        Home
-      </a>
-    </li>
-  
-
     
+    <li class="md-nav__item md-nav__item--nested">
       
       
-      
-
-  
-  
-    
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
       
       
       
       
-        <label class="md-nav__link" for="__nav_2">
-          Adr
+        <label class="md-nav__link" for="__nav_1">
+          Welcome
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Adr" data-md-level="1">
-        <label class="md-nav__title" for="__nav_2">
+      <nav class="md-nav" aria-label="Welcome" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
           <span class="md-nav__icon md-icon"></span>
-          Adr
+          Welcome
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -253,8 +362,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
-        Architectural Decision Log
+      <a href="../.." class="md-nav__link">
+        About
       </a>
     </li>
   
@@ -267,8 +376,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0000-prefer-proven-foss-components-with-optional-support-for-licensed-derivatives/" class="md-nav__link">
-        Prefer Proven FOSS Components with Optional Support for Licensed Derivatives
+      <a href="../../welcome/concepts/" class="md-nav__link">
+        Concepts
       </a>
     </li>
   
@@ -281,374 +390,47 @@
   
   
     <li class="md-nav__item">
-      <a href="../0001-apache-camel-as-the-default-integration-framework/" class="md-nav__link">
-        Apache Camel as the Default Integration Framework
+      <a href="../../welcome/contribute/" class="md-nav__link">
+        Contribute
       </a>
     </li>
   
 
             
           
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0002-spring-boot-as-the-base-application-framework/" class="md-nav__link">
-        Spring Boot as the Base Application Framework
-      </a>
+        </ul>
+      </nav>
     </li>
   
 
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0003-datasonnet-as-the-default-data-transformation-language/" class="md-nav__link">
-        DataSonnet as the Default Data Transformation Language
-      </a>
-    </li>
-  
+    
+      
+      
+      
 
-            
-          
-            
-              
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../0004-opentracing-for-in-process-tracing-api/" class="md-nav__link">
-        OpenTracing for In-Process Tracing API
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0005-kubernetes-as-the-computing-platform/" class="md-nav__link">
-        Kubernetes as the Computing Platform
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0006-kops-to-provision-a-kubernetes-cluster/" class="md-nav__link">
-        Kops to Provision a Kubernetes Cluster
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0007-flux-to-provide-platform-gitops/" class="md-nav__link">
-        Flux v2 Toolkit to Provide Platform GitOps
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0008-kubeseal-to-securely-manage-secrets-in-gitops/" class="md-nav__link">
-        Kubeseal to Securely Manage Secrets in GitOps
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0009-keycloak-for-indetity-and-access-management/" class="md-nav__link">
-        Keycloak for Identity and Access Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0010-kong-as-kubernetes-ingress-and-api-gateway/" class="md-nav__link">
-        Kong as Kubernetes Ingress Controller and API Gateway
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0011-postgresql-as-the-platform%27s-default-database/" class="md-nav__link">
-        PostgreSQL as the Platform's Default Database
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0012-gitea-for-a-lightweight-git-server/" class="md-nav__link">
-        Gitea for a Lightweight Git Server
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0013-kuma-for-service-mesh/" class="md-nav__link">
-        Kuma for Service Mesh
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0014-jenkins-for-continuous-integration/" class="md-nav__link">
-        Jenkins for Continuous Integration
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0015-sonarqube-for-application-static-code-analysis/" class="md-nav__link">
-        Sonarqube for Application Static Code Analysis
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0016-elastic-cloud-for-observability-data-aggregation-and-visualization/" class="md-nav__link">
-        Elastic Cloud for Observability Data Aggregation and Visualization
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0017-jaeger-for-tracing-with-elasticsearch-backend/" class="md-nav__link">
-        Jaeger for Tracing with Elasticsearch Backend
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0018-nexus-repository-manager-for-artifact-management/" class="md-nav__link">
-        Nexus Repository Manager for Artifact Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0019-prefer-daemonsets-over-sidecars/" class="md-nav__link">
-        Prefer Daemonsets over Sidecars
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0020-spring-cloud-config-for-application-configuration-management/" class="md-nav__link">
-        Spring Cloud Config for Application Configuration Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
   
   
     
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Prefer Kong Enterprise Edition
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Getting Started
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <a href="./" class="md-nav__link md-nav__link--active">
-        Prefer Kong Enterprise Edition
-      </a>
-      
-        
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#context-and-problem-statement" class="md-nav__link">
-    Context and Problem Statement
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision-drivers" class="md-nav__link">
-    Decision Drivers 
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#decision-outcome" class="md-nav__link">
-    Decision Outcome
-  </a>
-  
-    <nav class="md-nav" aria-label="Decision Outcome">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#positive-consequences" class="md-nav__link">
-    Positive Consequences 
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#negative-consequences" class="md-nav__link">
-    Negative Consequences 
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#links" class="md-nav__link">
-    Links 
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-            
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
           
             
               
@@ -656,120 +438,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../0022-use-ansible-as-the-provisioning-engine/" class="md-nav__link">
-        Use Ansible as Provisioning Engine
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0023-helm-and-operators-for-component-installation-and-management/" class="md-nav__link">
-        Helm and Operators for Component Installation and Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0024-use-ansible-collection-to-structure-and-package-ansible-code/" class="md-nav__link">
-        Use Ansible Collection to Structure and Package Ansible Code
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0025-setup-sandbox-and-production-kuma-meshes-and-kong-ingress-controllers/" class="md-nav__link">
-        Setup Sandbox and Production Kuma Meshes and Kong Ingress Controllers
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0026-setup-sandbox-and-production-keycloak-realms/" class="md-nav__link">
-        Setup Sandbox and Production Keycloak Realms
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0027-cert-manager-for-certificate-management/" class="md-nav__link">
-        cert-manager for Certificate Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0028-use-markdown-architectural-decision-records/" class="md-nav__link">
-        Use Markdown Architectural Decision Records
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../0029-troubadour-as-a-single-tenant-platform/" class="md-nav__link">
-        Tavros as a Single Tenant Platform
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../template/" class="md-nav__link">
-        [short title of solved problem and solution]
+      <a href="../../getting-started/installing/" class="md-nav__link">
+        Installing
       </a>
     </li>
   
@@ -799,14 +469,14 @@
       
       
         <label class="md-nav__link" for="__nav_3">
-          Playbooks
+          Roles
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Playbooks" data-md-level="1">
+      <nav class="md-nav" aria-label="Roles" data-md-level="1">
         <label class="md-nav__title" for="__nav_3">
           <span class="md-nav__icon md-icon"></span>
-          Playbooks
+          Roles
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -825,14 +495,14 @@
       
       
         <label class="md-nav__link" for="__nav_3_1">
-          Provision playbook
+          AKS
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Provision playbook" data-md-level="2">
+      <nav class="md-nav" aria-label="AKS" data-md-level="2">
         <label class="md-nav__title" for="__nav_3_1">
           <span class="md-nav__icon md-icon"></span>
-          Provision playbook
+          AKS
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -842,8 +512,22 @@
   
   
     <li class="md-nav__item">
-      <a href="../../playbooks/provision_playbook/" class="md-nav__link">
-        Tavros Provision Playbook
+      <a href="../../roles/aks/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/aks/config/" class="md-nav__link">
+        Prereqs
       </a>
     </li>
   
@@ -859,6 +543,132 @@
           
         </ul>
       </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Playbooks
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Playbooks" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Playbooks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../playbooks/provision_playbook/" class="md-nav__link">
+        Provision
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        Reference
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Releases
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Releases" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Releases
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../releases/0.1-NOTES/" class="md-nav__link">
+        0.1
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        ADR
+      </a>
     </li>
   
 
@@ -953,29 +763,29 @@
                   </a>
                 
                 
-                <h1 id="prefer-kong-enterprise-edition">Prefer Kong Enterprise Edition</h1>
+                <h1 id="prefer-kong-enterprise-edition">Prefer Kong Enterprise Edition<a class="headerlink" href="#prefer-kong-enterprise-edition" title="Permanent link">&para;</a></h1>
 <ul>
 <li>Status: accepted</li>
 <li>Deciders: @k2merlinsix</li>
 <li>Date: 2020-11</li>
 </ul>
-<h2 id="context-and-problem-statement">Context and Problem Statement</h2>
+<h2 id="context-and-problem-statement">Context and Problem Statement<a class="headerlink" href="#context-and-problem-statement" title="Permanent link">&para;</a></h2>
 <p>Given that we've chosen Kong as our Ingress Controller and API Gateway, but we're still missing an API Manager and Developer Portal.</p>
-<h2 id="decision-drivers">Decision Drivers <!-- optional --></h2>
+<h2 id="decision-drivers">Decision Drivers <!-- optional --><a class="headerlink" href="#decision-drivers" title="Permanent link">&para;</a></h2>
 <ul>
 <li>Feature set</li>
 </ul>
-<h2 id="decision-outcome">Decision Outcome</h2>
+<h2 id="decision-outcome">Decision Outcome<a class="headerlink" href="#decision-outcome" title="Permanent link">&para;</a></h2>
 <p>We'll recommend Kong enterprise edition in order to enable API manager and developer portal features. API manager and developer portal features are not necessary but they are valuable, supporting Kong EE as an optional component is an acceptable compromise to offer that value to our customers.</p>
-<h3 id="positive-consequences">Positive Consequences <!-- optional --></h3>
+<h3 id="positive-consequences">Positive Consequences <!-- optional --><a class="headerlink" href="#positive-consequences" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Single component for all API related functionality</li>
 </ul>
-<h3 id="negative-consequences">Negative Consequences <!-- optional --></h3>
+<h3 id="negative-consequences">Negative Consequences <!-- optional --><a class="headerlink" href="#negative-consequences" title="Permanent link">&para;</a></h3>
 <ul>
 <li>Requires a license</li>
 </ul>
-<h2 id="links">Links <!-- optional --></h2>
+<h2 id="links">Links <!-- optional --><a class="headerlink" href="#links" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://konghq.com/products/kong-enterprise/">Kong Enterprise</a></li>
 </ul>
@@ -994,41 +804,6 @@
       
         
 <footer class="md-footer">
-  
-    <nav class="md-footer__inner md-grid" aria-label="Footer">
-      
-        
-        <a href="../0020-spring-cloud-config-for-application-configuration-management/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Spring Cloud Config for Application Configuration Management" rel="prev">
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
-          </div>
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Previous
-              </span>
-              Spring Cloud Config for Application Configuration Management
-            </div>
-          </div>
-        </a>
-      
-      
-        
-        <a href="../0022-use-ansible-as-the-provisioning-engine/" class="md-footer__link md-footer__link--next" aria-label="Next: Use Ansible as Provisioning Engine" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              Use Ansible as Provisioning Engine
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
-          </div>
-        </a>
-      
-    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -1051,7 +826,7 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.8397ff9e.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.8397ff9e.min.js", "version": {"provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.1e84347e.min.js"></script>

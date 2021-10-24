@@ -9,12 +9,14 @@
       
       
       
+        <link rel="canonical" href="https://ms3inc.github.io/tavros/0.1.0/playbooks/provision_playbook/">
+      
       <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
     
     
       
-        <title>Tavros Provision Playbook - Tavros Docs</title>
+        <title>Provision - Tavros</title>
       
     
     
@@ -54,7 +56,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="red" data-md-color-accent="">
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="red" data-md-color-accent="red">
   
     
     <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
@@ -76,12 +78,14 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="../.." title="Tavros Docs" class="md-header__button md-logo" aria-label="Tavros Docs" data-md-component="logo">
+    <a href="../.." title="Tavros" class="md-header__button md-logo" aria-label="Tavros" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 18H6a4 4 0 0 1-4-4 4 4 0 0 1 4-4h.71C7.37 7.69 9.5 6 12 6a5.5 5.5 0 0 1 5.5 5.5v.5H19a3 3 0 0 1 3 3 3 3 0 0 1-3 3m.35-7.97A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.03A6.004 6.004 0 0 0 0 14a6 6 0 0 0 6 6h13a5 5 0 0 0 5-5c0-2.64-2.05-4.78-4.65-4.97z"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -91,13 +95,13 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            Tavros Docs
+            Tavros
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Tavros Provision Playbook
+              Provision
             
           </span>
         </div>
@@ -156,13 +160,135 @@
     
   </nav>
   
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        Welcome
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/installing/" class="md-tabs__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../roles/aks/" class="md-tabs__link">
+        Roles
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
+        Playbooks
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../reference/" class="md-tabs__link">
+      Reference
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../releases/0.1-NOTES/" class="md-tabs__link">
+        Releases
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../adr/" class="md-tabs__link">
+      ADR
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
 </header>
     
     <div class="md-container" data-md-component="container">
       
       
-        
-          
         
       
       <main class="md-main" data-md-component="main">
@@ -175,16 +301,18 @@
                   <div class="md-sidebar__inner">
                     
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Tavros Docs" class="md-nav__button md-logo" aria-label="Tavros Docs" data-md-component="logo">
+    <a href="../.." title="Tavros" class="md-nav__button md-logo" aria-label="Tavros" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 18H6a4 4 0 0 1-4-4 4 4 0 0 1 4-4h.71C7.37 7.69 9.5 6 12 6a5.5 5.5 0 0 1 5.5 5.5v.5H19a3 3 0 0 1 3 3 3 3 0 0 1-3 3m.35-7.97A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.03A6.004 6.004 0 0 0 0 14a6 6 0 0 0 6 6h13a5 5 0 0 0 5-5c0-2.64-2.05-4.78-4.65-4.97z"/></svg>
 
     </a>
-    Tavros Docs
+    Tavros
   </label>
   
     <div class="md-nav__source">
@@ -209,10 +337,71 @@
   
   
   
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Welcome
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Welcome" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Welcome
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
     <li class="md-nav__item">
       <a href="../.." class="md-nav__link">
-        Home
+        About
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../welcome/concepts/" class="md-nav__link">
+        Concepts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../welcome/contribute/" class="md-nav__link">
+        Contribute
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -234,14 +423,14 @@
       
       
         <label class="md-nav__link" for="__nav_2">
-          Adr
+          Getting Started
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Adr" data-md-level="1">
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
         <label class="md-nav__title" for="__nav_2">
           <span class="md-nav__icon md-icon"></span>
-          Adr
+          Getting Started
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -251,8 +440,82 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/" class="md-nav__link">
-        Architectural Decision Log
+      <a href="../../getting-started/installing/" class="md-nav__link">
+        Installing
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Roles
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Roles" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Roles
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          AKS
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="AKS" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          AKS
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/aks/" class="md-nav__link">
+        Overview
       </a>
     </li>
   
@@ -265,429 +528,16 @@
   
   
     <li class="md-nav__item">
-      <a href="../../adr/0000-prefer-proven-foss-components-with-optional-support-for-licensed-derivatives/" class="md-nav__link">
-        Prefer Proven FOSS Components with Optional Support for Licensed Derivatives
+      <a href="../../roles/aks/config/" class="md-nav__link">
+        Prereqs
       </a>
     </li>
   
 
             
           
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0001-apache-camel-as-the-default-integration-framework/" class="md-nav__link">
-        Apache Camel as the Default Integration Framework
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0002-spring-boot-as-the-base-application-framework/" class="md-nav__link">
-        Spring Boot as the Base Application Framework
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0003-datasonnet-as-the-default-data-transformation-language/" class="md-nav__link">
-        DataSonnet as the Default Data Transformation Language
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0004-opentracing-for-in-process-tracing-api/" class="md-nav__link">
-        OpenTracing for In-Process Tracing API
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0005-kubernetes-as-the-computing-platform/" class="md-nav__link">
-        Kubernetes as the Computing Platform
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0006-kops-to-provision-a-kubernetes-cluster/" class="md-nav__link">
-        Kops to Provision a Kubernetes Cluster
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0007-flux-to-provide-platform-gitops/" class="md-nav__link">
-        Flux v2 Toolkit to Provide Platform GitOps
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0008-kubeseal-to-securely-manage-secrets-in-gitops/" class="md-nav__link">
-        Kubeseal to Securely Manage Secrets in GitOps
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0009-keycloak-for-indetity-and-access-management/" class="md-nav__link">
-        Keycloak for Identity and Access Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0010-kong-as-kubernetes-ingress-and-api-gateway/" class="md-nav__link">
-        Kong as Kubernetes Ingress Controller and API Gateway
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0011-postgresql-as-the-platform%27s-default-database/" class="md-nav__link">
-        PostgreSQL as the Platform's Default Database
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0012-gitea-for-a-lightweight-git-server/" class="md-nav__link">
-        Gitea for a Lightweight Git Server
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0013-kuma-for-service-mesh/" class="md-nav__link">
-        Kuma for Service Mesh
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0014-jenkins-for-continuous-integration/" class="md-nav__link">
-        Jenkins for Continuous Integration
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0015-sonarqube-for-application-static-code-analysis/" class="md-nav__link">
-        Sonarqube for Application Static Code Analysis
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0016-elastic-cloud-for-observability-data-aggregation-and-visualization/" class="md-nav__link">
-        Elastic Cloud for Observability Data Aggregation and Visualization
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0017-jaeger-for-tracing-with-elasticsearch-backend/" class="md-nav__link">
-        Jaeger for Tracing with Elasticsearch Backend
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0018-nexus-repository-manager-for-artifact-management/" class="md-nav__link">
-        Nexus Repository Manager for Artifact Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0019-prefer-daemonsets-over-sidecars/" class="md-nav__link">
-        Prefer Daemonsets over Sidecars
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0020-spring-cloud-config-for-application-configuration-management/" class="md-nav__link">
-        Spring Cloud Config for Application Configuration Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0021-prefer-kong-enterprise-edition/" class="md-nav__link">
-        Prefer Kong Enterprise Edition
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0022-use-ansible-as-the-provisioning-engine/" class="md-nav__link">
-        Use Ansible as Provisioning Engine
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0023-helm-and-operators-for-component-installation-and-management/" class="md-nav__link">
-        Helm and Operators for Component Installation and Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0024-use-ansible-collection-to-structure-and-package-ansible-code/" class="md-nav__link">
-        Use Ansible Collection to Structure and Package Ansible Code
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0025-setup-sandbox-and-production-kuma-meshes-and-kong-ingress-controllers/" class="md-nav__link">
-        Setup Sandbox and Production Kuma Meshes and Kong Ingress Controllers
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0026-setup-sandbox-and-production-keycloak-realms/" class="md-nav__link">
-        Setup Sandbox and Production Keycloak Realms
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0027-cert-manager-for-certificate-management/" class="md-nav__link">
-        cert-manager for Certificate Management
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0028-use-markdown-architectural-decision-records/" class="md-nav__link">
-        Use Markdown Architectural Decision Records
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/0029-troubadour-as-a-single-tenant-platform/" class="md-nav__link">
-        Tavros as a Single Tenant Platform
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../adr/template/" class="md-nav__link">
-        [short title of solved problem and solution]
-      </a>
+        </ul>
+      </nav>
     </li>
   
 
@@ -712,48 +562,20 @@
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       
       
       
-        <label class="md-nav__link" for="__nav_3">
+        <label class="md-nav__link" for="__nav_4">
           Playbooks
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <nav class="md-nav" aria-label="Playbooks" data-md-level="1">
-        <label class="md-nav__title" for="__nav_3">
+        <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
           Playbooks
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-    
-  
-  
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" checked>
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_3_1">
-          Provision playbook
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Provision playbook" data-md-level="2">
-        <label class="md-nav__title" for="__nav_3_1">
-          <span class="md-nav__icon md-icon"></span>
-          Provision playbook
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -773,12 +595,12 @@
       
       
         <label class="md-nav__link md-nav__link--active" for="__toc">
-          Tavros Provision Playbook
+          Provision
           <span class="md-nav__icon md-icon"></span>
         </label>
       
       <a href="./" class="md-nav__link md-nav__link--active">
-        Tavros Provision Playbook
+        Provision
       </a>
       
         
@@ -1030,10 +852,81 @@
     </li>
   
 
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/" class="md-nav__link">
+        Reference
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Releases
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Releases" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Releases
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../releases/0.1-NOTES/" class="md-nav__link">
+        0.1
+      </a>
+    </li>
+  
+
             
           
         </ul>
       </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../adr/" class="md-nav__link">
+        ADR
+      </a>
     </li>
   
 
@@ -1296,12 +1189,12 @@
             <article class="md-content__inner md-typeset">
               
                 
-                  <a href="https://github.com/MS3Inc/tavros/edit/main/docs/playbooks/provision_playbook/README.md" title="Edit this page" class="md-content__button md-icon">
+                  <a href="https://github.com/MS3Inc/tavros/edit/main/docs/playbooks/provision_playbook.md" title="Edit this page" class="md-content__button md-icon">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
                   </a>
                 
                 
-                <h1 id="tavros-provision-playbook">Tavros Provision Playbook</h1>
+                <h1 id="tavros-provision-playbook">Tavros Provision Playbook<a class="headerlink" href="#tavros-provision-playbook" title="Permanent link">&para;</a></h1>
 <ul>
 <li><a href="#requirements">Requirements</a></li>
 <li><a href="#for-clusters-on-aws">For clusters on AWS</a><ul>
@@ -1342,15 +1235,15 @@
 * Elastic Cloud - To provide observability, if enabled
 * Gitea - To provide source control, if enabled
 * Jaeger - To provide observability, if enabled</p>
-<h2 id="requirements">Requirements</h2>
-<h3 id="for-clusters-on-aws">For clusters on AWS</h3>
-<h4 id="iam">IAM</h4>
-<p>For Tavros cluster on AWS, IAM should be configured as follows:</p>
-<pre><code class="language-bash">#!/bin/bash
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<h3 id="for-clusters-on-aws">For clusters on AWS<a class="headerlink" href="#for-clusters-on-aws" title="Permanent link">&para;</a></h3>
+<h4 id="iam">IAM<a class="headerlink" href="#iam" title="Permanent link">&para;</a></h4>
+<p>For Tavros cluster on AWS, IAM should be configured as follows:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
 aws iam create-group --group-name tavros-provisioner
 ​
-# required for kops
-# https://github.com/kubernetes/kops/blob/master/docs/getting_started/aws.md#setup-iam-user
+<span class="c1"># required for kops</span>
+<span class="c1"># https://github.com/kubernetes/kops/blob/master/docs/getting_started/aws.md#setup-iam-user</span>
 aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess --group-name tavros-provisioner
 aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonRoute53FullAccess --group-name tavros-provisioner
 aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --group-name tavros-provisioner
@@ -1360,13 +1253,13 @@ aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonVPCFullAc
 aws iam create-user --user-name tavros-ci
 aws iam add-user-to-group --user-name tavros-ci --group-name tavros-provisioner
 aws iam create-access-key --user-name tavros-ci
-</code></pre>
+</code></pre></div></p>
 <p>The resulting Access Key and Secret should be passed to the Ansible Playbook.</p>
 <p>For more detailed information see https://kops.sigs.k8s.io/getting_started/aws/</p>
-<h4 id="route53">Route53</h4>
+<h4 id="route53">Route53<a class="headerlink" href="#route53" title="Permanent link">&para;</a></h4>
 <p>Route53 should manage the domain to be used for the cluster as a Hosted Zone. It is not necessary for Route53 to serve as the root domain registrar. For more information see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-configuring.html">Configuring Amazon Route 53 as your DNS service</a>.</p>
 <p>For more detailed information see https://kops.sigs.k8s.io/getting_started/aws/</p>
-<h2 id="default-configuration">Default Configuration</h2>
+<h2 id="default-configuration">Default Configuration<a class="headerlink" href="#default-configuration" title="Permanent link">&para;</a></h2>
 <p>There is a default configuration vars file that results in the following:
 * A Kubernetes cluster on AWS with 3x T2.XLarge masters and 2x T2.Large worker nodes.
 * A single Keycloak instance with two realms: 'sandbox' and 'prod'.
@@ -1374,11 +1267,11 @@ aws iam create-access-key --user-name tavros-ci
 * 2x Kong ingress controllers: 'sandbox' and 'prod'. The ingress controllers are part of the Kuma meshes, respectively.
 * 3x application namespaced environments: 'dev', 'test', and 'prod'. 'dev' and 'test' belong to the 'sandbox' Kuma mesh, and 'prod' to the 'prod' Kuma mesh.</p>
 <p>To use the default configuration:</p>
-<pre><code class="language-bash">ansible-playbook playbooks/provision_playbook.yaml \
-  --extra-vars '{&quot;cluster_name&quot;:&quot;tavros&quot;,&quot;cluster_domain&quot;:&quot;example.com&quot;,&quot;cluster_admin_email&quot;:&quot;ops@example.com&quot;}' \
-  --inventory &quot;playbooks/provision_playbook/default_vars.yaml&quot;
-</code></pre>
-<h2 id="configuration-variables">Configuration Variables</h2>
+<div class="highlight"><pre><span></span><code>ansible-playbook playbooks/provision_playbook.yaml <span class="se">\</span>
+  --extra-vars <span class="s1">&#39;{&quot;cluster_name&quot;:&quot;tavros&quot;,&quot;cluster_domain&quot;:&quot;example.com&quot;,&quot;cluster_admin_email&quot;:&quot;ops@example.com&quot;}&#39;</span> <span class="se">\</span>
+  --inventory <span class="s2">&quot;playbooks/provision_playbook/default_vars.yaml&quot;</span>
+</code></pre></div>
+<h2 id="configuration-variables">Configuration Variables<a class="headerlink" href="#configuration-variables" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -1439,7 +1332,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="kubernetes-cluster-object">Kubernetes Cluster Object</h3>
+<h3 id="kubernetes-cluster-object">Kubernetes Cluster Object<a class="headerlink" href="#kubernetes-cluster-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1518,7 +1411,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="kubernetes-cluster-keycloak-object">Kubernetes Cluster Keycloak Object</h3>
+<h3 id="kubernetes-cluster-keycloak-object">Kubernetes Cluster Keycloak Object<a class="headerlink" href="#kubernetes-cluster-keycloak-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1543,7 +1436,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="kong-object">Kong Object</h3>
+<h3 id="kong-object">Kong Object<a class="headerlink" href="#kong-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1574,7 +1467,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="kong-ee-credentials-object">Kong EE Credentials Object</h3>
+<h3 id="kong-ee-credentials-object">Kong EE Credentials Object<a class="headerlink" href="#kong-ee-credentials-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1599,7 +1492,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="kong-instance-object">Kong Instance Object</h3>
+<h3 id="kong-instance-object">Kong Instance Object<a class="headerlink" href="#kong-instance-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1642,7 +1535,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="kong-instance-ee-object">Kong Instance EE Object</h3>
+<h3 id="kong-instance-ee-object">Kong Instance EE Object<a class="headerlink" href="#kong-instance-ee-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1673,7 +1566,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="kong-keycloak-object">Kong Keycloak Object</h3>
+<h3 id="kong-keycloak-object">Kong Keycloak Object<a class="headerlink" href="#kong-keycloak-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1698,7 +1591,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="kuma-object">Kuma Object</h3>
+<h3 id="kuma-object">Kuma Object<a class="headerlink" href="#kuma-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1717,7 +1610,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="kuma-mesh-object">Kuma Mesh Object</h3>
+<h3 id="kuma-mesh-object">Kuma Mesh Object<a class="headerlink" href="#kuma-mesh-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1742,7 +1635,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="kuma-mtls-object">Kuma mTLS Object</h3>
+<h3 id="kuma-mtls-object">Kuma mTLS Object<a class="headerlink" href="#kuma-mtls-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1761,7 +1654,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="namespace-object">Namespace Object</h3>
+<h3 id="namespace-object">Namespace Object<a class="headerlink" href="#namespace-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1786,7 +1679,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="keycloak-object">Keycloak Object</h3>
+<h3 id="keycloak-object">Keycloak Object<a class="headerlink" href="#keycloak-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1811,7 +1704,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="keycloak-realms-object">Keycloak Realms Object</h3>
+<h3 id="keycloak-realms-object">Keycloak Realms Object<a class="headerlink" href="#keycloak-realms-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1830,7 +1723,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="nexus-object">Nexus Object</h3>
+<h3 id="nexus-object">Nexus Object<a class="headerlink" href="#nexus-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1855,7 +1748,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="nexus-keycloak-object">Nexus Keycloak Object</h3>
+<h3 id="nexus-keycloak-object">Nexus Keycloak Object<a class="headerlink" href="#nexus-keycloak-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1880,7 +1773,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="elastic-cloud-object">Elastic Cloud Object</h3>
+<h3 id="elastic-cloud-object">Elastic Cloud Object<a class="headerlink" href="#elastic-cloud-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1905,7 +1798,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="elastic-cloud-ee-object">Elastic Cloud EE Object</h3>
+<h3 id="elastic-cloud-ee-object">Elastic Cloud EE Object<a class="headerlink" href="#elastic-cloud-ee-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1942,7 +1835,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="elastic-cloud-keycloak-object">Elastic Cloud Keycloak Object</h3>
+<h3 id="elastic-cloud-keycloak-object">Elastic Cloud Keycloak Object<a class="headerlink" href="#elastic-cloud-keycloak-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1967,7 +1860,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="gitea-object">Gitea Object</h3>
+<h3 id="gitea-object">Gitea Object<a class="headerlink" href="#gitea-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -1986,7 +1879,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="jaeger-object">Jaeger Object</h3>
+<h3 id="jaeger-object">Jaeger Object<a class="headerlink" href="#jaeger-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -2011,7 +1904,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="jaeger-keycloak-object">Jaeger Keycloak Object</h3>
+<h3 id="jaeger-keycloak-object">Jaeger Keycloak Object<a class="headerlink" href="#jaeger-keycloak-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -2036,7 +1929,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="jenkins-object">Jenkins Object</h3>
+<h3 id="jenkins-object">Jenkins Object<a class="headerlink" href="#jenkins-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -2061,7 +1954,7 @@ aws iam create-access-key --user-name tavros-ci
 </tr>
 </tbody>
 </table>
-<h3 id="jenkins-keycloak-object">Jenkins Keycloak Object</h3>
+<h3 id="jenkins-keycloak-object">Jenkins Keycloak Object<a class="headerlink" href="#jenkins-keycloak-object" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -2099,7 +1992,7 @@ aws iam create-access-key --user-name tavros-ci
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../../adr/template/" class="md-footer__link md-footer__link--prev" aria-label="Previous: [short title of solved problem and solution]" rel="prev">
+        <a href="../../roles/aks/config/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Prereqs" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
           </div>
@@ -2108,11 +2001,26 @@ aws iam create-access-key --user-name tavros-ci
               <span class="md-footer__direction">
                 Previous
               </span>
-              [short title of solved problem and solution]
+              Prereqs
             </div>
           </div>
         </a>
       
+      
+        
+        <a href="../../reference/" class="md-footer__link md-footer__link--next" aria-label="Next: Reference" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Reference
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
       
     </nav>
   
@@ -2137,7 +2045,7 @@ aws iam create-access-key --user-name tavros-ci
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.8397ff9e.min.js", "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.8397ff9e.min.js", "version": {"provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.1e84347e.min.js"></script>
