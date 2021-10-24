@@ -171,12 +171,67 @@
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ms3inc.github.io/tavros/0.1.0/features/</loc>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/contribute/developing/</loc>
          <lastmod>2021-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ms3inc.github.io/tavros/0.1.0/getting-started/customize/</loc>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/contribute/documentation/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/contribute/release-process/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/contribute/tavros-collection/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/contribute/testing/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/features/cicd/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/features/cluster/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/features/gateway/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/features/gitops/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/features/mesh/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/features/observability/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/features/repository/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/features/security/</loc>
          <lastmod>2021-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
@@ -187,6 +242,16 @@
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.1.0/getting-started/installation/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/getting-started/teardown/</loc>
+         <lastmod>2021-10-24</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.1.0/getting-started/troubleshooting/</loc>
          <lastmod>2021-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
