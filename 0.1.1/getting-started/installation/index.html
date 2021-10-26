@@ -724,8 +724,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#prepare-deployment-environment" class="md-nav__link">
-    Prepare deployment environment
+  <a href="#complete-cluster-prerequisites" class="md-nav__link">
+    Complete Cluster Prerequisites
   </a>
   
 </li>
@@ -2772,8 +2772,8 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#prepare-deployment-environment" class="md-nav__link">
-    Prepare deployment environment
+  <a href="#complete-cluster-prerequisites" class="md-nav__link">
+    Complete Cluster Prerequisites
   </a>
   
 </li>
@@ -2867,7 +2867,7 @@ cd tavros
 <p>We'll mount our current directory into an interactive instance of the Tavros Collection.
 <div class="highlight"><pre><span></span><code>docker run -it --rm -v $PWD:/tmp/ -w /tmp/ ghcr.io/ms3inc/tavros-collection:latest
 </code></pre></div></p>
-<h3 id="prepare-deployment-environment">Prepare deployment environment<a class="headerlink" href="#prepare-deployment-environment" title="Permanent link">&para;</a></h3>
+<h3 id="complete-cluster-prerequisites">Complete Cluster Prerequisites<a class="headerlink" href="#complete-cluster-prerequisites" title="Permanent link">&para;</a></h3>
 <div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Existing K8s</label><label for="__tabbed_2_2">AKS</label><label for="__tabbed_2_3">AWS</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -2961,7 +2961,7 @@ aws iam create-access-key --user-name tavros-ci
 </tbody>
 </table>
 <h3 id="create-an-instance-config">Create an Instance Config<a class="headerlink" href="#create-an-instance-config" title="Permanent link">&para;</a></h3>
-<p>You will need to create an instance configuration which overlays the base. At minimum you will need to provide a FQDN, Admin Email, and Credentials for accessing/generating the K8s Cluster.</p>
+<p>You will need to create an <code>instance_config.yaml</code> which overlays the Inventory. At minimum you will need to provide a FQDN and Admin Email. Place this file into your working directory so we can accecss it from the Tavros Collection Instance.</p>
 <div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Existing K8s</label><label for="__tabbed_3_2">AKS</label><label for="__tabbed_3_3">AWS</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
@@ -2998,18 +2998,18 @@ aws iam create-access-key --user-name tavros-ci
 </div>
 <h3 id="run-tavros">Run Tavros<a class="headerlink" href="#run-tavros" title="Permanent link">&para;</a></h3>
 <p>You can dry run first to make sure there are no issues with the Templeting phase
-<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &lt;instance_config&gt; --tags all,dry-run | tee $(date &#39;+%s&#39;)_tavros_dryrun.log
+<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &quot;@instance_config.yaml&quot; --tags all,dry-run | tee $(date &#39;+%s&#39;)_tavros_dryrun.log
 </code></pre></div>
 Provision the Tavros Cluster by removing the <code>dry-run</code> tag.<br />
-<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &lt;instance_config&gt; --tags all | tee $(date &#39;+%s&#39;)_tavros.log
+<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &quot;@instance_config.yaml&quot; --tags all | tee $(date &#39;+%s&#39;)_tavros.log
 </code></pre></div>
 Optionaly you can use Staging Lets Encrypt certs by adding the <code>test-run</code> tag.<br />
-<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &lt;instance_config&gt; --tags all | tee $(date &#39;+%s&#39;)_tavros_testrun.log
+<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &quot;@instance_config.yaml&quot; --tags all | tee $(date &#39;+%s&#39;)_tavros_testrun.log
 </code></pre></div></p>
 <h4 id="track-install-progress">Track install progress<a class="headerlink" href="#track-install-progress" title="Permanent link">&para;</a></h4>
 <p>From here you can see the progress of the Tavros Playbook in the Tavros Collection stdout.</p>
 <p>You can also use <code>kubectl</code> to observe the progress. https://kubernetes.io/docs/tasks/tools/#kubectl</p>
-<p>Other tools such as <code>k9s</code> are useful for mirnigoring progress and interacting with the cluster. https://github.com/derailed/k9s</p>
+<p>Other tools such as <code>k9s</code> are useful for monitoring progress and interacting with the cluster. https://github.com/derailed/k9s</p>
                 
                   
 
