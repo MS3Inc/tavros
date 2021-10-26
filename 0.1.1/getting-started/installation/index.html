@@ -2998,13 +2998,13 @@ aws iam create-access-key --user-name tavros-ci
 </div>
 <h3 id="run-tavros">Run Tavros<a class="headerlink" href="#run-tavros" title="Permanent link">&para;</a></h3>
 <p>You can dry run first to make sure there are no issues with the Templeting phase
-<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml  --inventory &lt;inventory&gt; --tags all,dry-run | tee $(date &#39;+%s&#39;)_tavros_dryrun.log
+<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &lt;instance_config&gt; --tags all,dry-run | tee $(date &#39;+%s&#39;)_tavros_dryrun.log
 </code></pre></div>
 Provision the Tavros Cluster by removing the <code>dry-run</code> tag.<br />
-<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml  --inventory &lt;inventory&gt; --tags all | tee $(date &#39;+%s&#39;)_tavros.log
+<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &lt;instance_config&gt; --tags all | tee $(date &#39;+%s&#39;)_tavros.log
 </code></pre></div>
 Optionaly you can use Staging Lets Encrypt certs by adding the <code>test-run</code> tag.<br />
-<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml  --inventory &lt;inventory&gt; --tags all | tee $(date &#39;+%s&#39;)_tavros.log
+<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &lt;instance_config&gt; --tags all | tee $(date &#39;+%s&#39;)_tavros_testrun.log
 </code></pre></div></p>
 <h4 id="track-install-progress">Track install progress<a class="headerlink" href="#track-install-progress" title="Permanent link">&para;</a></h4>
 <p>From here you can see the progress of the Tavros Playbook in the Tavros Collection stdout.</p>
