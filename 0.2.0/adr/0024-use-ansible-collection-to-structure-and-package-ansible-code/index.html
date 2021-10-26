@@ -11,8 +11,11 @@
       
         <link rel="canonical" href="https://ms3inc.github.io/tavros/0.2.0/adr/0024-use-ansible-collection-to-structure-and-package-ansible-code/">
       
+      
+        
+      
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4+insiders-3.1.4">
     
     
       
@@ -20,15 +23,17 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.db9e7362.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.2b73a8c3.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.3f5d1f46.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.1d832a92.min.css">
         
           
           
           <meta name="theme-color" content="#ef5552">
         
+      
+      <link rel="preload" as="style" href="../../assets/stylesheets/vendor/mermaid.733f213f.min.css">
       
     
     
@@ -42,10 +47,12 @@
     
     
     
+    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../..":"../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
     
       
 
 
+    
     
     
   </head>
@@ -59,7 +66,6 @@
     <body dir="ltr" data-md-color-scheme="" data-md-color-primary="red" data-md-color-accent="red">
   
     
-    <script>function __prefix(e){return new URL("../..",location).pathname+"."+e}function __get(e,t=localStorage){return JSON.parse(t.getItem(__prefix(e)))}</script>
     
     <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
     <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
@@ -76,6 +82,24 @@
       
     </div>
     
+      <div data-md-component="outdated" hidden>
+        <aside class="md-banner md-banner--warning">
+          
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest version.
+  <a href="../../.."> 
+
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          
+        </aside>
+      </div>
+    
+    
       
 
   
@@ -85,7 +109,7 @@
     <a href="../.." title="Tavros" class="md-header__button md-logo" aria-label="Tavros" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2m4.1 15c-.19 0-.34-.1-.55-.27l-5.16-4.17-1.73 4.34H7.17l4.37-10.51c.11-.28.35-.42.63-.42s.5.14.62.42l3.98 9.58c.04.11.07.22.07.29-.01.42-.34.74-.74.74m-3.93-8.89 2.59 6.39-3.91-3.08 1.32-3.31z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 16v5h-4v-3H9a3 3 0 0 1-3-3v-3a1 1 0 0 1 1-1 1 1 0 0 1 1 1v3c0 .56.45 1 1 1h1V6a2 2 0 0 1 2-2 2 2 0 0 1 2 2v8h1a1 1 0 0 0 1-1v-2a1 1 0 0 1 1-1 1 1 0 0 1 1 1v2a3 3 0 0 1-3 3h-1z"/></svg>
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -191,7 +215,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../features/gitops/" class="md-tabs__link">
+      <a href="../../features/cluster/" class="md-tabs__link">
         Features
       </a>
     </li>
@@ -223,7 +247,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../roles/roles/" class="md-tabs__link">
+      <a href="../../reference/overview/" class="md-tabs__link">
         Reference
       </a>
     </li>
@@ -326,7 +350,7 @@
     <a href="../.." title="Tavros" class="md-nav__button md-logo" aria-label="Tavros" data-md-component="logo">
       
   
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2m4.1 15c-.19 0-.34-.1-.55-.27l-5.16-4.17-1.73 4.34H7.17l4.37-10.51c.11-.28.35-.42.63-.42s.5.14.62.42l3.98 9.58c.04.11.07.22.07.29-.01.42-.34.74-.74.74m-3.93-8.89 2.59 6.39-3.91-3.08 1.32-3.31z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 16v5h-4v-3H9a3 3 0 0 1-3-3v-3a1 1 0 0 1 1-1 1 1 0 0 1 1 1v3c0 .56.45 1 1 1h1V6a2 2 0 0 1 2-2 2 2 0 0 1 2 2v8h1a1 1 0 0 0 1-1v-2a1 1 0 0 1 1-1 1 1 0 0 1 1 1v2a3 3 0 0 1-3 3h-1z"/></svg>
 
     </a>
     Tavros
@@ -457,6 +481,20 @@
   
   
     <li class="md-nav__item">
+      <a href="../../features/cluster/" class="md-nav__link">
+        Infrastructure Provisioning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../features/gitops/" class="md-nav__link">
         GitOps
       </a>
@@ -500,7 +538,7 @@
   
     <li class="md-nav__item">
       <a href="../../features/cicd/" class="md-nav__link">
-        Application CICD
+        CICD
       </a>
     </li>
   
@@ -543,20 +581,6 @@
     <li class="md-nav__item">
       <a href="../../features/security/" class="md-nav__link">
         Security
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../features/cluster/" class="md-nav__link">
-        Cluster Managment
       </a>
     </li>
   
@@ -617,8 +641,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/troubleshooting/" class="md-nav__link">
-        Troubleshooting
+      <a href="../../getting-started/deploying-applications/" class="md-nav__link">
+        Deploying Applications
       </a>
     </li>
   
@@ -645,8 +669,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/disaster-recovery/" class="md-nav__link">
-        Disaster Recovery
+      <a href="../../getting-started/teardown/" class="md-nav__link">
+        Teardown
       </a>
     </li>
   
@@ -659,8 +683,22 @@
   
   
     <li class="md-nav__item">
-      <a href="../../getting-started/teardown/" class="md-nav__link">
-        Teardown
+      <a href="../../getting-started/troubleshooting/" class="md-nav__link">
+        Troubleshooting
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/disaster-recovery/" class="md-nav__link">
+        Disaster Recovery
       </a>
     </li>
   
@@ -707,7 +745,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../roles/roles/" class="md-nav__link">
+      <a href="../../reference/overview/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -730,40 +768,14 @@
       
       
         <label class="md-nav__link" for="__nav_4_2">
-          Roles
+          Playbooks
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Roles" data-md-level="2">
+      <nav class="md-nav" aria-label="Playbooks" data-md-level="2">
         <label class="md-nav__title" for="__nav_4_2">
           <span class="md-nav__icon md-icon"></span>
-          Roles
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_1" type="checkbox" id="__nav_4_2_1" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_1">
-          AKS
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="AKS" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_1">
-          <span class="md-nav__icon md-icon"></span>
-          AKS
+          Playbooks
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -773,7 +785,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../roles/aks/overview/" class="md-nav__link">
+      <a href="../../reference/playbooks/overview/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -787,55 +799,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../roles/aks/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_2" type="checkbox" id="__nav_4_2_2" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_2">
-          KOps
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="KOps" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_2">
-          <span class="md-nav__icon md-icon"></span>
-          KOps
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/kops/overview/" class="md-nav__link">
-        Overview
+      <a href="../../reference/playbooks/provision_playbook/" class="md-nav__link">
+        Provision
       </a>
     </li>
   
@@ -848,870 +813,9 @@
   
   
     <li class="md-nav__item">
-      <a href="../../roles/kops/config/" class="md-nav__link">
-        Config
+      <a href="../../reference/playbooks/deprovision_playbook/" class="md-nav__link">
+        Deprovision
       </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_3" type="checkbox" id="__nav_4_2_3" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_3">
-          OPA Gatekeeper
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="OPA Gatekeeper" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_3">
-          <span class="md-nav__icon md-icon"></span>
-          OPA Gatekeeper
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/opa-gatekeeper/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/opa-gatekeeper/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_4" type="checkbox" id="__nav_4_2_4" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_4">
-          Sealed Secrets
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Sealed Secrets" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_4">
-          <span class="md-nav__icon md-icon"></span>
-          Sealed Secrets
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/sealed-secrets/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/sealed-secrets/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_5" type="checkbox" id="__nav_4_2_5" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_5">
-          Flux
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Flux" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_5">
-          <span class="md-nav__icon md-icon"></span>
-          Flux
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/flux/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/flux/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_6" type="checkbox" id="__nav_4_2_6" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_6">
-          Postgresql
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Postgresql" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_6">
-          <span class="md-nav__icon md-icon"></span>
-          Postgresql
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/postgresql/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/postgresql/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_7" type="checkbox" id="__nav_4_2_7" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_7">
-          Keycloak
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Keycloak" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_7">
-          <span class="md-nav__icon md-icon"></span>
-          Keycloak
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/keycloak/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/keycloak/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_8" type="checkbox" id="__nav_4_2_8" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_8">
-          Kuma
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Kuma" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_8">
-          <span class="md-nav__icon md-icon"></span>
-          Kuma
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/kuma/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/kuma/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_9" type="checkbox" id="__nav_4_2_9" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_9">
-          Cert Manager
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Cert Manager" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_9">
-          <span class="md-nav__icon md-icon"></span>
-          Cert Manager
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/cert-manager/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/cert-manager/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_10" type="checkbox" id="__nav_4_2_10" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_10">
-          Kong
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Kong" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_10">
-          <span class="md-nav__icon md-icon"></span>
-          Kong
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/kong/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/kong/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_11" type="checkbox" id="__nav_4_2_11" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_11">
-          Gitea
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Gitea" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_11">
-          <span class="md-nav__icon md-icon"></span>
-          Gitea
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/gitea/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/gitea/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_12" type="checkbox" id="__nav_4_2_12" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_12">
-          Elastic Cloud
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Elastic Cloud" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_12">
-          <span class="md-nav__icon md-icon"></span>
-          Elastic Cloud
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/elastic-cloud/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/elastic-cloud/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_13" type="checkbox" id="__nav_4_2_13" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_13">
-          Jaeger
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Jaeger" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_13">
-          <span class="md-nav__icon md-icon"></span>
-          Jaeger
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/jaeger/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/jaeger/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_14" type="checkbox" id="__nav_4_2_14" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_14">
-          Jenkins
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Jenkins" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_14">
-          <span class="md-nav__icon md-icon"></span>
-          Jenkins
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/jenkins/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/jenkins/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_15" type="checkbox" id="__nav_4_2_15" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_15">
-          Nexus
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Nexus" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_15">
-          <span class="md-nav__icon md-icon"></span>
-          Nexus
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/nexus/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/nexus/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-      
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2_16" type="checkbox" id="__nav_4_2_16" >
-      
-      
-      
-      
-        <label class="md-nav__link" for="__nav_4_2_16">
-          Namespace
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <nav class="md-nav" aria-label="Namespace" data-md-level="3">
-        <label class="md-nav__title" for="__nav_4_2_16">
-          <span class="md-nav__icon md-icon"></span>
-          Namespace
-        </label>
-        <ul class="md-nav__list" data-md-scrollfix>
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/namespace/overview/" class="md-nav__link">
-        Overview
-      </a>
-    </li>
-  
-
-            
-          
-            
-              
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../roles/namespace/config/" class="md-nav__link">
-        Config
-      </a>
-    </li>
-  
-
-            
-          
-        </ul>
-      </nav>
     </li>
   
 
@@ -1739,14 +843,14 @@
       
       
         <label class="md-nav__link" for="__nav_4_3">
-          Playbooks
+          Roles
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Playbooks" data-md-level="2">
+      <nav class="md-nav" aria-label="Roles" data-md-level="2">
         <label class="md-nav__title" for="__nav_4_3">
           <span class="md-nav__icon md-icon"></span>
-          Playbooks
+          Roles
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -1756,7 +860,47 @@
   
   
     <li class="md-nav__item">
-      <a href="../../playbooks/overview/" class="md-nav__link">
+      <a href="../../reference/roles/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_2" type="checkbox" id="__nav_4_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_2">
+          AKS
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="AKS" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          AKS
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/aks/overview/" class="md-nav__link">
         Overview
       </a>
     </li>
@@ -1770,8 +914,55 @@
   
   
     <li class="md-nav__item">
-      <a href="../../playbooks/provision_playbook/" class="md-nav__link">
-        Provision
+      <a href="../../reference/roles/aks/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_3" type="checkbox" id="__nav_4_3_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_3">
+          KOps
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="KOps" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          KOps
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/kops/overview/" class="md-nav__link">
+        Overview
       </a>
     </li>
   
@@ -1784,9 +975,870 @@
   
   
     <li class="md-nav__item">
-      <a href="../../playbooks/deprovision_playbook/" class="md-nav__link">
-        Deprovision
+      <a href="../../reference/roles/kops/config/" class="md-nav__link">
+        Config
       </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_4" type="checkbox" id="__nav_4_3_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_4">
+          OPA Gatekeeper
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="OPA Gatekeeper" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          OPA Gatekeeper
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/opa-gatekeeper/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/opa-gatekeeper/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_5" type="checkbox" id="__nav_4_3_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_5">
+          Sealed Secrets
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Sealed Secrets" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_5">
+          <span class="md-nav__icon md-icon"></span>
+          Sealed Secrets
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/sealed-secrets/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/sealed-secrets/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_6" type="checkbox" id="__nav_4_3_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_6">
+          Flux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Flux" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          Flux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/flux/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/flux/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_7" type="checkbox" id="__nav_4_3_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_7">
+          Postgresql
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Postgresql" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_7">
+          <span class="md-nav__icon md-icon"></span>
+          Postgresql
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/postgresql/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/postgresql/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_8" type="checkbox" id="__nav_4_3_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_8">
+          Keycloak
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Keycloak" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_8">
+          <span class="md-nav__icon md-icon"></span>
+          Keycloak
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/keycloak/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/keycloak/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_9" type="checkbox" id="__nav_4_3_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_9">
+          Kuma
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Kuma" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_9">
+          <span class="md-nav__icon md-icon"></span>
+          Kuma
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/kuma/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/kuma/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_10" type="checkbox" id="__nav_4_3_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_10">
+          Cert Manager
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cert Manager" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_10">
+          <span class="md-nav__icon md-icon"></span>
+          Cert Manager
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/cert-manager/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/cert-manager/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_11" type="checkbox" id="__nav_4_3_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_11">
+          Kong
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Kong" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_11">
+          <span class="md-nav__icon md-icon"></span>
+          Kong
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/kong/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/kong/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_12" type="checkbox" id="__nav_4_3_12" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_12">
+          Gitea
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Gitea" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_12">
+          <span class="md-nav__icon md-icon"></span>
+          Gitea
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/gitea/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/gitea/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_13" type="checkbox" id="__nav_4_3_13" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_13">
+          Elastic Cloud
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Elastic Cloud" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_13">
+          <span class="md-nav__icon md-icon"></span>
+          Elastic Cloud
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/elastic-cloud/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/elastic-cloud/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_14" type="checkbox" id="__nav_4_3_14" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_14">
+          Jaeger
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Jaeger" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_14">
+          <span class="md-nav__icon md-icon"></span>
+          Jaeger
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/jaeger/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/jaeger/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_15" type="checkbox" id="__nav_4_3_15" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_15">
+          Jenkins
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Jenkins" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_15">
+          <span class="md-nav__icon md-icon"></span>
+          Jenkins
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/jenkins/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/jenkins/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_16" type="checkbox" id="__nav_4_3_16" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_16">
+          Nexus
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Nexus" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_16">
+          <span class="md-nav__icon md-icon"></span>
+          Nexus
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/nexus/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/nexus/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_17" type="checkbox" id="__nav_4_3_17" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_17">
+          Namespace
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Namespace" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_17">
+          <span class="md-nav__icon md-icon"></span>
+          Namespace
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/namespace/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/roles/namespace/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
     </li>
   
 
@@ -2175,7 +2227,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../0011-postgresql-as-the-platforms-default-database.md" class="md-nav__link">
+      <a href="../0011-postgresql-as-the-platforms-default-database/" class="md-nav__link">
         ADR-0011
       </a>
     </li>
@@ -2688,6 +2740,7 @@
                   </a>
                 
                 
+                
                 <h1 id="use-ansible-collection-to-structure-and-package-ansible-code">Use Ansible Collection to Structure and Package Ansible Code<a class="headerlink" href="#use-ansible-collection-to-structure-and-package-ansible-code" title="Permanent link">&para;</a></h1>
 <ul>
 <li>Status: accepted</li>
@@ -2725,6 +2778,10 @@
 <li>Blog <a href="https://www.ansible.com/blog/hands-on-with-ansible-collections">Hands on with Ansible collections</a></li>
 </ul>
                 
+                  
+
+                
+                
               
               
                 
@@ -2732,6 +2789,9 @@
 
               
             </article>
+            
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))for(var set of document.querySelectorAll("[data-tabs]")){var labels=set.querySelectorAll(":scope > label");e:for(var tab of tabs)for(var label of labels)if(label.innerText.trim()===tab){var input=label.previousElementSibling;input.checked=!0;break e}}</script>
+
           </div>
         </div>
         
@@ -2782,7 +2842,7 @@
         
           Made with
           <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
-            Material for MkDocs
+            Material for MkDocs Insiders
           </a>
         
         
@@ -2796,10 +2856,11 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.8397ff9e.min.js", "version": {"provider": "mike"}}</script>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "content.tabs.link", "content.code.annotate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../assets/javascripts/workers/search.d5944110.min.js", "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.1e84347e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.4b1ed6f7.min.js"></script>
       
     
   </body>

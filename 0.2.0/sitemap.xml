@@ -2,462 +2,472 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0000-prefer-proven-foss-components-with-optional-support-for-licensed-derivatives/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0001-apache-camel-as-the-default-integration-framework/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0002-spring-boot-as-the-base-application-framework/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0003-datasonnet-as-the-default-data-transformation-language/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0004-opentracing-for-in-process-tracing-api/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0005-kubernetes-as-the-computing-platform/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0006-kops-to-provision-a-kubernetes-cluster/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0007-flux-to-provide-platform-gitops/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0008-kubeseal-to-securely-manage-secrets-in-gitops/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0009-keycloak-for-indetity-and-access-management/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0010-kong-as-kubernetes-ingress-and-api-gateway/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0011-postgresql-as-the-platform%27s-default-database/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0011-postgresql-as-the-platforms-default-database/</loc>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0012-gitea-for-a-lightweight-git-server/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0013-kuma-for-service-mesh/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0014-jenkins-for-continuous-integration/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0015-sonarqube-for-application-static-code-analysis/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0016-elastic-cloud-for-observability-data-aggregation-and-visualization/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0017-jaeger-for-tracing-with-elasticsearch-backend/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0018-nexus-repository-manager-for-artifact-management/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0019-prefer-daemonsets-over-sidecars/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0020-spring-cloud-config-for-application-configuration-management/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0021-prefer-kong-enterprise-edition/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0022-use-ansible-as-the-provisioning-engine/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0023-helm-and-operators-for-component-installation-and-management/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0024-use-ansible-collection-to-structure-and-package-ansible-code/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0025-setup-sandbox-and-production-kuma-meshes-and-kong-ingress-controllers/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0026-setup-sandbox-and-production-keycloak-realms/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0027-cert-manager-for-certificate-management/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0028-use-markdown-architectural-decision-records/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/0029-tavros-as-a-single-tenant-platform/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/adr/template/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/contribute/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/contribute/developing/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/contribute/documentation/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/contribute/release-process/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/contribute/tavros-collection/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/contribute/testing/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/features/cicd/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/features/cluster/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/features/gateway/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/features/gitops/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/features/mesh/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/features/observability/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/features/repository/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/features/security/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/getting-started/deploying-applications/</loc>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/getting-started/disaster-recovery/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/getting-started/installation/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/getting-started/teardown/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/getting-started/troubleshooting/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/getting-started/upgrades/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/playbooks/deprovision_playbook/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/playbooks/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/playbooks/deprovision_playbook/</loc>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/playbooks/provision_playbook/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/playbooks/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/playbooks/provision_playbook/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/aks/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/aks/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/cert-manager/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/cert-manager/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/elastic-cloud/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/elastic-cloud/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/flux/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/flux/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/gitea/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/gitea/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/jaeger/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/jaeger/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/jenkins/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/jenkins/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/keycloak/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/keycloak/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/kong/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/kong/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/kops/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/kops/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/kuma/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/kuma/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/namespace/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/namespace/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/nexus/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/nexus/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/opa-gatekeeper/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/opa-gatekeeper/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/postgresql/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/postgresql/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/sealed-secrets/config/</loc>
+         <lastmod>2021-10-26</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://ms3inc.github.io/tavros/0.2.0/reference/roles/sealed-secrets/overview/</loc>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/releases/0.1-NOTES/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/roles/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/aks/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/aks/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/cert-manager/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/cert-manager/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/elastic-cloud/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/elastic-cloud/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/flux/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/flux/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/gitea/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/gitea/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/jaeger/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/jaeger/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/jenkins/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/jenkins/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/keycloak/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/keycloak/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/kong/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/kong/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/kops/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/kops/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/kuma/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/kuma/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/namespace/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/namespace/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/nexus/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/nexus/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/opa-gatekeeper/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/opa-gatekeeper/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/postgresql/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/postgresql/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/sealed-secrets/config/</loc>
-         <lastmod>2021-10-24</lastmod>
-         <changefreq>daily</changefreq>
-    </url>
-    <url>
-         <loc>https://ms3inc.github.io/tavros/0.2.0/roles/sealed-secrets/overview/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/support/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/welcome/concepts/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://ms3inc.github.io/tavros/0.2.0/welcome/license/</loc>
-         <lastmod>2021-10-24</lastmod>
+         <lastmod>2021-10-26</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
