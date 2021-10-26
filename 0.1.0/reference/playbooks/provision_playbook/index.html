@@ -1,0 +1,3901 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="canonical" href="https://ms3inc.github.io/tavros/0.1.0/reference/playbooks/provision_playbook/">
+      
+      
+        
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.2.3, mkdocs-material-7.3.4+insiders-3.1.4">
+    
+    
+  <title>Lorem ipsum dolor sit amet</title>
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.2b73a8c3.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.1d832a92.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#ef5552">
+        
+      
+      <link rel="preload" as="style" href="../../../assets/stylesheets/vendor/mermaid.733f213f.min.css">
+      
+    
+    
+    
+      
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>:root{--md-text-font-family:"Roboto";--md-code-font-family:"Roboto Mono"}</style>
+      
+    
+    
+    
+    <script>function __md_scope(e,t,_){return new URL(_||(t===localStorage?"../../..":"../../.."),location).pathname+"."+e}function __md_get(e,t=localStorage,_){return JSON.parse(t.getItem(__md_scope(e,t,_)))}function __md_set(e,t,_=localStorage,o){try{_.setItem(__md_scope(e,_,o),JSON.stringify(t))}catch(e){}}</script>
+    
+      
+
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="red" data-md-color-accent="red">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tavros-provision-playbook" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        <aside class="md-banner md-banner--warning">
+          
+            <div class="md-banner__inner md-grid md-typeset">
+              
+  You're not viewing the latest version.
+  <a href="../../../..">
+    <strong>Click here to go to latest.</strong>
+  </a>
+
+            </div>
+            <script>var el=document.querySelector("[data-md-component=outdated]"),outdated=__md_get("__outdated",sessionStorage);!0===outdated&&el&&(el.hidden=!1)</script>
+          
+        </aside>
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Tavros" class="md-header__button md-logo" aria-label="Tavros" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 16v5h-4v-3H9a3 3 0 0 1-3-3v-3a1 1 0 0 1 1-1 1 1 0 0 1 1 1v3c0 .56.45 1 1 1h1V6a2 2 0 0 1 2-2 2 2 0 0 1 2 2v8h1a1 1 0 0 0 1-1v-2a1 1 0 0 1 1-1 1 1 0 0 1 1 1v2a3 3 0 0 1-3 3h-1z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Tavros
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Provision
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        
+<a href="https://github.com/MS3Inc/tavros/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MS3Inc/tavros
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        Welcome
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../features/cluster/" class="md-tabs__link">
+        Features
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../getting-started/installation/" class="md-tabs__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../overview/" class="md-tabs__link md-tabs__link--active">
+        Reference
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../contribute/" class="md-tabs__link">
+        Contribute
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../releases/0.1-NOTES/" class="md-tabs__link">
+        Releases
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../adr/" class="md-tabs__link">
+        ADR
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../support/" class="md-tabs__link">
+        Support
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Tavros" class="md-nav__button md-logo" aria-label="Tavros" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M14 16v5h-4v-3H9a3 3 0 0 1-3-3v-3a1 1 0 0 1 1-1 1 1 0 0 1 1 1v3c0 .56.45 1 1 1h1V6a2 2 0 0 1 2-2 2 2 0 0 1 2 2v8h1a1 1 0 0 0 1-1v-2a1 1 0 0 1 1-1 1 1 0 0 1 1 1v2a3 3 0 0 1-3 3h-1z"/></svg>
+
+    </a>
+    Tavros
+  </label>
+  
+    <div class="md-nav__source">
+      
+<a href="https://github.com/MS3Inc/tavros/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MS3Inc/tavros
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          Welcome
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Welcome" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          Welcome
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        About
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../welcome/concepts/" class="md-nav__link">
+        Concepts
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../welcome/license/" class="md-nav__link">
+        License
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Features
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Features" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Features
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/cluster/" class="md-nav__link">
+        Infrastructure Provisioning
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/gitops/" class="md-nav__link">
+        GitOps
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/gateway/" class="md-nav__link">
+        Gateway
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/mesh/" class="md-nav__link">
+        Service Mesh
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/cicd/" class="md-nav__link">
+        CICD
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/observability/" class="md-nav__link">
+        Observability
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/repository/" class="md-nav__link">
+        Repository
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../features/security/" class="md-nav__link">
+        Security
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/deploying-applications/" class="md-nav__link">
+        Deploying Applications
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/upgrades/" class="md-nav__link">
+        Upgrades
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/teardown/" class="md-nav__link">
+        Teardown
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/troubleshooting/" class="md-nav__link">
+        Troubleshooting
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/disaster-recovery/" class="md-nav__link">
+        Disaster Recovery
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Reference
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Reference" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Reference
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2" type="checkbox" id="__nav_4_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_2">
+          Playbooks
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Playbooks" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          Playbooks
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Provision
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Provision
+      </a>
+      
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-clusters-on-aws" class="md-nav__link">
+    For clusters on AWS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-configuration" class="md-nav__link">
+    Default Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-variables" class="md-nav__link">
+    Configuration Variables
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-cluster-object" class="md-nav__link">
+    Kubernetes Cluster Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-cluster-keycloak-object" class="md-nav__link">
+    Kubernetes Cluster Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kong-object" class="md-nav__link">
+    Kong Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kong-ee-credentials-object" class="md-nav__link">
+    Kong EE Credentials Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kong-instance-object" class="md-nav__link">
+    Kong Instance Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kong-instance-ee-object" class="md-nav__link">
+    Kong Instance EE Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kong-keycloak-object" class="md-nav__link">
+    Kong Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kuma-object" class="md-nav__link">
+    Kuma Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kuma-mesh-object" class="md-nav__link">
+    Kuma Mesh Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kuma-mtls-object" class="md-nav__link">
+    Kuma mTLS Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace-object" class="md-nav__link">
+    Namespace Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-object" class="md-nav__link">
+    Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-realms-object" class="md-nav__link">
+    Keycloak Realms Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nexus-object" class="md-nav__link">
+    Nexus Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nexus-keycloak-object" class="md-nav__link">
+    Nexus Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elastic-cloud-object" class="md-nav__link">
+    Elastic Cloud Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elastic-cloud-ee-object" class="md-nav__link">
+    Elastic Cloud EE Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elastic-cloud-keycloak-object" class="md-nav__link">
+    Elastic Cloud Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitea-object" class="md-nav__link">
+    Gitea Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jaeger-object" class="md-nav__link">
+    Jaeger Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jaeger-keycloak-object" class="md-nav__link">
+    Jaeger Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jenkins-object" class="md-nav__link">
+    Jenkins Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jenkins-keycloak-object" class="md-nav__link">
+    Jenkins Keycloak Object
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../deprovision_playbook/" class="md-nav__link">
+        Deprovision
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3" type="checkbox" id="__nav_4_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3">
+          Roles
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Roles" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_3">
+          <span class="md-nav__icon md-icon"></span>
+          Roles
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_2" type="checkbox" id="__nav_4_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_2">
+          AKS
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="AKS" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          AKS
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/aks/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/aks/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_3" type="checkbox" id="__nav_4_3_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_3">
+          KOps
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="KOps" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          KOps
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/kops/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/kops/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_4" type="checkbox" id="__nav_4_3_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_4">
+          OPA Gatekeeper
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="OPA Gatekeeper" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          OPA Gatekeeper
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/opa-gatekeeper/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/opa-gatekeeper/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_5" type="checkbox" id="__nav_4_3_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_5">
+          Sealed Secrets
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Sealed Secrets" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_5">
+          <span class="md-nav__icon md-icon"></span>
+          Sealed Secrets
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/sealed-secrets/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/sealed-secrets/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_6" type="checkbox" id="__nav_4_3_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_6">
+          Flux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Flux" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          Flux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/flux/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/flux/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_7" type="checkbox" id="__nav_4_3_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_7">
+          Postgresql
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Postgresql" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_7">
+          <span class="md-nav__icon md-icon"></span>
+          Postgresql
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/postgresql/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/postgresql/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_8" type="checkbox" id="__nav_4_3_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_8">
+          Keycloak
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Keycloak" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_8">
+          <span class="md-nav__icon md-icon"></span>
+          Keycloak
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/keycloak/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/keycloak/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_9" type="checkbox" id="__nav_4_3_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_9">
+          Kuma
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Kuma" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_9">
+          <span class="md-nav__icon md-icon"></span>
+          Kuma
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/kuma/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/kuma/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_10" type="checkbox" id="__nav_4_3_10" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_10">
+          Cert Manager
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Cert Manager" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_10">
+          <span class="md-nav__icon md-icon"></span>
+          Cert Manager
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/cert-manager/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/cert-manager/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_11" type="checkbox" id="__nav_4_3_11" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_11">
+          Kong
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Kong" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_11">
+          <span class="md-nav__icon md-icon"></span>
+          Kong
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/kong/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/kong/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_12" type="checkbox" id="__nav_4_3_12" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_12">
+          Gitea
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Gitea" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_12">
+          <span class="md-nav__icon md-icon"></span>
+          Gitea
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/gitea/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/gitea/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_13" type="checkbox" id="__nav_4_3_13" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_13">
+          Elastic Cloud
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Elastic Cloud" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_13">
+          <span class="md-nav__icon md-icon"></span>
+          Elastic Cloud
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/elastic-cloud/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/elastic-cloud/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_14" type="checkbox" id="__nav_4_3_14" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_14">
+          Jaeger
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Jaeger" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_14">
+          <span class="md-nav__icon md-icon"></span>
+          Jaeger
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/jaeger/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/jaeger/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_15" type="checkbox" id="__nav_4_3_15" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_15">
+          Jenkins
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Jenkins" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_15">
+          <span class="md-nav__icon md-icon"></span>
+          Jenkins
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/jenkins/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/jenkins/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_16" type="checkbox" id="__nav_4_3_16" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_16">
+          Nexus
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Nexus" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_16">
+          <span class="md-nav__icon md-icon"></span>
+          Nexus
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/nexus/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/nexus/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3_17" type="checkbox" id="__nav_4_3_17" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3_17">
+          Namespace
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Namespace" data-md-level="3">
+        <label class="md-nav__title" for="__nav_4_3_17">
+          <span class="md-nav__icon md-icon"></span>
+          Namespace
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/namespace/overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../roles/namespace/config/" class="md-nav__link">
+        Config
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Contribute
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Contribute" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Contribute
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contribute/" class="md-nav__link">
+        How to Contribute
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contribute/developing/" class="md-nav__link">
+        Developing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contribute/documentation/" class="md-nav__link">
+        Documentation Guidelines
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contribute/tavros-collection/" class="md-nav__link">
+        Build Tools
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contribute/release-process/" class="md-nav__link">
+        Release Process
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contribute/testing/" class="md-nav__link">
+        Testing
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Releases
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Releases" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Releases
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../releases/0.1-NOTES/" class="md-nav__link">
+        0.1
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          ADR
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="ADR" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          ADR
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0000-prefer-proven-foss-components-with-optional-support-for-licensed-derivatives/" class="md-nav__link">
+        ADR-0000
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0001-apache-camel-as-the-default-integration-framework/" class="md-nav__link">
+        ADR-0001
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0002-spring-boot-as-the-base-application-framework/" class="md-nav__link">
+        ADR-0002
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0003-datasonnet-as-the-default-data-transformation-language/" class="md-nav__link">
+        ADR-0003
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0004-opentracing-for-in-process-tracing-api/" class="md-nav__link">
+        ADR-0004
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0005-kubernetes-as-the-computing-platform/" class="md-nav__link">
+        ADR-0005
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0006-kops-to-provision-a-kubernetes-cluster/" class="md-nav__link">
+        ADR-0006
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0007-flux-to-provide-platform-gitops/" class="md-nav__link">
+        ADR-0007
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0008-kubeseal-to-securely-manage-secrets-in-gitops/" class="md-nav__link">
+        ADR-0008
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0009-keycloak-for-indetity-and-access-management/" class="md-nav__link">
+        ADR-0009
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0010-kong-as-kubernetes-ingress-and-api-gateway/" class="md-nav__link">
+        ADR-0010
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0011-postgresql-as-the-platforms-default-database/" class="md-nav__link">
+        ADR-0011
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0012-gitea-for-a-lightweight-git-server/" class="md-nav__link">
+        ADR-0012
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0013-kuma-for-service-mesh/" class="md-nav__link">
+        ADR-0013
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0014-jenkins-for-continuous-integration/" class="md-nav__link">
+        ADR-0014
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0015-sonarqube-for-application-static-code-analysis/" class="md-nav__link">
+        ADR-0015
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0016-elastic-cloud-for-observability-data-aggregation-and-visualization/" class="md-nav__link">
+        ADR-0016
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0017-jaeger-for-tracing-with-elasticsearch-backend/" class="md-nav__link">
+        ADR-0017
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0018-nexus-repository-manager-for-artifact-management/" class="md-nav__link">
+        ADR-0018
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0019-prefer-daemonsets-over-sidecars/" class="md-nav__link">
+        ADR-0019
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0020-spring-cloud-config-for-application-configuration-management/" class="md-nav__link">
+        ADR-0020
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0021-prefer-kong-enterprise-edition/" class="md-nav__link">
+        ADR-0021
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0022-use-ansible-as-the-provisioning-engine/" class="md-nav__link">
+        ADR-0022
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0023-helm-and-operators-for-component-installation-and-management/" class="md-nav__link">
+        ADR-0023
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0024-use-ansible-collection-to-structure-and-package-ansible-code/" class="md-nav__link">
+        ADR-0024
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0025-setup-sandbox-and-production-kuma-meshes-and-kong-ingress-controllers/" class="md-nav__link">
+        ADR-0025
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0026-setup-sandbox-and-production-keycloak-realms/" class="md-nav__link">
+        ADR-0026
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0027-cert-manager-for-certificate-management/" class="md-nav__link">
+        ADR-0027
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0028-use-markdown-architectural-decision-records/" class="md-nav__link">
+        ADR-0028
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/0029-tavros-as-a-single-tenant-platform/" class="md-nav__link">
+        ADR-0029
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/template/" class="md-nav__link">
+        ADR-TEMP
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Support
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Support" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Support
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../support/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#requirements" class="md-nav__link">
+    Requirements
+  </a>
+  
+    <nav class="md-nav" aria-label="Requirements">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-clusters-on-aws" class="md-nav__link">
+    For clusters on AWS
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-configuration" class="md-nav__link">
+    Default Configuration
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-variables" class="md-nav__link">
+    Configuration Variables
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration Variables">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-cluster-object" class="md-nav__link">
+    Kubernetes Cluster Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-cluster-keycloak-object" class="md-nav__link">
+    Kubernetes Cluster Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kong-object" class="md-nav__link">
+    Kong Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kong-ee-credentials-object" class="md-nav__link">
+    Kong EE Credentials Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kong-instance-object" class="md-nav__link">
+    Kong Instance Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kong-instance-ee-object" class="md-nav__link">
+    Kong Instance EE Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kong-keycloak-object" class="md-nav__link">
+    Kong Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kuma-object" class="md-nav__link">
+    Kuma Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kuma-mesh-object" class="md-nav__link">
+    Kuma Mesh Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kuma-mtls-object" class="md-nav__link">
+    Kuma mTLS Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#namespace-object" class="md-nav__link">
+    Namespace Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-object" class="md-nav__link">
+    Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-realms-object" class="md-nav__link">
+    Keycloak Realms Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nexus-object" class="md-nav__link">
+    Nexus Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nexus-keycloak-object" class="md-nav__link">
+    Nexus Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elastic-cloud-object" class="md-nav__link">
+    Elastic Cloud Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elastic-cloud-ee-object" class="md-nav__link">
+    Elastic Cloud EE Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#elastic-cloud-keycloak-object" class="md-nav__link">
+    Elastic Cloud Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitea-object" class="md-nav__link">
+    Gitea Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jaeger-object" class="md-nav__link">
+    Jaeger Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jaeger-keycloak-object" class="md-nav__link">
+    Jaeger Keycloak Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jenkins-object" class="md-nav__link">
+    Jenkins Object
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jenkins-keycloak-object" class="md-nav__link">
+    Jenkins Keycloak Object
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                  <a href="https://github.com/MS3Inc/tavros/edit/main/docs/reference/playbooks/provision_playbook.md" title="Edit this page" class="md-content__button md-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25z"/></svg>
+                  </a>
+                
+                
+                
+                <h1 id="tavros-provision-playbook">Tavros Provision Playbook<a class="headerlink" href="#tavros-provision-playbook" title="Permanent link">&para;</a></h1>
+<ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#for-clusters-on-aws">For clusters on AWS</a><ul>
+<li><a href="#iam">IAM</a></li>
+<li><a href="#route53">Route53</a></li>
+</ul>
+</li>
+<li><a href="#default-configuration">Default Configuration</a></li>
+<li><a href="#configuration-variables">Configuration Variables</a></li>
+<li><a href="#kubernetes-cluster-object">Kubernetes Cluster Object</a></li>
+<li><a href="#kong-object">Kong Object</a></li>
+<li><a href="#kong-ee-credentials-object">Kong EE Credentials Object</a></li>
+<li><a href="#image-registry-object">Image Registry Object</a></li>
+<li><a href="#kong-instance-object">Kong Instance Object</a></li>
+<li><a href="#kong-instance-ee-object">Kong Instance EE Object</a></li>
+<li><a href="#kuma-object">Kuma Object</a></li>
+<li><a href="#kuma-mesh-object">Kuma Mesh Object</a></li>
+<li><a href="#kuma-mtls-object">Kuma mTLS Object</a></li>
+<li><a href="#namespace-object">Namespace Object</a></li>
+<li><a href="#keycloak-object">Keycloak Object</a></li>
+<li><a href="#nexus-object">Nexus Object</a></li>
+<li><a href="#elastic-cloud-object">Elastic Cloud Object</a></li>
+<li><a href="#gitea-object">Gitea</a></li>
+<li><a href="#jaeger-object">Jaeger</a></li>
+</ul>
+<p><small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small></p>
+<p>This playbook will use provision a Kubernetes Cluster on AWS. It will then configure the platform components sequentially as configured, and finally commit all resource manifests to Git, for Flux to manage from that point on.</p>
+<p>The order of component configuration is as follows:
+* Flux v2 Toolkit - In order to provide platform GitOps
+* Kubeseal - In order to safely store secrets in GitOps
+* PostgreSQL - A central configuration database for multiple components
+* Namespaces - Application namespaced environments
+* Kuma - Service Meshes
+* cert-manager - TLS certificate manager for the given domain
+* Kong - As a API Gateway and Manager, with enterprise edition features if that is enabled
+* Keycloak - To provide Identity and Access Management, if enabled
+* Nexus - To provide repository for varios formats, if enabled
+* Elastic Cloud - To provide observability, if enabled
+* Gitea - To provide source control, if enabled
+* Jaeger - To provide observability, if enabled</p>
+<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
+<h3 id="for-clusters-on-aws">For clusters on AWS<a class="headerlink" href="#for-clusters-on-aws" title="Permanent link">&para;</a></h3>
+<h4 id="iam">IAM<a class="headerlink" href="#iam" title="Permanent link">&para;</a></h4>
+<p>For Tavros cluster on AWS, IAM should be configured as follows:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+aws iam create-group --group-name tavros-provisioner
+​
+<span class="c1"># required for kops</span>
+<span class="c1"># https://github.com/kubernetes/kops/blob/master/docs/getting_started/aws.md#setup-iam-user</span>
+aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess --group-name tavros-provisioner
+aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonRoute53FullAccess --group-name tavros-provisioner
+aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --group-name tavros-provisioner
+aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/IAMFullAccess --group-name tavros-provisioner
+aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonVPCFullAccess --group-name tavros-provisioner
+​
+aws iam create-user --user-name tavros-ci
+aws iam add-user-to-group --user-name tavros-ci --group-name tavros-provisioner
+aws iam create-access-key --user-name tavros-ci
+</code></pre></div></p>
+<p>The resulting Access Key and Secret should be passed to the Ansible Playbook.</p>
+<p>For more detailed information see https://kops.sigs.k8s.io/getting_started/aws/</p>
+<h4 id="route53">Route53<a class="headerlink" href="#route53" title="Permanent link">&para;</a></h4>
+<p>Route53 should manage the domain to be used for the cluster as a Hosted Zone. It is not necessary for Route53 to serve as the root domain registrar. For more information see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-configuring.html">Configuring Amazon Route 53 as your DNS service</a>.</p>
+<p>For more detailed information see https://kops.sigs.k8s.io/getting_started/aws/</p>
+<h2 id="default-configuration">Default Configuration<a class="headerlink" href="#default-configuration" title="Permanent link">&para;</a></h2>
+<p>There is a default configuration vars file that results in the following:
+* A Kubernetes cluster on AWS with 3x T2.XLarge masters and 2x T2.Large worker nodes.
+* A single Keycloak instance with two realms: 'sandbox' and 'prod'.
+* 2x Kuma meshes: 'sandbox' and 'prod'.
+* 2x Kong ingress controllers: 'sandbox' and 'prod'. The ingress controllers are part of the Kuma meshes, respectively.
+* 3x application namespaced environments: 'dev', 'test', and 'prod'. 'dev' and 'test' belong to the 'sandbox' Kuma mesh, and 'prod' to the 'prod' Kuma mesh.</p>
+<p>To use the default configuration:</p>
+<div class="highlight"><pre><span></span><code>ansible-playbook playbooks/provision_playbook.yaml <span class="se">\</span>
+  --extra-vars <span class="s1">&#39;{&quot;cluster_name&quot;:&quot;tavros&quot;,&quot;cluster_domain&quot;:&quot;example.com&quot;,&quot;cluster_admin_email&quot;:&quot;ops@example.com&quot;}&#39;</span> <span class="se">\</span>
+  --inventory <span class="s2">&quot;playbooks/provision_playbook/default_vars.yaml&quot;</span>
+</code></pre></div>
+<h2 id="configuration-variables">Configuration Variables<a class="headerlink" href="#configuration-variables" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cluster_name</td>
+<td>String</td>
+<td><strong>Required</strong> The name of the Tavros Kubernetes cluster</td>
+<td></td>
+</tr>
+<tr>
+<td>cluster_domain</td>
+<td>String</td>
+<td><strong>Required</strong> The domain name to use for the platform. This should be managed by the cloud provider chosen in order to setup routes and certificates</td>
+<td></td>
+</tr>
+<tr>
+<td>cluster_admin_email</td>
+<td>String</td>
+<td><strong>Required</strong> The email for alerts and general notifications.</td>
+<td></td>
+</tr>
+<tr>
+<td>kubernetes_cluster</td>
+<td><a href="#kubernetes-cluster-object">Kubernetes Cluster Object</a></td>
+<td><strong>Required</strong> Configuration for the Kubernetes Cluster to be provisioned</td>
+<td></td>
+</tr>
+<tr>
+<td>kong</td>
+<td><a href="#kong-object">Kong Object</a></td>
+<td>Configuration for Kong</td>
+<td></td>
+</tr>
+<tr>
+<td>kuma</td>
+<td><a href="#kuma-object">Kuma Object</a></td>
+<td>Configuration for Kuma</td>
+<td></td>
+</tr>
+<tr>
+<td>namespaces</td>
+<td>[<a href="#namespace-object">Namespace Object</a>]</td>
+<td>An array of Namespace configurations</td>
+<td></td>
+</tr>
+<tr>
+<td>keycloak</td>
+<td><a href="#keycloak-object">Keycloak Object</a></td>
+<td>Configuration for Keycloak</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="kubernetes-cluster-object">Kubernetes Cluster Object<a class="headerlink" href="#kubernetes-cluster-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>cloud</td>
+<td>String</td>
+<td>The cloud provider to provision the cluster in</td>
+<td>'aws'</td>
+</tr>
+<tr>
+<td>master_count</td>
+<td>Integer</td>
+<td>The number of master nodes</td>
+<td>3</td>
+</tr>
+<tr>
+<td>master_size</td>
+<td>String</td>
+<td>The machine instance type for master nodes</td>
+<td>'T2.Large'</td>
+</tr>
+<tr>
+<td>node_count</td>
+<td>Integer</td>
+<td>The number of worker nodes</td>
+<td>2</td>
+</tr>
+<tr>
+<td>node_size</td>
+<td>String</td>
+<td>The machine instance type for worker nodes</td>
+<td>'T2.XLarge'</td>
+</tr>
+<tr>
+<td>zones</td>
+<td>String</td>
+<td>A comma separated list of availability zones in which to place the machines</td>
+<td>'us-east-1,us-east-2'</td>
+</tr>
+<tr>
+<td>state_bucket</td>
+<td>String</td>
+<td>The name of the S3 bucket to place the cluster state in</td>
+<td>'troubaodur'</td>
+</tr>
+<tr>
+<td>ssh_public_key</td>
+<td>String</td>
+<td>The SSH public key to setup as authorized user on provisioned machines</td>
+<td><em>read from ~/.ssh/id_rsa.pub</em></td>
+</tr>
+<tr>
+<td>aws_access_key_id</td>
+<td>String</td>
+<td>The AWS IAM AccessKeyId</td>
+<td><em>uses aws cli logged in user</em></td>
+</tr>
+<tr>
+<td>aws_secret_access_key</td>
+<td>The AWS IAM SecretAccessKey</td>
+<td><em>uses aws cli logged in user</em></td>
+<td></td>
+</tr>
+<tr>
+<td>keycloak</td>
+<td><a href="#kubernetes-cluster-keycloak-object">Kubernetes Cluster Keycloak Object</a></td>
+<td>Keycloak Config</td>
+<td>{ "realm": "", "client_secret": "" }</td>
+</tr>
+</tbody>
+</table>
+<h3 id="kubernetes-cluster-keycloak-object">Kubernetes Cluster Keycloak Object<a class="headerlink" href="#kubernetes-cluster-keycloak-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>realm</td>
+<td>String</td>
+<td>Keycloak Realm Name</td>
+<td></td>
+</tr>
+<tr>
+<td>client_secret</td>
+<td>String</td>
+<td>Client Secret</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="kong-object">Kong Object<a class="headerlink" href="#kong-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>default_ingress_class</td>
+<td>String</td>
+<td>The default ingress controller class for other components to use</td>
+<td>'prod'</td>
+</tr>
+<tr>
+<td>ee_creds</td>
+<td>[<a href="#kong-ee-credentials-object">Kong EE Credentials Object</a>]</td>
+<td>An array of Kong Enterprise Edition Credentials available for Kong instances to use</td>
+<td></td>
+</tr>
+<tr>
+<td>instances</td>
+<td>[<a href="#kong-instance-object">Kong Instance Object</a>]</td>
+<td>An array of Kong instance object to be configured</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="kong-ee-credentials-object">Kong EE Credentials Object<a class="headerlink" href="#kong-ee-credentials-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>license</td>
+<td>String</td>
+<td><strong>Required</strong> The Enterprise Edition license</td>
+<td></td>
+</tr>
+<tr>
+<td>name</td>
+<td>String</td>
+<td><strong>Required</strong> Identifier for EE Kong Instance</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="kong-instance-object">Kong Instance Object<a class="headerlink" href="#kong-instance-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td><strong>Required</strong> The name of the Kong instance</td>
+<td></td>
+</tr>
+<tr>
+<td>hybrid</td>
+<td>Boolean</td>
+<td><strong>Required</strong> Deployment Type</td>
+<td></td>
+</tr>
+<tr>
+<td>ingress_class</td>
+<td>String</td>
+<td><strong>Required</strong>  The name of the ingress class</td>
+<td></td>
+</tr>
+<tr>
+<td>kuma_mesh_name</td>
+<td>String</td>
+<td>The name of the Kuma mesh that the Kong instance should be part of</td>
+<td></td>
+</tr>
+<tr>
+<td>ee</td>
+<td><a href="#kong-instance-ee-object">Kong Instance EE Object</a></td>
+<td>The EE configuration for the Kong instance</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="kong-instance-ee-object">Kong Instance EE Object<a class="headerlink" href="#kong-instance-ee-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+<td>Whether to use Enterprise Edition</td>
+<td>false</td>
+</tr>
+<tr>
+<td>creds</td>
+<td>String</td>
+<td>The name of the Kong EE Credentials resource to use</td>
+<td>'default'</td>
+</tr>
+<tr>
+<td>keycloak</td>
+<td><a href="#kong-keycloak-object">Kong Keycloak Object</a></td>
+<td>Keycloak Config</td>
+<td>{ "realm": "", "client_secret": "" }</td>
+</tr>
+</tbody>
+</table>
+<h3 id="kong-keycloak-object">Kong Keycloak Object<a class="headerlink" href="#kong-keycloak-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>realm</td>
+<td>String</td>
+<td>Keycloak Realm Name</td>
+<td></td>
+</tr>
+<tr>
+<td>client_secret</td>
+<td>String</td>
+<td>Client Secret</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="kuma-object">Kuma Object<a class="headerlink" href="#kuma-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>meshes</td>
+<td>[<a href="#kuma-mesh-object">Kuma Mesh Object</a>]</td>
+<td>The Kuma mesh configuration object</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="kuma-mesh-object">Kuma Mesh Object<a class="headerlink" href="#kuma-mesh-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td><strong>Required</strong> The name of the Kuma mesh</td>
+<td></td>
+</tr>
+<tr>
+<td>mtls</td>
+<td><a href="#kuma-mtls-object">Kuma mTLS Object</a></td>
+<td>The mTLS configuration for the Kuma mesh</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="kuma-mtls-object">Kuma mTLS Object<a class="headerlink" href="#kuma-mtls-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+<td>Whether to enable mTLS</td>
+<td>false</td>
+</tr>
+</tbody>
+</table>
+<h3 id="namespace-object">Namespace Object<a class="headerlink" href="#namespace-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>String</td>
+<td><strong>Required</strong> The name of the Namespace</td>
+<td></td>
+</tr>
+<tr>
+<td>kuma_mesh_name</td>
+<td>String</td>
+<td>The name of the Kuma mesh this namespace should be a part of</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="keycloak-object">Keycloak Object<a class="headerlink" href="#keycloak-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+<td>Whether to use Keycloak</td>
+<td>true</td>
+</tr>
+<tr>
+<td>realms</td>
+<td>Array of <a href="#keycloak-realms-object">Keycloak Realms Object</a></td>
+<td>Enumeration of Desired Realms</td>
+<td>[{"name": "sandbox"}, {"name": "prod"}]</td>
+</tr>
+</tbody>
+</table>
+<h3 id="keycloak-realms-object">Keycloak Realms Object<a class="headerlink" href="#keycloak-realms-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>Boolean</td>
+<td>Whether to use Keycloak</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="nexus-object">Nexus Object<a class="headerlink" href="#nexus-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+<td>Whether to use Elastic Cloud</td>
+<td>true</td>
+</tr>
+<tr>
+<td>keycloak</td>
+<td><a href="#nexus-keycloak-object">Nexus Keycloak Object</a></td>
+<td>Keycloak Config</td>
+<td>{ "realm": "", "client_secret": "" }</td>
+</tr>
+</tbody>
+</table>
+<h3 id="nexus-keycloak-object">Nexus Keycloak Object<a class="headerlink" href="#nexus-keycloak-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>realm</td>
+<td>String</td>
+<td>Keycloak Realm Name</td>
+<td></td>
+</tr>
+<tr>
+<td>client_secret</td>
+<td>String</td>
+<td>Client Secret</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="elastic-cloud-object">Elastic Cloud Object<a class="headerlink" href="#elastic-cloud-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+<td>Whether to use Elastic Cloud</td>
+<td>true</td>
+</tr>
+<tr>
+<td>ee</td>
+<td><a href="#elastic-cloud-ee-object">Elastic Cloud EE Object</a></td>
+<td>EE Config</td>
+<td>{ "enabled": false }</td>
+</tr>
+</tbody>
+</table>
+<h3 id="elastic-cloud-ee-object">Elastic Cloud EE Object<a class="headerlink" href="#elastic-cloud-ee-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+<td>Whether to use EE</td>
+<td></td>
+</tr>
+<tr>
+<td>trial</td>
+<td>Boolean</td>
+<td>Whether to use 30 day cluster trial license</td>
+<td></td>
+</tr>
+<tr>
+<td>licnese</td>
+<td>String</td>
+<td>License JSON</td>
+<td></td>
+</tr>
+<tr>
+<td>keycloak</td>
+<td><a href="#elastic-cloud-keycloak-object">Elastic Cloud Keycloak Object</a></td>
+<td>Keycloak Config</td>
+<td>{ "realm": "", "client_secret": "" }</td>
+</tr>
+</tbody>
+</table>
+<h3 id="elastic-cloud-keycloak-object">Elastic Cloud Keycloak Object<a class="headerlink" href="#elastic-cloud-keycloak-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>realm</td>
+<td>String</td>
+<td>Keycloak Realm Name</td>
+<td></td>
+</tr>
+<tr>
+<td>client_secret</td>
+<td>String</td>
+<td>Client Secret</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="gitea-object">Gitea Object<a class="headerlink" href="#gitea-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+<td>Whether to use Gitea</td>
+<td>true</td>
+</tr>
+</tbody>
+</table>
+<h3 id="jaeger-object">Jaeger Object<a class="headerlink" href="#jaeger-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+<td>Whether to use Jaeger</td>
+<td>true</td>
+</tr>
+<tr>
+<td>keycloak</td>
+<td><a href="#jaeger-keycloak-object">Jaeger Keycloak Object</a></td>
+<td>Keycloak Config</td>
+<td>{ "realm": "", "client_secret": "" }</td>
+</tr>
+</tbody>
+</table>
+<h3 id="jaeger-keycloak-object">Jaeger Keycloak Object<a class="headerlink" href="#jaeger-keycloak-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>realm</td>
+<td>String</td>
+<td>Keycloak Realm Name</td>
+<td></td>
+</tr>
+<tr>
+<td>client_secret</td>
+<td>String</td>
+<td>Client Secret</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="jenkins-object">Jenkins Object<a class="headerlink" href="#jenkins-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>enabled</td>
+<td>Boolean</td>
+<td>Whether to use Jenkins</td>
+<td>true</td>
+</tr>
+<tr>
+<td>keycloak</td>
+<td><a href="#jenkins-keycloak-object">Jenkins Keycloak Object</a></td>
+<td>Keycloak Config</td>
+<td>{ "realm": "" }</td>
+</tr>
+</tbody>
+</table>
+<h3 id="jenkins-keycloak-object">Jenkins Keycloak Object<a class="headerlink" href="#jenkins-keycloak-object" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Field Name</th>
+<th>Type</th>
+<th>Description</th>
+<th>Default Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>realm</td>
+<td>String</td>
+<td>Keycloak Realm Name</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+                
+                  
+
+                
+                
+              
+              
+                
+
+
+              
+            </article>
+            
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))for(var set of document.querySelectorAll("[data-tabs]")){var labels=set.querySelectorAll(":scope > label");e:for(var tab of tabs)for(var label of labels)if(label.innerText.trim()===tab){var input=label.previousElementSibling;input.checked=!0;break e}}</script>
+
+          </div>
+        </div>
+        
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <nav class="md-footer__inner md-grid" aria-label="Footer">
+      
+        
+        <a href="../overview/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Overview
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../deprovision_playbook/" class="md-footer__link md-footer__link--next" aria-label="Next: Deprovision" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Deprovision
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        
+          Made with
+          <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+            Material for MkDocs Insiders
+          </a>
+        
+        
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.instant", "navigation.tabs", "navigation.tabs.sticky", "content.tabs.link", "content.code.annotate"], "translations": {"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "search": "../../../assets/javascripts/workers/search.d5944110.min.js", "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.4b1ed6f7.min.js"></script>
+      
+    
+  </body>
+</html>
