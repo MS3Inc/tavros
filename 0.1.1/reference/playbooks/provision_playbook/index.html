@@ -835,33 +835,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
-    Requirements
-  </a>
-  
-    <nav class="md-nav" aria-label="Requirements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#for-clusters-on-aws" class="md-nav__link">
-    For clusters on AWS
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#default-configuration" class="md-nav__link">
-    Default Configuration
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#configuration-variables" class="md-nav__link">
     Configuration Variables
   </a>
@@ -2816,33 +2789,6 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#requirements" class="md-nav__link">
-    Requirements
-  </a>
-  
-    <nav class="md-nav" aria-label="Requirements">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#for-clusters-on-aws" class="md-nav__link">
-    For clusters on AWS
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#default-configuration" class="md-nav__link">
-    Default Configuration
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
   <a href="#configuration-variables" class="md-nav__link">
     Configuration Variables
   </a>
@@ -3035,82 +2981,6 @@
                 
                 
                 <h1 id="tavros-provision-playbook">Tavros Provision Playbook<a class="headerlink" href="#tavros-provision-playbook" title="Permanent link">&para;</a></h1>
-<ul>
-<li><a href="#requirements">Requirements</a></li>
-<li><a href="#for-clusters-on-aws">For clusters on AWS</a><ul>
-<li><a href="#iam">IAM</a></li>
-<li><a href="#route53">Route53</a></li>
-</ul>
-</li>
-<li><a href="#default-configuration">Default Configuration</a></li>
-<li><a href="#configuration-variables">Configuration Variables</a></li>
-<li><a href="#kubernetes-cluster-object">Kubernetes Cluster Object</a></li>
-<li><a href="#kong-object">Kong Object</a></li>
-<li><a href="#kong-ee-credentials-object">Kong EE Credentials Object</a></li>
-<li><a href="#image-registry-object">Image Registry Object</a></li>
-<li><a href="#kong-instance-object">Kong Instance Object</a></li>
-<li><a href="#kong-instance-ee-object">Kong Instance EE Object</a></li>
-<li><a href="#kuma-object">Kuma Object</a></li>
-<li><a href="#kuma-mesh-object">Kuma Mesh Object</a></li>
-<li><a href="#kuma-mtls-object">Kuma mTLS Object</a></li>
-<li><a href="#namespace-object">Namespace Object</a></li>
-<li><a href="#keycloak-object">Keycloak Object</a></li>
-<li><a href="#nexus-object">Nexus Object</a></li>
-<li><a href="#elastic-cloud-object">Elastic Cloud Object</a></li>
-<li><a href="#gitea-object">Gitea</a></li>
-<li><a href="#jaeger-object">Jaeger</a></li>
-</ul>
-<p><small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small></p>
-<p>This playbook will use provision a Kubernetes Cluster on AWS. It will then configure the platform components sequentially as configured, and finally commit all resource manifests to Git, for Flux to manage from that point on.</p>
-<p>The order of component configuration is as follows:
-* Flux v2 Toolkit - In order to provide platform GitOps
-* Kubeseal - In order to safely store secrets in GitOps
-* PostgreSQL - A central configuration database for multiple components
-* Namespaces - Application namespaced environments
-* Kuma - Service Meshes
-* cert-manager - TLS certificate manager for the given domain
-* Kong - As a API Gateway and Manager, with enterprise edition features if that is enabled
-* Keycloak - To provide Identity and Access Management, if enabled
-* Nexus - To provide repository for varios formats, if enabled
-* Elastic Cloud - To provide observability, if enabled
-* Gitea - To provide source control, if enabled
-* Jaeger - To provide observability, if enabled</p>
-<h2 id="requirements">Requirements<a class="headerlink" href="#requirements" title="Permanent link">&para;</a></h2>
-<h3 id="for-clusters-on-aws">For clusters on AWS<a class="headerlink" href="#for-clusters-on-aws" title="Permanent link">&para;</a></h3>
-<h4 id="iam">IAM<a class="headerlink" href="#iam" title="Permanent link">&para;</a></h4>
-<p>For Tavros cluster on AWS, IAM should be configured as follows:
-<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
-aws iam create-group --group-name tavros-provisioner
-​
-<span class="c1"># required for kops</span>
-<span class="c1"># https://github.com/kubernetes/kops/blob/master/docs/getting_started/aws.md#setup-iam-user</span>
-aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonEC2FullAccess --group-name tavros-provisioner
-aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonRoute53FullAccess --group-name tavros-provisioner
-aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonS3FullAccess --group-name tavros-provisioner
-aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/IAMFullAccess --group-name tavros-provisioner
-aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/AmazonVPCFullAccess --group-name tavros-provisioner
-​
-aws iam create-user --user-name tavros-ci
-aws iam add-user-to-group --user-name tavros-ci --group-name tavros-provisioner
-aws iam create-access-key --user-name tavros-ci
-</code></pre></div></p>
-<p>The resulting Access Key and Secret should be passed to the Ansible Playbook.</p>
-<p>For more detailed information see https://kops.sigs.k8s.io/getting_started/aws/</p>
-<h4 id="route53">Route53<a class="headerlink" href="#route53" title="Permanent link">&para;</a></h4>
-<p>Route53 should manage the domain to be used for the cluster as a Hosted Zone. It is not necessary for Route53 to serve as the root domain registrar. For more information see <a href="https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-configuring.html">Configuring Amazon Route 53 as your DNS service</a>.</p>
-<p>For more detailed information see https://kops.sigs.k8s.io/getting_started/aws/</p>
-<h2 id="default-configuration">Default Configuration<a class="headerlink" href="#default-configuration" title="Permanent link">&para;</a></h2>
-<p>There is a default configuration vars file that results in the following:
-* A Kubernetes cluster on AWS with 3x T2.XLarge masters and 2x T2.Large worker nodes.
-* A single Keycloak instance with two realms: 'sandbox' and 'prod'.
-* 2x Kuma meshes: 'sandbox' and 'prod'.
-* 2x Kong ingress controllers: 'sandbox' and 'prod'. The ingress controllers are part of the Kuma meshes, respectively.
-* 3x application namespaced environments: 'dev', 'test', and 'prod'. 'dev' and 'test' belong to the 'sandbox' Kuma mesh, and 'prod' to the 'prod' Kuma mesh.</p>
-<p>To use the default configuration:</p>
-<div class="highlight"><pre><span></span><code>ansible-playbook playbooks/provision_playbook.yaml <span class="se">\</span>
-  --extra-vars <span class="s1">&#39;{&quot;cluster_name&quot;:&quot;tavros&quot;,&quot;cluster_domain&quot;:&quot;example.com&quot;,&quot;cluster_admin_email&quot;:&quot;ops@example.com&quot;}&#39;</span> <span class="se">\</span>
-  --inventory <span class="s2">&quot;playbooks/provision_playbook/default_vars.yaml&quot;</span>
-</code></pre></div>
 <h2 id="configuration-variables">Configuration Variables<a class="headerlink" href="#configuration-variables" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
