@@ -717,8 +717,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#start-a-tavros-collection-instance" class="md-nav__link">
-    Start a Tavros Collection instance
+  <a href="#configure-an-inventory" class="md-nav__link">
+    Configure an Inventory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shell-into-a-tavros-collection-instance" class="md-nav__link">
+    Shell into a Tavros Collection instance
   </a>
   
 </li>
@@ -726,20 +733,6 @@
           <li class="md-nav__item">
   <a href="#complete-cluster-prerequisites" class="md-nav__link">
     Complete Cluster Prerequisites
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#select-a-base-inventory" class="md-nav__link">
-    Select a base Inventory
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#create-an-instance-config" class="md-nav__link">
-    Create an Instance Config
   </a>
   
 </li>
@@ -2765,8 +2758,15 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#start-a-tavros-collection-instance" class="md-nav__link">
-    Start a Tavros Collection instance
+  <a href="#configure-an-inventory" class="md-nav__link">
+    Configure an Inventory
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shell-into-a-tavros-collection-instance" class="md-nav__link">
+    Shell into a Tavros Collection instance
   </a>
   
 </li>
@@ -2774,20 +2774,6 @@
           <li class="md-nav__item">
   <a href="#complete-cluster-prerequisites" class="md-nav__link">
     Complete Cluster Prerequisites
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#select-a-base-inventory" class="md-nav__link">
-    Select a base Inventory
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#create-an-instance-config" class="md-nav__link">
-    Create an Instance Config
   </a>
   
 </li>
@@ -2863,12 +2849,301 @@
 <div class="highlight"><pre><span></span><code>mkdir tavros
 cd tavros
 </code></pre></div></p>
-<h3 id="start-a-tavros-collection-instance">Start a Tavros Collection instance<a class="headerlink" href="#start-a-tavros-collection-instance" title="Permanent link">&para;</a></h3>
+<h3 id="configure-an-inventory">Configure an Inventory<a class="headerlink" href="#configure-an-inventory" title="Permanent link">&para;</a></h3>
+<p>Tavros is designed to use an Ansible Inventory for configuration. This file specifies custom settings for each component in Tavros. We provide a set of Inventores to choose from as a starting point.</p>
+<blockquote>
+<ul>
+<li>Advanced users may want to customize further</li>
+<li>Inventory files are documented in the <a href="/tavros/reference/playbooks/">reference docs</a> for each Playbook. </li>
+</ul>
+</blockquote>
+<p>We'll create our config in the working directory and name it <code>{{ cluster_fqdn }}_vars.yaml</code>.</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Existing K8s</label><label for="__tabbed_2_2">AKS</label><label for="__tabbed_2_3">AWS</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">all</span><span class="p">:</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">cluster_fqdn</span><span class="p">:</span> <span class="s">&#39;&#39;</span> <span class="c1"># (1)</span>
+    <span class="nt">cluster_admin_email</span><span class="p">:</span> <span class="s">&#39;&#39;</span> <span class="c1"># (2)</span>
+    <span class="nt">kubernetes_cluster</span><span class="p">:</span>
+      <span class="nt">cloud_provider</span><span class="p">:</span> <span class="s">&#39;existing&#39;</span>
+      <span class="nt">dns_zone</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">cluster_fqdn</span><span class="nv"> </span><span class="s">}}&quot;</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prod</span>
+    <span class="nt">kops</span><span class="p">:</span> 
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">aks</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">kong</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">default_ingress_class</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+      <span class="nt">ee_creds</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+      <span class="nt">instances</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;sandbox-kong&#39;</span>
+        <span class="nt">hybrid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+        <span class="nt">ingress_class</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+        <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+        <span class="nt">ee</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;prod-kong&#39;</span>
+        <span class="nt">hybrid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">ingress_class</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+        <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+        <span class="nt">ee</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">kuma</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">meshes</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+        <span class="nt">mtls</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">traffictrace</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+        <span class="nt">mtls</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">traffictrace</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">namespaces</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;dev&#39;</span>
+      <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;test&#39;</span>
+      <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+      <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">keycloak</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">realms</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sandbox</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prod</span>
+    <span class="nt">postgresql</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
+    <span class="nt">cert_manager</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">gitea</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">nexus</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">elastic_cloud</span><span class="p">:</span>
+      <span class="nt">ee</span><span class="p">:</span>
+        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">jaeger</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">jenkins</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">flux</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
+</code></pre></div>
+<ol>
+<li>FQDN to be used for Tavros</li>
+<li>Starting Admin user for Tavros</li>
+</ol>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">all</span><span class="p">:</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">cluster_fqdn</span><span class="p">:</span> <span class="s">&#39;&#39;</span> <span class="c1"># (1)</span>
+    <span class="nt">cluster_admin_email</span><span class="p">:</span> <span class="s">&#39;&#39;</span> <span class="c1"># (2)</span>
+    <span class="nt">kubernetes_cluster</span><span class="p">:</span>
+      <span class="nt">cloud_provider</span><span class="p">:</span> <span class="s">&#39;aks&#39;</span>
+      <span class="nt">dns_zone</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">cluster_fqdn</span><span class="nv"> </span><span class="s">}}&quot;</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prod</span>
+    <span class="nt">kops</span><span class="p">:</span> 
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">aks</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tavros</span>
+      <span class="nt">resource_group</span><span class="p">:</span> <span class="s">&#39;&#39;</span> <span class="c1"># (3)</span>
+      <span class="nt">storage_account_name</span><span class="p">:</span> <span class="s">&#39;&#39;</span> <span class="c1"># (4)</span>
+      <span class="nt">node_count</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+      <span class="nt">node_size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Standard_B4ms</span>
+    <span class="nt">kong</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">default_ingress_class</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+      <span class="nt">ee_creds</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+      <span class="nt">instances</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;sandbox-kong&#39;</span>
+        <span class="nt">hybrid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+        <span class="nt">ingress_class</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+        <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+        <span class="nt">ee</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;prod-kong&#39;</span>
+        <span class="nt">hybrid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">ingress_class</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+        <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+        <span class="nt">ee</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">kuma</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">meshes</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+        <span class="nt">mtls</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">traffictrace</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+        <span class="nt">mtls</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">traffictrace</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">namespaces</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;dev&#39;</span>
+      <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;test&#39;</span>
+      <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+      <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">keycloak</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">realms</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sandbox</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prod</span>
+    <span class="nt">postgresql</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
+    <span class="nt">cert_manager</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">gitea</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">nexus</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">elastic_cloud</span><span class="p">:</span>
+      <span class="nt">ee</span><span class="p">:</span>
+        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">jaeger</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">jenkins</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">flux</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
+</code></pre></div>
+<ol>
+<li>FQDN to be used for Tavros</li>
+<li>Starting Admin user for Tavros</li>
+<li>Resrouce group previously created</li>
+<li>Storage account created for tavros configs</li>
+</ol>
+</div>
+<div class="tabbed-block">
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">all</span><span class="p">:</span>
+  <span class="nt">vars</span><span class="p">:</span>
+    <span class="nt">cluster_fqdn</span><span class="p">:</span> <span class="s">&#39;&#39;</span> <span class="c1"># (1)</span>
+    <span class="nt">cluster_admin_email</span><span class="p">:</span> <span class="s">&#39;&#39;</span> <span class="c1"># (2)</span>
+    <span class="nt">kubernetes_cluster</span><span class="p">:</span>
+      <span class="nt">cloud_provider</span><span class="p">:</span> <span class="s">&#39;aws&#39;</span>
+      <span class="nt">dns_zone</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">cluster_fqdn</span><span class="nv"> </span><span class="s">}}&quot;</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prod</span>
+    <span class="nt">kops</span><span class="p">:</span> 
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">master_count</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+      <span class="nt">master_size</span><span class="p">:</span> <span class="s">&#39;t2.large&#39;</span>
+      <span class="nt">master_zones</span><span class="p">:</span> <span class="s">&#39;us-east-1a,us-east-1b&#39;</span>
+      <span class="nt">node_count</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+      <span class="nt">node_size</span><span class="p">:</span> <span class="s">&#39;t2.xlarge&#39;</span>
+      <span class="nt">node_zones</span><span class="p">:</span> <span class="s">&#39;us-east-1a,us-east-1b&#39;</span>
+      <span class="nt">state_bucket</span><span class="p">:</span> <span class="s">&quot;{{</span><span class="nv"> </span><span class="s">cluster_fqdn</span><span class="nv"> </span><span class="s">}}-tavros&quot;</span>
+      <span class="nt">state_bucket_region</span><span class="p">:</span> <span class="s">&quot;us-east-1&quot;</span>
+    <span class="nt">aks</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">kong</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">default_ingress_class</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+      <span class="nt">ee_creds</span><span class="p">:</span> <span class="p p-Indicator">[]</span>
+      <span class="nt">instances</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;sandbox-kong&#39;</span>
+        <span class="nt">hybrid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+        <span class="nt">ingress_class</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+        <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+        <span class="nt">ee</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;prod-kong&#39;</span>
+        <span class="nt">hybrid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">ingress_class</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+        <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+        <span class="nt">ee</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+    <span class="nt">kuma</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">meshes</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+        <span class="nt">mtls</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">traffictrace</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+        <span class="nt">mtls</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">traffictrace</span><span class="p">:</span>
+          <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">namespaces</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;dev&#39;</span>
+      <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;test&#39;</span>
+      <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;sandbox&#39;</span>
+    <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+      <span class="nt">kuma_mesh_name</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">keycloak</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">realms</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sandbox</span>
+      <span class="p p-Indicator">-</span> <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prod</span>
+    <span class="nt">postgresql</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
+    <span class="nt">cert_manager</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">gitea</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">nexus</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">elastic_cloud</span><span class="p">:</span>
+      <span class="nt">ee</span><span class="p">:</span>
+        <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">jaeger</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">jenkins</span><span class="p">:</span>
+      <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+      <span class="nt">keycloak</span><span class="p">:</span>
+        <span class="nt">realm</span><span class="p">:</span> <span class="s">&#39;prod&#39;</span>
+    <span class="nt">flux</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
+</code></pre></div>
+<ol>
+<li>FQDN to be used for Tavros</li>
+<li>Starting Admin user for Tavros</li>
+</ol>
+</div>
+</div>
+</div>
+<h3 id="shell-into-a-tavros-collection-instance">Shell into a Tavros Collection instance<a class="headerlink" href="#shell-into-a-tavros-collection-instance" title="Permanent link">&para;</a></h3>
 <p>We'll mount our current directory into an interactive instance of the Tavros Collection.
 <div class="highlight"><pre><span></span><code>docker run -it --rm -v $PWD:/tmp/ -w /tmp/ ghcr.io/ms3inc/tavros-collection:latest
 </code></pre></div></p>
 <h3 id="complete-cluster-prerequisites">Complete Cluster Prerequisites<a class="headerlink" href="#complete-cluster-prerequisites" title="Permanent link">&para;</a></h3>
-<div class="tabbed-set tabbed-alternate" data-tabs="2:3"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><input id="__tabbed_2_3" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Existing K8s</label><label for="__tabbed_2_2">AKS</label><label for="__tabbed_2_3">AWS</label></div>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Existing K8s</label><label for="__tabbed_3_2">AKS</label><label for="__tabbed_3_3">AWS</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
 <p>For existing clusters you will need to provide the Tavros Collection with K8s access. This is done by providing a Kube config at <code>~/.kube/config</code> in the instance. </p>
@@ -2926,85 +3201,15 @@ aws iam create-access-key --user-name tavros-ci
 </div>
 </div>
 </div>
-<h3 id="select-a-base-inventory">Select a base Inventory<a class="headerlink" href="#select-a-base-inventory" title="Permanent link">&para;</a></h3>
-<p>Tavros is designed to use an Ansible Inventory for its base config. This file specifies default settings for each component in Tavros. We provide a set of Inventory files to choose from as your starting config.</p>
-<blockquote>
-<ul>
-<li>Inventory files are documented in the <a href="/tavros/reference/playbooks/">reference docs</a> for each Playbook. </li>
-<li>Advanced users may want to create custom Inventories to meet their needs</li>
-</ul>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>Type</th>
-<th>Path</th>
-<th>Overview</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>Minimal</code></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><code>Standard</code></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td><code>Single</code></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<h3 id="create-an-instance-config">Create an Instance Config<a class="headerlink" href="#create-an-instance-config" title="Permanent link">&para;</a></h3>
-<p>You will need to create an <code>instance_config.yaml</code> which overlays the Inventory. At minimum you will need to provide a FQDN and Admin Email. Place this file into your working directory so we can accecss it from the Tavros Collection Instance.</p>
-<div class="tabbed-set tabbed-alternate" data-tabs="3:3"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><input id="__tabbed_3_3" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Existing K8s</label><label for="__tabbed_3_2">AKS</label><label for="__tabbed_3_3">AWS</label></div>
-<div class="tabbed-content">
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="nt">cluster_fqdn</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">k8s.ms3-inc.com</span>
-<span class="nt">cluster_admin_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rmccright@ms3-inc.com</span>
-<span class="nt">kubernetes_cluster</span><span class="p">:</span>
-    <span class="nt">cloud_provider</span><span class="p">:</span> <span class="s">&#39;existing&#39;</span>
-<span class="nt">kops</span><span class="p">:</span>
-    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span> 
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="nt">cluster_fqdn</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">az.ms3-inc.com</span>
-<span class="nt">cluster_admin_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rmccright@ms3-inc.com</span>
-<span class="nt">kubernetes_cluster</span><span class="p">:</span>
-    <span class="nt">cloud_provider</span><span class="p">:</span> <span class="s">&#39;aks&#39;</span>
-<span class="nt">kops</span><span class="p">:</span>
-    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">false</span> 
-<span class="nt">aks</span><span class="p">:</span>
-    <span class="nt">enabled</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-    <span class="nt">name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">az-tavros</span>
-    <span class="nt">resource_group</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tavros-aks</span>
-    <span class="nt">storage_account_name</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tavros01234</span>
-    <span class="nt">node_count</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
-    <span class="nt">node_size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Standard_B4ms</span>
-</code></pre></div>
-</div>
-<div class="tabbed-block">
-<div class="highlight"><pre><span></span><code><span class="nt">cluster_fqdn</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">az.ms3-inc.com</span>
-<span class="nt">cluster_admin_email</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rmccright@ms3-inc.com</span>
-</code></pre></div>
-</div>
-</div>
-</div>
 <h3 id="run-tavros">Run Tavros<a class="headerlink" href="#run-tavros" title="Permanent link">&para;</a></h3>
 <p>You can dry run first to make sure there are no issues with the Templeting phase
-<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &quot;@instance_config.yaml&quot; --tags all,dry-run | tee $(date &#39;+%s&#39;)_tavros_dryrun.log
+<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; --tags all,dry-run | tee $(date &#39;+%s&#39;)_tavros_dryrun.log
 </code></pre></div>
 Provision the Tavros Cluster by removing the <code>dry-run</code> tag.<br />
-<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &quot;@instance_config.yaml&quot; --tags all | tee $(date &#39;+%s&#39;)_tavros.log
+<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; --tags all | tee $(date &#39;+%s&#39;)_tavros.log
 </code></pre></div>
 Optionaly you can use Staging Lets Encrypt certs by adding the <code>test-run</code> tag.<br />
-<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; -e &quot;@instance_config.yaml&quot; --tags all | tee $(date &#39;+%s&#39;)_tavros_testrun.log
+<div class="highlight"><pre><span></span><code>ansible-playbook ms3_inc.tavros.provision_playbook.yaml -i &lt;inventory&gt; --tags all | tee $(date &#39;+%s&#39;)_tavros_testrun.log
 </code></pre></div></p>
 <h4 id="track-install-progress">Track install progress<a class="headerlink" href="#track-install-progress" title="Permanent link">&para;</a></h4>
 <p>From here you can see the progress of the Tavros Playbook in the Tavros Collection stdout.</p>
