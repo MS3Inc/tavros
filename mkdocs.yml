@@ -1,0 +1,183 @@
+site_name: Tavros
+repo_name: MS3Inc/tavros
+repo_url: https://github.com/MS3Inc/tavros
+site_url: 'https://ms3inc.github.io/tavros'
+edit_uri: edit/main/docs/
+
+plugins:
+  - search
+  #Insiders
+  # - social
+
+extra:
+  version:
+    provider: mike
+
+theme:
+  name: material
+  custom_dir: overrides
+  icon:
+    logo: 'material/cactus' #'material/ansible'
+  palette:
+    primary: red
+    accent: red
+  features:
+    - navigation.instant
+    - navigation.tabs
+    - navigation.tabs.sticky
+    #Insiders
+    - content.tabs.link
+    - content.code.annotate
+markdown_extensions:
+  # https://squidfunk.github.io/mkdocs-material/reference/content-tabs/#configuration
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true 
+
+  # https://squidfunk.github.io/mkdocs-material/setup/extensions/python-markdown-extensions/#snippets
+  - pymdownx.snippets:
+      base_path:
+      - ./playbooks/provision_playbook/default_vars.yaml
+      - ./playbooks/provision_playbook/aws_standard_vars.yaml
+      - ./playbooks/provision_playbook/aks_standard_vars.yaml
+      - ./playbooks/provision_playbook/existing_standard_vars.yaml
+      - ./CONTRIBUTING.md
+      - ./LICENSE
+      # auto_append:
+      # - refs.txt
+      check_paths: true
+
+  # https://squidfunk.github.io/mkdocs-material/reference/data-tables/#configuration
+  - tables
+
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+      
+  - pymdownx.highlight
+  - meta
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+nav:
+  - "Welcome": 
+    - About: 'index.md'
+    - Concepts: 'welcome/concepts.md'
+    - License: 'welcome/license.md'
+  - "Features": 
+    - Infrastructure Provisioning: 'features/cluster.md'
+    - GitOps: 'features/gitops.md'
+    - Gateway: 'features/gateway.md'
+    - Service Mesh: 'features/mesh.md'
+    - CICD: 'features/cicd.md'
+    - Observability: 'features/observability.md'
+    - Repository: 'features/repository.md'
+    - Security: 'features/security.md'
+  - "Getting Started":
+    - Installation: 'getting-started/installation.md'
+    - Deploying Applications: 'getting-started/deploying-applications.md'
+    - Upgrades: 'getting-started/upgrades.md'
+    - Teardown: 'getting-started/teardown.md'
+    - Troubleshooting: 'getting-started/troubleshooting.md'
+    - Disaster Recovery: 'getting-started/disaster-recovery.md'
+  - "Reference": 
+    - Overview: 'reference/overview.md'
+    - "Playbooks":
+      - Overview: 'reference/playbooks/overview.md'
+      - Provision: 'reference/playbooks/provision_playbook.md'
+      - Deprovision: 'reference/playbooks/deprovision_playbook.md'
+    - "Roles":
+      - Overview: 'reference/roles/overview.md'
+      - "AKS":
+        - Overview: 'reference/roles/aks/overview.md'
+        - Config: 'reference/roles/aks/config.md'
+      - "KOps":
+        - Overview: 'reference/roles/kops/overview.md'
+        - Config: 'reference/roles/kops/config.md'
+      - "OPA Gatekeeper":
+        - Overview: 'reference/roles/opa-gatekeeper/overview.md'
+        - Config: 'reference/roles/opa-gatekeeper/config.md'
+      - "Sealed Secrets":
+        - Overview: 'reference/roles/sealed-secrets/overview.md'
+        - Config: 'reference/roles/sealed-secrets/config.md'
+      - "Flux":
+        - Overview: 'reference/roles/flux/overview.md'
+        - Config: 'reference/roles/flux/config.md'
+      - "Postgresql": 
+        - Overview: 'reference/roles/postgresql/overview.md'
+        - Config: 'reference/roles/postgresql/config.md'
+      - "Keycloak":
+        - Overview: 'reference/roles/keycloak/overview.md'
+        - Config: 'reference/roles/keycloak/config.md'
+      - "Kuma": 
+        - Overview: 'reference/roles/kuma/overview.md'
+        - Config: 'reference/roles/kuma/config.md'
+      - "Cert Manager":
+        - Overview: 'reference/roles/cert-manager/overview.md'
+        - Config: 'reference/roles/cert-manager/config.md' 
+      - "Kong":
+        - Overview: 'reference/roles/kong/overview.md'
+        - Config: 'reference/roles/kong/config.md'
+      - "Gitea":
+        - Overview: 'reference/roles/gitea/overview.md'
+        - Config: 'reference/roles/gitea/config.md'
+      - "Elastic Cloud":
+        - Overview: 'reference/roles/elastic-cloud/overview.md'
+        - Config: 'reference/roles/elastic-cloud/config.md'
+      - "Jaeger":
+        - Overview: 'reference/roles/jaeger/overview.md'
+        - Config: 'reference/roles/jaeger/config.md'
+      - "Jenkins":
+        - Overview: 'reference/roles/jenkins/overview.md'
+        - Config: 'reference/roles/jenkins/config.md'
+      - "Nexus":
+        - Overview: 'reference/roles/nexus/overview.md'
+        - Config: 'reference/roles/nexus/config.md'
+      - "Namespace":
+        - Overview: 'reference/roles/namespace/overview.md'
+        - Config: 'reference/roles/namespace/config.md'
+  - Contribute: 
+      "How to Contribute": 'contribute/index.md'
+      "Developing": 'contribute/developing.md'
+      "Documentation Guidelines": 'contribute/documentation.md'
+      "Build Tools": 'contribute/tavros-collection.md'
+      "Release Process": 'contribute/release-process.md'
+      "Testing": 'contribute/testing.md'
+  - Releases: 
+    - "0.1": 'releases/0.1-NOTES.md'
+  - ADR: 
+    - Overview: 'adr/index.md'
+    - ADR-0000: 'adr/0000-prefer-proven-foss-components-with-optional-support-for-licensed-derivatives.md'
+    - ADR-0001: 'adr/0001-apache-camel-as-the-default-integration-framework.md'
+    - ADR-0002: 'adr/0002-spring-boot-as-the-base-application-framework.md'
+    - ADR-0003: 'adr/0003-datasonnet-as-the-default-data-transformation-language.md'
+    - ADR-0004: 'adr/0004-opentracing-for-in-process-tracing-api.md'
+    - ADR-0005: 'adr/0005-kubernetes-as-the-computing-platform.md'
+    - ADR-0006: 'adr/0006-kops-to-provision-a-kubernetes-cluster.md'
+    - ADR-0007: 'adr/0007-flux-to-provide-platform-gitops.md'
+    - ADR-0008: 'adr/0008-kubeseal-to-securely-manage-secrets-in-gitops.md'
+    - ADR-0009: 'adr/0009-keycloak-for-indetity-and-access-management.md'
+    - ADR-0010: 'adr/0010-kong-as-kubernetes-ingress-and-api-gateway.md'
+    - ADR-0011: 'adr/0011-postgresql-as-the-platforms-default-database.md'
+    - ADR-0012: 'adr/0012-gitea-for-a-lightweight-git-server.md'
+    - ADR-0013: 'adr/0013-kuma-for-service-mesh.md'
+    - ADR-0014: 'adr/0014-jenkins-for-continuous-integration.md'
+    - ADR-0015: 'adr/0015-sonarqube-for-application-static-code-analysis.md'
+    - ADR-0016: 'adr/0016-elastic-cloud-for-observability-data-aggregation-and-visualization.md'
+    - ADR-0017: 'adr/0017-jaeger-for-tracing-with-elasticsearch-backend.md'
+    - ADR-0018: 'adr/0018-nexus-repository-manager-for-artifact-management.md'
+    - ADR-0019: 'adr/0019-prefer-daemonsets-over-sidecars.md'
+    - ADR-0020: 'adr/0020-spring-cloud-config-for-application-configuration-management.md'
+    - ADR-0021: 'adr/0021-prefer-kong-enterprise-edition.md'
+    - ADR-0022: 'adr/0022-use-ansible-as-the-provisioning-engine.md'
+    - ADR-0023: 'adr/0023-helm-and-operators-for-component-installation-and-management.md'
+    - ADR-0024: 'adr/0024-use-ansible-collection-to-structure-and-package-ansible-code.md'
+    - ADR-0025: 'adr/0025-setup-sandbox-and-production-kuma-meshes-and-kong-ingress-controllers.md'
+    - ADR-0026: 'adr/0026-setup-sandbox-and-production-keycloak-realms.md'
+    - ADR-0027: 'adr/0027-cert-manager-for-certificate-management.md'
+    - ADR-0028: 'adr/0028-use-markdown-architectural-decision-records.md'
+    - ADR-0029: 'adr/0029-tavros-as-a-single-tenant-platform.md'
+    - ADR-TEMP: 'adr/template.md'
+  - Support:
+    - Overview: 'support/index.md'

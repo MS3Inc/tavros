@@ -1,0 +1,88 @@
+---
+all:
+  vars:
+    cluster_fqdn: '' # (1)
+    cluster_admin_email: '' # (2)
+    kubernetes_cluster:
+      cloud_provider: 'aws'
+      dns_zone: "{{ cluster_fqdn }}"
+      keycloak:
+        realm: prod
+    kops: 
+      enabled: true
+      master_count: 3
+      master_size: 't2.large'
+      master_zones: 'us-east-1a,us-east-1b'
+      node_count: 2
+      node_size: 't2.xlarge'
+      node_zones: 'us-east-1a,us-east-1b'
+      state_bucket: "{{ cluster_fqdn }}-tavros"
+      state_bucket_region: "us-east-1"
+    aks:
+      enabled: false
+    kong:
+      enabled: true
+      default_ingress_class: 'prod'
+      ee_creds: []
+      instances:
+      - name: 'sandbox-kong'
+        hybrid: false
+        ingress_class: 'sandbox'
+        kuma_mesh_name: 'sandbox'
+        ee:
+          enabled: false
+      - name: 'prod-kong'
+        hybrid: true
+        ingress_class: 'prod'
+        kuma_mesh_name: 'prod'
+        ee:
+          enabled: false
+    kuma:
+      enabled: true
+      meshes:
+      - name: 'sandbox'
+        mtls:
+          enabled: true
+        traffictrace:
+          enabled: true
+      - name: 'prod'
+        mtls:
+          enabled: true
+        traffictrace:
+          enabled: true
+    namespaces:
+    - name: 'dev'
+      kuma_mesh_name: 'sandbox'
+    - name: 'test'
+      kuma_mesh_name: 'sandbox'
+    - name: 'prod'
+      kuma_mesh_name: 'prod'
+    keycloak:
+      enabled: true
+      realms:
+      - name: sandbox
+      - name: prod
+    postgresql: {}
+    cert_manager:
+      enabled: true
+    gitea:
+      enabled: true
+      keycloak:
+        realm: 'prod'
+    nexus:
+      enabled: true
+      keycloak:
+        realm: 'prod'
+    elastic_cloud:
+      ee:
+        enabled: false
+      enabled: true
+    jaeger:
+      enabled: true
+      keycloak:
+        realm: 'prod'
+    jenkins:
+      enabled: true
+      keycloak:
+        realm: 'prod'
+    flux: {}

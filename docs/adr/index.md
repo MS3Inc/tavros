@@ -1,4 +1,4 @@
-# Architectural Decision Log
+# Architectural Decision Records
 
 This log lists the architectural decisions for Tavros.
 
@@ -15,7 +15,7 @@ This log lists the architectural decisions for Tavros.
 - [ADR-0008](0008-kubeseal-to-securely-manage-secrets-in-gitops.md) - Kubeseal to Securely Manage Secrets in GitOps
 - [ADR-0009](0009-keycloak-for-indetity-and-access-management.md) - Keycloak for Indetity and Access Management
 - [ADR-0010](0010-kong-as-kubernetes-ingress-and-api-gateway.md) - Kong as Kubernetes Ingress and API gateway
-- [ADR-0011](0011-postgresql-as-the-platform's-default-database.md) - PostgreSQL as the Platform's Default Database
+- [ADR-0011](0011-postgresql-as-the-platforms-default-database.md) - PostgreSQL as the Platform's Default Database
 - [ADR-0012](0012-gitea-for-a-lightweight-git-server.md) - Gitea for a Lightweight Git Server
 - [ADR-0013](0013-kuma-for-service-mesh.md) - Kuma for Service Mesh
 - [ADR-0014](0014-jenkins-for-continuous-integration.md) - Jenkins for Continuous Integration
