@@ -8,3 +8,4 @@
     container: "vars"
     blob: "{{ cluster_fqdn }}_vars.yaml"
     src: "/tmp/{{ cluster_fqdn }}_vars.yaml"
+    force: true

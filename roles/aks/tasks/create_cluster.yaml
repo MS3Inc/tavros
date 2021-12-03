@@ -54,3 +54,21 @@
   copy:
     content: "{{ result.aks[0].kube_config }}"
     dest: "~/.kube/config"
+    
+- name: Update AKS as Contributor for Resource Group
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    az role assignment create --assignee {{ result.aks[0].identity.principalId }} --role Contributor --resource-group {{ aks.resource_group }} 
+
+- name: Create Resource Group Contributor
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    az ad sp create-for-rbac --name {{ aks.resource_group }}-sp --role Contributor --scopes /subscriptions/{{ aks.subscription_id }}/resourceGroups/{{ aks.resource_group }}
+  register: result
+
+- name: Merge Contributor Creds
+  when: ('dry-run' not in ansible_run_tags)
+  set_fact:
+    aks: "{{ aks | combine({ 'sp': { 'client_id': creds.appId, 'client_secret': creds.password } } , recursive=true) }}"
+  vars:
+    creds: "{{ result.stdout | from_json }}"
