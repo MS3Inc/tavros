@@ -1,0 +1,48 @@
+#
+# To run this we assume you have Verlaro enabled for AWS, or AKS. On AWS Cert Manager is also required for the Kops snapshotController.
+#
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_tasks: tasks/pre-flight.yaml
+
+  - name: kOps
+    include_role:
+      name: ms3_inc.tavros.kops
+    when: kops.enabled
+    vars:
+      cluster_state: present
+    tags: [ kops ]
+
+  - name: aks
+    include_role:
+      name: ms3_inc.tavros.aks
+    when: aks.enabled
+    vars:
+      cluster_state: present
+    tags: [ aks ]
+
+  - name: Install and Configure Components
+    block:
+      - name: Flux GitOps Toolkit
+        include_role:
+          name: ms3_inc.tavros.fluxtoolkit
+        tags: [ fluxtoolkit ]
+
+      - name: sealed-secrets
+        include_role:
+          name: ms3_inc.tavros.sealed_secrets
+        tags: [ sealed_secrets ]
+
+      - name: cert-manager
+        include_role:
+          name: ms3_inc.tavros.cert_manager
+        when: kubernetes_cluster.cloud_provider == 'aws' 
+        tags: [ cert_manager ]
+        
+      - name: Velero
+        include_role:
+          name: ms3_inc.tavros.velero
+        tags: [ velero ]

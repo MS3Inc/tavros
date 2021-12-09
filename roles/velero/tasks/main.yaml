@@ -1,0 +1,50 @@
+---
+- name: Create Directories
+  file:
+    path: /tmp/{{ cluster_fqdn }}/platform/velero/
+    state: directory
+
+- name: Template Files
+  template:
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/velero/{{ item.name }}{{ item.type | default('.yaml')}}
+  when: item.condition | default(true)
+  loop:
+    - name: release
+    - name: volume-snapshot-class
+    - name: secret-service-account-creds
+
+- name: Seal Service Acount Creds
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/velero/secret-service-account-creds.yaml >/tmp/{{ cluster_fqdn }}/platform/velero/secret-service-account-creds.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/velero/secret-service-account-creds.tmp /tmp/{{ cluster_fqdn }}/platform/velero/secret-service-account-creds.yaml
+
+- name: Copy Files
+  copy:
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/velero/{{ item.name }}
+  when: item.condition | default(true)
+  loop:
+    - name: helm-repo.yaml
+    - name: ns.yaml
+    - name: kustomization.yaml
+
+- name: Apply Resources
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/velero/', reorder='none') }}"
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
+
+- name: Template flux-kustomization
+  copy:
+    src: flux-kustomization.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/velero.yaml

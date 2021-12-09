@@ -18,7 +18,25 @@
     echo "Failed to delete cluster"
     exit 1
 
-- name: Delete kOps S3 Bucket
-  amazon.aws.aws_s3:
-    bucket: "{{ kops.state_bucket }}"
-    mode: delete
+- name: Get SP Access Keys
+  shell: |
+    aws iam list-access-keys --user-name {{ kops.state_bucket }}-sp
+  register: result
+    
+- name: Delete SP Access Key
+  shell: |
+    aws iam delete-access-key --user-name {{ kops.state_bucket }}-sp --access-key-id {{ item.AccessKeyId }}
+  loop: "{{ (result.stdout | from_json).AccessKeyMetadata }}"
+  register: result
+
+- name: Delete SP Policy
+  shell: |
+    aws iam delete-user-policy \
+      --user-name {{ kops.state_bucket }}-sp \
+      --policy-name {{ kops.state_bucket }}-sp
+  register: result
+
+- name: Delete AWS SP User
+  shell: |
+    aws iam delete-user --user-name {{ kops.state_bucket }}-sp
+  register: result

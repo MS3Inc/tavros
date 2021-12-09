@@ -1,0 +1,62 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tavros
+  namespace: velero
+spec:
+  releaseName: velero
+  chart:
+    spec:      
+      # https://github.com/vmware-tanzu/helm-charts/blob/main/charts/velero/values.yaml
+      chart: velero
+      sourceRef:
+        kind: HelmRepository
+        name: vmware-tanzu
+        namespace: flux-system
+      version: 2.26.2
+  interval: 30m
+  install:
+    remediation:
+      retries: 3
+  values:
+    initContainers:
+{%  if (kubernetes_cluster.cloud_provider == 'aks') %}
+      - name: velero-plugin-for-microsoft-azure
+        image: velero/velero-plugin-for-microsoft-azure:v1.3.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /target
+            name: plugins
+{% endif  %}
+{%  if (kubernetes_cluster.cloud_provider == 'aws') %}
+      - name: velero-plugin-for-aws
+        image: velero/velero-plugin-for-aws:v1.3.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /target
+            name: plugins
+{% endif  %}
+      - name: velero-plugin-for-csi
+        image: velero/velero-plugin-for-csi:v0.2.0 
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - mountPath: /target
+            name: plugins
+    snapshotsEnabled: false
+    configuration:
+      provider: "{{ 'azure' if (kubernetes_cluster.cloud_provider == 'aks') else 'aws' if (kubernetes_cluster.cloud_provider == 'aws') }}"
+      backupStorageLocation:
+        bucket: "{{ 'backups' if (kubernetes_cluster.cloud_provider == 'aks') else (kops.state_bucket) if (kubernetes_cluster.cloud_provider == 'aws') }}"
+        default: true
+{%  if (kubernetes_cluster.cloud_provider == 'aks') %}
+        config:
+          resourceGroup: {{ aks.resource_group }}
+          storageAccount: {{ aks.storage_account_name }}
+          subscriptionId: {{ aks.subscription_id }}
+{% endif  %}
+      features: EnableCSI
+    credentials:
+      useSecret: true
+      name: creds
+      existingSecret: service-account-creds
+    

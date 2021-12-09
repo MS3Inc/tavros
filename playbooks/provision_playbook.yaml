@@ -27,12 +27,23 @@
         include_role:
           name: ms3_inc.tavros.fluxtoolkit
         tags: [ fluxtoolkit ]
-
+        
       - name: sealed-secrets
         include_role:
           name: ms3_inc.tavros.sealed_secrets
         tags: [ sealed_secrets ]
 
+      - name: cert-manager
+        include_role:
+          name: ms3_inc.tavros.cert_manager
+        when: cert_manager.enabled
+        tags: [ cert_manager ]
+
+      - name: Velero
+        include_role:
+          name: ms3_inc.tavros.velero
+        tags: [ velero ]
+        
       - name: PostgreSQL
         include_role:
           name: ms3_inc.tavros.postgresql
@@ -43,12 +54,6 @@
           name: ms3_inc.tavros.kuma
         when: kuma.enabled
         tags: [ kuma ]
-
-      - name: cert-manager
-        include_role:
-          name: ms3_inc.tavros.cert_manager
-        when: cert_manager.enabled
-        tags: [ cert_manager ]
 
       - name: Kong
         include_role:
@@ -142,6 +147,7 @@
           - 'gitea'
           - 'jaeger'
           - 'jenkins'
+          - 'velero'
 
       - include_role:
           name: ms3_inc.tavros.kops
