@@ -13,6 +13,8 @@ all:
       keycloak:
         client_secret: 'placeholder17'
         realm: prod
+    aks:
+      enabled: false
     kops:
       enabled: false
     kong:

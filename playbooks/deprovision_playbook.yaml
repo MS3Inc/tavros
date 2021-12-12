@@ -12,5 +12,12 @@
 
   - import_role:
       name: ms3_inc.tavros.kops
+    when: kops.enabled
+    vars:
+      cluster_state: absent
+
+  - import_role:
+      name: ms3_inc.tavros.aks
+    when: aks.enabled
     vars:
       cluster_state: absent

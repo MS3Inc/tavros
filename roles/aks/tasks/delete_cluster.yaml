@@ -1,0 +1,25 @@
+---
+- name: Get Resource Group Service Principal ID
+  when: ('dry-run' not in ansible_run_tags) and (kubernetes_cluster.cloud_provider == 'aks')
+  shell: |
+    az ad sp list --display-name {{ aks.resource_group }}-sp
+  register: result
+
+- name: Delete Resource Group Contributor Service Principal
+  when: ('dry-run' not in ansible_run_tags) and (kubernetes_cluster.cloud_provider == 'aks')
+  shell: |
+    az ad sp delete --id {{ sp[0].appId }}
+  vars:
+    sp: "{{ result.stdout | from_json }}"
+
+- name: Delete a managed Azure Container Services (AKS) instance
+  collections:
+    - azure.azcollection
+  azure_rm_aks:
+    name: "{{ aks.name }}"
+    kubernetes_version: 1.21.2
+    location: eastus
+    dns_prefix: "{{ aks.name }}"
+    enable_rbac: true
+    resource_group: "{{ aks.resource_group }}"
+    state: absent
