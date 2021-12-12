@@ -1,4 +1,4 @@
-ansible
+ansible==5.0.1
 botocore
 boto
 boto3
