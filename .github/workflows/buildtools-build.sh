@@ -42,6 +42,13 @@ mount=$(buildah mount $container)
 printf "\nSetting up installer container...\n"
 podman run --detach --tty --name installer --volume ${mount}:/mnt/container:rw --volume $PWD:$PWD:Z --workdir $PWD fedora:latest
 
+
+
+#####
+# https://packages.microsoft.com/yumrepos/azure-cli/
+# azure-cli-2.29.1-1.el7.x86_64.rpm
+# sudo dnf install azure-cli-2.29.1-1.el7
+#####
 # Add Azure CLI DNF repository
 # See: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=dnf
 podman exec installer bash -c "rpm --import https://packages.microsoft.com/keys/microsoft.asc"
@@ -51,7 +58,7 @@ podman exec installer bash -c "yum upgrade -y --quiet"
 podman exec installer bash -c "yum install pip -y --quiet"
 
 printf "\nInstalling tools with package manager...\n"
-dnf_install "vi make curl telnet openssl bind-utils diffutils python awscli git jq azure-cli procps nano traceroute iputils iproute"
+dnf_install "vi make curl telnet openssl bind-utils diffutils python awscli git jq azure-cli-2.29.1-1.el7 procps nano traceroute iputils iproute"
 
 pip_install "-r requirements.txt"
 
