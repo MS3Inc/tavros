@@ -1,0 +1,14 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshotClass
+metadata:
+  name: csi-snapclass
+  labels:
+    velero.io/csi-volumesnapshot-class: "true"
+  annotations:
+    snapshot.storage.kubernetes.io/is-default-class: "true"
+driver: "{{ 'disk.csi.azure.com' if (kubernetes_cluster.cloud_provider == 'aks') else 'ebs.csi.aws.com' if (kubernetes_cluster.cloud_provider == 'aws') }}"
+{%  if (kubernetes_cluster.cloud_provider == 'aks') %}
+parameters:
+  resourceGroup: "{{ aks.resource_group }}"
+{% endif  %}
+deletionPolicy: Retain

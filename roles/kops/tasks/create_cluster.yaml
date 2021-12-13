@@ -16,6 +16,35 @@
       block_public_policy: true
       restrict_public_buckets: true
 
+- name: Template SP Policy
+  template:
+    src: aws-sp-policy.j2
+    dest: /tmp/kops/aws-sp-policy.json
+
+- name: Create AWS SP User
+  shell: |
+    aws iam create-user --user-name {{kops.state_bucket}}-sp
+  register: result
+
+- name: Create SP Policy
+  shell: |
+    aws iam put-user-policy \
+      --user-name {{kops.state_bucket}}-sp \
+      --policy-name {{kops.state_bucket}}-sp \
+      --policy-document file:///tmp/kops/aws-sp-policy.json
+  register: result
+
+- name: Create Access Key
+  shell: |
+    aws iam create-access-key --user-name {{kops.state_bucket}}-sp
+  register: result
+
+- name: Merge User Creds
+  set_fact:
+    kops: "{{ kops | combine({ 'sp': { 'client_id': creds.AccessKey.AccessKeyId, 'client_secret': creds.AccessKey.SecretAccessKey } } , recursive=true) }}"
+  vars:
+    creds: "{{ result.stdout | from_json }}"
+
 - name: Generate an OpenSSH Key Pair
   community.crypto.openssh_keypair:
     path: /tmp/kops/id_rsa
@@ -71,6 +100,11 @@
         cloudConfig:
           awsEBSCSIDriver:
             enabled: true
+        snapshotController:
+          enabled: true
+        certManager:
+          enabled: true
+          managed: false
         metricsServer:
           enabled: true
           insecure: true
@@ -98,10 +132,10 @@
 
     exit 101
 
-- name: Wait for DNS zone propagation
-  when: (cluster_state == 'present') and ('dry-run' not in ansible_run_tags)
-  wait_for:
-    host: api.{{ cluster_fqdn }}
+# - name: Wait for DNS zone propagation
+#   when: (cluster_state == 'present') and ('dry-run' not in ansible_run_tags)
+#   wait_for:
+#     host: api.{{ cluster_fqdn }}
 
 - name: Export Kube Context
   environment:

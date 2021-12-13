@@ -1,0 +1,16 @@
+#
+# Ran to repaire DNS in case of lost Proxy Service. (For example after a Recovery Playbook is ran)
+#
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  tasks:
+  - include_tasks: tasks/pre-flight.yaml
+
+  - name: Kong DNS
+    include_role:
+      name: ms3_inc.tavros.kong_dns
+    vars:
+      cluster_state: present
+    tags: [ kong_dns ]

@@ -98,3 +98,5 @@ all:
       keycloak:
         realm: 'prod'
     flux: {}
+    velero:
+      enabled: false
