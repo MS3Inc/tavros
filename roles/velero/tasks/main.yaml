@@ -31,6 +31,15 @@
     - name: ns.yaml
     - name: kustomization.yaml
 
+- name: Create Backup Blob Container
+  when: ('dry-run' not in ansible_run_tags) and kubernetes_cluster.cloud_provider == 'aks'
+  collections:
+    - azure.azcollection
+  azure_rm_storageblob:
+    resource_group: "{{ aks.resource_group }}"
+    storage_account_name: "{{ aks.storage_account_name }}"
+    container: "backups"
+
 - name: Apply Resources
   tags: [ requires_cluster ]
   when: ('dry-run' not in ansible_run_tags)

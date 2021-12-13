@@ -112,3 +112,5 @@ all:
     flux:
       gitea:
         password: placeholder18
+    velero:
+      enabled: false

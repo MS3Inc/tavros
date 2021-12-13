@@ -42,6 +42,7 @@
       - name: Velero
         include_role:
           name: ms3_inc.tavros.velero
+        when: velero.enabled
         tags: [ velero ]
         
       - name: PostgreSQL
