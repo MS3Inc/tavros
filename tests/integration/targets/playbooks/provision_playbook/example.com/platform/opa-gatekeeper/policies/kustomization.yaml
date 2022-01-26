@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - privileged-containers/template.yaml
+  - privileged-containers/constraint.yaml
+  - host-filesystem/template.yaml
+  - host-filesystem/constraint.yaml
+  - capabilities/template.yaml
+  - capabilities/constraint.yaml
+  - host-network-ports/template.yaml
+  - host-network-ports/constraint.yaml
+  - host-namespaces/template.yaml
+  - host-namespaces/constraint.yaml
+  - forbidden-sysctls/template.yaml
+  - forbidden-sysctls/constraint.yaml

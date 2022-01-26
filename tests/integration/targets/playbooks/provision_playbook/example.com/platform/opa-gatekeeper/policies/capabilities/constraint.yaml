@@ -1,0 +1,17 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sPSPCapabilities
+metadata:
+  name: capabilities-demo
+spec:
+  match:
+    kinds:
+      - apiGroups:
+          - ""
+        kinds: 
+          - Pod
+    excludedNamespaces:
+      - kube-system
+  parameters:
+    allowedCapabilities:
+      - NET_ADMIN
+    requiredDropCapabilities: []

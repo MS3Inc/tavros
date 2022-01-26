@@ -1,0 +1,39 @@
+---
+- name: Create Directory
+  file:
+    path: /tmp/{{ cluster_fqdn }}/platform/opa-gatekeeper
+    state: directory
+  tags: [ opa_gatekeeper ]
+
+- name: Copy Files
+  copy:
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/opa-gatekeeper/{{ item.dest | default(item.name) }}
+  when: item.condition | default(true)
+  loop:
+    - name: kustomization.yaml
+    - name: ns.yaml
+    - name: helmrepo.yaml
+    - name: release.yaml
+    - name: policies
+      dest: ""
+  tags: [ opa_gatekeeper ]
+
+- name: Apply Resources
+  tags: [ requires_cluster, opa_gatekeeper ]
+  when: ('dry-run' not in ansible_run_tags)
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/opa-gatekeeper/', reorder='none') }}"
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
+
+- name: Template flux-kustomization
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/opa-gatekeeper.yaml
+  tags: [ opa_gatekeeper ]
