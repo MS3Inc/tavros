@@ -27,7 +27,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: tavros-pg-creds
-                  key: postgresql-password
+                  key: postgres-password
           volumeMounts:
             - name: schema-init-script
               mountPath: /tmp/schema-init
