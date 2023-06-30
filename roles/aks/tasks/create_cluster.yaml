@@ -8,6 +8,17 @@
   community.crypto.openssh_keypair:
     path: /tmp/aks/id_rsa
 
+- name: Create a resource group
+  azure_rm_resourcegroup:
+    name: "{{ aks.resource_group }}"
+    location: eastus
+
+- name: Create a storage account
+  azure_rm_storageaccount:
+    resource_group: "{{ aks.resource_group }}"
+    name: tavrosstorage
+    type: Standard_RAGRS
+
 # https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_aks_module.html
 - name: Create a managed Azure Kubernetes Services (AKS) instance
   collections:
