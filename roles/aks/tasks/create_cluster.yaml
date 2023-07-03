@@ -19,6 +19,11 @@
     name: tavrosstorage
     type: Standard_RAGRS
 
+- name: Create a DNS zone
+  azure_rm_dnszone:
+    resource_group: "{{ aks.resource_group }}"
+    name: "{{ cluster_fqdn }}"
+
 # https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_aks_module.html
 - name: Create a managed Azure Kubernetes Services (AKS) instance
   collections:
