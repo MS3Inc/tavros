@@ -4,7 +4,7 @@
     "client_secret":["{{ item[0].ee.keycloak.client_secret }}"],
     "consumer_by":["username","custom_id","id"],
     "ssl_verify":false,
-    "consumer_claim":["email"],
+    "admin_claim":"email",
     "leeway":1000,
     "redirect_uri":["https://admin.{{ item[0].name }}.{{ cluster_fqdn }}"],
     "login_redirect_uri":["https://admin.{{ item[0].name }}.{{ cluster_fqdn }}"],
