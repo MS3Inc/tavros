@@ -14,7 +14,7 @@ spec:
     disableCSRFProtection: false
     containers:
     - name: jenkins-master
-      image: jenkins/jenkins:2.277.4-lts-alpine
+      image: jenkins/jenkins:2.346.3-alpine-jdk8
       imagePullPolicy: IfNotPresent
       resources:
         limits:
@@ -45,20 +45,23 @@ spec:
         timeoutSeconds: 1
     basePlugins:
     - name: kubernetes
-      version: "1.30.0"
+      version: "1.31.2"
     - name: workflow-job
-      version: "2.41"
+      version: "1207.ve6191ff089f8"
     - name: workflow-aggregator
       version: "2.6"
     - name: git
       version: "4.7.2"
     # dependency for gitea based on git version above
     - name: git-client
-      version: "3.7.2"
+      version: "3.11.0"
     - name: job-dsl
       version: "1.77"
     - name: configuration-as-code
-      version: "1.51"
+      version: "1414.v878271fc496f"
+    # issue with cyclic dependencies
+    - name: mina-sshd-api-core
+      version: "2.8.0-18.vd98674ecd652"
     - name: kubernetes-credentials-provider
       version: "0.18-1"
     plugins:
