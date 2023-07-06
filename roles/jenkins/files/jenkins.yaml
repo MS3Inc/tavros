@@ -14,7 +14,7 @@ spec:
     disableCSRFProtection: false
     containers:
     - name: jenkins-master
-      image: jenkins/jenkins:2.375.2-lts
+      image: jenkins/jenkins:2.401.1-jdk11
       imagePullPolicy: IfNotPresent
       resources:
         limits:
@@ -47,20 +47,20 @@ spec:
     - name: kubernetes
       version: "3802.vb_b_600831fcb_3"
     - name: workflow-job
-      version: "1295.v395eb_7400005"
+      version: "1308.v58d48a_763b_31"
     - name: workflow-aggregator
       version: "2.6"
     - name: git
-      version: "5.0.2"
+      version: "5.1.0"
     - name: git-server
       version: "99.va_0826a_b_cdfa_d"
     # dependency for gitea based on git version above
     - name: git-client
-      version: "4.3.0"
+      version: "4.4.0"
     - name: job-dsl
       version: "1.78.1"
     - name: configuration-as-code
-      version: "1625.v27444588cc3d"
+      version: "1647.ve39ca_b_829b_42"
     - name: kubernetes-credentials-provider
       version: "1.208.v128ee9800c04"
     plugins:
