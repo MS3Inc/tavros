@@ -1,6 +1,7 @@
 ---
 all:
   vars:
+    cluster_name: ''
     cluster_fqdn: ''
     cluster_admin_email: ''
     kubernetes_cluster:
@@ -8,6 +9,14 @@ all:
       dns_zone: "{{ cluster_fqdn }}"
       keycloak:
         realm: prod
+    aks:
+      enabled: false
+      name: ''
+      node_count: 2
+      node_size: 'Standard_A8_v2'
+      resource_group: ''
+      storage_account_name: ''
+      subscription_id: ''
     kops:
       enabled: true
       master_count: 3
@@ -21,20 +30,28 @@ all:
     kong:
       enabled: true
       default_ingress_class: 'prod'
-      ee_creds: []
+      ee_creds:
+        - license: ""
+          name: default
       instances:
       - name: 'sandbox-kong'
         hybrid: false
         ingress_class: 'sandbox'
         kuma_mesh_name: 'sandbox'
         ee:
-          enabled: false
+          enabled: true
+          creds: 'default'
+          keycloak:
+            realm: 'sandbox'
       - name: 'prod-kong'
-        hybrid: true
+        hybrid: false
         ingress_class: 'prod'
         kuma_mesh_name: 'prod'
         ee:
-          enabled: false
+          enabled: true
+          creds: 'default'
+          keycloak:
+            realm: 'prod'
     kuma:
       enabled: true
       meshes:
