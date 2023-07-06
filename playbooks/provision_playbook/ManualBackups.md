@@ -1,6 +1,8 @@
-### Manual Backups
+## Manual Backups
 
-## Backup Postgres
+### Postgres
+
+#### Backup Postgres
 
 ```
 PASSWORD=$(kubectl get secrets/tavros-pg-creds -n postgresql --template='{{ index .data "postgres-password" | base64decode}}')
@@ -24,7 +26,7 @@ kubectl scale statefulsets gitea -n gitea --replicas=1
 ```
 
 
-## Restore Postgres
+#### Restore Postgres
 
 ```
 kubectl -n postgresql cp backup.sql pgtesting:/tmp/backup.sql
