@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: schema-init
-          image: docker.io/bitnami/postgresql:11.9.0-debian-10-r73
+          image: docker.io/bitnami/postgresql:14.3.0-debian-10-r22
           command:
             - "bin/bash"
             - "-c"
