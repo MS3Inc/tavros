@@ -8,14 +8,24 @@
 - name: Install Kibana Integrations' Assets
   tags: [ requires_cluster, elastic_cloud ]
   when: ('dry-run' not in ansible_run_tags)
-  shell: |
-    curl --insecure --fail -X POST https://kibana.{{ cluster_fqdn }}/api/fleet/epm/packages/{{ item }} \
-    -u elastic:{{ elastic_cloud.generated.elastic_password }} \
-    -H kbn-xsrf:true
+  uri:
+    url: https://kibana.{{ cluster_fqdn }}/api/fleet/epm/packages/{{ item }}
+    method: POST
+    return_content: true
+    force_basic_auth: true
+    user: "elastic"
+    password: "{{ elastic_cloud.generated.elastic_password }}"
+    headers:
+      kbn-xsrf: "true"
   loop:
     - kubernetes-0.5.2
     - postgresql-0.4.0
     - nginx-0.5.0
+  register: _result
+  until: _result.status == 200
+  retries: 10
+  delay: 30
+  no_log: True
 
 - name: Import Kibana Objects
   tags: [ requires_cluster, elastic_cloud ]
