@@ -19,11 +19,6 @@
     name: tavrosstorage
     type: Standard_RAGRS
 
-- name: Create a DNS zone
-  azure_rm_dnszone:
-    resource_group: "{{ aks.resource_group }}"
-    name: "{{ cluster_fqdn }}"
-
 # https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_aks_module.html
 - name: Create a managed Azure Kubernetes Services (AKS) instance
   collections:
@@ -51,6 +46,15 @@
         mode: System
         enable_auto_scaling: false
         type: VirtualMachineScaleSets
+
+- name: Create a DNS zone
+  azure_rm_dnszone:
+    resource_group: "{{ aks.resource_group }}"
+    name: "{{ cluster_fqdn }}"
+
+- name: WAIT, verify DNS is correct for your FQDN
+  ansible.builtin.pause:
+    prompt: "Use nslookup -type=soa FQDN to verify (may take 10+ minutes)"
 
 - name: Create Kube Directory
   file:
