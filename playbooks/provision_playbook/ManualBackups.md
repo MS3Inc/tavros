@@ -7,7 +7,7 @@
 ```
 PASSWORD=$(kubectl get secrets/tavros-pg-creds -n postgresql --template='{{ index .data "postgres-password" | base64decode}}')
 
-kubectl run pgtesting --image=docker.io/bitnami/postgresql:14.3.0-debian-10-r22 -n postgresql --env="ALLOW_EMPTY_PASSWORD=yes" --env="PGPASSWORD=$PASSWORD" --env="PGUSER=postgres"
+kubectl run pgtesting --image=docker.io/bitnami/postgresql:<version-currently-being-used> -n postgresql --env="ALLOW_EMPTY_PASSWORD=yes" --env="PGPASSWORD=$PASSWORD" --env="PGUSER=postgres"
 
 kubectl exec -i pgtesting -n postgresql -- bash -c "pg_dumpall -U postgres -h tavros-postgresql.postgresql.svc.cluster.local -w --clean" > backup.sql
 ```
