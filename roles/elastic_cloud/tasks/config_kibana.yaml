@@ -15,6 +15,7 @@
     force_basic_auth: true
     user: "elastic"
     password: "{{ elastic_cloud.generated.elastic_password }}"
+    validate_certs: false
     headers:
       kbn-xsrf: "true"
   loop:
