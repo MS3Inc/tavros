@@ -25,6 +25,8 @@ These are in order.
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
 | Can login with admin creds |  |  | Auth |
+| Can create account and assign roles in prod |  |  | Auth |
+| Can create account and assign roles in sandbox |  |  | Auth |
 
 #### Gitea
 
@@ -68,6 +70,7 @@ These are in order.
 | Can create helm release in Gitea (if not created by quickstart)|  |  |  |
 | Confirm image can be pulled by cluster, pod starts in specified namespace |  |  |  |
 | Update helm release in Gitea to include an ingress, confirm API is accessible with ingress |  |  |  |
+| Confirm API ingress is secure |  |  |  |
 
 #### Prod Kong
 
