@@ -25,93 +25,92 @@ These are in order. Refer to the above access chart for how to login to each com
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Is secure |  |  | Checks cert manager is working correctly |
-| Can login with admin creds |  |  | Auth |
-| Can create account and assign roles in prod |  |  | Auth |
-| Can create account and assign roles in sandbox |  |  | Auth |
+| Is secure |  | PASS | Checks cert manager is working correctly |
+| Can login with admin creds |  | PASS | Auth |
+| Can create account and assign roles in prod |  | UNKNOWN, need to define roles | Auth |
+| Can create account and assign roles in sandbox |  | UNKNOWN | Auth |
 
 #### Gitea
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Is secure |  |  | Checks cert manager is working correctly |
-| Can login with admin creds |  |  | Auth |
-| Can login with Keycloak creds |  |  | Auth |
-| Platform repo is there |  |  |  |
-| Can edit a file in Gitea and this causes an update to a component |  |  | Tests flux is working correctly |
+| Is secure |  | PASS | Checks cert manager is working correctly |
+| Can login with admin creds |  | PASS | Auth |
+| Can login with Keycloak creds |  | PASS | Auth |
+| Platform repo is there |  | PASS |  |
+| Can edit a file in Gitea and this causes an update to a component |  | PASS | Tests flux is working correctly |
 
 #### Nexus
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Is secure |  |  | Checks cert manager is working correctly |
-| Can login with admin creds |  |  | Auth |
-| Can login with Keycloak creds |  |  | Auth |
-| Repos exist: container-registry, dockerhub-proxy, internal, maven-central, maven-public, maven-releases, maven-snapshots |  |  | API calls were successful |
+| Is secure |  | PASS | Checks cert manager is working correctly |
+| Can login with admin creds |  | PASS | Auth |
+| Can login with Keycloak creds | no keycloak prompt | FAIL | Auth |
+| Repos exist: container-registry, dockerhub-proxy, internal, maven-central, maven-public, maven-releases, maven-snapshots |  | PASS | API calls were successful |
 
 
 #### Jenkins
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Is secure |  |  | Checks cert manager is working correctly |
-| Can login with Keycloak creds |  |  | Auth |
-| Pipelines are there |  |  |  |
-| Can deploy an API using quickstart |  |  |  |
+| Is secure |  | PASS | Checks cert manager is working correctly |
+| Can login with Keycloak creds |  | FAIL | Auth |
+| Pipelines are there |  | FAIL |  |
+| Can deploy an API using quickstart |  | FAIL |  |
 
 #### Nexus Registry
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Image exists in internal repo |  |  |  |
+| Image exists in internal repo |  | PASS |  |
 
 #### Other
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Can create helm release in Gitea (if not created by quickstart)|  |  |  |
-| Confirm image can be pulled by cluster, pod starts in specified namespace |  |  |  |
-| Update helm release in Gitea to include an ingress, confirm API is accessible with ingress |  |  |  |
-| Confirm API ingress is secure |  |  |  |
+| Can create helm release in Gitea (if not created by quickstart)|  | PASS |  |
+| Confirm image can be pulled by cluster, pod starts in specified namespace | getting "HelmChart 'flux-system/prod-test-proj' is not ready" | FAIL |  |
+| Update helm release in Gitea to include an ingress, confirm API is accessible with ingress |  | FAIL |  |
 
 #### Prod Kong
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Is secure |  |  | Checks cert manager is working correctly |
-| Can login with keycloak prod creds and view routes/services/etc |  |  |  |
-| Kong license is configured properly (if it wasn't, install would have failed) |  |  |  |
+| Is secure |  | PASS | Checks cert manager is working correctly |
+| Can login with keycloak prod creds and view routes/services/etc | Is showing Kong Manager instead | FAIL |  |
+| Kong license is configured properly (if it wasn't, install would have failed) | why is it Kong Manager instead of Enterprise? | FAIL? |  |
 
 #### Sandbox Kong
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Is secure |  |  | Checks cert manager is working correctly |
-| Can login with keycloak sandbox creds and view routes/services/etc |  |  |  |
-| Kong license is configured properly (if it wasn't, install would have failed) |  |  |  |
+| Is secure |  | PASS | Checks cert manager is working correctly |
+| Can login with keycloak sandbox creds and view routes/services/etc | FAIL | Is showing Kong Manager instead |  |
+| Kong license is configured properly (if it wasn't, install would have failed) |  | FAIL? |  |
 
 #### Kibana
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Is secure |  |  | Checks cert manager is working correctly |
-| Can login with admin creds from and view logs. All expected dashboards (including Tavros - Logs Dashboard) are there. |  |  |  |
+| Is secure |  | PASS | Checks cert manager is working correctly |
+| Can login with admin creds from and view logs. All expected dashboards (including Tavros - Logs Dashboard) are there. |  | PASS |  |
 
 #### Jaeger
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Is secure |  |  | Checks cert manager is working correctly |
-| Can login with keycloak prod creds and view traces |  |  |  |
+| Is secure |  | PASS | Checks cert manager is working correctly |
+| Can login with keycloak prod creds and view traces | Getting {"message":"Forbidden"} | FAIL |  |
 
 #### Service mesh (Kuma)
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Can't curl from one prod to test |  |  |  |
+| Can't curl from one prod to test |  | UNKNOWN |  |
 
 #### Postgres
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| If not configured properly, then Kong and ? wouldn't start, so maybe this is not necessary |  |  |  |
+| If not configured properly, then Kong and ? wouldn't start, so maybe this is not necessary |  | PASS? |  |
