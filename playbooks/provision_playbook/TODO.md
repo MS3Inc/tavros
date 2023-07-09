@@ -1,6 +1,7 @@
 HIGH PRIORITY
 - [ ] Test service mesh working (need services on pod if not using helm release)
 - [ ] Fix flux/helm issue, can't deploy apps with normal helm release (error is: "HelmChart 'flux-system/prod-test-proj' is not ready")
+- [ ] Fix ErrImagePull from nexus?
 - [ ] Fix prod and sandbox Kong keycloak issues
 
 MED PRIORITY
