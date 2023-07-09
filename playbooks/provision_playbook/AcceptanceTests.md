@@ -78,7 +78,7 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Is secure |  | PASS | Checks cert manager is working correctly |
-| Can login with keycloak prod creds and view routes/services/etc | Is showing Kong Manager instead | FAIL |  |
+| Can login with keycloak prod creds (Kong Enterprise/Manager screen -> Keycloak screen) and view routes/services/etc | Is showing Kong Manager instead | FAIL |  |
 | Kong license is configured properly (if it wasn't, install would have failed) | why is it Kong Manager instead of Enterprise? | FAIL? |  |
 
 #### Sandbox Kong
@@ -86,7 +86,7 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Is secure |  | PASS | Checks cert manager is working correctly |
-| Can login with keycloak sandbox creds and view routes/services/etc | FAIL | Is showing Kong Manager instead |  |
+| Can login with keycloak sandbox creds (Kong Enterprise/Manager screen -> Keycloak screen) and view routes/services/etc | FAIL | Is showing Kong Manager instead |  |
 | Kong license is configured properly (if it wasn't, install would have failed) |  | FAIL? |  |
 
 #### Kibana
@@ -114,3 +114,20 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | If not configured properly, then Kong and ? wouldn't start, so maybe this is not necessary |  | PASS? |  |
+
+### Keycloak Roles
+
+Realm roles: offline access, uma_authorization
+
+Client roles:
+Account: manage account, view profile
+Account console: none
+Admin cli: none
+Broker: none
+Gitea: none?
+Jaeger: user
+Jenkins: none
+Nexus: admin or developer
+Prod-kong: super-admin (or is this added in Kong itself?)
+Realm management: none
+Security admin console: none
