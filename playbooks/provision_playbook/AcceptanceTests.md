@@ -1,5 +1,7 @@
 ### Access
 
+Use the outputted `vars.yaml` to find credentials to access the various components.
+
 | Keycloak     | URL                     | Uses Keycloak | Admin/other access                                                                  |
 |--------------|-------------------------|---------------|-------------------------------------------------------------------------------------|
 | Keycloak     | auth.fdqn               | F             | credential-tavros secret                                                            |
@@ -17,7 +19,7 @@ Run `kubectl get ingresses -A` to find the specific ingresses in your cluster.  
 
 ### Initial Setup Acceptance Tests
 
-These are in order.
+These are in order. Refer to the above access chart for how to login to each component.
 
 #### Keycloak
 
