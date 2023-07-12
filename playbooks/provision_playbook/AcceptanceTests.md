@@ -70,8 +70,8 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Can create helm release in Gitea (if not created by quickstart)|  | PASS |  |
-| Confirm image can be pulled by cluster, pod starts in specified namespace | getting "HelmChart 'flux-system/prod-test-proj' is not ready" | FAIL |  |
-| Update helm release in Gitea to include an ingress, confirm API is accessible with ingress |  | FAIL |  |
+| Confirm image can be pulled by cluster, pod starts in specified namespace |  | PASS |  |
+| Update helm release in Gitea to include an ingress, confirm API is accessible with ingress |  | PASS |  |
 
 #### Prod Kong
 
@@ -107,7 +107,7 @@ These are in order. Refer to the above access chart for how to login to each com
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Can't curl from one prod to test |  | UNKNOWN |  |
+| Can't curl from one prod to test |  | PASS |  |
 
 #### Postgres
 
