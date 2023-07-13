@@ -17,6 +17,11 @@ spec:
     rootUrl: https://admin.{{ item.name }}.{{ cluster_fqdn }}
     redirectUris:
     - "https://admin.{{ item.name }}.{{ cluster_fqdn }}/*"
+    defaultClientScopes:
+      - "email"
+      - "profile"
+      - "roles"
+      - "offline_access"
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
     enabled: True

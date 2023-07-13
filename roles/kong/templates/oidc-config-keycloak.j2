@@ -1,10 +1,10 @@
 {
     "issuer":"https://auth.{{ cluster_fqdn }}/auth/realms/{{ item[0].ee.keycloak.realm }}",
+    "admin_claim": "email",
     "client_id":["{{ item[0].name }}"],
     "client_secret":["{{ item[0].ee.keycloak.client_secret }}"],
-    "consumer_by":["username","custom_id","id"],
+    "authenticated_groups_claim": ["groups"],
     "ssl_verify":false,
-    "admin_claim":"email",
     "leeway":1000,
     "redirect_uri":["https://admin.{{ item[0].name }}.{{ cluster_fqdn }}"],
     "login_redirect_uri":["https://admin.{{ item[0].name }}.{{ cluster_fqdn }}"],
@@ -12,6 +12,7 @@
     "logout_query_arg":"logout",
     "logout_redirect_uri":["https://admin.{{ item[0].name }}.{{ cluster_fqdn }}"],
     "scopes":["openid","profile","email","offline_access"],
-    "auth_methods":["authorization_code"]
+    "auth_methods": ["authorization_code"],
+    "admin_auto_create_rbac_token_disabled": false
 }
     
