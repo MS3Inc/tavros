@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: troubleshooting-shell
+  namespace: {{ item.name }}
+  labels:
+    app: troubleshooting
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: troubleshooting
+  template:
+    metadata:
+      labels:
+        app: troubleshooting
+    spec:
+      containers:
+      - name: troubleshooting
+        image: redhat/ubi9:9.2-696
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]
