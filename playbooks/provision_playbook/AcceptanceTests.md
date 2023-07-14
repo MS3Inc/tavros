@@ -47,6 +47,7 @@ These are in order. Refer to the above access chart for how to login to each com
 | Is secure |  |  | Checks cert manager is working correctly |
 | Can login with admin creds |  |  | Auth |
 | Can login with Keycloak creds |  |  | Auth |
+| Can login with jenkins-ci Keycloak creds (keycloak-basic-auth -n jenkins secret) |  |  | Auth |
 | Repos exist: container-registry, dockerhub-proxy, internal, maven-central, maven-public, maven-releases, maven-snapshots |  |  | API calls were successful |
 
 
