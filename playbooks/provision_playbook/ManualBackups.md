@@ -122,3 +122,10 @@ kubectl exec -i $NEXUS_POD -n nexus -- bash -c "rm -rf /nexus-data/backups"
 ```
 
 Reference: https://help.sonatype.com/repomanager3/planning-your-implementation/backup-and-restore/restore-exported-databases
+
+### Gitea
+
+#### Back up config
+
+kubectl exec -i gitea-0 -n gitea -- bash -c "gitea dump -c /data/gitea/conf/app.ini --skip-repository --file /tmp/backup.zip"
+kubectl -n gitea cp gitea-0:tmp/backup.zip gitea-backup.zip
