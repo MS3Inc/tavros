@@ -8,7 +8,7 @@ spec:
     spec:
       containers:
         - name: schema-init
-          image: docker.io/bitnami/postgresql:14.3.0-debian-10-r22
+          image: docker.io/bitnami/postgresql:11.9.0-debian-10-r73
           command:
             - "bin/bash"
             - "-c"
@@ -27,7 +27,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: tavros-pg-creds
-                  key: postgres-password
+                  key: postgresql-password
           volumeMounts:
             - name: schema-init-script
               mountPath: /tmp/schema-init

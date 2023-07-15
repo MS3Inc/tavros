@@ -12,19 +12,16 @@ spec:
         kind: HelmRepository
         name: bitnami
         namespace: flux-system
-      version: 11.6.3
+      version: 10.3.17
   interval: 30m
   install:
     remediation:
       retries: 3
   # Default values
-  # https://github.com/bitnami/charts/blob/540669fa16b4be8a23cdec1d854f2433f92b920f/bitnami/postgresql/values.yaml
+  # FIX ME https://github.com/bitnami/charts/blob/540669fa16b4be8a23cdec1d854f2433f92b920f/bitnami/postgresql/values.yaml
   values:
-    global:
-      postgresql:
-        auth:
-          database: postgres
-          existingSecret: tavros-pg-creds
+    postgresqlDatabase: postgres
+    existingSecret: tavros-pg-creds
 {% if elastic_cloud.enabled %}
     primary:
       podAnnotations:
