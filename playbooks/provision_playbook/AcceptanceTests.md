@@ -58,7 +58,8 @@ These are in order. Refer to the above access chart for how to login to each com
 | Is secure |  |  | Checks cert manager is working correctly |
 | Can login with Keycloak creds |  |  | Auth |
 | Pipelines are there |  |  |  |
-| Can deploy an API using quickstart |  |  |  |
+| Configuration as code is setup properly |  |  |  |
+| Can deploy an API using quickstart (or other custom pipeline, if applicable) |  |  |  |
 
 #### Nexus Registry
 
@@ -108,7 +109,7 @@ These are in order. Refer to the above access chart for how to login to each com
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Can't curl from one prod to test |  |  |  |
+| Can't curl across namespaces (ex: from prod to test) |  |  |  |
 
 #### Postgres
 
