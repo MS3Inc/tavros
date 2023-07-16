@@ -38,6 +38,7 @@ These are in order. Refer to the above access chart for how to login to each com
 | Can login with admin creds |  |  | Auth |
 | Can login with Keycloak creds |  |  | Auth |
 | Platform repo is there |  |  |  |
+| Can pull/push to repo |  |  |  |
 | Can edit a file in Gitea and this causes an update to a component |  |  | Tests flux is working correctly |
 
 #### Nexus
@@ -71,9 +72,13 @@ These are in order. Refer to the above access chart for how to login to each com
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Can create helm release in Gitea (if not created by quickstart)|  |  |  |
-| Confirm image can be pulled by cluster, pod starts in specified namespace |  |  |  |
-| Update helm release in Gitea to include an ingress, confirm API is accessible with ingress |  |  |  |
+| Can create helm release in Gitea in prod (if not created by quickstart)|  |  |  |
+| Confirm image can be pulled by cluster, pod starts in orod|  |  |  |
+| Update helm release in Gitea to include an ingress, confirm API is accessible with prod kong ingress |  |  |  |
+
+| Can create helm release in Gitea in dev/test |  |  |  |
+| Confirm image can be pulled by cluster, pod starts in dev/test |  |  |  |
+| Update helm release in Gitea to include an ingress, confirm API is accessible with sanbox kong ingress |  |  |  |
 
 #### Prod Kong
 
