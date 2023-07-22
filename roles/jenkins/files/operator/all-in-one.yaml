@@ -1,3 +1,4 @@
+# https://github.com/jenkinsci/kubernetes-operator/issues/873
 ---
 apiVersion: v1
 kind: ServiceAccount
