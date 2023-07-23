@@ -5,7 +5,7 @@
 
 - name: Generate Flux GitOps Toolkit Resources
   shell: |
-    flux install --version=v0.41.2 \
+    flux install --version=v0.10.0 \
       --export > /tmp/{{ cluster_fqdn }}/platform/flux-system/gotk-components.yaml
 
 - name: Template Files
