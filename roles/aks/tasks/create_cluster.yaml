@@ -25,7 +25,7 @@
     - azure.azcollection
   azure_rm_aks:
     name: "{{ aks.name }}"
-    kubernetes_version: 1.25.5
+    kubernetes_version: 1.25.6
     location: eastus
     dns_prefix: "{{ aks.name }}"
     enable_rbac: true
