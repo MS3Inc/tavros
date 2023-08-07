@@ -17,7 +17,7 @@ Keycloak: all.vars.keycloak.admin_password
 
 Run `kubectl get ingresses -A` to find the specific ingresses in your cluster.
 
-### Initial Setup Acceptance Tests
+### Out of the Box Acceptance Tests
 
 These are in order. Refer to the above access chart for how to login to each component.
 
@@ -60,7 +60,9 @@ These are in order. Refer to the above access chart for how to login to each com
 | Can login with Keycloak creds |  |  | Auth |
 | Pipelines are there |  |  |  |
 | Configuration as code is setup properly |  |  |  |
-| Can deploy an API using quickstart (or other custom pipeline, if applicable) |  |  |  |
+| Can create spec repo using Quickstart − OpenAPI Project |  |  |  |
+| Can create API repo using Quickstart − Camel Web Service Project and previously created spec repo |  |  |  |
+| Can scan Gitea Tavros org and API repo builds properly and updates helm release |  |  |  |
 
 #### Nexus Registry
 
