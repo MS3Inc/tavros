@@ -46,9 +46,10 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
-| Can login with admin creds |  |  | Auth |
+| Can login with admin creds (not possible through UI?) |  |  | Auth |
 | Can login with Keycloak creds |  |  | Auth |
 | Can login with jenkins-ci Keycloak creds (keycloak-basic-auth -n jenkins secret) |  |  | Auth |
+| Can login with created prod user|  |  | Auth |
 | Repos exist: container-registry, dockerhub-proxy, internal, maven-central, maven-public, maven-releases, maven-snapshots |  |  | API calls were successful |
 
 
@@ -80,7 +81,7 @@ These are in order. Refer to the above access chart for how to login to each com
 
 | Can create helm release in Gitea in dev/test |  |  |  |
 | Confirm image can be pulled by cluster, pod starts in dev/test |  |  |  |
-| Update helm release in Gitea to include an ingress, confirm API is accessible with sanbox kong ingress |  |  |  |
+| Update helm release in Gitea to include an ingress, confirm API is accessible with sandbox kong ingress |  |  |  |
 
 #### Prod Kong
 
