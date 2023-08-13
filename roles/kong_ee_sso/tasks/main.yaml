@@ -45,20 +45,20 @@
   delay: 30
   changed_when: false
 
-- name: Create Keycloak kong.name Client Roles
-  tags: [ requires_cluster, kong_ee_sso ]
-  when: ('dry-run' not in ansible_run_tags) and item.ee.enabled
-  loop: "{{ kong.instances }}"
-  ms3_inc.tavros.keycloak_client_roles:
-    auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
-    validate_certs: false
-    auth_realm: master
-    auth_username: admin
-    auth_password: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
-    realm: "{{ item.ee.keycloak.realm }}"
-    clientId: "{{ item.name }}"
-    roles:
-    - name: "super-admin"
+# - name: Create Keycloak kong.name Client Roles
+#   tags: [ requires_cluster, kong_ee_sso ]
+#   when: ('dry-run' not in ansible_run_tags) and item.ee.enabled
+#   loop: "{{ kong.instances }}"
+#   ms3_inc.tavros.keycloak_client_roles:
+#     auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
+#     validate_certs: false
+#     auth_realm: master
+#     auth_username: admin
+#     auth_password: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
+#     realm: "{{ item.ee.keycloak.realm }}"
+#     clientId: "{{ item.name }}"
+#     roles:
+#     - name: "super-admin"
 
 - name: Add Keycloak kong.name Client Role super-admin to Realm Admin User
   when: item.ee.enabled
