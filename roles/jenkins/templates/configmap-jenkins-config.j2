@@ -45,10 +45,14 @@ data:
           env:
           - key: TAVROS_HOST
             value: {{ cluster_fqdn }}
+          - key: TAVROS_GIT_HOST
+            value: code.{{ cluster_fqdn }}
           - key: TAVROS_GIT_PROVIDER
             value: gitea
           - key: TAVROS_GIT_CREDS
             value: tavros-gitea-creds
+          - key: TAVROS_REG_HOST
+            value: registry.{{ cluster_fqdn }}
           - key: TAVROS_REG_CREDS
             value: keycloak-basic-auth
 
