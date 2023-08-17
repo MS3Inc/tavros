@@ -5,11 +5,14 @@
 #### Backup Postgres
 
 ```
-PASSWORD=$(kubectl get secrets/tavros-pg-creds -n postgresql --template='{{ index .data "postgres-password" | base64decode}}')
+PASSWORD=$(kubectl get secrets/tavros-pg-creds -n postgresql --template='{{ index .data "postgresql-password" | base64decode}}')
 
 kubectl run pgtesting --image=docker.io/bitnami/postgresql:<version-currently-being-used> -n postgresql --env="ALLOW_EMPTY_PASSWORD=yes" --env="PGPASSWORD=$PASSWORD" --env="PGUSER=postgres"
 
-kubectl exec -i pgtesting -n postgresql -- bash -c "pg_dumpall -U postgres -h tavros-postgresql.postgresql.svc.cluster.local -w --clean" > backup.sql
+kubectl exec -i pgtesting -n postgresql -- bash -c "pg_dumpall -U postgres -h tavros-postgresql.postgresql.svc.cluster.local -w --clean" > backup-$(date +"%Y-%m-%d-%H-%M-%S").sql
+
+unset PASSWORD
+kubectl delete pod pgtesting -n postgresql
 ```
 
 To test a database where tables have been removed, take DROP commands from backup.sql and copy them into file called drop.sql and run that file separately. You may need to scale down gitea and kong in order to run without errors.
