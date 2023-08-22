@@ -27,8 +27,8 @@ These are in order. Refer to the above access chart for how to login to each com
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
 | Can login with admin creds |  | | Auth |
-| Can create account and assign roles in prod |  |  | Auth |
-| Can create account and assign roles in sandbox |  |  | Auth |
+| Can create new user and assign roles in prod (nexus: developer, jaeger: user, prod-kong: ?) |  |  | Auth |
+| Can create new user and assign roles in sandbox (sandbox-kong: ?) |  |  | Auth |
 
 #### Gitea
 
@@ -36,7 +36,7 @@ These are in order. Refer to the above access chart for how to login to each com
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
 | Can login with admin creds |  |  | Auth |
-| Can login with Keycloak creds |  |  | Auth |
+| Can login with Keycloak creds (ocasinally Keycloak needs to be re-enabled in gitea settings) |  |  | Auth |
 | Platform repo is there |  |  |  |
 | Can pull/push to repo |  |  |  |
 | Can edit a file in Gitea and this causes an update to a component |  |  | Tests flux is working correctly |
@@ -48,9 +48,9 @@ These are in order. Refer to the above access chart for how to login to each com
 | Is secure |  |  | Checks cert manager is working correctly |
 | Can login with admin creds (not possible through UI?) |  |  | Auth |
 | Can login with Keycloak creds |  |  | Auth |
-| Can login with jenkins-ci Keycloak creds (keycloak-basic-auth -n jenkins secret) |  |  | Auth |
-| Can login with created prod user|  |  | Auth |
 | Repos exist: container-registry, dockerhub-proxy, internal, maven-central, maven-public, maven-releases, maven-snapshots |  |  | API calls were successful |
+| Can login with jenkins-ci Keycloak creds (keycloak-basic-auth -n jenkins secret) |  |  | Auth |
+| Can login with created prod user and see repos |  |  | Auth |
 
 
 #### Jenkins
@@ -75,13 +75,13 @@ These are in order. Refer to the above access chart for how to login to each com
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Can create helm release in Gitea in prod (if not created by quickstart)|  |  |  |
-| Confirm image can be pulled by cluster, pod starts in orod|  |  |  |
-| Update helm release in Gitea to include an ingress, confirm API is accessible with prod kong ingress |  |  |  |
+| Can create helm release in Gitea in prod |  |  |  |
+| Confirm image can be pulled by cluster, pod starts in prod |  |  |  |
+| Update helm release in Gitea to include an ingress, confirm API is accessible with prod kong ingress (https://apps.<FQDN>/<path>/api/pet/123)  |  |  |  |
 
-| Can create helm release in Gitea in dev/test |  |  |  |
+| Can create helm release in Gitea in dev (if not created by quickstart) |  |  |  |
 | Confirm image can be pulled by cluster, pod starts in dev/test |  |  |  |
-| Update helm release in Gitea to include an ingress, confirm API is accessible with sandbox kong ingress |  |  |  |
+| Update helm release in Gitea to include an ingress, confirm API is accessible with sandbox kong ingress (https://apps.sandbox.<FQDN>/<path>/api/pet/123) |  |  |  |
 
 #### Prod Kong
 
@@ -104,7 +104,8 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
-| Can login with admin creds from and view logs. All expected dashboards (including Tavros - Logs Dashboard) are there. |  |  |  |
+| Assets are correctly installed |  |  |  |
+| Can login with admin creds from and view logs. All expected dashboards (including 'Dashboard' -> 'Tavros - Logs Dashboard') are there. |  |  |  |
 
 #### Jaeger
 
@@ -118,6 +119,12 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Can't curl across namespaces (ex: from prod to test) |  |  |  |
+
+Notes: 
+
+In prod troubleshooting shell:
+- curl http://api-repo.prod.svc.cluster.local:9000/api/pet/123 should return` {"opId":"get-pet-petId"}`
+- curl http://api-repo.dev.svc.cluster.local:9000/api/pet/123 should return `(52) Empty reply from server`
 
 #### Postgres
 
