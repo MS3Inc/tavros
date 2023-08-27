@@ -20,3 +20,6 @@ spec:
         image: redhat/ubi9:9.2-696
         command: [ "/bin/bash", "-c", "--" ]
         args: [ "while true; do sleep 30; done;" ]
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 3000
