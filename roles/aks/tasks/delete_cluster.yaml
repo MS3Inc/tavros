@@ -24,14 +24,8 @@
     resource_group: "{{ aks.resource_group }}"
     state: absent
 
-- name: Delete a resource group
+- name: Delete resource group
   azure_rm_resourcegroup:
     name: "{{ aks.resource_group }}"
     force_delete_nonempty: yes
     state: absent
-
-# - name: Delete storage account
-#   azure_rm_storageaccount:
-#     resource_group: "{{ aks.resource_group }}"
-#     name: tavrosstorage
-#     state: absent
