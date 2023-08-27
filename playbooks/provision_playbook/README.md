@@ -45,6 +45,7 @@ The order of component configuration is as follows:
 - An environment to build a cluster in
 - A Kong EE license (stringified!). Although Kong works without a license, a number of components use Keycloak. openid-connect is a required plugin if using Keycloak and is not available without a license.
 - Knowledge of Kubernetes
+- If developing Tavros, awareness of [rate limits](https://letsencrypt.org/docs/rate-limits/) with Let's Encrypt certs 
 
 ## Requirements
 
