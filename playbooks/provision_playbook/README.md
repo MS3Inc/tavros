@@ -40,6 +40,12 @@ The order of component configuration is as follows:
 * Gitea - To provide source control, if enabled
 * Jaeger - To provide observability, if enabled
 
+## Prerequisites
+
+- An environment to build a cluster in
+- A Kong EE license (stringified!). Although Kong works without a license, a number of components use Keycloak. openid-connect is a required plugin if using Keycloak and is not available without a license.
+- Knowledge of Kubernetes
+
 ## Requirements
 
 ### For clusters on AWS
@@ -74,6 +80,20 @@ Route53 should manage the domain to be used for the cluster as a Hosted Zone. It
 
 For more detailed information see https://kops.sigs.k8s.io/getting_started/aws/
 
+### For clusters on AKS
+
+- An AKS account. Note that the free tier will not be enough as larger VM sizes are needed.
+- Install Azure CLI
+- The playbook will generate a resource group, storage account, and DNS zone.
+- Once logged into the tavros-collection container, and before running the playbook, run the following:
+```
+python -m ensurepip --upgrade
+cd /root/.ansible/collections/ansible_collections/azure/azcollection
+pip3 install -r requirements-azure.txt
+az login --tenant <tenantId>
+```
+
+- Once cluster is created, login in locally using `az login --tenant <tenantId>` and then retrieve kubeconfig with `az aks get-credentials --resource-group $resource_group --name $name`
 
 ## Default Configuration
 
@@ -86,11 +106,23 @@ There is a default configuration vars file that results in the following:
 
 To use the default configuration:
 
+1. Update default_vars. If using AKS or AWS and want them to manage the cluster, set kops to be disabled.
+2. Run `docker run -v $PWD:$PWD -it ghcr.io/ms3inc/tavros-collection bash`
+
+If you have made changes between runs of the playbook, `cd` to your working directory of tavros and run `make install`. Delete `tmp` directory if you are aiming to provision from scratch and have not restarted the docker container. Otherwise, `cd` back to the root and proceed to running the playbook:
+
 ``` bash
-ansible-playbook playbooks/provision_playbook.yaml \
+cd / && ansible-playbook playbooks/provision_playbook.yaml \
   --extra-vars '{"cluster_name":"tavros","cluster_domain":"example.com","cluster_admin_email":"ops@example.com"}' \
   --inventory "playbooks/provision_playbook/default_vars.yaml"
 ```
+
+Available tags for the playbook:
+dry-run, test-run
+
+## Recommendations
+
+Configure retention policies as appropriate for all components. Particularly for nexus and elastic logs.
 
 ## Configuration Variables
 

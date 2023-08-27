@@ -13,12 +13,12 @@ all:
       enabled: false
       name: ''
       node_count: 2
-      node_size: 'Standard_A8_v2'
+      node_size: 'Standard_A4m_v2'
       resource_group: ''
       storage_account_name: ''
       subscription_id: ''
     kops:
-      enabled: true
+      enabled: false
       master_count: 3
       master_size: 't2.large'
       master_zones: 'us-east-1a,us-east-1b'

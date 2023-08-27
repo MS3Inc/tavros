@@ -39,6 +39,10 @@ For items that are not yet targeting a milestone, you can see our [Backlog](http
 
 This project documents significant architectural decisions in MADR, a lightweight format for recording architectural decisions in Markdown. See our [Architectural Decision Log](docs/adr/index.md).
 
+## Acceptance Tests
+
+See the [acceptance tests](docs/AcceptanceTests.md) for verifying cluster functionality out of the box.
+
 ## DNS Cache
 
 Subsequent Tavros re installs will cause your DNS Cache to be invalid and prevent Hosts from being resolved for various API calls. You can flush the Cache diffferently based on your system. Below are some common examples:
