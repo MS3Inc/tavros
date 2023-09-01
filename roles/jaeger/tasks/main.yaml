@@ -78,24 +78,6 @@
   # allow errors because deployment initially fails due to jaeger-operator-service-cert secret not created before the deployment is
   # unsure of how to change the order
 
-  # not working yet
-- name: Wait for Jaeger operator
-  tags: [ requires_cluster, jaeger ]
-  when: ('dry-run' not in ansible_run_tags)
-  ms3_inc.tavros.kube_info:
-    kubeconfig: '~/.kube/config'
-    api_version: apps/v1
-    kind: Deployment
-    name: jaeger-operator
-    namespace: jaeger
-  register: jaeger_instance
-  until: ('status' in jaeger_instance.resources[0]) and (jaeger_instance.resources[0].status.readyReplicas >= 1)
-  retries: 30
-  delay: 30
-  changed_when: false
-  ignore_errors: true
-  # remove this if it works
-
 - name: Wait for Keycloak Client
   tags: [ requires_cluster, jaeger ]
   when: ('dry-run' not in ansible_run_tags)
@@ -111,18 +93,6 @@
   retries: 30
   delay: 30
   changed_when: false
-
-# - name: Create Keycloak jaeger Client Roles
-#   tags: [ requires_cluster, jaeger ]
-#   when: ('dry-run' not in ansible_run_tags)
-#   ms3_inc.tavros.keycloak_client_roles:
-#     auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
-#     validate_certs: false
-#     auth_realm: master
-#     auth_username: admin
-#     auth_password: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
-#     realm: "{{ jaeger.keycloak.realm}}"
-#     clientId: jaeger
 
 - name: Add Keycloak jaeger Client Role user to Realm Admin User
   blockinfile:

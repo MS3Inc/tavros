@@ -142,39 +142,6 @@
   retries: 30
   delay: 30
   changed_when: false
-
-# - name: Create Keycloak Kubernetes Client Admin Role
-#   tags: [ requires_cluster, keycloak ]
-#   when: ('dry-run' not in ansible_run_tags)
-#   ms3_inc.tavros.keycloak_client_roles:
-#     auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
-#     validate_certs: false
-#     auth_realm: master
-#     auth_username: admin
-#     auth_password: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
-#     realm: "{{ kubernetes_cluster.keycloak.realm }}"
-#     clientId: "kubernetes"
-#     roles:
-#     - name: "admin"
-#   retries: 30
-#   delay: 30
-
-# - name: Create Keycloak Kubernetes Client Namespace Roles
-#   tags: [ requires_cluster, keycloak ]
-#   when: ('dry-run' not in ansible_run_tags)
-#   loop: "{{ namespaces }}"
-#   ms3_inc.tavros.keycloak_client_roles:
-#     auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
-#     validate_certs: false
-#     auth_realm: master
-#     auth_username: admin
-#     auth_password: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
-#     realm: "{{ kubernetes_cluster.keycloak.realm }}"
-#     clientId: "kubernetes"
-#     roles:
-#     - name: "{{ item.name }}"
-#   retries: 30
-#   delay: 30
   
 - name: Template flux-kustomization
   template:
