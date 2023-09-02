@@ -27,14 +27,14 @@ These are in order. Refer to the above access chart for how to login to each com
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
 | Can login with admin creds |  | | Auth |
-| Can create new user and assign roles in prod (nexus: developer, jaeger: user, prod-kong: ?) |  |  | Auth |
-| Can create new user and assign roles in sandbox (sandbox-kong: ?) |  |  | Auth |
+| Can create new user and assign roles in prod (nexus: developer, jaeger: user) |  |  | Auth |
 
 #### Gitea
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
+| 'Sign in with openid connect' is showing on login screen |  |  | Checks cert manager is working correctly |
 | Can login with admin creds |  |  | Auth |
 | Can login with Keycloak creds (ocasinally Keycloak needs to be re-enabled in gitea settings) |  |  | Auth |
 | Platform repo is there |  |  |  |
@@ -48,8 +48,8 @@ These are in order. Refer to the above access chart for how to login to each com
 | Is secure |  |  | Checks cert manager is working correctly |
 | Can login with admin creds (not possible through UI?) |  |  | Auth |
 | Can login with Keycloak creds |  |  | Auth |
-| Repos exist: container-registry, dockerhub-proxy, internal, maven-central, maven-public, maven-releases, maven-snapshots |  |  | API calls were successful |
-| Can login with jenkins-ci Keycloak creds (keycloak-basic-auth -n jenkins secret) |  |  | Auth |
+| Repos exist: container-registry, dockerhub-proxy, internal, maven-central, maven-public, maven-releases, maven-snapshots |  |  | API calls to add repos were successful |
+| Can login with jenkins-ci Keycloak creds (keycloak-basic-auth -n jenkins secret), has limited access (developer role) |  |  | Auth |
 | Can login with created prod user and see repos |  |  | Auth |
 
 
@@ -78,7 +78,6 @@ These are in order. Refer to the above access chart for how to login to each com
 | Can create helm release in Gitea in prod |  |  |  |
 | Confirm image can be pulled by cluster, pod starts in prod |  |  |  |
 | Update helm release in Gitea to include an ingress, confirm API is accessible with prod kong ingress (https://apps.<FQDN>/<path>/api/pet/123)  |  |  |  |
-
 | Can create helm release in Gitea in dev (if not created by quickstart) |  |  |  |
 | Confirm image can be pulled by cluster, pod starts in dev/test |  |  |  |
 | Update helm release in Gitea to include an ingress, confirm API is accessible with sandbox kong ingress (https://apps.sandbox.<FQDN>/<path>/api/pet/123) |  |  |  |
@@ -88,7 +87,7 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
-| Can login with keycloak prod creds (Kong Enterprise/Manager screen -> Keycloak screen) and view routes/services/etc |  |  |  |
+| Can login with admin/keycloak prod creds (Kong Enterprise/Manager screen -> Keycloak screen) and view routes/services/etc |  |  |  |
 | Kong license is configured properly (if it wasn't, install would have failed) |  |  |  |
 
 #### Sandbox Kong
@@ -112,7 +111,8 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
-| Can login with keycloak prod creds and view traces |  |  |  |
+| Can login with admin/keycloak prod creds and view traces |  |  |  |
+| Can login with created prod user and view traces |  |  | Auth |
 
 #### Service mesh (Kuma)
 
