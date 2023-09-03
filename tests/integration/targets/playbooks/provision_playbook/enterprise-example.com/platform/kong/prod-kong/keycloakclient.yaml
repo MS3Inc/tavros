@@ -20,3 +20,12 @@ spec:
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
     enabled: True
+    defaultClientScopes:
+      - "email"
+      - "profile"
+      - "roles"
+      - "offline_access"
+  roles:
+    - name: "read-only"
+    - name: "super-admin"
+    - name: "admin"
