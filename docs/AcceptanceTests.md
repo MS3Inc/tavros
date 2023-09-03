@@ -36,7 +36,7 @@ These are in order. Refer to the above access chart for how to login to each com
 | Is secure |  |  | Checks cert manager is working correctly |
 | 'Sign in with openid connect' is showing on login screen |  |  | Checks cert manager is working correctly |
 | Can login with admin creds |  |  | Auth |
-| Can login with Keycloak creds (ocasinally Keycloak needs to be re-enabled in gitea settings) |  |  | Auth |
+| Can login with Keycloak creds (occasionally Keycloak needs to be re-enabled in gitea settings) |  |  | Auth |
 | Platform repo is there |  |  |  |
 | Can pull/push to repo |  |  |  |
 | Can edit a file in Gitea and this causes an update to a component |  |  | Tests flux is working correctly |
@@ -46,7 +46,7 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
-| Can login with admin creds (not possible through UI?) |  |  | Auth |
+| Can login with admin creds |  | N/A (not possible through UI?) | Auth |
 | Can login with Keycloak creds |  |  | Auth |
 | Repos exist: container-registry, dockerhub-proxy, internal, maven-central, maven-public, maven-releases, maven-snapshots |  |  | API calls to add repos were successful |
 | Can login with jenkins-ci Keycloak creds (keycloak-basic-auth -n jenkins secret), has limited access (developer role) |  |  | Auth |
@@ -130,4 +130,4 @@ In prod troubleshooting shell:
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| If not configured properly, then Kong and ? wouldn't start, so maybe this is not necessary |  |  |  |
+| Configured properly (If not configured properly, then Kong, Keycloak wouldn't start, so maybe this is not necessary) |  |  |  |
