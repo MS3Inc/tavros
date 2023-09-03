@@ -45,32 +45,39 @@ spec:
         timeoutSeconds: 1
     basePlugins:
     - name: kubernetes
-      version: "3971.v94b_4c914ca_75"
+      version: "4029.v5712230ccb_f8"
     - name: workflow-job
-      version: "1308.v58d48a_763b_31"
+      version: "1326.ve643e00e9220"
     - name: workflow-aggregator
-      version: "2.7"
+      version: "581.v0c46fa_697ffd"
     - name: git
       version: "5.2.0"
-    - name: git-server
-      version: "99.va_0826a_b_cdfa_d"
-    # dependency for gitea based on git version above
-    - name: git-client
-      version: "4.4.0"
     - name: job-dsl
-      version: "1.78.1"
+      version: "1.84"
     - name: configuration-as-code
-      version: "1647.ve39ca_b_829b_42"
+      version: "1670.v564dc8b_982d0"
     - name: kubernetes-credentials-provider
-      version: "1.208.v128ee9800c04"
-    # latestPlugins: false
+      version: "1.211.vc236a_f5a_2f3c"
+    latestPlugins: false
     plugins:
     - name: keycloak
       version: "2.3.0"
+    - name: script-security
+      version: "1265.va_fb_290b_4b_d34"
+    - name: pipeline-model-api
+      version: "2.2144.v077a_d1928a_40"
+    - name: pipeline-stage-step
+      version: "305.ve96d0205c1c6"
+    - name: git-server
+      version: "99.va_0826a_b_cdfa_d"
+    - name: pipeline-model-definition
+      version: "2.2144.v077a_d1928a_40"
     - name: gitea
       version: "1.2.1"
     - name: build-user-vars-plugin
       version: "1.7"
+    - name: junit
+      version: "1189.v1b_e593637fa_e" 
   configurationAsCode:
     configurations:
     - name: tavros-jenkins-config
