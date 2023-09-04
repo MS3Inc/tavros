@@ -15,9 +15,12 @@
 
 - name: Get Eastic Public CA Cert
   when: ('dry-run' not in ansible_run_tags)
-  shell: |
-    kubectl get secret tavros-es-http-certs-public -n elastic-system -o "jsonpath={.data['ca\.crt']}" | base64 --decode
-  register: elastic_ca_cert
+  community.kubernetes.k8s_info:
+    api_version: v1
+    kind: Secret
+    name: tavros-es-http-certs-public
+    namespace: elastic-system
+  register: elastic_certs
 
 - name: Template Files
   template:
