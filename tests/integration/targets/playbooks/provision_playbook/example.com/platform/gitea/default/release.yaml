@@ -48,7 +48,7 @@ spec:
 
         database:
           DB_TYPE: postgres
-          HOST: 'tavros-postgresql.postgresql.svc.cluster.local:5432'
+          HOST: 'tavros-postgresql-ha-pgpool.postgresql.svc.cluster.local:5432'
           NAME: 'gitea'
           USER: 'gitea'
           PASSWD: 'placeholder8'

@@ -7,24 +7,31 @@ spec:
   releaseName: tavros
   chart:
     spec:
-      chart: postgresql
+      chart: postgresql-ha
       sourceRef:
         kind: HelmRepository
         name: bitnami
         namespace: flux-system
-      version: 10.3.17
+      version: 7.9.6
   interval: 30m
   install:
     remediation:
       retries: 3
   # Default values
-  # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
+  # https://github.com/bitnami/charts/blob/master/bitnami/postgresql-ha/values.yaml
   values:
-    postgresqlDatabase: postgres
-    existingSecret: tavros-pg-creds
+    global:
+      postgresql:
+        database: postgres
+        existingSecret: tavros-pg-creds
+    pgpool:
+      replicaCount: 2
+      initdbScriptsSecret: tavros-pgpool-init-script
+
+      
 {% if elastic_cloud.enabled %}
-    primary:
+    postgresql:
       podAnnotations:
-        co.elastic.logs.tavros-postgresql/enabled: "true"
-        co.elastic.logs.tavros-postgresql/module: "postgresql"
+        co.elastic.logs.postgresql/enabled: "true"
+        co.elastic.logs.postgresql/module: "postgresql"
 {% endif  %}
