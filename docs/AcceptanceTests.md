@@ -34,7 +34,7 @@ These are in order. Refer to the above access chart for how to login to each com
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
 | Is secure |  |  | Checks cert manager is working correctly |
-| 'Sign in with openid connect' is showing on login screen |  |  | Checks cert manager is working correctly |
+| 'Sign in with openid connect' is showing on login screen |  |  | Checks keycloak is set up correctly |
 | Can login with admin creds |  |  | Auth |
 | Can login with Keycloak creds (occasionally Keycloak needs to be re-enabled in gitea settings) |  |  | Auth |
 | Platform repo is there |  |  |  |
@@ -118,7 +118,7 @@ These are in order. Refer to the above access chart for how to login to each com
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Can't curl across namespaces (ex: from prod to test) |  |  |  |
+| Can't curl across namespaces (ex: from prod to test) |  |  | Tests mesh is working correctly  |
 
 Notes: 
 
