@@ -99,21 +99,6 @@
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 900
 
-- name: Wait for Elasticsearch
-  tags: [ requires_cluster, elastic_cloud ]
-  when: ('dry-run' not in ansible_run_tags)
-  ms3_inc.tavros.kube_info:
-    kubeconfig: '~/.kube/config'
-    api_version: elasticsearch.k8s.elastic.co/v1
-    kind: Elasticsearch
-    name: tavros
-    namespace: elastic-system
-  register: elastic_def
-  until: ('status' in elastic_def.resources[0]) and (elastic_def.resources[0].status.phase == 'Ready')
-  retries: 30
-  delay: 30
-  changed_when: false
-
 - name: Wait for init-runner Job
   tags: [ requires_cluster, elastic_cloud ]
   when: ('dry-run' not in ansible_run_tags) and jaeger.enabled
@@ -127,6 +112,21 @@
     wait_condition:
       type: Complete
       status: "true"
+  changed_when: false
+
+- name: Wait for Elasticsearch
+  tags: [ requires_cluster, elastic_cloud ]
+  when: ('dry-run' not in ansible_run_tags)
+  ms3_inc.tavros.kube_info:
+    kubeconfig: '~/.kube/config'
+    api_version: elasticsearch.k8s.elastic.co/v1
+    kind: Elasticsearch
+    name: tavros
+    namespace: elastic-system
+  register: elastic_def
+  until: ('status' in elastic_def.resources[0]) and (elastic_def.resources[0].status.phase == 'Ready')
+  retries: 30
+  delay: 30
   changed_when: false
 
 - name: Wait for Kibana

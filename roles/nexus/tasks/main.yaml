@@ -119,27 +119,6 @@
   delay: 30
   changed_when: false
 
-- name: Create Keycloak nexus Client Roles
-  tags: [ requires_cluster, nexus ]
-  when: ('dry-run' not in ansible_run_tags)
-  ms3_inc.tavros.keycloak_client_roles:
-    auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
-    validate_certs: false
-    auth_realm: master
-    auth_username: admin
-    auth_password: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
-    realm: "{{ nexus.keycloak.realm }}"
-    clientId: "nexus"
-    roles:
-    - name: "admin"
-    - name: "developer"
-    serviceAccountRoles:
-      clientRoles:
-        realm-management:
-          - name: "view-clients"
-          - name: "view-users"
-          - name: "view-realm"
-
 - name: Add Keycloak nexus Client Role admin to Realm Admin User
   blockinfile:
     marker_begin: "Begin nexus"

@@ -32,6 +32,8 @@
       dest: default/ingress
     - name: keycloakclient
       dest: default/keycloakclient
+    - name: gitshell
+      dest: default/gitshell
   tags: [ gitea ]
 
 - name: Copy Files

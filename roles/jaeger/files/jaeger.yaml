@@ -28,4 +28,15 @@ spec:
         index-prefix: tavros
         tags-as-fields:
           all: true
+        tls:
+          enabled: true
+          ca: /es/certificates/ca.crt
     secretName: tavros-es-creds
+  volumeMounts:
+    - name: certificates
+      mountPath: /es/certificates/
+      readOnly: true
+  volumes:
+    - name: certificates
+      secret:
+        secretName: tavros-es-http-certs

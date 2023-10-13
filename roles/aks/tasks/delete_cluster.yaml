@@ -23,3 +23,9 @@
     enable_rbac: true
     resource_group: "{{ aks.resource_group }}"
     state: absent
+
+- name: Delete resource group
+  azure_rm_resourcegroup:
+    name: "{{ aks.resource_group }}"
+    force_delete_nonempty: yes
+    state: absent

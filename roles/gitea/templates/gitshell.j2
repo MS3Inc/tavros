@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: git-shell
+  namespace: gitea
+  labels:
+    app: git
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: git
+  template:
+    metadata:
+      labels:
+        app: git
+    spec:
+      containers:
+      - name: git
+        image: bitnami/git:2.41.0
+        command: [ "/bin/bash", "-c", "--" ]
+        args: [ "while true; do sleep 30; done;" ]

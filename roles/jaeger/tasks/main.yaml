@@ -13,6 +13,15 @@
     uuid: "{{ 1000000 | random | to_uuid }}"
   tags: [ jaeger ]
 
+- name: Get Eastic Public CA Cert
+  when: ('dry-run' not in ansible_run_tags)
+  community.kubernetes.k8s_info:
+    api_version: v1
+    kind: Secret
+    name: tavros-es-http-certs-public
+    namespace: elastic-system
+  register: elastic_certs
+
 - name: Template Files
   template:
     src: "{{ item.name }}.j2"
@@ -27,6 +36,8 @@
       dest: default/kongplugin-oidc
     - name: secret-es-creds
       dest: default/secret-es-creds
+    - name: secret-es-http-certs
+      dest: default/secret-es-http-certs
   tags: [ jaeger ]
 
 - name: Copy Files
@@ -52,6 +63,7 @@
     mv /tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/jaeger/{{ item.name }}.yaml
   loop:
     - name: default/secret-es-creds
+    - name: default/secret-es-http-certs
 
 - name: Apply Resources
   tags: [ requires_cluster, jaeger ]
@@ -65,6 +77,9 @@
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 900
+  ignore_errors: true
+  # allow errors because deployment initially fails due to jaeger-operator-service-cert secret not created before the deployment is
+  # unsure of how to change the order
 
 - name: Wait for Keycloak Client
   tags: [ requires_cluster, jaeger ]
@@ -81,20 +96,6 @@
   retries: 30
   delay: 30
   changed_when: false
-
-- name: Create Keycloak jaeger Client Roles
-  tags: [ requires_cluster, jaeger ]
-  when: ('dry-run' not in ansible_run_tags)
-  ms3_inc.tavros.keycloak_client_roles:
-    auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
-    validate_certs: false
-    auth_realm: master
-    auth_username: admin
-    auth_password: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
-    realm: "{{ jaeger.keycloak.realm}}"
-    clientId: jaeger
-    roles:
-    - name: "user"
 
 - name: Add Keycloak jaeger Client Role user to Realm Admin User
   blockinfile:
