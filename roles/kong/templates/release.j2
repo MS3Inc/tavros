@@ -114,7 +114,6 @@ spec:
 {% endif  %}
     podAnnotations:
 {% if item[0].kuma_mesh_name is defined %}
-      kuma.io/sidecar-injection: enabled
       kuma.io/gateway: {{ 'enabled' if ((item[0].hybrid) and (item[1].role == 'control_plane')) else 'enabled' }}
       kuma.io/mesh: {{ item[0].kuma_mesh_name }}
 {% endif  %}
@@ -123,6 +122,10 @@ spec:
       co.elastic.logs.proxy/module: nginx
       co.elastic.logs.proxy/fileset.stdout: access
       co.elastic.logs.proxy/fileset.stderr: error
+{% endif  %}
+{% if item[0].kuma_mesh_name is defined %}
+    podLabels:
+      kuma.io/sidecar-injection: enabled
 {% endif  %}
     admin:
       enabled: {{ false if ((item[0].hybrid) and (item[1].role == 'data_plane')) else true }}
