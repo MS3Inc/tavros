@@ -112,6 +112,8 @@
     wait_condition:
       type: Complete
       status: "true"
+  retries: 30
+  delay: 30
   changed_when: false
 
 - name: Wait for Elasticsearch
