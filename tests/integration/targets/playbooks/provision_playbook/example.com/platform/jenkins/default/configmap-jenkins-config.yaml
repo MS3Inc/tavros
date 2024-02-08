@@ -28,7 +28,7 @@ data:
       globalLibraries:
         libraries:
           - name: "tavros-library"
-            defaultVersion: "v0.4"
+            defaultVersion: "v0.5"
             retriever:
               modernSCM:
                 scm:
@@ -39,6 +39,8 @@ data:
       globalNodeProperties:
       - envVars:
           env:
+          - key: TAVROS_HOST
+            value: tavros.example.com
           - key: TAVROS_GIT_HOST
             value: code.tavros.example.com
           - key: TAVROS_GIT_PROVIDER

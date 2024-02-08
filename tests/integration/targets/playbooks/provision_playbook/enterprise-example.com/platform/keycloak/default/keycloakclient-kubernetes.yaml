@@ -32,3 +32,8 @@ spec:
         jsonType.label: string
         access.token.claim: "true"
         usermodel.clientRoleMapping.clientId: kubernetes
+  roles:
+    - name: "admin"
+    - name: "test"
+    - name: "dev"
+    - name: "prod"

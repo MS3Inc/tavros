@@ -6,3 +6,4 @@ resources:
   - default/keycloakclient.yaml
   - default/release.yaml
   - default/ingress.yaml
+  - default/gitshell.yaml

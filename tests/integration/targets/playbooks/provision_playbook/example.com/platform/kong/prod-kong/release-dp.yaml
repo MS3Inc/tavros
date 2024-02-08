@@ -8,9 +8,9 @@ spec:
   interval: 10m
   chart:
     spec:
-      # https://github.com/Kong/charts/tree/kong-2.3.0/charts/kong
+      # https://github.com/Kong/charts/tree/kong-2.15.0/charts/kong
       chart: kong
-      version: 2.3.0
+      version: 2.15.0
       sourceRef:
         kind: HelmRepository
         name: kong
@@ -43,13 +43,14 @@ spec:
     ingressController:
       enabled: False
     podAnnotations:
-      kuma.io/sidecar-injection: enabled
       kuma.io/gateway: enabled
       kuma.io/mesh: prod
       co.elastic.logs.proxy/enabled: "true"
       co.elastic.logs.proxy/module: nginx
       co.elastic.logs.proxy/fileset.stdout: access
       co.elastic.logs.proxy/fileset.stderr: error
+    podLabels:
+      kuma.io/sidecar-injection: enabled
     admin:
       enabled: False
       http:
