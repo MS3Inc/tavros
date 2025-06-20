@@ -3,5 +3,5 @@ kind: Kustomization
 namespace: jenkins
 resources:
   - ns.yaml
-  - https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/v0.6.0/config/crd/bases/jenkins.io_jenkins.yaml
-  - https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/v0.6.0/deploy/all-in-one-v1alpha2.yaml
+  - https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/v0.8.0-beta2/config/crd/bases/jenkins.io_jenkins.yaml
+  - all-in-one.yaml
