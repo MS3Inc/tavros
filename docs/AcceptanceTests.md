@@ -105,6 +105,7 @@ These are in order. Refer to the above access chart for how to login to each com
 | Is secure |  |  | Checks cert manager is working correctly |
 | Assets are correctly installed |  |  |  |
 | Can login with admin creds from and view logs. All expected dashboards (including 'Dashboard' -> 'Tavros - Logs Dashboard') are there. |  |  |  |
+| Observability -> Uptime shows UP for prod, dev, and test pod  |  |  |  |
 
 #### Jaeger
 
@@ -118,13 +119,12 @@ These are in order. Refer to the above access chart for how to login to each com
 
 | Expected result | Actual result | PASS/FAIL | Purpose of test |
 |---|---|---|---|
-| Can't curl across namespaces (ex: from prod to test) |  |  | Tests mesh is working correctly  |
-
-Notes: 
-
-In prod troubleshooting shell:
-- curl http://api-repo.prod.svc.cluster.local:9000/api/pet/123 should return` {"opId":"get-pet-petId"}`
-- curl http://api-repo.dev.svc.cluster.local:9000/api/pet/123 should return `(52) Empty reply from server`
+| From PROD shell `curl 'http://api-repo.prod.svc.cluster.local:8080/actuator/health/liveness'` returns {"status":"UP"} |  |  |  |
+| From PROD shell `curl 'http://api-repo.dev.svc.cluster.local:8080/actuator/health/liveness'` & `curl 'http://api-repo.test.svc.cluster.local:8080/actuator/health/liveness'` returns Empty reply from server |  |  |
+| From DEV shell `curl 'http://api-repo.prod.svc.cluster.local:8080/actuator/health/liveness'` returns Empty reply from server |  |  |  |
+| From DEV shell `curl 'http://api-repo.dev.svc.cluster.local:8080/actuator/health/liveness'` & `curl 'http://api-repo.test.svc.cluster.local:8080/actuator/health/liveness'` returns {"status":"UP"} |  |  |  |
+| From TEST shell `curl 'http://api-repo.prod.svc.cluster.local:8080/actuator/health/liveness'` returns Empty reply from server |  |  |  |
+| From TEST shell `curl 'http://api-repo.dev.svc.cluster.local:8080/actuator/health/liveness'` & `curl 'http://api-repo.test.svc.cluster.local:8080/actuator/health/liveness'` returns {"status":"UP"} |  |  |  |
 
 #### Postgres
 

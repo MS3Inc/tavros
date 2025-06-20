@@ -3,7 +3,8 @@ kind: Namespace
 metadata:
   name: {{ item.name }}
 {%  if item.kuma_mesh_name is defined %}
+  labels:
+    kuma.io/sidecar-injection: enabled
   annotations:
     kuma.io/mesh: {{ item.kuma_mesh_name }}
-    kuma.io/sidecar-injection: enabled
 {% endif  %}

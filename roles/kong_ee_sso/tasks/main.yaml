@@ -80,7 +80,7 @@
     validate_certs: False
   register: _result
   until: _result.status == 200
-  retries: 5
+  retries: 30
   delay: 30
   loop: "{{ kong.instances }}"
 

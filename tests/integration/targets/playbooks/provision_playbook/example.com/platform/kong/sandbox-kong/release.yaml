@@ -63,13 +63,14 @@ spec:
           cpu: 50m
           memory: 128Mi
     podAnnotations:
-      kuma.io/sidecar-injection: enabled
       kuma.io/gateway: enabled
       kuma.io/mesh: sandbox
       co.elastic.logs.proxy/enabled: "true"
       co.elastic.logs.proxy/module: nginx
       co.elastic.logs.proxy/fileset.stdout: access
       co.elastic.logs.proxy/fileset.stderr: error
+    podLabels:
+      kuma.io/sidecar-injection: enabled
     admin:
       enabled: True
       http:
