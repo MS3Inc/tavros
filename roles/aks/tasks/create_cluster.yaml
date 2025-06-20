@@ -8,13 +8,24 @@
   community.crypto.openssh_keypair:
     path: /tmp/aks/id_rsa
 
+- name: Create a resource group
+  azure_rm_resourcegroup:
+    name: "{{ aks.resource_group }}"
+    location: eastus
+
+- name: Create a storage account
+  azure_rm_storageaccount:
+    resource_group: "{{ aks.resource_group }}"
+    name: tavrosstorage
+    type: Standard_RAGRS
+
 # https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_aks_module.html
 - name: Create a managed Azure Kubernetes Services (AKS) instance
   collections:
     - azure.azcollection
   azure_rm_aks:
     name: "{{ aks.name }}"
-    kubernetes_version: 1.21.2
+    kubernetes_version: 1.25.6
     location: eastus
     dns_prefix: "{{ aks.name }}"
     enable_rbac: true
@@ -35,6 +46,15 @@
         mode: System
         enable_auto_scaling: false
         type: VirtualMachineScaleSets
+
+- name: Create a DNS zone
+  azure_rm_dnszone:
+    resource_group: "{{ aks.resource_group }}"
+    name: "{{ cluster_fqdn }}"
+
+- name: WAIT, verify DNS is correct for your FQDN
+  ansible.builtin.pause:
+    prompt: "Use nslookup -type=soa FQDN to verify (may take 10+ minutes)"
 
 - name: Create Kube Directory
   file:

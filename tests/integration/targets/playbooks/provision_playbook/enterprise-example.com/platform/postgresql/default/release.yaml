@@ -18,7 +18,7 @@ spec:
     remediation:
       retries: 3
   # Default values
-  # https://github.com/bitnami/charts/blob/master/bitnami/postgresql/values.yaml
+  # https://github.com/bitnami/charts/blob/4c72712f8d0c79ca3b573c87b993bfe80fc99b01/bitnami/postgresql/values.yaml
   values:
     postgresqlDatabase: postgres
     existingSecret: tavros-pg-creds

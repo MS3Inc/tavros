@@ -8,9 +8,9 @@ spec:
   interval: 10m
   chart:
     spec:
-      # https://github.com/Kong/charts/tree/kong-2.3.0/charts/kong
+      # https://github.com/Kong/charts/tree/kong-2.15.0/charts/kong
       chart: kong
-      version: 2.3.0
+      version: 2.15.0
       sourceRef:
         kind: HelmRepository
         name: kong
@@ -24,7 +24,7 @@ spec:
   values:
     image:
       repository: kong/kong-gateway
-      tag: '2.5.0.0-alpine'
+      tag: '3.0.0.0-alpine'
     env:
     
       admin_api_uri: "https://admin-api.sandbox-kong.tavros.enterprise-example.com"

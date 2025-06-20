@@ -17,6 +17,18 @@
     src: rolebinding-oidc-ns-admin.j2
     dest: /tmp/{{ cluster_fqdn }}/{{ item.name }}/rolebinding-oidc-ns-admin.yaml
 
+- name: Template Repo
+  loop: "{{ namespaces }}"
+  template:
+    src: tavros-repo.j2
+    dest: /tmp/{{ cluster_fqdn }}/{{ item.name }}/tavros-repo.yaml
+
+- name: Template Troubleshooting Shell
+  loop: "{{ namespaces }}"
+  template:
+    src: troubleshooting-shell.j2
+    dest: /tmp/{{ cluster_fqdn }}/{{ item.name }}/troubleshooting-shell.yaml
+
 - name: Template Docker Registry Secrets
   loop: "{{ namespaces }}"
   template:

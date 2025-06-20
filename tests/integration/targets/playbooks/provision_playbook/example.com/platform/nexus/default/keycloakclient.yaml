@@ -18,7 +18,23 @@ spec:
     - "https://artifacts.tavros.example.com/*"
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
-    authorizationEnabled: True
     authorizationServicesEnabled: True
     serviceAccountsEnabled: True
     enabled: True
+    defaultClientScopes:
+      - "email"
+      - "profile"
+      - "roles"
+      - "offline_access"
+      - "web-origins"
+      - "phone"
+      - "microprofile-jwt"
+      - "address"
+  serviceAccountClientRoles:
+    "realm-management":
+      - "view-clients"
+      - "view-users"
+      - "view-realm"
+  roles:
+    - name: "admin"
+    - name: "developer"

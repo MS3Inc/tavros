@@ -18,7 +18,6 @@ spec:
     - "https://code.tavros.example.com/*"
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
-    authorizationEnabled: True
     authorizationServicesEnabled: True
     serviceAccountsEnabled: True
     enabled: True
