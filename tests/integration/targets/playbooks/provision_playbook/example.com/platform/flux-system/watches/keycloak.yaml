@@ -8,7 +8,7 @@ spec:
   path: ./platform/keycloak
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: tavros
   validation: client
   prune: true
   timeout: 5m0s

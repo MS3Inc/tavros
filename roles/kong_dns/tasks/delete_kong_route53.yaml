@@ -1,0 +1,17 @@
+---
+- name: Delete DNS for Kongs by Name
+  when: ('dry-run' not in ansible_run_tags)
+  script: "{{ role_path }}/files/delete-route53-record.sh '{{ kubernetes_cluster.dns_zone }}' '*.{{ item.name }}.{{ cluster_fqdn }}'"
+  loop: "{{ kong.instances }}"
+  tags: [ kong_dns, route53 requires_cluster ]
+
+- name: Delete DNS for Default Ingress Class
+  when: ('dry-run' not in ansible_run_tags)
+  script: "{{ role_path }}/files/delete-route53-record.sh '{{ kubernetes_cluster.dns_zone }}' '*.{{ cluster_fqdn }}'"
+  tags: [ kong_dns, route53 requires_cluster ]
+
+- name: Delete DNS for Non-Default Ingress Classes
+  when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
+  script: "{{ role_path }}/files/delete-route53-record.sh '{{ kubernetes_cluster.dns_zone }}' '*.{{ item.ingress_class }}.{{ cluster_fqdn }}'"
+  loop: "{{ kong.instances }}"
+  tags: [ kong_dns, route53 requires_cluster ]

@@ -1,7 +1,7 @@
 apiVersion: jaegertracing.io/v1
 kind: Jaeger
 metadata:
-  name: troubadour
+  name: tavros
   namespace: jaeger
 spec:
   strategy: production
@@ -46,3 +46,4 @@ spec:
     - name: certificates
       secret:
         secretName: es-http-certs
+

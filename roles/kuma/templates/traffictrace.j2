@@ -1,0 +1,12 @@
+apiVersion: kuma.io/v1alpha1
+kind: TrafficTrace
+mesh: {{ item[0].name }}
+metadata:
+  name: {{ item[0].name }}-trace-all-traffic
+  namespace: kuma-system
+spec:
+  selectors:
+  - match:
+      kuma.io/service: '*'
+  conf:
+    backend: jaeger-collector

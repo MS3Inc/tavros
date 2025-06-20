@@ -1,0 +1,96 @@
+---
+- name: Create DockerHub Proxy Repository
+  tags: [ requires_cluster, non_idempotent, nexus ]
+  when: ('dry-run' not in ansible_run_tags)
+  uri:
+    url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/beta/repositories/docker/proxy"
+    method: POST
+    status_code: 201
+    headers:
+      Authorization: "Basic {{ ('admin:' + nexus.generated.admin_password ) | b64encode }}"
+    validate_certs: False
+    body_format: json
+    body:
+      name: dockerhub-proxy
+      online: true
+      storage:
+        blobStoreName: default
+        strictContentTypeValidation: true
+      proxy:
+        remoteUrl: https://registry-1.docker.io
+        contentMaxAge: 1440
+        metadataMaxAge: 1440
+      negativeCache:
+        enabled: false
+        timeToLive: 1440
+      httpClient:
+        blocked: false
+        autoBlock: false
+      docker:
+        v1Enabled: false
+        forceBasicAuth: true
+        httpPort: 5001
+      dockerProxy:
+        indexType: HUB
+  register: _result
+  until: _result.status == 201
+  retries: 30
+  delay: 30
+
+- name: Create Interal Container Registry Hosted Repository
+  tags: [ requires_cluster, non_idempotent, nexus ]
+  when: ('dry-run' not in ansible_run_tags)
+  uri:
+    url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/beta/repositories/docker/hosted"
+    method: POST
+    status_code: 201
+    headers:
+      Authorization: "Basic {{ ('admin:' + nexus.generated.admin_password ) | b64encode }}"
+    validate_certs: False
+    body_format: json
+    body:
+      name: internal
+      online: true
+      storage:
+        blobStoreName: default
+        latestPolicy: true
+        strictContentTypeValidation: true
+        writePolicy: ALLOW
+      docker:
+        v1Enabled: false
+        forceBasicAuth: true
+        httpPort: 5002
+  register: _result
+  until: _result.status == 201
+  retries: 30
+  delay: 30
+
+- name: Create Container Registry Group Repository
+  tags: [ requires_cluster, non_idempotent, nexus ]
+  when: ('dry-run' not in ansible_run_tags)
+  uri:
+    url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/beta/repositories/docker/group"
+    method: POST
+    status_code: 201
+    headers:
+      Authorization: "Basic {{ ('admin:' + nexus.generated.admin_password ) | b64encode }}"
+    validate_certs: False
+    body_format: json
+    body:
+      name: container-registry
+      online: true
+      storage:
+        blobStoreName: default
+        strictContentTypeValidation: true
+      group:
+        memberNames:
+        - dockerhub-proxy
+        - internal
+      docker:
+        v1Enabled: false
+        forceBasicAuth: true
+        httpPort: 5000
+  register: _result
+  until: _result.status == 201
+  retries: 30
+  delay: 30

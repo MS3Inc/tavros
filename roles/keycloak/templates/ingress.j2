@@ -1,24 +1,27 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: keycloak
+  name: tavros
   namespace: keycloak
   annotations:
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: {{ kong.default_ingress_class }}
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: auth.{{ cluster_name}}.{{ cluster_domain }}
+  - host: auth.{{ cluster_fqdn }}
     http:
       paths:
       - path: /
+        pathType: ImplementationSpecific
         backend:
-          serviceName: keycloak-discovery
-          servicePort: 8080
+          service:
+            name: keycloak-discovery
+            port:
+              number: 8080
   tls:
   - hosts:
-    - auth.{{ cluster_name}}.{{ cluster_domain }}
+    - auth.{{ cluster_fqdn }}
     secretName: auth-ingress-cert

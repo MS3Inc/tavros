@@ -1,0 +1,61 @@
+pipeline {
+  agent {
+    kubernetes {
+      label 'node'
+      yamlFile '.jenkins/kubernetes.yaml'
+    }
+  }
+  stages {
+    stage('Build') {
+      steps {
+        container('tavros-tools') {
+          sh 'make install'
+          sh 'cat /etc/resolv.conf | sed \'/^nameserver/d\' > /etc/resolv.conf'
+          sh 'echo \'nameserver 1.1.1.1\' >> /etc/resolv.conf'
+          sh 'echo \'nameserver 1.0.0.1\' >> /etc/resolv.conf'
+          sh ".jenkins/update-default-vars.sh cluster_fqdn=${cluster_fqdn}"
+          sh ".jenkins/update-default-vars.sh cluster_admin_email=${admin_email}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.master_count=${master_count}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.master_azs=${master_azs}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.worker_count=${worker_count}"
+          sh ".jenkins/update-default-vars.sh kubernetes_cluster.worker_azs=${worker_azs}"
+          sh 'cat playbooks/provision_playbook/default_vars.yaml'
+        }
+      }
+    }
+    stage("Provision") {
+      when {
+        expression {
+          env.DESTROY != 'yes'
+        }
+      }
+      steps {
+        withAWS(credentials:"${aws_creds}", region:"${aws_region}") {
+          container('tavros-tools') {
+            catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+              sh '''
+                for i in $(set | grep "KUBERNETES" | cut -f1 -d=); do unset $i; done
+                env
+                ansible-playbook playbooks/provision_playbook.yaml --inventory playbooks/provision_playbook/default_vars.yaml --tags all,test-run
+              '''
+            }
+          }
+        }
+      }
+    }
+    stage("Deprovision") {
+      when {
+        expression {
+          env.DESTROY != 'no'
+        }
+      }
+      steps {
+        withAWS(credentials:"${aws_creds}", region:"${aws_region}") {
+          container('tavros-tools') {
+            sh 'ansible-playbook playbooks/deprovision_playbook.yaml --extra-vars "cluster_state=absent" --inventory playbooks/provision_playbook/default_vars.yaml'
+          }
+        }
+      }
+    }
+  }
+}

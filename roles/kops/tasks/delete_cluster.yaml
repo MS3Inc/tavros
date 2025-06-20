@@ -1,0 +1,24 @@
+---
+- name: Delete Cluster
+  register: result
+  changed_when: result.rc == 101
+  failed_when: result.rc not in [100, 101]
+  shell: |
+    kops get cluster \
+      --name {{ cluster_fqdn }} \
+      --state s3://{{ kops.state_bucket }}
+    if [[ $? -eq 1 ]]; then { exit 100; } fi
+
+    kops delete cluster \
+      --name="{{ cluster_fqdn }}" \
+      --state="s3://{{ kops.state_bucket }}" \
+      --yes
+    if [ $? -eq 0 ]; then { exit 101; } fi
+
+    echo "Failed to delete cluster"
+    exit 1
+
+- name: Delete kOps S3 Bucket
+  amazon.aws.aws_s3:
+    bucket: "{{ kops.state_bucket }}"
+    mode: delete

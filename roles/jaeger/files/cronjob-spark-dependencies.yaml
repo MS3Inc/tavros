@@ -1,0 +1,59 @@
+kind: CronJob
+apiVersion: batch/v1beta1
+metadata:
+  name: tavros-spark-dependencies
+  namespace: jaeger
+  labels:
+    app: jaeger
+    app.kubernetes.io/component: spark-dependencies
+    app.kubernetes.io/instance: tavros
+    app.kubernetes.io/name: tavros-spark-dependencies
+    app.kubernetes.io/part-of: jaeger
+spec:
+  schedule: "55 23 * * *"
+  concurrencyPolicy: Forbid
+  suspend: false
+  jobTemplate:
+    spec:
+      parallelism: 1
+      template:
+        metadata:
+          labels:
+            app: jaeger
+            app.kubernetes.io/component: spark-dependencies
+            app.kubernetes.io/instance: tavros
+            app.kubernetes.io/name: tavros-spark-dependencies
+            app.kubernetes.io/part-of: jaeger
+          annotations:
+            linkerd.io/inject: disabled
+            prometheus.io/scrape: 'false'
+            sidecar.istio.io/inject: 'false'
+        spec:
+          volumes:
+            - name: keystore-volume
+              emptyDir: {}
+          containers:
+            - name: tavros-spark-dependencies
+              image: quay.io/jam01/jaeger-spark-dependencies:0.0.1-SNAPSHOT-001
+              envFrom:
+                - secretRef:
+                    name: tavros-es-creds
+              env:
+                - name: STORAGE
+                  value: elasticsearch
+                - name: ES_NODES
+                  value: 'http://tavros-es-http.elastic-system.svc:9200'
+                - name: ES_INDEX_PREFIX
+                  value: tavros
+                - name: ES_TAGS_AS_FIELDS_ALL
+                  value: 'true'
+              resources:
+                limits:
+                  memory: 2Gi
+                requests:
+                  memory: 2Gi
+          restartPolicy: Never
+          terminationGracePeriodSeconds: 30
+          dnsPolicy: ClusterFirst
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1

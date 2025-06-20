@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: Secret
-type: Opaque
-metadata:
-  name: keycloak-config
-  namespace: nexus
-data:
-  keycloak-config.json: eyJyZWFsbSI6ICJwcm9kIiwgImF1dGgtc2VydmVyLXVybCI6ICJodHRwczovL2F1dGgudHJvdWJhZG91ci5leGFtcGxlLmNvbS9hdXRoLyIsICJzc2wtcmVxdWlyZWQiOiAiZXh0ZXJuYWwiLCAicmVzb3VyY2UiOiAibmV4dXMiLCAidmVyaWZ5LXRva2VuLWF1ZGllbmNlIjogdHJ1ZSwgImNyZWRlbnRpYWxzIjogeyJzZWNyZXQiOiAicHJvZCJ9LCAidXNlLXJlc291cmNlLXJvbGUtbWFwcGluZ3MiOiB0cnVlLCAiY29uZmlkZW50aWFsLXBvcnQiOiAwfQ==

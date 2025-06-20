@@ -1,0 +1,72 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tavros
+  namespace: gitea
+spec:
+  targetNamespace: gitea
+  interval: 10m
+  chart:
+    spec:
+      # https://docs.gitea.io/en-us/config-cheat-sheet/
+      # https://artifacthub.io/packages/helm/gitea/gitea
+      # https://gitea.com/gitea/helm-chart/src/tag/v2.2.4/values.yaml
+      chart: gitea
+      version: 2.2.4
+      sourceRef:
+        kind: HelmRepository
+        name: gitea
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    fullnameOverride: gitea
+    gitea:
+      admin:
+        username: 'gitea_admin'
+        password: '{{ gitea.admin_password }}'
+        email: '{{ cluster_admin_email }}'
+
+      config:
+        service:
+          # Disable registration, except via OpenID
+          DISABLE_REGISTRATION: false
+          ALLOW_ONLY_EXTERNAL_REGISTRATION: true
+        openid:
+          # Do not allow signin to local users via OpenID
+          ENABLE_OPENID_SIGNIN: false
+          # Do not allow creation of new users via OpenID
+          ENABLE_OPENID_SIGNUP: false
+
+        server:
+          ROOT_URL: 'https://code.{{ cluster_fqdn }}/'
+          SSH_DOMAIN: 'code.{{ cluster_fqdn }}'
+
+        database:
+          DB_TYPE: postgres
+          HOST: 'tavros-postgresql.postgresql.svc.cluster.local:5432'
+          NAME: 'gitea'
+          USER: 'gitea'
+          PASSWD: '{{ gitea.pg.password }}'
+
+        security:
+          PASSWORD_COMPLEXITY: 'off'
+
+      database:
+        builtIn:
+          postgresql:
+            enabled: false
+
+{% if ('test-run' in ansible_run_tags) %}
+    extraVolumes:
+    - name: ca-certs
+      configMap:
+        name: ca-certs
+    extraVolumeMounts:
+    - name: ca-certs
+      mountPath: /etc/ssl/certs/
+{% endif %}

@@ -1,0 +1,33 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: tavros-jaeger
+  namespace: keycloak
+  labels:
+    client: jaeger
+spec:
+  realmSelector:
+    matchLabels:
+        realm: prod
+  client:
+    clientId: jaeger
+    secret: placeholder15
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect
+    redirectUris:
+    - "https://jaeger.tavros.example.com/*"
+    directAccessGrantsEnabled: false
+    standardFlowEnabled: True
+    enabled: True
+    protocolMappers:
+    - name: roles
+      protocol: openid-connect
+      protocolMapper: "oidc-usermodel-client-role-mapper"
+      config:
+        id.token.claim: "false"
+        claim.name: roles
+        multivalued: "true"
+        userinfo.token.claim: "false"
+        jsonType.label: string
+        access.token.claim: "true"
+        usermodel.clientRoleMapping.clientId: jaeger

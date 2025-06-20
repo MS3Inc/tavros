@@ -1,0 +1,20 @@
+---
+- name: Template EE Creds Files
+  template:
+    src: "{{ item[1].name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}-{{ item[1].dest | default(item[1].name) }}.yaml
+  with_nested:
+    - "{{ kong.ee_creds }}"
+    -
+      - name: secret-ee-license
+
+- name: Seal EE Creds Secrets
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}-{{ item[1].name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}-{{ item[1].name }}.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}-{{ item[1].name }}.tmp /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}-{{ item[1].name }}.yaml
+  with_nested:
+    - "{{ kong.ee_creds }}"
+    -
+      - name: secret-ee-license

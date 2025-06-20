@@ -1,0 +1,24 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: tavros-gitea
+  namespace: keycloak
+  labels:
+    client: gitea
+spec:
+  realmSelector:
+    matchLabels:
+        realm: prod
+  client:
+    clientId: "gitea"
+    secret: placeholder17
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect
+    redirectUris:
+    - "https://code.tavros.example.com/*"
+    directAccessGrantsEnabled: True
+    standardFlowEnabled: True
+    authorizationEnabled: True
+    authorizationServicesEnabled: True
+    serviceAccountsEnabled: True
+    enabled: True

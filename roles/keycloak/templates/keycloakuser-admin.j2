@@ -1,0 +1,33 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakUser
+metadata:
+  name: tavros-{{ item[0].name }}-admin
+  namespace: keycloak
+  labels:
+    app: sso
+spec:
+  realmSelector:
+    matchLabels:
+      realm: {{ item[0].name }}
+  user:
+    username: {{ cluster_admin_email }}
+    firstName: Tavros
+    lastName: Admin
+    email: {{ cluster_admin_email }}
+    enabled: True
+    emailVerified: True
+    credentials:
+      - type: "password"
+        # todo: should be a secret?
+        value: "{{ item[0].admin_password }}"
+        temporary: False
+    realmRoles:
+      - "offline_access"
+    clientRoles:
+      account:
+        - "manage-account"
+        - "view-profile"
+      realm-management:
+        - "realm-admin"
+      kubernetes:
+        - "admin"

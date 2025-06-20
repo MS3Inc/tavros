@@ -1,0 +1,32 @@
+---
+- name: Generate and Merge postgresql.password Variable
+  when: postgresql.password is not defined
+  set_fact:
+    postgresql: "{{ { 'password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
+
+- name: Generate and Merge postgresql.postgres_password Variable
+  when: postgresql.postgres_password is not defined
+  set_fact:
+    postgresql: "{{ { 'postgres_password': lookup('password', '/dev/null') } | combine(postgresql, recursive=true) }}"
+
+- name: Generate kong.instances.pg.password Variables
+  loop: "{{ kong.instances }}"
+  set_fact:
+    generated_pg_passwords: "{{ (generated_pg_passwords | default([])) + [ (item | combine({ 'pg': { 'password': password } }, recursive=true)) ] }}"
+  vars:
+    password: "{{ ( item.pg.password | default(lookup('password', '/dev/null')) ) }}"
+
+- name: Merge kong.instances.pg.password Variables
+  when: generated_pg_passwords is defined
+  set_fact:
+    kong: "{{ kong | combine({'instances': generated_pg_passwords}, recursive=true) }}"
+
+- name: Generate and Merge gitea.pg.password Variable
+  when: gitea.pg.password is not defined
+  set_fact:
+    gitea: "{{ gitea | combine({ 'pg': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
+
+- name: Generate and Merge keycloak.pg.password Variable
+  when: keycloak.pg.password is not defined
+  set_fact:
+    keycloak: "{{ keycloak | combine({ 'pg': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"

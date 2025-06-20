@@ -1,0 +1,26 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: bitnami
+  namespace: flux-system
+spec:
+  interval: 30m
+  url: https://charts.bitnami.com/bitnami
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: kuma
+  namespace: flux-system
+spec:
+  interval: 30m
+  url: https://kumahq.github.io/charts
+---
+apiVersion: source.toolkit.fluxcd.io/v1beta1
+kind: HelmRepository
+metadata:
+  name: sonatype
+  namespace: flux-system
+spec:
+  interval: 30m
+  url: https://sonatype.github.io/helm3-charts/

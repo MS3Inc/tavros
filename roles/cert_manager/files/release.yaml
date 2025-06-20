@@ -1,16 +1,16 @@
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
-  name: cert-manager
+  name: tavros
   namespace: cert-manager
 spec:
   targetNamespace: cert-manager
   interval: 10m
   chart:
     spec:
-      # https://github.com/jetstack/cert-manager/blob/v1.1.0/deploy/charts/cert-manager/values.yaml
+      # https://github.com/jetstack/cert-manager/blob/v1.3.0/deploy/charts/cert-manager/values.yaml
       chart: cert-manager
-      version: 1.1.0
+      version: 1.3.0
       sourceRef:
         kind: HelmRepository
         name: jetstack

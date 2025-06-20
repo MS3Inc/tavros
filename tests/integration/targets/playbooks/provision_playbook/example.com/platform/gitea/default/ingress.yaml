@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tavros
+  namespace: gitea
+  annotations:
+    cert-manager.io/cluster-issuer: tavros
+    kubernetes.io/ingress.class: prod
+    konghq.com/strip-path: 'true'
+    konghq.com/protocols: https
+    konghq.com/https-redirect-status-code: '302'
+spec:
+  rules:
+  - host: code.tavros.example.com
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: gitea-http
+            port:
+              number: 3000
+  tls:
+  - hosts:
+    - code.tavros.example.com
+    secretName: gitea-ingress-cert

@@ -1,0 +1,9 @@
+---
+- name: Store Tavros Vars
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags) and (kubernetes_cluster.cloud_provider == 'aws')
+  amazon.aws.aws_s3:
+    bucket: "{{ kops.state_bucket }}"
+    object: /vars.yaml
+    src: /tmp/{{ cluster_fqdn }}_vars.yaml
+    mode: put

@@ -5,10 +5,10 @@ metadata:
   namespace: flux-system
 spec:
   interval: 5m0s
-  path: ./platform/cert-manager
+  path: ./platform/gitea
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: tavros
   validation: client
   prune: true
   timeout: 5m0s

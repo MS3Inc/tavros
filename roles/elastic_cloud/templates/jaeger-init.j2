@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+
+set -o nounset
+set -o errexit
+
+
+# todo: make operations idempotent
+echo "Create Role"
+curl -X POST -i --insecure -u elastic:$ES_PSW $ES_HOST:9200/_security/role/jaeger_writer  \
+-d '{
+      "cluster": [
+          "monitor",
+          "manage_index_templates"
+      ],
+      "indices": [
+          {
+              "names": [
+                  "tavros-jaeger-*",
+                  "tavros:jaeger-*"
+              ],
+              "privileges": [
+                  "all"
+              ],
+              "field_security": {
+                  "grant": [
+                      "*"
+                  ]
+              },
+              "allow_restricted_indices": false
+          }
+      ],
+      "applications": [],
+      "run_as": [],
+      "metadata": {},
+      "transient_metadata": {
+          "enabled": true
+      }
+  }' \
+-H 'Content-Type: application/json' \
+
+echo "Create User"
+curl -X POST -i --insecure -u elastic:$ES_PSW $ES_HOST:9200/_security/user/jaeger \
+-d '{
+      "password": "{{ jaeger.es.password }}",
+      "roles": [
+        "jaeger_writer"
+      ],
+      "full_name": "Jaeger User"
+    }' \
+-H 'Content-Type: application/json'

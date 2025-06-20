@@ -1,0 +1,117 @@
+---
+- name: Create Directory
+  file:
+    path: /tmp/kops
+    state: directory
+
+- name: Create kOps S3 Bucket
+  amazon.aws.s3_bucket:
+    name: "{{ kops.state_bucket }}"
+    state: present
+    encryption: AES256
+    region: "{{ kops.state_bucket_region }}"
+    public_access:
+      block_public_acls: true
+      ignore_public_acls: true
+      block_public_policy: true
+      restrict_public_buckets: true
+
+- name: Generate an OpenSSH Key Pair
+  community.crypto.openssh_keypair:
+    path: /tmp/kops/id_rsa
+
+- name: Create Cluster Configuration
+  register: result
+  changed_when: result.rc == 101
+  failed_when: result.rc not in [100, 101]
+  environment:
+    KOPS_STATE_STORE: s3://{{ kops.state_bucket }}
+  shell: |
+    kops get cluster {{ cluster_fqdn }}
+    if [[ $? -eq 0 ]]; then { exit 100; } fi
+
+    kops create cluster {{ cluster_fqdn }} \
+      --cloud={{ kubernetes_cluster.cloud_provider }} \
+      --master-count={{ kops.master_count }} \
+      --master-size={{ kops.master_size }} \
+      --master-zones={{ kops.master_zones }} \
+      --node-count={{ kops.node_count }} \
+      --node-size={{ kops.node_size }} \
+      --zones={{ kops.node_zones }} \
+      --container-runtime containerd \
+      --topology private \
+      --networking weave \
+      --dns-zone={{ kubernetes_cluster.dns_zone }} \
+      --bastion \
+      --authorization RBAC \
+      --ssh-public-key /tmp/kops/id_rsa.pub
+    if [ $? -eq 0 ]; then { exit 101; } fi
+
+    echo "Failed to create cluster"
+    exit 1
+
+- name: Download Cluster Configuration
+  when: result.changed
+  changed_when: false
+  shell: |
+    aws s3 cp s3://{{ kops.state_bucket }}/{{ cluster_fqdn }}/cluster.spec /tmp/kops/cluster.spec
+    aws s3 cp s3://{{ kops.state_bucket }}/{{ cluster_fqdn }}/instancegroup /tmp/kops/instancegroup --recursive
+
+- name: Add Extra Cluster Configurations
+  when: result.changed
+  changed_when: false
+  copy:
+    content: "{{ lookup('file', '/tmp/kops/cluster.spec') | from_yaml | combine(extras, recursive=true) | to_nice_yaml(indent=2) }}"
+    dest: /tmp/kops/cluster.spec
+  vars:
+    extras:
+      apiVersion: kops.k8s.io/v1alpha2
+      kind: Cluster
+      spec:
+        cloudConfig:
+          awsEBSCSIDriver:
+            enabled: true
+        metricsServer:
+          enabled: true
+          insecure: true
+        kubeAPIServer:
+          oidcIssuerURL: https://auth.{{ cluster_fqdn }}/auth/realms/{{ kubernetes_cluster.keycloak.realm }}
+          oidcClientID: kubernetes
+          oidcUsernameClaim: email
+          oidcUsernamePrefix: "oidc:"
+          oidcGroupsClaim: groups
+          oidcGroupsPrefix: "oidc:"
+
+- name: Create Cluster
+  when: result.changed
+  register: result
+  changed_when: result.rc == 101
+  failed_when: result.rc not in [100, 101]
+  environment:
+    KOPS_STATE_STORE: s3://{{ kops.state_bucket }}
+  shell: |
+    kops replace -f /tmp/kops/cluster.spec
+    if [ $? -ne 0 ]; then { echo "Failed to replace cluster config"; exit 1; } fi
+
+    kops update cluster {{ cluster_fqdn }} --yes
+    if [ $? -ne 0 ]; then { echo "Failed to update cluster"; exit 2; } fi
+
+    exit 101
+
+- name: Wait for DNS zone propagation
+  when: (cluster_state == 'present') and ('dry-run' not in ansible_run_tags)
+  wait_for:
+    host: api.{{ cluster_fqdn }}
+
+- name: Export Kube Context
+  environment:
+    KOPS_STATE_STORE: s3://{{ kops.state_bucket }}
+  shell: |
+    kops export kubecfg --admin --name={{ cluster_fqdn }}
+
+- name: Validate Cluster
+  changed_when: false
+  environment:
+    KOPS_STATE_STORE: s3://{{ kops.state_bucket }}
+  shell: |
+    kops validate cluster {{ cluster_fqdn }} --wait 30m

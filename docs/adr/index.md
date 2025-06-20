@@ -1,6 +1,6 @@
 # Architectural Decision Log
 
-This log lists the architectural decisions for Troubadour.
+This log lists the architectural decisions for Tavros.
 
 <!-- adrlog -- Regenerate the content by using "adr-log -i". You can install it via "npm install -g adr-log" -->
 
@@ -33,7 +33,7 @@ This log lists the architectural decisions for Troubadour.
 - [ADR-0026](0026-setup-sandbox-and-production-keycloak-realms.md) - Setup Sandbox and Production Keycloak Realms
 - [ADR-0027](0027-cert-manager-for-certificate-management.md) - cert-manager for Certificate Management
 - [ADR-0028](0028-use-markdown-architectural-decision-records.md) - Use Markdown Architectural Decision Records
-- [ADR-0029](0029-troubadour-as-a-single-tenant-platform.md) - Troubadour as a Single Tenant Platform
+- [ADR-0029](0029-tavros-as-a-single-tenant-platform.md) - Tavros as a Single Tenant Platform
 
 <!-- adrlogstop -->
 

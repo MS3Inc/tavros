@@ -1,24 +1,24 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: jenkins
+  name: tavros
   namespace: jenkins
   annotations:
-    cert-manager.io/cluster-issuer: troubadour
+    cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: {{ kong.default_ingress_class }}
     konghq.com/strip-path: 'true'
     konghq.com/protocols: https
     konghq.com/https-redirect-status-code: '302'
 spec:
   rules:
-  - host: ci.{{ cluster_name}}.{{ cluster_domain }}
+  - host: ci.{{ cluster_fqdn }}
     http:
       paths:
       - path: /
         backend:
-          serviceName: jenkins-operator-http-troubadour
+          serviceName: jenkins-operator-http-tavros
           servicePort: 8080
   tls:
   - hosts:
-    - ci.{{ cluster_name}}.{{ cluster_domain }}
+    - ci.{{ cluster_fqdn }}
     secretName: ci-ingress-cert

@@ -1,0 +1,15 @@
+apiVersion: keycloak.org/v1alpha1
+kind: Keycloak
+metadata:
+  name: tavros
+  namespace: keycloak
+  labels:
+    app.tavros/component: auth
+spec:
+  instances: 1
+  externalDatabase:
+    enabled: true
+  externalAccess:
+    enabled: false
+  podDisruptionBudget:
+    enabled: true

@@ -1,51 +1,50 @@
 ---
-- name: Create directory
+- name: Create Directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/cert-manager
+    path: /tmp/{{ cluster_fqdn }}/platform/cert-manager
     state: directory
 
-- name: Process cluster-issuer template
+- name: Template Files
   template:
-    src: cluster-issuer.j2
-    dest: /tmp/{{ cluster_domain }}/platform/cert-manager/cluster-issuer.yaml
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/cert-manager/{{ item.dest | default(item.name) }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: tavros-clusterissuer
 
-- name: Copy namespace
+- name: Copy Files
   copy:
-    src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/cert-manager/ns.yaml
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/cert-manager/{{ item.dest | default(item.name) }}
+  when: item.condition | default(true)
+  loop:
+    - name: helmrepo.yaml
+    - name: kustomization.yaml
+    - name: ns.yaml
+    - name: release.yaml
+    - name: tavros-ca.yaml
 
-- name: Copy kustomization
-  copy:
-    src: kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/cert-manager/kustomization.yaml
-
-- name: Copy helm source
-  copy:
-    src: helm-source.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/cert-manager/helm-source.yaml
-
-- name: Copy release
-  copy:
-    src: release.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/cert-manager/release.yaml
-
-- name: Apply manifests
-  when: "'dry-run' not in ansible_run_tags"
-  loop: "{{ lookup('ms3_inc.troubadour.kustomize', '/tmp/' + cluster_domain + '/platform/cert-manager/', reorder='none') }}"
-  k8s:
+- name: Apply Resources
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/cert-manager/', reorder='none') }}"
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-    wait_timeout: 300
+    wait_timeout: 900
   # adding retry because cert-manager release reports ready before CRDs are stable
   # applying these is an idempotent operation
-  # see https://github.com/MS3Inc/troubadour/issues/34
+  # see https://github.com/MS3Inc/tavros/issues/34
   retries: 2
   delay: 3
   register: result
   until: result is succeeded
 
-- name: Process flux-kustomization template
+- name: Template flux-kustomization
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/gitea.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/cert-manager.yaml

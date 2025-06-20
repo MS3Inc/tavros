@@ -1,4 +1,4 @@
-# Troubadour as a Single Tenant Platform
+# Tavros as a Single Tenant Platform
 
 * Status: accepted
 * Deciders: @jam01
@@ -6,7 +6,7 @@
 
 ## Context and Problem Statement
 
-A single platform for an indefinite amount of tenants would allow us to provide Troubadour in a cloud 'as-a-service' offering to our customers, instead of only as managed services. However, there is an unknown complexity and level of effort behind multi-tenancy.
+A single platform for an indefinite amount of tenants would allow us to provide Tavros in a cloud 'as-a-service' offering to our customers, instead of only as managed services. However, there is an unknown complexity and level of effort behind multi-tenancy.
 
 ## Decision Drivers <!-- optional -->
 
@@ -21,10 +21,10 @@ A single platform for an indefinite amount of tenants would allow us to provide 
 
 ## Decision Outcome
 
-We'll build Troubadour as a single tenant platform. The Ansible automation can be developed in a way that accommodates two modes of operation:
+We'll build Tavros as a single tenant platform. The Ansible automation can be developed in a way that accommodates two modes of operation:
 
-* Build a troubadour cluster to be owned by the client and optionally operated by us, as was the original objective
-* Build a troubadour cluster to be owned and operated by us, transparently to the client.
+* Build a tavros cluster to be owned by the client and optionally operated by us, as was the original objective
+* Build a tavros cluster to be owned and operated by us, transparently to the client.
 
 The second mode allows us to offer a PaaS while keeping the platform simple.
 

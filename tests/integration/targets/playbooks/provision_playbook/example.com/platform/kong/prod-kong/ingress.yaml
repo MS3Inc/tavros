@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tavros-prod-kong
+  namespace: kong
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: https
+    kubernetes.io/ingress.class: prod
+    cert-manager.io/cluster-issuer: tavros
+    konghq.com/https-redirect-status-code: '302'
+spec:
+  tls:
+  - hosts:
+    - "apps.tavros.example.com"
+    secretName: prod-kong-ingress-certs
+  rules:
+  - host: "apps.tavros.example.com"
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kong-tavros-prod-kong-dp-kong-proxy
+            port:
+              number: 80

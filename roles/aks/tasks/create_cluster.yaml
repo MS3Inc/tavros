@@ -1,0 +1,74 @@
+---
+- name: Create Directory
+  file:
+    path: /tmp/aks
+    state: directory
+
+- name: Generate an OpenSSH Key Pair
+  community.crypto.openssh_keypair:
+    path: /tmp/aks/id_rsa
+
+# https://docs.ansible.com/ansible/latest/collections/azure/azcollection/azure_rm_aks_module.html
+- name: Create a managed Azure Kubernetes Services (AKS) instance
+  collections:
+    - azure.azcollection
+  azure_rm_aks:
+    name: "{{ aks.name }}"
+    kubernetes_version: 1.21.2
+    location: eastus
+    dns_prefix: "{{ aks.name }}"
+    enable_rbac: true
+    resource_group: "{{ aks.resource_group }}"
+    network_profile:
+      network_policy: calico
+    linux_profile:
+      admin_username: aks
+      ssh_key: "{{ lookup('file', '/tmp/aks/id_rsa.pub') }}" 
+    agent_pool_profiles:
+      - name: default
+        count: "{{ aks.node_count }}"
+        availability_zones:
+          - 1
+          - 2
+          - 3
+        vm_size: "{{ aks.node_size }}"
+        mode: System
+        enable_auto_scaling: false
+        type: VirtualMachineScaleSets
+
+- name: Create Kube Directory
+  file:
+    path: ~/.kube
+    state: directory
+
+- name: Get facts for Azure Kubernetes Service
+  collections:
+    - azure.azcollection
+  azure_rm_aks_info:
+    name: "{{ aks.name }}"
+    resource_group: "{{ aks.resource_group }}"
+    show_kubeconfig: admin
+  register: result
+
+- name: Set Kube Config
+  copy:
+    content: "{{ result.aks[0].kube_config }}"
+    dest: "~/.kube/config"
+    
+- name: Update AKS as Contributor for Resource Group
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    az role assignment create --assignee {{ result.aks[0].identity.principalId }} --role Contributor --resource-group {{ aks.resource_group }} 
+
+- name: Create Resource Group Contributor
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    az ad sp create-for-rbac --name {{ aks.resource_group }}-sp --role Contributor --scopes /subscriptions/{{ aks.subscription_id }}/resourceGroups/{{ aks.resource_group }}
+  register: result
+
+- name: Merge Contributor Creds
+  when: ('dry-run' not in ansible_run_tags)
+  set_fact:
+    aks: "{{ aks | combine({ 'sp': { 'client_id': creds.appId, 'client_secret': creds.password } } , recursive=true) }}"
+  vars:
+    creds: "{{ result.stdout | from_json }}"

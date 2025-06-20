@@ -1,0 +1,31 @@
+---
+- name: Create directory
+  file:
+    path: /tmp/{{ cluster_fqdn }}/platform/sealed-secrets
+    state: directory
+
+- name: Copy Files
+  copy:
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/sealed-secrets/{{ item.name }}
+  when: item.condition | default(true)
+  loop:
+    - name: kustomization.yaml
+
+- name: Apply Resources
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/sealed-secrets/', reorder='none') | ms3_inc.tavros.kube_sort }}"
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
+
+- name: Template flux-kustomization
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/sealed-secrets.yaml

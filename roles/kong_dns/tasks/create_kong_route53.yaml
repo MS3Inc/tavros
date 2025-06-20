@@ -1,0 +1,47 @@
+---
+- name: Set DNS for Kongs by Name
+  tags: [ kong_dns, route53, requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  community.aws.route53:
+    state: present
+    zone: "{{ kubernetes_cluster.dns_zone }}"
+    type: CNAME
+    record: "*.{{ item.name }}.{{ cluster_fqdn }}"
+    value: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+    wait_timeout: 900
+  vars:
+    instance_kong_proxy: "kong-tavros-{{ item.name }}{{'-dp' if item.hybrid }}-kong-proxy"
+  loop: "{{ kong.instances }}"
+
+- name: Set DNS for Default Ingress Class
+  tags: [ kong_dns, route53, requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  community.aws.route53:
+    state: present
+    zone: "{{ kubernetes_cluster.dns_zone }}"
+    type: CNAME
+    record: "*.{{ cluster_fqdn }}"
+    value: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=prod_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+    wait_timeout: 900
+  vars:
+    prod_kong_proxy: "kong-tavros-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}{{'-dp' if (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).hybrid }}-kong-proxy"
+
+- name: Set DNS for Non-Default Ingress Classes
+  tags: [ kong_dns, route53, requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
+  community.aws.route53:
+    state: present
+    zone: "{{ kubernetes_cluster.dns_zone }}"
+    type: CNAME
+    record: "*.{{ item.ingress_class }}.{{ cluster_fqdn }}"
+    value: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Service', namespace='kong', resource_name=instance_kong_proxy).status.loadBalancer.ingress[0].hostname }}"
+    overwrite: true
+    wait: yes
+    wait_timeout: 900
+  vars:
+    instance_kong_proxy: "kong-tavros-{{ item.name }}{{'-dp' if item.hybrid }}-kong-proxy"
+  loop: "{{ kong.instances }}"

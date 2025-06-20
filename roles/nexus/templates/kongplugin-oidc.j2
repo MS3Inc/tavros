@@ -1,0 +1,25 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: tavros-oidc-nexus
+  namespace: nexus
+  annotations:
+    kubernetes.io/ingress.class: {{ kong.default_ingress_class }}
+disabled: false
+config:
+  issuer: "https://auth.{{ cluster_fqdn }}/auth/realms/{{ nexus.keycloak.realm }}"
+  client_id:
+  - nexus
+  client_secret:
+  - "{{ nexus.keycloak.client_secret }}"
+  redirect_uri:
+  - https://artifacts.{{ cluster_fqdn }}
+  ssl_verify: false
+
+  upstream_headers_claims:
+  - preferred_username
+  upstream_headers_names:
+  - 'X-Auth-Username'
+  upstream_access_token_header: 'X-Auth-Token'
+
+plugin: openid-connect

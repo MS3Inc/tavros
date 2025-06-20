@@ -1,0 +1,129 @@
+---
+- name: Generate and Merge flux.gitea.password Variable
+  when: flux.gitea.password is not defined
+  set_fact:
+    flux: "{{ flux | combine({ 'gitea': { 'password': lookup('password', '/dev/null') } }, recursive=true) }}"
+  tags: [ fluxtoolkit_sync ]
+
+- name: Template Files
+  template:
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.dest | default(item.name) }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: gotk-sync
+    - name: secret-git-creds
+  tags: [ fluxtoolkit_sync ]
+
+- name: Seal Secrets
+  tags: [ requires_cluster, fluxtoolkit_sync ]
+  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/flux-system/{{ item.name }}.yaml
+  loop:
+    - name: secret-git-creds
+
+- name: Create flux-cd User
+  tags: [ requires_cluster, non_idempotent, fluxtoolkit_sync ]
+  when: ('dry-run' not in ansible_run_tags)
+  uri:
+    url: https://code.{{ cluster_fqdn }}/api/v1/admin/users
+    method: POST
+    force_basic_auth: true
+    follow_redirects: all
+    body_format: json
+    url_username: gitea_admin
+    url_password: '{{ gitea.admin_password }}'
+    body:
+      username: flux-cd
+      email: "flux-cd@{{ cluster_fqdn }}"
+      login_name: flux-cd
+      must_change_password: false
+      password: "{{ flux.gitea.password }}"
+      send_notify: false
+      source_id: 0
+    status_code: 201
+    validate_certs: False
+
+- name: Create Tavros Platform Repo
+  tags: [ requires_cluster, non_idempotent, fluxtoolkit_sync ]
+  when: ('dry-run' not in ansible_run_tags)
+  uri:
+    url: https://code.{{ cluster_fqdn }}/api/v1/orgs/tavros/repos
+    method: POST
+    force_basic_auth: true
+    follow_redirects: all
+    body_format: json
+    url_username: gitea_admin
+    url_password: '{{ gitea.admin_password }}'
+    body:
+      auto_init: false
+      default_branch: main
+      description: Tavros Platform Repo
+      name: platform
+      private: false
+      template: false
+      trust_model: default
+    status_code: 201
+    validate_certs: False
+
+- name: Register gitea_login Variable
+  tags: [ requires_cluster, fluxtoolkit_sync ]
+  when: ('dry-run' not in ansible_run_tags)
+  # todo: figure out how to re-use gitea_login if available
+  # beware a simple `when` with a `register` will ovewrite the variable with the skipped task dict
+  # when: gitea_login.cookies_string is not defined
+  uri:
+    url: https://code.{{ cluster_fqdn }}/user/login
+    method: POST
+    follow_redirects: all
+    body_format: form-urlencoded
+    body:
+      user_name: gitea_admin
+      password: '{{ gitea.admin_password }}'
+    status_code: 200
+    validate_certs: False
+  register: gitea_login
+
+- name: Add flux-cd as Owner of tavros Org
+  tags: [ requires_cluster, non_idempotent, fluxtoolkit_sync ]
+  when: ('dry-run' not in ansible_run_tags)
+  uri:
+    url: https://code.{{ cluster_fqdn }}/org/tavros/teams/owners/action/add
+    method: POST
+    follow_redirects: all
+    body_format: form-urlencoded
+    headers:
+      Cookie: "{{ gitea_login.cookies_string }}"
+    body:
+      _csrf: "{{ gitea_login.cookies._csrf }}"
+      # gitea_admin uid
+      uid: 1
+      uname: flux-cd
+    status_code: 200
+    validate_certs: False
+
+- name: Add/Commit/Push tavros/platform Repo
+  tags: [ requires_cluster, non_idempotent, fluxtoolkit_sync ]
+  when: ('dry-run' not in ansible_run_tags)
+  args:
+    chdir: /tmp/{{ cluster_fqdn }}/
+  shell: |
+    git init
+    git checkout -b main
+    git add .
+    git commit -m "Initial platform state"
+    git push --set-upstream https://flux-cd:{{ flux.gitea.password }}@code.{{ cluster_fqdn }}/tavros/platform.git main
+
+- name: Apply Resources
+  tags: [ requires_cluster, fluxtoolkit_sync ]
+  when: ('dry-run' not in ansible_run_tags)
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
+    src: "{{ item }}"
+    wait: true
+    wait_timeout: 900
+  loop:
+    - /tmp/{{ cluster_fqdn }}/platform/flux-system/secret-git-creds.yaml
+    - /tmp/{{ cluster_fqdn }}/platform/flux-system/gotk-sync.yaml

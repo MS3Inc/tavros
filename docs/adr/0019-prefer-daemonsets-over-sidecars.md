@@ -21,7 +21,7 @@ Which should we favor for cross cutting concern deployments?
 
 ## Decision Outcome
 
-We'll prefer daemonsets over sidecar deployments whenever there is the option. Given that Troubadour is designed as a single tenant platform there are computing resource savings when using daemonsets (deployment per node) vs sidecars (deployment per service).
+We'll prefer daemonsets over sidecar deployments whenever there is the option. Given that Tavros is designed as a single tenant platform there are computing resource savings when using daemonsets (deployment per node) vs sidecars (deployment per service).
 
 ### Positive Consequences <!-- optional -->
 
@@ -34,4 +34,4 @@ We'll prefer daemonsets over sidecar deployments whenever there is the option. G
 ## Links <!-- optional -->
 
 * [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
-* See about single tenancy in [ADR-0029](0029-troubadour-as-a-single-tenant-platform.md)
+* See about single tenancy in [ADR-0029](0029-tavros-as-a-single-tenant-platform.md)

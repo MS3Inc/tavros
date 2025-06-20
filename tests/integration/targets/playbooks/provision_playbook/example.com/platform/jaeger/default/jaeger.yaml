@@ -1,0 +1,31 @@
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: tavros
+  namespace: jaeger
+spec:
+  strategy: production
+  agent:
+    strategy: DaemonSet
+  ingress:
+    enabled: false
+    security: none
+  collector:
+    maxReplicas: 2
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+  ui:
+    options:
+      dependencies:
+        menuEnabled: true
+  storage:
+    type: elasticsearch
+    options:
+      es:
+        server-urls: http://tavros-es-http.elastic-system.svc:9200
+        index-prefix: tavros
+        tags-as-fields:
+          all: true
+    secretName: tavros-es-creds

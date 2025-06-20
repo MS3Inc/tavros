@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: jaeger-agent
+  namespace: elastic-system
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: jaeger-agent
+  namespace: elastic-system
+  labels:
+    app.kubernetes.io/name: jaeger
+    app.kubernetes.io/instance: jaeger
+    app.kubernetes.io/component: agent
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: jaeger
+      app.kubernetes.io/instance: jaeger
+      app.kubernetes.io/component: agent
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jaeger
+        app.kubernetes.io/instance: jaeger
+        app.kubernetes.io/component: agent
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5778"
+    spec:
+      securityContext:
+        {}
+      dnsPolicy: ClusterFirst
+      serviceAccountName: jaeger-agent
+      containers:
+      - name: jaeger-agent
+        securityContext:
+          {}
+        image: jaegertracing/jaeger-agent:1.22.0
+        imagePullPolicy: IfNotPresent
+        args:
+        env:
+        - name: REPORTER_GRPC_HOST_PORT
+          value: 'tavros-apm-http.elastic-system.svc:14250'
+        - name: REPORTER_TYPE_GRPC
+          value: 'true'
+        - name: REPORTER_GRPC_TLS_ENABLED
+          value: 'true'
+        - name: REPORTER_GRPC_TLS_SKIP_HOST_VERIFY
+          value: 'true'
+        ports:
+        - name: zipkin-compact
+          containerPort: 5775
+          hostPort: 5775
+          protocol: UDP
+        - name: jaeger-compact
+          containerPort: 6831
+          hostPort: 6831
+          protocol: UDP
+        - name: jaeger-binary
+          containerPort: 6832
+          hostPort: 6832
+          protocol: UDP
+        - name: http
+          containerPort: 5778
+          hostPort: 5778
+          protocol: TCP
+        - name: admin
+          containerPort: 14271
+          hostPort: 14271
+          protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: admin
+        readinessProbe:
+          httpGet:
+            path: /
+            port: admin

@@ -1,0 +1,98 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: tavros-prod-kong-cp
+  namespace: kong
+spec:
+  targetNamespace: kong
+  interval: 10m
+  chart:
+    spec:
+      # https://github.com/Kong/charts/tree/kong-2.3.0/charts/kong
+      chart: kong
+      version: 2.3.0
+      sourceRef:
+        kind: HelmRepository
+        name: kong
+        namespace: flux-system
+  install:
+    remediation:
+      retries: 5
+  upgrade:
+    remediation:
+      retries: 5
+  values:
+    env:
+      role: control_plane
+      cluster_mtls: pki
+      cluster_ca_cert: /etc/secrets/prod-kong-cp-cert/ca.crt
+      cluster_cert: /etc/secrets/prod-kong-cp-cert/tls.crt
+      cluster_cert_key: /etc/secrets/prod-kong-cp-cert/tls.key
+    
+      # see: https://github.com/elastic/beats/pull/14505
+      # https://docs.konghq.com/gateway-oss/2.4.x/logging/
+      # https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
+      nginx_http_log_format: |
+        extended '$host $remote_addr - $remote_user [$time_local] ' '"$request" $status $body_bytes_sent ' '"$http_referer" "$http_user_agent"'
+      proxy_access_log: /dev/stdout extended
+      database: postgres
+      pg_host: tavros-postgresql.postgresql
+      pg_port: '5432'
+      pg_database:
+        valueFrom:
+          secretKeyRef:
+            name: tavros-prod-kong-pg-creds
+            key: pg_database
+      pg_user:
+        valueFrom:
+          secretKeyRef:
+            name: tavros-prod-kong-pg-creds
+            key: pg_user
+      pg_password:
+        valueFrom:
+          secretKeyRef:
+            name: tavros-prod-kong-pg-creds
+            key: pg_password
+    ingressController:
+      enabled: True
+      ingressClass: prod
+      installCRDs: false
+      env:
+        publish_service: kong/kong-tavros-prod-kong-dp-kong-proxy
+      # see https://github.com/Kong/charts/issues/224
+        kong_admin_tls_skip_verify: 'true'
+      resources:
+        limits:
+          cpu: 100m
+          memory: 256Mi
+        requests:
+          cpu: 50m
+          memory: 128Mi
+    podAnnotations:
+      kuma.io/sidecar-injection: enabled
+      kuma.io/gateway: enabled
+      kuma.io/mesh: prod
+      co.elastic.logs.proxy/enabled: "true"
+      co.elastic.logs.proxy/module: nginx
+      co.elastic.logs.proxy/fileset.stdout: access
+      co.elastic.logs.proxy/fileset.stderr: error
+    admin:
+      enabled: True
+      http:
+        enabled: true
+    proxy:
+      enabled: False
+    cluster:
+      enabled: true
+      tls:
+        enabled: true
+        servicePort: 8005
+        containerPort: 8005
+    clustertelemetry:
+      enabled: true
+      tls:
+        enabled: true
+        servicePort: 8006
+        containerPort: 8006
+    secretVolumes:
+    - prod-kong-cp-cert

@@ -1,91 +1,88 @@
 ---
-- name: Create directory
+- name: Create Directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/gitea
+    path: /tmp/{{ cluster_fqdn }}/platform/gitea/default
     state: directory
+  tags: [ gitea ]
 
-- name: Copy Gitea ns
-  copy:
-    src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/ns.yaml
-
-- name: Generate Admin pass for Gitea
-  when: gitea.admin.password is not defined
+- name: Generate and Merge gitea.admin_password Variable
+  when: gitea.admin_password is not defined
   set_fact:
-    gitea: "{{ gitea | combine({ 'admin': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
+    gitea: "{{ gitea | combine({ 'admin_password': lookup('password', '/dev/null') }, recursive=true) }}"
+  tags: [ gitea ]
 
-- name: Process values-secret template
-  template:
-    src: values-secret.j2
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml
-
-- name: Convert values-secret to SealedSecrets
-  when: ('dry-run' not in ansible_run_tags)
-  shell: |
-    kubeseal --format=yaml </tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml >/tmp/{{ cluster_domain }}/platform/gitea/values-secret.tmp
-    mv /tmp/{{ cluster_domain }}/platform/gitea/values-secret.tmp /tmp/{{ cluster_domain }}/platform/gitea/values-secret.yaml
-
-- name: Copy gitea kustomization
-  copy:
-    src: kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/kustomization.yaml
-
-- name: Copy gitea helm source
-  copy:
-    src: helm-source.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/helm-source.yaml
-
-- name: Copy gitea release
-  copy:
-    src: release.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/release.yaml
-
-- name: Process ingress template
-  template:
-    src: ingress.j2
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/ingress.yaml
-
-- name: Process flux-kustomization template
-  template:
-    src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/gitea.yaml
-
-- name: Generate Keycloak Client Secret
+- name: Generate and Merge gitea.keycloak.client_secret Variable
   when: gitea.keycloak.client_secret is not defined
   set_fact:
     gitea: "{{ gitea | combine({ 'keycloak': { 'client_secret': uuid } } , recursive=true) }}"
   vars:
     uuid: "{{ 1000000 | random | to_uuid }}"
+  tags: [ gitea ]
 
-- name: Process instance keycloak-client templates
+- name: Template Files
   template:
-    src: keycloak-client.j2
-    dest: /tmp/{{ cluster_domain }}/platform/gitea/keycloak-client.yaml
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/gitea/{{ item.dest | default(item.name) }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: kustomization
+    - name: release
+      dest: default/release
+    - name: ingress
+      dest: default/ingress
+    - name: keycloakclient
+      dest: default/keycloakclient
+  tags: [ gitea ]
 
-- name: Apply manifests
+- name: Copy Files
+  copy:
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/gitea/{{ item.dest | default(item.name) }}
+  when: item.condition | default(true)
+  loop:
+    - name: ns.yaml
+    - name: helmrepo.yaml
+    - name: configmap-ca-certs.yaml
+      condition: "{{ 'test-run' in ansible_run_tags }}"
+  tags: [ gitea ]
+
+- name: Apply Resources
+  tags: [ requires_cluster, gitea ]
   when: ('dry-run' not in ansible_run_tags)
-  loop: "{{ lookup('ms3_inc.troubadour.kustomize', '/tmp/' + cluster_domain + '/platform/gitea/', reorder='none') }}"
-  k8s:
+  loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/gitea/', reorder='none') }}"
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
-    wait_timeout: 1800
+    wait_timeout: 900
 
 - include_tasks: keycloak_sso.yaml
+  tags: [ requires_cluster, gitea ]
   when: ('dry-run' not in ansible_run_tags)
 
 - name: Add tavros organization
+  tags: [ requires_cluster, non_idempotent, gitea ]
   when: ('dry-run' not in ansible_run_tags)
   uri:
-    url: https://code.{{ cluster_name }}.{{ cluster_domain }}/api/v1/orgs
+    url: https://code.{{ cluster_fqdn }}/api/v1/orgs
     method: POST
     force_basic_auth: true
     follow_redirects: all
     body_format: json
     url_username: gitea_admin
-    url_password: '{{ gitea.admin.password }}'
+    url_password: '{{ gitea.admin_password }}'
     body:
       username: tavros
       visibility: limited
       repo_admin_change_team_access: true
     status_code: 201
+    validate_certs: False
+
+- name: Template flux-kustomization
+  template:
+    src: flux-kustomization.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/gitea.yaml
+  tags: [ gitea ]

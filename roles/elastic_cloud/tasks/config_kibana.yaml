@@ -1,0 +1,44 @@
+---
+- name: Copy kibana-objects.ndjson to /tmp
+  copy:
+    src: kibana-objects.ndjson
+    dest: /tmp/kibana-objects.ndjson
+  tags: [ elastic_cloud ]
+
+- name: Install Kibana Integrations' Assets
+  tags: [ requires_cluster, elastic_cloud ]
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    curl --insecure --fail -X POST https://kibana.{{ cluster_fqdn }}/api/fleet/epm/packages/{{ item }} \
+    -u elastic:{{ elastic_cloud.generated.elastic_password }} \
+    -H kbn-xsrf:true
+  loop:
+    - kubernetes-0.5.2
+    - postgresql-0.4.0
+    - nginx-0.5.0
+
+- name: Import Kibana Objects
+  tags: [ requires_cluster, elastic_cloud ]
+  when: ('dry-run' not in ansible_run_tags)
+  shell: |
+    curl --insecure --fail -X POST https://kibana.{{ cluster_fqdn }}/api/saved_objects/_import?createNewCopies=false \
+     -u elastic:{{ elastic_cloud.generated.elastic_password }} \
+     -H kbn-xsrf:true \
+     --form file=@/tmp/kibana-objects.ndjson
+
+  # Leaving this here in case we can figure how to do the import this way to forego the file copy
+  # Elastic complains about the file being a String and not a Stream
+  # uri:
+  #   url: https://kibana.{{ cluster_fqdn }}/api/saved_objects/_import
+  #   method: POST
+  #   force_basic_auth: true
+  #   follow_redirects: all
+  #   body_format: form-multipart
+  #   url_username: elastic
+  #   url_password: "{{ elastic_cloud.generated.elastic_password }}"
+  #   headers:
+  #     kbn-xsrf: 'true'
+  #   body:
+  #     file: "{{ lookup('file', 'kibana-objects.ndjson') }}"
+  #   status_code: 200
+  #   validate_certs: False

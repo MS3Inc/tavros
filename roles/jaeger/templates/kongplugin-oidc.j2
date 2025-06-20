@@ -1,0 +1,20 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: tavros-oidc-jaeger
+  namespace: jaeger
+  annotations:
+    kubernetes.io/ingress.class: {{ kong.default_ingress_class }}
+config:
+  issuer: "https://auth.{{ cluster_fqdn }}/auth/realms/{{ jaeger.keycloak.realm }}"
+  client_id:
+  - jaeger
+  client_secret:
+  - "{{ jaeger.keycloak.client_secret }}"
+  redirect_uri:
+  - https://jaeger.{{ cluster_fqdn }}
+  ssl_verify: false
+  roles_claim: [ "roles" ]
+  roles_required:
+  - user
+plugin: openid-connect

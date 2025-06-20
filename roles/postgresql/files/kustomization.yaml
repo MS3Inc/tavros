@@ -3,13 +3,7 @@ kind: Kustomization
 namespace: postgresql
 resources:
   - ns.yaml
-  - default-release.yaml
-  - config-secret.yaml
-  - schema-init-job.yaml
-configMapGenerator:
-  - name: setup-config
-    namespace: postgresql
-    files:
-      - setup.sql=setup.sql
-generatorOptions:
-  disableNameSuffixHash: true
+  - default/secret-pg-creds.yaml
+  - default/secret-schema-init-script.yaml
+  - default/release.yaml
+  - default/job-schema-init.yaml

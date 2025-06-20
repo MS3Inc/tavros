@@ -1,89 +1,121 @@
 ---
-- name: Create directory
+- name: Create Directory
   file:
-    path: /tmp/{{ cluster_domain }}/platform/jenkins/default
+    path: /tmp/{{ cluster_fqdn }}/platform/jenkins/default
     state: directory
+  tags: [ jenkins ]
 
-- name: Copy operator
-  copy:
-    src: operator
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/
+- name: Generate and Merge jenkins.gitea.password Variable
+  when: jenkins.gitea.password is not defined
+  set_fact:
+    jenkins: "{{ jenkins | combine({ 'gitea': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
+  tags: [ jenkins ]
 
-- name: Copy jenkins ns
-  copy:
-    src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/ns.yaml
+- name: Generate and Merge jenkins.keycloak.password Variable
+  when: jenkins.keycloak.password is not defined
+  set_fact:
+    jenkins: "{{ jenkins | combine({ 'keycloak': { 'password': lookup('password', '/dev/null') } } , recursive=true) }}"
+  tags: [ jenkins ]
 
-- name: Copy base kustomization
-  copy:
-    src: base-kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/kustomization.yaml
-
-- name: Copy instance kustomization
-  copy:
-    src: instance-kustomization.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/kustomization.yaml
-
-- name: Copy gitea credentials
-  copy:
-    src: gitea-credentials.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/gitea-credentials.yaml
-
-- name: Process ingress template
+- name: Template Files
   template:
-    src: ingress.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/ingress.yaml
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/{{ item.dest | default(item.name) }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: configmap-jenkins-config
+      dest: default/configmap-jenkins-config
+    - name: ingress
+      dest: default/ingress
+    - name: keycloakclient
+      dest: default/keycloakclient
+    - name: keycloakuser-jenkins-ci
+      dest: default/keycloakuser-jenkins-ci
+    - name: secret-gitea-creds
+      dest: default/secret-gitea-creds
+    - name: secret-keycloak-creds
+      dest: default/secret-keycloak-creds
+  tags: [ jenkins ]
 
-- name: Process configuration template
+- name: Template secret-artifacts-registry File
   template:
-    src: config.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/config.yaml
+    src: secret-artifacts-registry.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/default/secret-artifacts-registry.yaml
+  vars:
+    config:
+      auths: "{{ { 'registry.' + cluster_fqdn : { 'auth' : ('jenkins-ci:' + jenkins.keycloak.password) | b64encode } } }}"
+  tags: [ jenkins ]
 
-- name: Process keycloak client template
-  template:
-    src: keycloak-client.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/keycloak-client.yaml
-
-- name: Process keycloak user template
-  template:
-    src: keycloak-user.j2
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/keycloak-user.yaml
-
-- name: Copy jenkins instance
+- name: Copy Files
   copy:
-    src: default-instance.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/jenkins/default/instance.yaml
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/jenkins/{{ item.dest | default(item.name) }}
+  when: item.condition | default(true)
+  loop:
+    - name: base-kustomization.yaml
+      dest: kustomization.yaml
+    - name: instance-kustomization.yaml
+      dest: default/kustomization.yaml
+    - name: jenkins.yaml
+      dest: default/jenkins.yaml
+    - name: operator
+      dest: ""
+  tags: [ jenkins ]
 
-- name: Apply operator manifests
+- name: Seal Secrets
+  tags: [ requires_cluster, jenkins ]
+  when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/jenkins/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/jenkins/{{ item.name }}.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/jenkins/{{ item.name }}.tmp /tmp/{{ cluster_fqdn }}/platform/jenkins/{{ item.name }}.yaml
+  loop:
+    - name: default/secret-gitea-creds
+    - name: default/secret-artifacts-registry
+    - name: default/secret-keycloak-creds
+
+- name: Apply Operator Resources
+  tags: [ requires_cluster, jenkins ]
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/jenkins/operator/0.5.0
-  k8s:
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins/operator
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
 
-- name: Apply manifests
+- name: Apply Resources
+  tags: [ requires_cluster, jenkins ]
   when: ('dry-run' not in ansible_run_tags)
-  with_ms3_inc.troubadour.kustomize:  /tmp/{{ cluster_domain }}/platform/jenkins
-  k8s:
+  with_ms3_inc.tavros.kustomize:  /tmp/{{ cluster_fqdn }}/platform/jenkins
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
 
 - name: Wait for Jenkins
+  tags: [ requires_cluster, jenkins ]
   when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s_info:
+  ms3_inc.tavros.kube_info:
+    kubeconfig: '~/.kube/config'
     kind: Pod
-    name: jenkins-troubadour
+    name: jenkins-tavros
     namespace: jenkins
     wait: true
-    wait_sleep: 10
-    wait_timeout: 3600
+    wait_timeout: 900
   changed_when: false
 
-- name: Process flux-kustomization template
+- include_tasks: gitea_setup.yaml
+  tags: [ jenkins ]
+
+- name: Template flux-kustomization
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/jenkins.yaml
-
-- include_tasks: gitea_setup.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/jenkins.yaml
+  tags: [ jenkins ]

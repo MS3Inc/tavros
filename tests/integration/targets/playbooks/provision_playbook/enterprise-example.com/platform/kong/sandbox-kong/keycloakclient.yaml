@@ -1,0 +1,22 @@
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakClient
+metadata:
+  name: sandbox-kong
+  namespace: keycloak
+  labels:
+    client: sandbox-kong
+spec:
+  realmSelector:
+    matchLabels:
+        realm: sandbox
+  client:
+    clientId: sandbox-kong
+    secret: placeholder14
+    clientAuthenticatorType: client-secret
+    protocol: openid-connect
+    rootUrl: https://admin.sandbox-kong.tavros.enterprise-example.com
+    redirectUris:
+    - "https://admin.sandbox-kong.tavros.enterprise-example.com/*"
+    directAccessGrantsEnabled: True
+    standardFlowEnabled: True
+    enabled: True

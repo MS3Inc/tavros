@@ -1,0 +1,39 @@
+---
+- name: Set kubernetes_cluster Default Variables
+  set_fact:
+    kubernetes_cluster: "{{ defaults | combine(kubernetes_cluster, recursive=true)  }}"
+  vars:
+    defaults:
+      dns_zone: "{{ cluster_fqdn }}"
+
+- name: Generate and Merge kubernetes_cluster.keycloak.client_secret Variable
+  when: kubernetes_cluster.keycloak.client_secret is not defined
+  set_fact:
+    kubernetes_cluster: "{{ kubernetes_cluster | combine({ 'keycloak': { 'client_secret': uuid } } , recursive=true) }}"
+  vars:
+    uuid: "{{ 1000000 | random | to_uuid }}"
+    
+- name: Add Custom wait_conditions
+  set_fact:
+    wait_conditions:
+      HelmRelease:
+        type: Ready
+        status: true
+        reason: ReconciliationSucceeded
+      CustomResourceDefinition:
+        type: Established
+        status: true
+        reason: InitialNamesAccepted
+
+- name: Configure Git User
+  shell: |
+    git config --global user.email
+    if [ $? -ne 0 ]; then
+      git config --global user.email "{{ cluster_admin_email }}"
+      git config --global user.name "tavros/provision_playbook"
+    fi
+
+- name: Disable Git SSL-Verify
+  when: "'test-run' in ansible_run_tags"
+  shell: |
+    git config --global http.sslVerify false

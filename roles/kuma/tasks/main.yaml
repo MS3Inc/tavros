@@ -1,39 +1,49 @@
 ---
-- name: Create directory
+- name: Create Directories
+  loop: "{{ kuma.meshes }}"
   file:
-    path: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/
+    path: /tmp/{{ cluster_fqdn }}/platform/kuma-system/{{ item.name }}
     state: directory
 
-- name: Process mesh template
-  with_list: '{{ kuma.meshes }}'
+- name: Template Files
   template:
-    src: mesh.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/meshes/{{ item.name }}.yaml
+    src: "{{ item.name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kuma-system/{{ item.name }}.yaml
+  when: item.condition | default(true)
+  loop:
+    - name: kustomization
 
-- name: Process kuma kustomization template
+- name: Copy Files
+  copy:
+    src: "{{ item.name }}"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kuma-system/{{ item.name }}
+  when: item.condition | default(true)
+  loop:
+    - name: ns.yaml
+    - name: release.yaml
+
+- name: Template Mesh Files
   template:
-    src: kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/kustomization.yaml
+    src: "{{ item[1] }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kuma-system/{{ item[0].name }}/{{ item[1] }}.yaml
+  with_nested:
+    - "{{ kuma.meshes }}"
+    - ['mesh', 'traffictrace']
 
-- name: Copy kuma namespace
-  copy:
-    src: ns.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/ns.yaml
-
-- name: Copy kuma default release
-  copy:
-    src: default-release.yaml
-    dest: /tmp/{{ cluster_domain }}/platform/kuma-system/default-release.yaml
-
-- name: Apply Kuma release
-  when: "'dry-run' not in ansible_run_tags"
-  with_ms3_inc.troubadour.kustomize: /tmp/{{ cluster_domain }}/platform/kuma-system/
-  k8s:
+- name: Apply Resources
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags)
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kuma-system/
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
 
-- name: Process flux-kustomization template
+- name: Template flux-kustomization
   template:
     src: flux-kustomization.j2
-    dest: /tmp/{{ cluster_domain }}/platform/flux-system/watches/kuma-system.yaml
+    dest: /tmp/{{ cluster_fqdn }}/platform/flux-system/watches/kuma-system.yaml

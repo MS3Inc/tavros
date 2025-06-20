@@ -1,0 +1,116 @@
+---
+- name: Template Keycloak Client File
+  when: item.ee.enabled
+  template:
+    src: keycloakclient.j2
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/keycloakclient.yaml
+  loop: "{{ kong.instances }}"
+  tags: [ kong_ee_sso ]
+
+- name: Add Keycloak Client Resource to Kong Resources
+  when: item.ee.enabled
+  lineinfile:
+    path: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item.name }}/kustomization.yaml
+    line: "  - keycloakclient.yaml"
+    insertafter: "resources:"
+  loop: "{{ kong.instances }}"
+  tags: [ kong_ee_sso ]
+
+- name: Apply Updated Resources
+  tags: [ requires_cluster, kong_ee_sso ]
+  when: ('dry-run' not in ansible_run_tags)
+  with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kong/
+  loop_control:
+    label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
+    definition: "{{ item }}"
+    wait: true
+    wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
+    wait_timeout: 900
+
+- name: Wait for Keycloak
+  tags: [ requires_cluster, kong_ee_sso ]
+  when: ('dry-run' not in ansible_run_tags)
+  ms3_inc.tavros.kube_info:
+    kubeconfig: '~/.kube/config'
+    api_version: keycloak.org/v1alpha1
+    kind: Keycloak
+    name: tavros
+    namespace: keycloak
+  register: keycloak_def
+  # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
+  until: ('status' in keycloak_def.resources[0]) and (keycloak_def.resources[0].status.ready)
+  retries: 30
+  delay: 30
+  changed_when: false
+
+- name: Create Keycloak kong.name Client Roles
+  tags: [ requires_cluster, kong_ee_sso ]
+  when: ('dry-run' not in ansible_run_tags) and item.ee.enabled
+  loop: "{{ kong.instances }}"
+  ms3_inc.tavros.keycloak_client_roles:
+    auth_keycloak_url: 'https://auth.{{ cluster_fqdn }}/auth'
+    validate_certs: false
+    auth_realm: master
+    auth_username: admin
+    auth_password: "{{ lookup('ms3_inc.tavros.kube', kubeconfig='~/.kube/config', kind='Secret', namespace='keycloak', resource_name='credential-tavros').data.ADMIN_PASSWORD | b64decode }}"
+    realm: "{{ item.ee.keycloak.realm }}"
+    clientId: "{{ item.name }}"
+    roles:
+    - name: "super-admin"
+
+- name: Add Keycloak kong.name Client Role super-admin to Realm Admin User
+  when: item.ee.enabled
+  loop: "{{ kong.instances }}"
+  blockinfile:
+    marker_begin: "Begin {{ item.name }} Kong"
+    marker_end: "End {{ item.name }} Kong"
+    path: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}/keycloakuser-admin.yaml
+    insertafter: "    clientRoles:"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK"
+    block: |2
+            {{ item.name }}:
+              - super-admin
+  tags: [ kong_ee_sso ]
+
+- name: Apply Updated Keycloak Realm Admin User Resource
+  tags: [ requires_cluster, kong_ee_sso ]
+  when: ('dry-run' not in ansible_run_tags) and item.ee.enabled
+  loop: "{{ kong.instances }}"
+  ms3_inc.tavros.kube:
+    kubeconfig: '~/.kube/config'
+    state: present
+    src: /tmp/{{ cluster_fqdn }}/platform/keycloak/default/{{ item.ee.keycloak.realm }}/keycloakuser-admin.yaml
+
+- name: Create Kong Admins
+  tags: [ requires_cluster, non_idempotent, kong_ee_sso ]
+  when: ('dry-run' not in ansible_run_tags) and item.ee.enabled
+  uri:
+    url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins?username={{ cluster_admin_email }}&email={{ cluster_admin_email }}"
+    method: POST
+    status_code: 200
+    headers:
+      kong-admin-token: "{{ item.ee.admin_password }}"
+    validate_certs: False
+  register: _result
+  until: _result.status == 200
+  retries: 5
+  delay: 30
+  loop: "{{ kong.instances }}"
+
+- name: Add Kong super-admin Role to Admins
+  tags: [ requires_cluster, non_idempotent, kong_ee_sso ]
+  when: ('dry-run' not in ansible_run_tags) and item.ee.enabled
+  uri:
+    url: "https://admin-api.{{ item.name }}.{{ cluster_fqdn }}/admins/{{ cluster_admin_email }}/roles?roles=super-admin"
+    method: POST
+    status_code: 201
+    headers:
+      kong-admin-token: "{{ item.ee.admin_password }}"
+    validate_certs: False
+  register: _result
+  until: _result.status == 201
+  retries: 5
+  delay: 30
+  loop: "{{ kong.instances }}"

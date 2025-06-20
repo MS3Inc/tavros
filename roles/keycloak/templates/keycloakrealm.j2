@@ -1,0 +1,17 @@
+---
+apiVersion: keycloak.org/v1alpha1
+kind: KeycloakRealm
+metadata:
+  name: tavros-{{ item[0].name }}
+  namespace: keycloak
+  labels:
+    realm: {{ item[0].name }}
+spec:
+  instanceSelector:
+    matchLabels:
+      app.tavros/component: auth
+  realm:
+    id: {{ item[0].name }}
+    realm: {{ item[0].name }}
+    enabled: True
+    displayName: {{ item[0].name }}

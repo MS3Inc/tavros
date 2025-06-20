@@ -1,0 +1,46 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ item[0].name }}-cp
+  namespace: kong
+spec:
+  commonName: {{ item[0].name }}-cp
+  secretName: {{ item[0].name }}-cp-cert
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  usages:
+  - digital signature
+  - key encipherment
+  - key agreement
+  - server auth
+  dnsNames:
+  - kong-tavros-{{ item[0].name }}-cp-kong-cluster.kong.svc.cluster.local
+  - kong-tavros-{{ item[0].name }}-cp-kong-clustertelemetry.kong.svc.cluster.local
+  issuerRef:
+    name: tavros-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ item[0].name }}-dp
+  namespace: kong
+spec:
+  commonName: {{ item[0].name }}-dp
+  secretName: {{ item[0].name }}-dp-cert
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  usages:
+  - digital signature
+  - key encipherment
+  - key agreement
+  - client auth
+  dnsNames:
+  - kong-tavros-{{ item[0].name }}-dp-kong-proxy.kong.svc.cluster.local
+  issuerRef:
+    name: tavros-ca
+    kind: ClusterIssuer
+    group: cert-manager.io

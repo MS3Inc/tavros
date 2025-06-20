@@ -1,0 +1,74 @@
+---
+- name: Template Instance Files
+  template:
+    src: "{{ item[1].name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].dest | default(item[1].name) }}.yaml
+  with_nested:
+    - "{{ kong.instances }}"
+    -
+      - name: secret-pg-creds
+      - name: instance-kustomization
+        dest: kustomization
+      - name: ingress
+
+- name: Template Distributed Release
+  when: ( (not item[0].hybrid) | default(false))
+  template:
+    src: "{{ item[1].name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].dest | default(item[1].name) }}.yaml
+  with_nested:
+    - "{{ kong.instances }}"
+    -
+      - name: release
+
+- name: Template Hybrid Release
+  when: (item[0].hybrid | default(false))
+  template:
+    src: "{{ item[1].name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].dest | default(item[1].name) }}.yaml
+  with_nested:
+    - "{{ kong.instances }}"
+    -
+      - name: release
+        dest: release-cp
+        role: control_plane
+      - name: release
+        dest: release-dp
+        role: data_plane
+      - name: hybrid-certs
+
+- name: Seal Instance Secrets
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags) and (item[1].condition | default(true))
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.tmp /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.yaml
+  with_nested:
+    - "{{ kong.instances }}"
+    -
+      - name: secret-pg-creds
+
+- name: Template Instance EE Files
+  template:
+    src: "{{ item[1].name }}.j2"
+    dest: /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].dest | default(item[1].name) }}.yaml
+  when: item[0].ee.enabled
+  with_nested:
+    - "{{ kong.instances }}"
+    -
+      - name: secret-ee-admin-creds
+      - name: secret-ee-admin-gui-auth
+      - name: secret-ee-admin-gui-session
+
+- name: Seal Instance EE Secrets
+  tags: [ requires_cluster ]
+  when: ('dry-run' not in ansible_run_tags) and (item[0].ee.enabled)
+  shell: |
+    kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.tmp
+    mv /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.tmp /tmp/{{ cluster_fqdn }}/platform/kong/{{ item[0].name }}/{{ item[1].name }}.yaml
+  with_nested:
+    - "{{ kong.instances }}"
+    -
+      - name: secret-ee-admin-creds
+      - name: secret-ee-admin-gui-auth
+      - name: secret-ee-admin-gui-session

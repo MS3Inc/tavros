@@ -1,0 +1,75 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tavros-{{ item[0].name }}
+  namespace: kong
+  annotations:
+    konghq.com/strip-path: "true"
+    konghq.com/protocols: https
+    kubernetes.io/ingress.class: {{ item[0].ingress_class }}
+    cert-manager.io/cluster-issuer: tavros
+    konghq.com/https-redirect-status-code: '302'
+spec:
+  tls:
+  - hosts:
+{%  if item[0].ee.enabled %}
+    - "admin-api.{{ item[0].name }}.{{ cluster_fqdn }}"
+    - "admin.{{ item[0].name }}.{{ cluster_fqdn }}"
+    - "dev-portal-api{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
+    - "dev-portal{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
+{% endif  %}
+    - "apps{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
+    secretName: {{ item[0].name }}-ingress-certs
+  rules:
+{%  if item[0].ee.enabled %}
+  - host: "admin-api.{{ item[0].name }}.{{ cluster_fqdn }}"
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kong-tavros-{{ item[0].name }}{{'-cp' if (item[0].hybrid) }}-kong-admin
+            port:
+              number: 8001
+  - host: "admin.{{ item[0].name }}.{{ cluster_fqdn }}"
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kong-tavros-{{ item[0].name }}{{'-cp' if (item[0].hybrid) }}-kong-manager
+            port:
+              number: 8002
+  - host: "dev-portal{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kong-tavros-{{ item[0].name }}{{'-cp' if (item[0].hybrid) }}-kong-portal
+            port:
+              number: 8003
+  - host: "dev-portal-api{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kong-tavros-{{ item[0].name }}{{'-cp' if (item[0].hybrid) }}-kong-portalapi
+            port:
+              number: 8004
+{% endif  %}
+  - host: "apps{{ ('.' + item[0].ingress_class) if (item[0].ingress_class != kong.default_ingress_class) else ('') }}.{{ cluster_fqdn }}"
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: kong-tavros-{{ item[0].name }}{{'-dp' if (item[0].hybrid) }}-kong-proxy
+            port:
+              number: 80

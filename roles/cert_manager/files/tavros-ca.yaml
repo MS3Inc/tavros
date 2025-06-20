@@ -1,0 +1,33 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: tavros-selfsigned-ca
+  namespace: cert-manager
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tavros-ca-root
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: tavros-ca
+  secretName: tavros-ca-root
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: tavros-selfsigned-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: tavros-ca
+  namespace: cert-manager
+spec:
+  ca:
+    secretName: tavros-ca-root

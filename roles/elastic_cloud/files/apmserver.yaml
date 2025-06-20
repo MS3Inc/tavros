@@ -1,0 +1,26 @@
+apiVersion: apm.k8s.elastic.co/v1
+kind: ApmServer
+metadata:
+  name: tavros
+  namespace: elastic-system
+spec:
+  version: 7.13.4
+  count: 1
+  elasticsearchRef:
+    name: tavros
+  kibanaRef:
+    name: tavros
+  config:
+    name: elastic-apm
+    apm-server.jaeger.grpc.enabled: true
+    apm-server.jaeger.grpc.host: "0.0.0.0:14250"
+  http:
+    service:
+      spec:
+        ports:
+          - name: http
+            port: 8200
+            targetPort: 8200
+          - name: grpc
+            port: 14250
+            targetPort: 14250

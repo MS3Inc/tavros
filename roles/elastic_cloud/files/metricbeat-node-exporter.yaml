@@ -1,0 +1,144 @@
+apiVersion: beat.k8s.elastic.co/v1beta1
+kind: Beat
+metadata:
+  name: tavros-metricbeat-node-exporter
+  namespace: elastic-system
+spec:
+  type: metricbeat
+  version: 7.13.4
+  elasticsearchRef:
+    name: tavros
+  kibanaRef:
+    name: tavros
+  config:
+    setup.template.enabled: false
+    setup.ilm.enabled: false
+    setup.dashboards.enabled: false
+    output.elasticsearch:
+      index: "metrics-%{[data_stream.dataset]}-%{[data_stream.namespace]}"
+    metricbeat:
+      autodiscover:
+        providers:
+        - type: kubernetes
+          scope: node
+          node: ${NODE_NAME}
+          hints:
+            default_config: {}
+            enabled: "true"
+      modules:
+      - module: system
+        period: 30s
+        metricsets:
+        - cpu
+        - load
+        - memory
+        - network
+        - process
+        - process_summary
+        process:
+          include_top_n:
+            by_cpu: 5
+            by_memory: 5
+        processes:
+        - .*
+      - module: system
+        period: 1m
+        metricsets:
+        - filesystem
+        - fsstat
+        processors:
+        - drop_event:
+            when:
+              regexp:
+                system:
+                  filesystem:
+                    mount_point: ^/(sys|cgroup|proc|dev|etc|host|lib)($|/)
+      - module: kubernetes
+        period: 30s
+        node: ${NODE_NAME}
+        hosts:
+        - http://${NODE_NAME}:10255
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        ssl:
+          verification_mode: none
+          certificate_authorities:
+          - /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        add_metadata: true
+        enabled: true
+        metricsets:
+        - node
+        - system
+        - pod
+        - container
+        - volume
+      - module: kubernetes
+        enabled: true
+        metricsets:
+        - proxy
+        hosts:
+        - http://localhost:10249
+        period: 30s
+    processors:
+    - add_fields:
+        target: data_stream
+        fields:
+          type: metrics
+          dataset: generic
+          namespace: default
+    - script:
+        lang: javascript
+        id: dataset_override
+        source: >
+          function process(event) {
+            var ns = event.Get("kubernetes.namespace");
+            if (ns != null) event.Put("data_stream.namespace", "k8s." + ns);
+
+            var mod = event.Get("event.module");
+            var ms = event.Get("metricset.name");
+            if (mod != null && ms != null) event.Put("data_stream.dataset", mod + "." + ms);
+          }
+    - add_cloud_metadata: {}
+    - add_host_metadata: {}
+    - add_kubernetes_metadata: {}
+  daemonSet:
+    podTemplate:
+      spec:
+        serviceAccountName: metricbeat
+        automountServiceAccountToken: true # some older Beat versions are depending on this settings presence in k8s context
+        tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+        containers:
+        - args:
+          - -e
+          - -c
+          - /etc/beat.yml
+          - -system.hostfs=/hostfs
+          name: metricbeat
+          volumeMounts:
+          - mountPath: /hostfs/sys/fs/cgroup
+            name: cgroup
+          - mountPath: /var/run/docker.sock
+            name: dockersock
+          - mountPath: /hostfs/proc
+            name: proc
+          env:
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: spec.nodeName
+        dnsPolicy: ClusterFirstWithHostNet
+        hostNetwork: true # Allows to provide richer host metadata
+        securityContext:
+          runAsUser: 0
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - hostPath:
+            path: /sys/fs/cgroup
+          name: cgroup
+        - hostPath:
+            path: /var/run/docker.sock
+          name: dockersock
+        - hostPath:
+            path: /proc
+          name: proc

@@ -1,0 +1,11 @@
+---
+- name: Store Tavros Vars
+  collections:
+    - azure.azcollection
+  azure_rm_storageblob:
+    resource_group: "{{ aks.resource_group }}"
+    storage_account_name: "{{ aks.storage_account_name }}"
+    container: "vars"
+    blob: "{{ cluster_fqdn }}_vars.yaml"
+    src: "/tmp/{{ cluster_fqdn }}_vars.yaml"
+    force: true

@@ -1,0 +1,26 @@
+apiVersion: kuma.io/v1alpha1
+kind: Mesh
+metadata:
+  name: sandbox
+  namespace: kuma-system
+spec:
+  mtls:
+    enabledBackend: ca-1
+    backends:
+      - name: ca-1
+        type: builtin
+        dpCert:
+          rotation:
+            expiration: 1d
+        conf:
+          caCert:
+            RSAbits: 2048
+            expiration: 10y
+  tracing:
+    defaultBackend: jaeger-collector
+    backends:
+      - name: jaeger-collector
+        type: zipkin
+        sampling: 100
+        conf:
+          url: http://tavros-collector.jaeger.svc.cluster.local:9411/api/v2/spans

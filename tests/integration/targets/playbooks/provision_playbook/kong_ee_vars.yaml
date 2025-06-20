@@ -2,13 +2,21 @@
 all:
   vars:
     kubernetes_cluster:
-      cloud: 'aws'
-      master_count: 1
-      master_size: 't2.large'
-      node_count: 2
-      node_size: 't2.xlarge'
-      zones: 'us-east-1a,us-east-1b'
-      state_bucket: 'troubadour'
+      cloud_provider: 'aws'
+      master_count: 3
+      master_instance_type: 't2.large'
+      master_azs: 'us-east-1a,us-east-1b'
+      worker_count: 2
+      worker_instance_type: 't2.xlarge'
+      worker_azs: 'us-east-1a,us-east-1b'
+      dns_zone: "{{ cluster_fqdn }}"
+      keycloak:
+        client_secret: 'placeholder17'
+        realm: prod
+    aks:
+      enabled: false
+    kops:
+      enabled: false
     kong:
       default_ingress_class: 'prod'
       ee_creds:
@@ -19,6 +27,7 @@ all:
             password: 'placeholder4'
       instances:
       - name: 'sandbox-kong'
+        hybrid: false
         ingress_class: 'sandbox'
         pg:
           password: placeholder1
@@ -30,6 +39,7 @@ all:
             client_secret: 'placeholder14'
           admin_password: 'placeholder10'
       - name: 'prod-kong'
+        hybrid: true
         ingress_class: 'prod'
         pg:
           password: placeholder2
@@ -41,6 +51,7 @@ all:
             client_secret: 'placeholder12'
           admin_password: 'placeholder13'
     kuma:
+      enabled: false
       meshes: []
     namespaces: []
     keycloak:
@@ -86,3 +97,4 @@ all:
       enabled: false
       keycloak:
         realm: 'prod'
+    flux: {}
