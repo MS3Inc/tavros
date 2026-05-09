@@ -6,23 +6,23 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: prod
-    konghq.com/strip-path: 'true'
+    konghq.com/strip-path: "true"
     konghq.com/protocols: https
-    konghq.com/https-redirect-status-code: '302'
+    konghq.com/https-redirect-status-code: "302"
     konghq.com/plugins: tavros-oidc-jaeger
 spec:
   rules:
-  - host: jaeger.tavros.example.com
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: tavros-query
-            port:
-              name: http-query
+    - host: jaeger.tavros.example.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: tavros-query
+                port:
+                  name: http-query
   tls:
-  - hosts:
-    - jaeger.tavros.example.com
-    secretName: jaeger-ingress-cert
+    - hosts:
+        - jaeger.tavros.example.com
+      secretName: jaeger-ingress-cert

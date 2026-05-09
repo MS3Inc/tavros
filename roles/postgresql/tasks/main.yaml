@@ -31,7 +31,7 @@
       dest: default/job-schema-init.yaml
 
 - name: Seal Secrets
-  tags: [ requires_cluster]
+  tags: [requires_cluster]
   when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.name }}.yaml >/tmp/{{ cluster_fqdn }}/platform/postgresql/{{ item.name }}.tmp
@@ -41,13 +41,13 @@
     - name: default/secret-schema-init-script
 
 - name: Apply Resources
-  tags: [ requires_cluster]
+  tags: [requires_cluster]
   when: ('dry-run' not in ansible_run_tags)
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/postgresql/', reorder='none') }}"
   loop_control:
     label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
   ms3_inc.tavros.kube:
-    kubeconfig: '~/.kube/config'
+    kubeconfig: "~/.kube/config"
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"

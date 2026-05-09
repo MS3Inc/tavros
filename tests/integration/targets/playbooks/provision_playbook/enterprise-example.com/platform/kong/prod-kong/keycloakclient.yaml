@@ -8,7 +8,7 @@ metadata:
 spec:
   realmSelector:
     matchLabels:
-        realm: prod
+      realm: prod
   client:
     clientId: prod-kong
     secret: placeholder12
@@ -16,7 +16,7 @@ spec:
     protocol: openid-connect
     rootUrl: https://admin.prod-kong.tavros.enterprise-example.com
     redirectUris:
-    - "https://admin.prod-kong.tavros.enterprise-example.com/*"
+      - "https://admin.prod-kong.tavros.enterprise-example.com/*"
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
     enabled: True

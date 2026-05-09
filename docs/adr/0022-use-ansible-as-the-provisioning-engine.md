@@ -1,8 +1,8 @@
 # Use Ansible as Provisioning Engine
 
-* Status: accepted
-* Deciders: Mohammad Naeem, @jam01
-* Date: 2020-11
+- Status: accepted
+- Deciders: Mohammad Naeem, @jam01
+- Date: 2020-11
 
 ## Context and Problem Statement
 
@@ -10,13 +10,13 @@
 
 ## Decision Drivers <!-- optional -->
 
-* Flexibility
-* Maintainability
+- Flexibility
+- Maintainability
 
 ## Considered Options
 
-* Bash
-* Ansible
+- Bash
+- Ansible
 
 ## Decision Outcome
 
@@ -24,15 +24,15 @@ We'll use Ansible as the provisioning engine. Ansible modules, variable handling
 
 ### Positive Consequences <!-- optional -->
 
-* Ansible being a desired-state engine enables idempotency
-* Simpler setup
+- Ansible being a desired-state engine enables idempotency
+- Simpler setup
 
 ### Negative Consequences <!-- optional -->
 
-* A learning curve to Ansible, playbooks, roles, etc
+- A learning curve to Ansible, playbooks, roles, etc
 
 ## Links <!-- optional -->
 
-* [Ansible](https://www.ansible.com/)
-* [Kubernetes Ansible](https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_module.html)
-* [Ansible Operator SDK](https://sdk.operatorframework.io/docs/building-operators/ansible/tutorial/)
+- [Ansible](https://www.ansible.com/)
+- [Kubernetes Ansible](https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_module.html)
+- [Ansible Operator SDK](https://sdk.operatorframework.io/docs/building-operators/ansible/tutorial/)

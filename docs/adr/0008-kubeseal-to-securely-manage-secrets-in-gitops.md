@@ -1,8 +1,8 @@
 # Kubeseal to Securely Manage Secrets in GitOps
 
-* Status: accepted
-* Deciders: @jam01, @rmccright-ms3
-* Date: 2020-09
+- Status: accepted
+- Deciders: @jam01, @rmccright-ms3
+- Date: 2020-09
 
 ## Context and Problem Statement
 
@@ -10,8 +10,8 @@ In order to store secrets safely in a public or private Git repository, what too
 
 ## Decision Drivers <!-- optional -->
 
-* Simplicity
-* Integration with Flux
+- Simplicity
+- Integration with Flux
 
 ## Decision Outcome
 
@@ -19,5 +19,5 @@ We'll use Bitnami's Sealed Secrets controller to securely manage secrets in GitO
 
 ## Links <!-- optional -->
 
-* [Flux Sealed Secrets recommendation](https://toolkit.fluxcd.io/guides/sealed-secrets/)
-* [Sealed Secrets project](https://github.com/bitnami-labs/sealed-secrets)
+- [Flux Sealed Secrets recommendation](https://toolkit.fluxcd.io/guides/sealed-secrets/)
+- [Sealed Secrets project](https://github.com/bitnami-labs/sealed-secrets)

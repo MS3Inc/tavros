@@ -1,8 +1,8 @@
 # Prefer Daemonsets over Sidecars
 
-* Status: accepted
-* Deciders: @jam01
-* Date: 2020-11
+- Status: accepted
+- Deciders: @jam01
+- Date: 2020-11
 
 ## Context and Problem Statement
 
@@ -12,12 +12,12 @@ Which should we favor for cross cutting concern deployments?
 
 ## Decision Drivers <!-- optional -->
 
-* Cost
+- Cost
 
 ## Considered Options
 
-* Sidecars
-* Daemonsets
+- Sidecars
+- Daemonsets
 
 ## Decision Outcome
 
@@ -25,13 +25,13 @@ We'll prefer daemonsets over sidecar deployments whenever there is the option. G
 
 ### Positive Consequences <!-- optional -->
 
-* Less resource utilization
+- Less resource utilization
 
 ### Negative Consequences <!-- optional -->
 
-* Would have to refactor in order to support multi-tenancy
+- Would have to refactor in order to support multi-tenancy
 
 ## Links <!-- optional -->
 
-* [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
-* See about single tenancy in [ADR-0029](0029-tavros-as-a-single-tenant-platform.md)
+- [DaemonSet](https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/)
+- See about single tenancy in [ADR-0029](0029-tavros-as-a-single-tenant-platform.md)

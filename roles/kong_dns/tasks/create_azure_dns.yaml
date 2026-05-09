@@ -1,6 +1,6 @@
 - name: Set DNS for Kongs by Name
   when: ('dry-run' not in ansible_run_tags)
-  tags: [ kong_dns, aks, requires_cluster ]
+  tags: [kong_dns, aks, requires_cluster]
   azure_rm_dnsrecordset:
     resource_group: "{{ aks.resource_group }}"
     zone_name: "{{ cluster_fqdn }}"
@@ -15,7 +15,7 @@
 
 - name: Set DNS for Default Ingress Class
   when: ('dry-run' not in ansible_run_tags)
-  tags: [ kong_dns, aks, requires_cluster ]
+  tags: [kong_dns, aks, requires_cluster]
   azure_rm_dnsrecordset:
     resource_group: "{{ aks.resource_group }}"
     zone_name: "{{ cluster_fqdn }}"
@@ -29,7 +29,7 @@
 
 - name: Set DNS for Non-Default Ingress Classes
   when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
-  tags: [ kong_dns, aks, requires_cluster ]
+  tags: [kong_dns, aks, requires_cluster]
   azure_rm_dnsrecordset:
     resource_group: "{{ aks.resource_group }}"
     zone_name: "{{ cluster_fqdn }}"

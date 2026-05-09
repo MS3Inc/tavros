@@ -11,34 +11,34 @@ spec:
         disabled: true
   auth:
     roles:
-    - secretName: tavros-beats-role-override
+      - secretName: tavros-beats-role-override
   nodeSets:
-  - name: default
-    count: 3
-    volumeClaimTemplates:
-    - metadata:
-        name: elasticsearch-data
-      spec:
-        accessModes:
-        - ReadWriteOnce
-        resources:
-          requests:
-            storage: 50Gi
-        storageClassName: kops-csi-1-21
-    podTemplate:
-      spec:
-        containers:
-        - name: elasticsearch
-          env:
-          - name: ES_JAVA_OPTS
-            value: -Xms2g -Xmx2g
-          resources:
-            requests:
-              memory: 4Gi
-            limits:
-              memory: 4Gi
-        initContainers:
-        - name: sysctl
-          securityContext:
-            privileged: true
-          command: ['sh', '-c', 'sysctl -w vm.max_map_count=262144']
+    - name: default
+      count: 3
+      volumeClaimTemplates:
+        - metadata:
+            name: elasticsearch-data
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 50Gi
+            storageClassName: kops-csi-1-21
+      podTemplate:
+        spec:
+          containers:
+            - name: elasticsearch
+              env:
+                - name: ES_JAVA_OPTS
+                  value: -Xms2g -Xmx2g
+              resources:
+                requests:
+                  memory: 4Gi
+                limits:
+                  memory: 4Gi
+          initContainers:
+            - name: sysctl
+              securityContext:
+                privileged: true
+              command: ["sh", "-c", "sysctl -w vm.max_map_count=262144"]

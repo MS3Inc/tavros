@@ -34,7 +34,7 @@
       network_policy: calico
     linux_profile:
       admin_username: aks
-      ssh_key: "{{ lookup('file', '/tmp/aks/id_rsa.pub') }}" 
+      ssh_key: "{{ lookup('file', '/tmp/aks/id_rsa.pub') }}"
     agent_pool_profiles:
       - name: default
         count: "{{ aks.node_count }}"
@@ -74,11 +74,11 @@
   copy:
     content: "{{ result.aks[0].kube_config }}"
     dest: "~/.kube/config"
-    
+
 - name: Update AKS as Contributor for Resource Group
   when: ('dry-run' not in ansible_run_tags)
   shell: |
-    az role assignment create --assignee {{ result.aks[0].identity.principalId }} --role Contributor --resource-group {{ aks.resource_group }} 
+    az role assignment create --assignee {{ result.aks[0].identity.principalId }} --role Contributor --resource-group {{ aks.resource_group }}
 
 - name: Create Resource Group Contributor
   when: ('dry-run' not in ansible_run_tags)

@@ -1,6 +1,6 @@
 ---
 - name: Register gitea_login Cookies Variable
-  tags: [ requires_cluster, non_idempotent ]
+  tags: [requires_cluster, non_idempotent]
   when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://code.{{ cluster_fqdn }}/user/login
@@ -9,7 +9,7 @@
     body_format: form-urlencoded
     body:
       user_name: gitea_admin
-      password: '{{ gitea.admin_password }}'
+      password: "{{ gitea.admin_password }}"
     status_code: 200
     validate_certs: False
   register: gitea_login
@@ -18,7 +18,7 @@
   delay: 30
 
 - name: Add OIDC Configuration
-  tags: [ requires_cluster, non_idempotent ]
+  tags: [requires_cluster, non_idempotent]
   when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://code.{{ cluster_fqdn }}/admin/auths/new

@@ -28,16 +28,16 @@
     dest: /tmp/{{ cluster_fqdn }}/platform/kuma-system/{{ item[0].name }}/{{ item[1] }}.yaml
   with_nested:
     - "{{ kuma.meshes }}"
-    - ['mesh', 'traffictrace']
+    - ["mesh", "traffictrace"]
 
 - name: Apply Resources
-  tags: [ requires_cluster ]
+  tags: [requires_cluster]
   when: ('dry-run' not in ansible_run_tags)
   with_ms3_inc.tavros.kustomize: /tmp/{{ cluster_fqdn }}/platform/kuma-system/
   loop_control:
     label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
   ms3_inc.tavros.kube:
-    kubeconfig: '~/.kube/config'
+    kubeconfig: "~/.kube/config"
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"

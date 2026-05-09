@@ -32,8 +32,8 @@ spec:
             - name: schema-init-script
               mountPath: /tmp/schema-init
       volumes:
-      - name: schema-init-script
-        secret:
-          secretName: tavros-schema-init-script
+        - name: schema-init-script
+          secret:
+            secretName: tavros-schema-init-script
       restartPolicy: OnFailure
   backoffLimit: 4

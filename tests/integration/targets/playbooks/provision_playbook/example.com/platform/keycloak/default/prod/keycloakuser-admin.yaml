@@ -24,14 +24,14 @@ spec:
     realmRoles:
       - "offline_access"
     clientRoles:
-# Begin jaeger ANSIBLE MANAGED BLOCK
+      # Begin jaeger ANSIBLE MANAGED BLOCK
       jaeger:
         - user
-# End jaeger ANSIBLE MANAGED BLOCK
-# Begin nexus ANSIBLE MANAGED BLOCK
+      # End jaeger ANSIBLE MANAGED BLOCK
+      # Begin nexus ANSIBLE MANAGED BLOCK
       nexus:
         - admin
-# End nexus ANSIBLE MANAGED BLOCK
+      # End nexus ANSIBLE MANAGED BLOCK
       account:
         - "manage-account"
         - "view-profile"

@@ -1,7 +1,7 @@
 ---
 - name: Set DNS for Kongs by Name
   when: ('dry-run' not in ansible_run_tags)
-  tags: [ kong_dns, requires_cluster ]
+  tags: [kong_dns, requires_cluster]
   set_fact:
     kong_dns_records: "{{ kong_dns_records + '*.' + item.name + '.' + cluster_fqdn + '\t\t\t IN\t A\t ' + kong_ip + '\n' }}"
   vars:
@@ -12,7 +12,7 @@
 
 - name: Set DNS for Default Ingress Class
   when: ('dry-run' not in ansible_run_tags)
-  tags: [ kong_dns, requires_cluster ]
+  tags: [kong_dns, requires_cluster]
   set_fact:
     kong_dns_records: "{{ kong_dns_records + '*.' + cluster_fqdn + '\t\t\t IN\t A\t ' + kong_ip + '\n' }}"
   vars:
@@ -22,7 +22,7 @@
 
 - name: Set DNS for Non-Default Ingress Classes
   when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
-  tags: [ kong_dns, requires_cluster ]
+  tags: [kong_dns, requires_cluster]
   set_fact:
     kong_dns_records: "{{ kong_dns_records + '*.' + item.ingress_class + '.' + cluster_fqdn + '\t\t\t IN\t A\t ' + kong_ip + '\n' }}"
   vars:
@@ -35,16 +35,16 @@
   when: ('dry-run' not in ansible_run_tags)
   debug:
     msg: "{{ kong_dns_records }}"
-  tags: [ kong_dns, requires_cluster ]
+  tags: [kong_dns, requires_cluster]
 
 - name: Print the confirmation prompt
   when: ('dry-run' not in ansible_run_tags)
   pause:
     prompt: "{{ item }}"
   with_items: |
-     :::::::::::::::::::::::::::::::::::::::::::::::::::::
-     :                                                   :
-     :  Press enter when DNS is configured as requested  :
-     :                                                   :
-     ::::::::::::::::::::::::::::::::::::::::::::::::::::
-  tags: [ kong_dns, requires_cluster ]
+    :::::::::::::::::::::::::::::::::::::::::::::::::::::
+    :                                                   :
+    :  Press enter when DNS is configured as requested  :
+    :                                                   :
+    ::::::::::::::::::::::::::::::::::::::::::::::::::::
+  tags: [kong_dns, requires_cluster]

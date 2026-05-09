@@ -12,7 +12,7 @@
     kubernetes_cluster: "{{ kubernetes_cluster | combine({ 'keycloak': { 'client_secret': uuid } } , recursive=true) }}"
   vars:
     uuid: "{{ 1000000 | random | to_uuid }}"
-    
+
 - name: Add Custom wait_conditions
   set_fact:
     wait_conditions:

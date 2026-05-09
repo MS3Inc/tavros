@@ -11,19 +11,19 @@ spec:
     privateKeySecretRef:
       name: tavros-issuer-account-key
     solvers:
-    - selector:
-        dnsZones:
-        - 'sandbox-kong.tavros.example.com'
-        - 'sandbox.tavros.example.com'
-        - 'apps.sandbox.tavros.example.com'
-      http01:
-        ingress:
-          class: sandbox
-    - selector:
-        dnsZones:
-        - 'prod-kong.tavros.example.com'
-        - 'tavros.example.com'
-        - 'apps.tavros.example.com'
-      http01:
-        ingress:
-          class: prod
+      - selector:
+          dnsZones:
+            - "sandbox-kong.tavros.example.com"
+            - "sandbox.tavros.example.com"
+            - "apps.sandbox.tavros.example.com"
+        http01:
+          ingress:
+            class: sandbox
+      - selector:
+          dnsZones:
+            - "prod-kong.tavros.example.com"
+            - "tavros.example.com"
+            - "apps.tavros.example.com"
+        http01:
+          ingress:
+            class: prod

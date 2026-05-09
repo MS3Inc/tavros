@@ -15,19 +15,19 @@ The provision playbook provisions a Kubernetes cluster and configures Tavros's p
 
 ## Supported Platform Components
 
-| Concern | Component | Version |
-| ------- | --------- | ------- |
-| Platform GitOps | Flux v2 | 0.10.0 |
-| Platform GitOps | Sealed Secrets | 0.17.5 |
-| API Gateway and Manager | Kong | 3.0.0 |
-| API Portal | Kong Enterprise Edition | 3.0.0 |
-| Service Mesh | Kuma | 1.2.0 |
-| Identity and Access Management | Keycloak | 19.0.2 |
-| Artifact Management | Nexus Repository Manager | 3.28.1 |
-| Continuous Delivery | Jenkins | 2.416 |
-| Observability | Elastic Cloud | 7.13.4 |
-| Observability | Jaeger | 1.47.0 |
-| Static Code Qualitative Analysis | Sonarqube | 8.5 |
+| Concern                          | Component                | Version |
+| -------------------------------- | ------------------------ | ------- |
+| Platform GitOps                  | Flux v2                  | 0.10.0  |
+| Platform GitOps                  | Sealed Secrets           | 0.17.5  |
+| API Gateway and Manager          | Kong                     | 3.0.0   |
+| API Portal                       | Kong Enterprise Edition  | 3.0.0   |
+| Service Mesh                     | Kuma                     | 1.2.0   |
+| Identity and Access Management   | Keycloak                 | 19.0.2  |
+| Artifact Management              | Nexus Repository Manager | 3.28.1  |
+| Continuous Delivery              | Jenkins                  | 2.416   |
+| Observability                    | Elastic Cloud            | 7.13.4  |
+| Observability                    | Jaeger                   | 1.47.0  |
+| Static Code Qualitative Analysis | Sonarqube                | 8.5     |
 
 ## Roadmap
 
@@ -48,6 +48,7 @@ See the [acceptance tests](docs/AcceptanceTests.md) for verifying cluster functi
 Subsequent Tavros re installs will cause your DNS Cache to be invalid and prevent Hosts from being resolved for various API calls. You can flush the Cache diffferently based on your system. Below are some common examples:
 
 Mac:
+
 ```bash
 # Newer MacOs
 sudo killall -HUP mDNSResponder
@@ -65,6 +66,7 @@ sudo dscacheutil -flushcache
 ```
 
 Linux
+
 ```bash
 # If using Systemd Resolved
 sudo systemd-resolve --flush-caches

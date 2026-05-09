@@ -8,30 +8,30 @@ metadata:
 spec:
   realmSelector:
     matchLabels:
-        realm: prod
+      realm: prod
   client:
     clientId: kubernetes
     secret: placeholder22
     protocol: openid-connect
     rootUrl: http://localhost:8000
     redirectUris:
-    - "http://localhost:8000"
-    - "http://localhost:18000"
+      - "http://localhost:8000"
+      - "http://localhost:18000"
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
     enabled: True
     protocolMappers:
-    - name: roles
-      protocol: openid-connect
-      protocolMapper: "oidc-usermodel-client-role-mapper"
-      config:
-        id.token.claim: "true"
-        claim.name: "groups"
-        multivalued: "true"
-        userinfo.token.claim: "false"
-        jsonType.label: string
-        access.token.claim: "true"
-        usermodel.clientRoleMapping.clientId: kubernetes
+      - name: roles
+        protocol: openid-connect
+        protocolMapper: "oidc-usermodel-client-role-mapper"
+        config:
+          id.token.claim: "true"
+          claim.name: "groups"
+          multivalued: "true"
+          userinfo.token.claim: "false"
+          jsonType.label: string
+          access.token.claim: "true"
+          usermodel.clientRoleMapping.clientId: kubernetes
   roles:
     - name: "admin"
     - name: "test"

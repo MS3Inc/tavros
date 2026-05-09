@@ -1,8 +1,8 @@
 # Gitea for a Lightweight Git Server
 
-* Status: accepted
-* Deciders: Mohammad Naeem, @jam01
-* Date: 2020-09
+- Status: accepted
+- Deciders: Mohammad Naeem, @jam01
+- Date: 2020-09
 
 ## Context and Problem Statement
 
@@ -10,13 +10,13 @@ Given that Flux requires a Git repository to provide GitOps, and that our CI/CD 
 
 ## Decision Drivers <!-- optional -->
 
-* Lightweight as we expect a number of customers will already have a Git saas
-* Easy to integrate
+- Lightweight as we expect a number of customers will already have a Git saas
+- Easy to integrate
 
 ## Considered Options
 
-* GitLab
-* Gitea
+- GitLab
+- Gitea
 
 ## Decision Outcome
 
@@ -24,9 +24,9 @@ We'll use Gitea as our bundled and lightweight Git server. Gitea is more lightwe
 
 ### Negative Consequences <!-- optional -->
 
-* No out of the box integration with Flux
+- No out of the box integration with Flux
 
 ## Links <!-- optional -->
 
-* [Gitea](https://gitea.io/en-us/)
-* [GitLab](https://about.gitlab.com/)
+- [Gitea](https://gitea.io/en-us/)
+- [GitLab](https://about.gitlab.com/)

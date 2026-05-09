@@ -23,7 +23,6 @@ spec:
       retries: 5
   values:
     env:
-    
       # see: https://github.com/elastic/beats/pull/14505
       # https://docs.konghq.com/gateway-oss/2.4.x/logging/
       # https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
@@ -32,7 +31,7 @@ spec:
       proxy_access_log: /dev/stdout extended
       database: postgres
       pg_host: tavros-postgresql.postgresql
-      pg_port: '5432'
+      pg_port: "5432"
       pg_database:
         valueFrom:
           secretKeyRef:
@@ -53,8 +52,8 @@ spec:
       ingressClass: sandbox
       installCRDs: false
       env:
-      # see https://github.com/Kong/charts/issues/224
-        kong_admin_tls_skip_verify: 'true'
+        # see https://github.com/Kong/charts/issues/224
+        kong_admin_tls_skip_verify: "true"
       resources:
         limits:
           cpu: 100m
@@ -81,17 +80,17 @@ spec:
         service.beta.kubernetes.io/aws-load-balancer-type: nlb
         service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
     topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: topology.kubernetes.io/zone
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app.kubernetes.io/instance: kong-tavros-sandbox-kong
-          app.kubernetes.io/name: kong
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: kong-tavros-sandbox-kong
+            app.kubernetes.io/name: kong
     resources:
       limits:
-       cpu: 1
-       memory: 1Gi
+        cpu: 1
+        memory: 1Gi
       requests:
-       cpu: 500m
-       memory: 1Gi
+        cpu: 500m
+        memory: 1Gi

@@ -1,8 +1,8 @@
 # PostgreSQL as the Platform's Default Database
 
-* Status: accepted
-* Deciders: Mohammad Naeem
-* Date: 2020-09
+- Status: accepted
+- Deciders: Mohammad Naeem
+- Date: 2020-09
 
 ## Context and Problem Statement
 
@@ -14,4 +14,4 @@ We'll use PostgreSQL as the platform's default database. Since Gitea and Keycloa
 
 ### Positive Consequences <!-- optional -->
 
-* Single instance to backup, and restore in case of a disaster recovery
+- Single instance to backup, and restore in case of a disaster recovery

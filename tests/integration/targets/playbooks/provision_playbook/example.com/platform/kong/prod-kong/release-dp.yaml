@@ -23,7 +23,6 @@ spec:
       retries: 5
   values:
     env:
-    
       role: data_plane
       cluster_mtls: pki
       cluster_ca_cert: /etc/secrets/prod-kong-dp-cert/ca.crt
@@ -67,33 +66,33 @@ spec:
     manager:
       enabled: False
     secretVolumes:
-    - prod-kong-dp-cert
+      - prod-kong-dp-cert
     deployment:
       userDefinedVolumeMounts:
-      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
-        name: default-token
+        - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+          name: default-token
       userDefinedVolumes:
-      - name: default-token
-        projected:
-          sources:
-          - serviceAccountToken:
-              expirationSeconds: 7200
-              path: token
+        - name: default-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  expirationSeconds: 7200
+                  path: token
     topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: topology.kubernetes.io/zone
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          app.kubernetes.io/instance: kong-tavros-prod-kong-dp
-          app.kubernetes.io/name: kong
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: ScheduleAnyway
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: kong-tavros-prod-kong-dp
+            app.kubernetes.io/name: kong
     resources:
       limits:
-       cpu: 1
-       memory: 1Gi
+        cpu: 1
+        memory: 1Gi
       requests:
-       cpu: 500m
-       memory: 1Gi
+        cpu: 500m
+        memory: 1Gi
     autoscaling:
       enabled: true
       minReplicas: 2

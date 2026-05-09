@@ -32,23 +32,23 @@
   when: kong.ee_creds
 
 - name: Apply Resources
-  tags: [ requires_cluster ]
+  tags: [requires_cluster]
   when: ('dry-run' not in ansible_run_tags)
   loop: "{{ lookup('ms3_inc.tavros.kustomize', '/tmp/' + cluster_fqdn + '/platform/kong/', reorder='none') }}"
   loop_control:
     label: "{{ item.kind }}/{{ item.metadata.name | default('unnamed')}}"
   ms3_inc.tavros.kube:
-    kubeconfig: '~/.kube/config'
+    kubeconfig: "~/.kube/config"
     definition: "{{ item }}"
     wait: true
     wait_condition: "{{ wait_conditions[item.kind] | default(omit) }}"
     wait_timeout: 900
 
 - name: Wait for LoadBalancer IPs
-  tags: [ requires_cluster ]
+  tags: [requires_cluster]
   when: ('dry-run' not in ansible_run_tags)
   ms3_inc.tavros.kube_info:
-    kubeconfig: '~/.kube/config'
+    kubeconfig: "~/.kube/config"
     kind: Service
     name: "{{ instance_kong_proxy }}"
     namespace: kong

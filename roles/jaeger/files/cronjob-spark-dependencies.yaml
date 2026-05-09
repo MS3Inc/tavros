@@ -26,8 +26,8 @@ spec:
             app.kubernetes.io/part-of: jaeger
           annotations:
             linkerd.io/inject: disabled
-            prometheus.io/scrape: 'false'
-            sidecar.istio.io/inject: 'false'
+            prometheus.io/scrape: "false"
+            sidecar.istio.io/inject: "false"
         spec:
           volumes:
             - name: keystore-volume
@@ -42,11 +42,11 @@ spec:
                 - name: STORAGE
                   value: elasticsearch
                 - name: ES_NODES
-                  value: 'http://tavros-es-http.elastic-system.svc:9200'
+                  value: "http://tavros-es-http.elastic-system.svc:9200"
                 - name: ES_INDEX_PREFIX
                   value: tavros
                 - name: ES_TAGS_AS_FIELDS_ALL
-                  value: 'true'
+                  value: "true"
               resources:
                 limits:
                   memory: 2Gi

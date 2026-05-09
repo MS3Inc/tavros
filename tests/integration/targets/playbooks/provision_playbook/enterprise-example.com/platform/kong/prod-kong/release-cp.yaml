@@ -24,14 +24,14 @@ spec:
   values:
     image:
       repository: kong/kong-gateway
-      tag: '3.0.0.0-alpine'
+      tag: "3.0.0.0-alpine"
     env:
       role: control_plane
       cluster_mtls: pki
       cluster_ca_cert: /etc/secrets/prod-kong-cp-cert/ca.crt
       cluster_cert: /etc/secrets/prod-kong-cp-cert/tls.crt
       cluster_cert_key: /etc/secrets/prod-kong-cp-cert/tls.key
-    
+
       admin_api_uri: "https://admin-api.prod-kong.tavros.enterprise-example.com"
       admin_gui_url: "https://admin.prod-kong.tavros.enterprise-example.com"
       portal_api-url: "https://dev-portal-api.tavros.enterprise-example.com"
@@ -50,7 +50,7 @@ spec:
       proxy_access_log: /dev/stdout extended
       database: postgres
       pg_host: tavros-postgresql.postgresql
-      pg_port: '5432'
+      pg_port: "5432"
       pg_database:
         valueFrom:
           secretKeyRef:
@@ -72,8 +72,8 @@ spec:
       installCRDs: false
       env:
         publish_service: kong/kong-tavros-prod-kong-dp-kong-proxy
-      # see https://github.com/Kong/charts/issues/224
-        kong_admin_tls_skip_verify: 'true'
+        # see https://github.com/Kong/charts/issues/224
+        kong_admin_tls_skip_verify: "true"
         kong_admin_token:
           valueFrom:
             secretKeyRef:
@@ -122,4 +122,4 @@ spec:
         servicePort: 8006
         containerPort: 8006
     secretVolumes:
-    - prod-kong-cp-cert
+      - prod-kong-cp-cert

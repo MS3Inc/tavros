@@ -1,8 +1,8 @@
 # Prefer Kong Enterprise Edition
 
-* Status: accepted
-* Deciders: @k2merlinsix
-* Date: 2020-11
+- Status: accepted
+- Deciders: @k2merlinsix
+- Date: 2020-11
 
 ## Context and Problem Statement
 
@@ -10,7 +10,7 @@ Given that we've chosen Kong as our Ingress Controller and API Gateway, but we'r
 
 ## Decision Drivers <!-- optional -->
 
-* Feature set
+- Feature set
 
 ## Decision Outcome
 
@@ -18,12 +18,12 @@ We'll recommend Kong enterprise edition in order to enable API manager and devel
 
 ### Positive Consequences <!-- optional -->
 
-* Single component for all API related functionality
+- Single component for all API related functionality
 
 ### Negative Consequences <!-- optional -->
 
-* Requires a license
+- Requires a license
 
 ## Links <!-- optional -->
 
-* [Kong Enterprise](https://konghq.com/products/kong-enterprise/)
+- [Kong Enterprise](https://konghq.com/products/kong-enterprise/)

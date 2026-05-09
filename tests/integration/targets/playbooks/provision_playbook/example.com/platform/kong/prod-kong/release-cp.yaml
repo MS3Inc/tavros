@@ -28,7 +28,7 @@ spec:
       cluster_ca_cert: /etc/secrets/prod-kong-cp-cert/ca.crt
       cluster_cert: /etc/secrets/prod-kong-cp-cert/tls.crt
       cluster_cert_key: /etc/secrets/prod-kong-cp-cert/tls.key
-    
+
       # see: https://github.com/elastic/beats/pull/14505
       # https://docs.konghq.com/gateway-oss/2.4.x/logging/
       # https://nginx.org/en/docs/http/ngx_http_log_module.html#log_format
@@ -37,7 +37,7 @@ spec:
       proxy_access_log: /dev/stdout extended
       database: postgres
       pg_host: tavros-postgresql.postgresql
-      pg_port: '5432'
+      pg_port: "5432"
       pg_database:
         valueFrom:
           secretKeyRef:
@@ -59,8 +59,8 @@ spec:
       installCRDs: false
       env:
         publish_service: kong/kong-tavros-prod-kong-dp-kong-proxy
-      # see https://github.com/Kong/charts/issues/224
-        kong_admin_tls_skip_verify: 'true'
+        # see https://github.com/Kong/charts/issues/224
+        kong_admin_tls_skip_verify: "true"
       resources:
         limits:
           cpu: 100m
@@ -96,4 +96,4 @@ spec:
         servicePort: 8006
         containerPort: 8006
     secretVolumes:
-    - prod-kong-cp-cert
+      - prod-kong-cp-cert

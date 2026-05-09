@@ -1,8 +1,8 @@
 # Keycloak for Identity and Access Management
 
-* Status: accepted
-* Deciders: Mohammad Naeem
-* Date: 2020-08
+- Status: accepted
+- Deciders: Mohammad Naeem
+- Date: 2020-08
 
 ## Context and Problem Statement
 
@@ -14,4 +14,4 @@ We'll use Keycloak for identity and access management.
 
 ## Links <!-- optional -->
 
-* [Keycloak](https://www.keycloak.org/)
+- [Keycloak](https://www.keycloak.org/)

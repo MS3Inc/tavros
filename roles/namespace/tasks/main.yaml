@@ -39,7 +39,7 @@
       auths: "{{ { 'registry.' + cluster_fqdn : { 'auth' : ('jenkins-ci:' + jenkins.keycloak.password) | b64encode } } }}"
 
 - name: Seal Docker Registry Secrets
-  tags: [ requires_cluster ]
+  tags: [requires_cluster]
   when: ('dry-run' not in ansible_run_tags) and (item.condition | default(true))
   shell: |
     kubeseal --format=yaml </tmp/{{ cluster_fqdn }}/{{ item.name }}/secret-artifacts-registry.yaml >/tmp/{{ cluster_fqdn }}/{{ item.name }}/secret-artifacts-registry.tmp
@@ -47,11 +47,11 @@
   loop: "{{ namespaces }}"
 
 - name: Apply Resources
-  tags: [ requires_cluster ]
+  tags: [requires_cluster]
   when: ('dry-run' not in ansible_run_tags)
   loop: "{{ namespaces }}"
   ms3_inc.tavros.kube:
-    kubeconfig: '~/.kube/config'
+    kubeconfig: "~/.kube/config"
     state: present
     src: /tmp/{{ cluster_fqdn }}/{{ item.name }}/ns.yaml
 

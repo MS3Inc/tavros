@@ -11,27 +11,27 @@ kind: Role
 metadata:
   name: leader-election-role
 rules:
-- apiGroups:
-  - ""
-  - coordination.k8s.io
-  resources:
-  - configmaps
-  - leases
-  verbs:
-  - get
-  - list
-  - watch
-  - create
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - events
-  verbs:
-  - create
-  - patch
+  - apiGroups:
+      - ""
+      - coordination.k8s.io
+    resources:
+      - configmaps
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
@@ -46,7 +46,7 @@ rules:
       - replicasets
       - statefulsets
     verbs:
-      - '*'
+      - "*"
   - apiGroups:
       - apps
       - jenkins-operator
@@ -111,7 +111,7 @@ rules:
       - pods
       - pods/exec
     verbs:
-      - '*'
+      - "*"
   - apiGroups:
       - ""
     resources:
@@ -161,9 +161,9 @@ rules:
   - apiGroups:
       - jenkins.io
     resources:
-      - '*'
+      - "*"
     verbs:
-      - '*'
+      - "*"
   - apiGroups:
       - rbac.authorization.k8s.io
     resources:
@@ -212,8 +212,8 @@ roleRef:
   kind: Role
   name: leader-election-role
 subjects:
-- kind: ServiceAccount
-  name: jenkins-operator
+  - kind: ServiceAccount
+    name: jenkins-operator
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1

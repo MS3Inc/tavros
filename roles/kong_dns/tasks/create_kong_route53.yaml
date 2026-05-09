@@ -1,6 +1,6 @@
 ---
 - name: Set DNS for Kongs by Name
-  tags: [ kong_dns, route53, requires_cluster ]
+  tags: [kong_dns, route53, requires_cluster]
   when: ('dry-run' not in ansible_run_tags)
   community.aws.route53:
     state: present
@@ -16,7 +16,7 @@
   loop: "{{ kong.instances }}"
 
 - name: Set DNS for Default Ingress Class
-  tags: [ kong_dns, route53, requires_cluster ]
+  tags: [kong_dns, route53, requires_cluster]
   when: ('dry-run' not in ansible_run_tags)
   community.aws.route53:
     state: present
@@ -31,7 +31,7 @@
     prod_kong_proxy: "kong-tavros-{{ (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).name }}{{'-dp' if (kong.instances | selectattr('ingress_class', 'equalto', kong.default_ingress_class) | first).hybrid }}-kong-proxy"
 
 - name: Set DNS for Non-Default Ingress Classes
-  tags: [ kong_dns, route53, requires_cluster ]
+  tags: [kong_dns, route53, requires_cluster]
   when: ('dry-run' not in ansible_run_tags) and (item.ingress_class != kong.default_ingress_class)
   community.aws.route53:
     state: present

@@ -4,15 +4,15 @@ kind: ClusterRole
 metadata:
   name: filebeat
 rules:
-- apiGroups: [""] # "" indicates the core API group
-  resources:
-  - namespaces
-  - pods
-  - nodes
-  verbs:
-  - get
-  - watch
-  - list
+  - apiGroups: [""] # "" indicates the core API group
+    resources:
+      - namespaces
+      - pods
+      - nodes
+    verbs:
+      - get
+      - watch
+      - list
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -25,9 +25,9 @@ kind: ClusterRoleBinding
 metadata:
   name: filebeat
 subjects:
-- kind: ServiceAccount
-  name: filebeat
-  namespace: elastic-system
+  - kind: ServiceAccount
+    name: filebeat
+    namespace: elastic-system
 roleRef:
   kind: ClusterRole
   name: filebeat

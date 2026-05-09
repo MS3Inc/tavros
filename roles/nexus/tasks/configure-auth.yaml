@@ -1,6 +1,6 @@
 ---
 - name: Disable Anonymous Access
-  tags: [ requires_cluster, nexus ]
+  tags: [requires_cluster, nexus]
   when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/anonymous"
@@ -20,10 +20,10 @@
   delay: 30
 
 - name: Install Keycloak plugin
-  tags: [ requires_cluster, nexus ]
+  tags: [requires_cluster, nexus]
   when: ('dry-run' not in ansible_run_tags)
   community.kubernetes.k8s_exec:
-    kubeconfig: '~/.kube/config'
+    kubeconfig: "~/.kube/config"
     namespace: nexus
     pod: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
     command: |
@@ -32,7 +32,7 @@
     nexus_pod_name: "app.kubernetes.io/name=nexus-repository-manager"
 
 - name: Add Nexus Keycloak Realm
-  tags: [ requires_cluster, nexus ]
+  tags: [requires_cluster, nexus]
   when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/realms/active"
@@ -43,16 +43,16 @@
     validate_certs: False
     body_format: json
     body:
-      - 'NexusAuthenticatingRealm'
-      - 'NexusAuthorizingRealm'
-      - 'org.github.flytreeleft.nexus3.keycloak.plugin.KeycloakAuthenticatingRealm'
+      - "NexusAuthenticatingRealm"
+      - "NexusAuthorizingRealm"
+      - "org.github.flytreeleft.nexus3.keycloak.plugin.KeycloakAuthenticatingRealm"
   register: _result
   until: _result.status == 204
   retries: 5
   delay: 30
 
 - name: Add Nexus Keycloak admin Role Mapping
-  tags: [ requires_cluster, non_idempotent, nexus ]
+  tags: [requires_cluster, non_idempotent, nexus]
   when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/roles"
@@ -67,14 +67,14 @@
       name: keycloak-admin
       description: Mapping for Keycloak to Nexus Role
       roles:
-      - 'nx-admin'
+        - "nx-admin"
   register: _result
   until: _result.status == 200
   retries: 5
   delay: 30
 
 - name: Add Nexus developer Role
-  tags: [ requires_cluster, non_idempotent, nexus ]
+  tags: [requires_cluster, non_idempotent, nexus]
   when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/roles"
@@ -90,29 +90,29 @@
       description: Necessary permissions for developers
       # todo
       privileges:
-      - nx-repository-view-maven2-maven-releases-browse
-      - nx-repository-view-maven2-maven-releases-read
-      - nx-repository-view-maven2-maven-snapshots-add
-      - nx-repository-view-maven2-maven-snapshots-browse
-      - nx-repository-view-maven2-maven-snapshots-edit
-      - nx-repository-view-maven2-maven-snapshots-read
-      - nx-repository-view-docker-dockerhub-proxy-browse
-      - nx-repository-view-docker-dockerhub-proxy-read
-      - nx-repository-view-docker-internal-add
-      - nx-repository-view-docker-internal-browse
-      - nx-repository-view-docker-internal-edit
-      - nx-repository-view-docker-internal-read
-      - nx-repository-view-docker-container-registry-add
-      - nx-repository-view-docker-container-registry-browse
-      - nx-repository-view-docker-container-registry-edit
-      - nx-repository-view-docker-container-registry-read
+        - nx-repository-view-maven2-maven-releases-browse
+        - nx-repository-view-maven2-maven-releases-read
+        - nx-repository-view-maven2-maven-snapshots-add
+        - nx-repository-view-maven2-maven-snapshots-browse
+        - nx-repository-view-maven2-maven-snapshots-edit
+        - nx-repository-view-maven2-maven-snapshots-read
+        - nx-repository-view-docker-dockerhub-proxy-browse
+        - nx-repository-view-docker-dockerhub-proxy-read
+        - nx-repository-view-docker-internal-add
+        - nx-repository-view-docker-internal-browse
+        - nx-repository-view-docker-internal-edit
+        - nx-repository-view-docker-internal-read
+        - nx-repository-view-docker-container-registry-add
+        - nx-repository-view-docker-container-registry-browse
+        - nx-repository-view-docker-container-registry-edit
+        - nx-repository-view-docker-container-registry-read
   register: _result
   until: _result.status == 200
   retries: 5
   delay: 30
 
 - name: Add Nexus Keycloak developer Role Mapping
-  tags: [ requires_cluster, non_idempotent, nexus ]
+  tags: [requires_cluster, non_idempotent, nexus]
   when: ('dry-run' not in ansible_run_tags)
   uri:
     url: "https://artifacts.{{ cluster_fqdn }}/nosso/service/rest/v1/security/roles"
@@ -127,9 +127,8 @@
       name: keycloak-developer
       description: Mapping for Keycloak to Nexus Role
       roles:
-      - 'developer'
+        - "developer"
   register: _result
   until: _result.status == 200
   retries: 5
   delay: 30
-

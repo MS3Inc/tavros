@@ -22,21 +22,21 @@ spec:
   values:
     deployment:
       additionalVolumes:
-      - name: keycloak-config
-        secret:
-          secretName: tavros-keycloak-config
-      - name: nexus-properties
-        configMap:
-          name: tavros-properties
-      - name: nexus-deploy
-        persistentVolumeClaim:
-          claimName: tavros-deploy
+        - name: keycloak-config
+          secret:
+            secretName: tavros-keycloak-config
+        - name: nexus-properties
+          configMap:
+            name: tavros-properties
+        - name: nexus-deploy
+          persistentVolumeClaim:
+            claimName: tavros-deploy
       additionalVolumeMounts:
-      - mountPath: /opt/sonatype/nexus/deploy/
-        name: nexus-deploy
-      - mountPath: /opt/sonatype/nexus/etc/keycloak.json
-        name: keycloak-config
-        subPath: keycloak-config.json
-      - mountPath: /opt/sonatype/nexus/etc/nexus-default.properties
-        name: nexus-properties
-        subPath: nexus.properties
+        - mountPath: /opt/sonatype/nexus/deploy/
+          name: nexus-deploy
+        - mountPath: /opt/sonatype/nexus/etc/keycloak.json
+          name: keycloak-config
+          subPath: keycloak-config.json
+        - mountPath: /opt/sonatype/nexus/etc/nexus-default.properties
+          name: nexus-properties
+          subPath: nexus.properties

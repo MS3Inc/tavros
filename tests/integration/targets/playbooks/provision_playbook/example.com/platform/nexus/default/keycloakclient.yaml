@@ -8,14 +8,14 @@ metadata:
 spec:
   realmSelector:
     matchLabels:
-        realm: prod
+      realm: prod
   client:
     clientId: "nexus"
     secret: "placeholder10"
     clientAuthenticatorType: client-secret
     protocol: openid-connect
     redirectUris:
-    - "https://artifacts.tavros.example.com/*"
+      - "https://artifacts.tavros.example.com/*"
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
     authorizationServicesEnabled: True

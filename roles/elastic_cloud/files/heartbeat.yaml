@@ -3,28 +3,28 @@ kind: ClusterRole
 metadata:
   name: heartbeat
 rules:
-- apiGroups: [""]
-  resources:
-  - nodes
-  - namespaces
-  - events
-  - pods
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["extensions"]
-  resources:
-  - replicasets
-  verbs: ["get", "list", "watch"]
-- apiGroups: ["apps"]
-  resources:
-  - statefulsets
-  - deployments
-  verbs: ["get", "list", "watch"]
-- apiGroups:
-  - ""
-  resources:
-  - nodes/stats
-  verbs:
-  - get
+  - apiGroups: [""]
+    resources:
+      - nodes
+      - namespaces
+      - events
+      - pods
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["extensions"]
+    resources:
+      - replicasets
+    verbs: ["get", "list", "watch"]
+  - apiGroups: ["apps"]
+    resources:
+      - statefulsets
+      - deployments
+    verbs: ["get", "list", "watch"]
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/stats
+    verbs:
+      - get
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -37,9 +37,9 @@ kind: ClusterRoleBinding
 metadata:
   name: heartbeat
 subjects:
-- kind: ServiceAccount
-  name: heartbeat-svc
-  namespace: elastic-system
+  - kind: ServiceAccount
+    name: heartbeat-svc
+    namespace: elastic-system
 roleRef:
   kind: ClusterRole
   name: heartbeat
@@ -59,10 +59,10 @@ spec:
     heartbeat:
       autodiscover:
         providers:
-        - type: kubernetes
-          node: ${NODE_NAME}
-          namespace: "prod"
-          hints.enabled: true
+          - type: kubernetes
+            node: ${NODE_NAME}
+            namespace: "prod"
+            hints.enabled: true
   daemonSet:
     podTemplate:
       metadata:
@@ -76,12 +76,12 @@ spec:
         securityContext:
           runAsUser: 0
         containers:
-        - name: heartbeat
-          env:
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
+          - name: heartbeat
+            env:
+              - name: NODE_NAME
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName
 ---
 apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
@@ -97,10 +97,10 @@ spec:
     heartbeat:
       autodiscover:
         providers:
-        - type: kubernetes
-          node: ${NODE_NAME}
-          namespace: "dev"
-          hints.enabled: true
+          - type: kubernetes
+            node: ${NODE_NAME}
+            namespace: "dev"
+            hints.enabled: true
   daemonSet:
     podTemplate:
       metadata:
@@ -114,12 +114,12 @@ spec:
         securityContext:
           runAsUser: 0
         containers:
-        - name: heartbeat
-          env:
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
+          - name: heartbeat
+            env:
+              - name: NODE_NAME
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName
 ---
 apiVersion: beat.k8s.elastic.co/v1beta1
 kind: Beat
@@ -135,10 +135,10 @@ spec:
     heartbeat:
       autodiscover:
         providers:
-        - type: kubernetes
-          node: ${NODE_NAME}
-          namespace: "test"
-          hints.enabled: true
+          - type: kubernetes
+            node: ${NODE_NAME}
+            namespace: "test"
+            hints.enabled: true
   daemonSet:
     podTemplate:
       metadata:
@@ -152,9 +152,9 @@ spec:
         securityContext:
           runAsUser: 0
         containers:
-        - name: heartbeat
-          env:
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
+          - name: heartbeat
+            env:
+              - name: NODE_NAME
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName

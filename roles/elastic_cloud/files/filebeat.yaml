@@ -25,72 +25,72 @@ spec:
     filebeat:
       autodiscover:
         providers:
-        - type: kubernetes
-          node: ${NODE_NAME}
-          hints:
-            enabled: true
-            default_config:
-              enabled: false
-              type: container
-              paths:
-              - /var/log/containers/*-${data.kubernetes.container.id}.log
+          - type: kubernetes
+            node: ${NODE_NAME}
+            hints:
+              enabled: true
+              default_config:
+                enabled: false
+                type: container
+                paths:
+                  - /var/log/containers/*-${data.kubernetes.container.id}.log
     processors:
-    - add_fields:
-        target: data_stream
-        fields:
-          type: logs
-          dataset: generic
-          namespace: default
-    - script:
-        lang: javascript
-        id: dataset_override
-        source: >
-          function process(event) {
-            var ns = event.Get("kubernetes.namespace");
-            if (ns != null) event.Put("data_stream.namespace", "k8s." + ns);
+      - add_fields:
+          target: data_stream
+          fields:
+            type: logs
+            dataset: generic
+            namespace: default
+      - script:
+          lang: javascript
+          id: dataset_override
+          source: >
+            function process(event) {
+              var ns = event.Get("kubernetes.namespace");
+              if (ns != null) event.Put("data_stream.namespace", "k8s." + ns);
 
-            var ds = event.Get("event.dataset");
-            if (ds != null) event.Put("data_stream.dataset", ds);
-            else event.Put("event.dataset", "generic");
-          }
-    - add_cloud_metadata: {}
-    - add_host_metadata: {}
+              var ds = event.Get("event.dataset");
+              if (ds != null) event.Put("data_stream.dataset", ds);
+              else event.Put("event.dataset", "generic");
+            }
+      - add_cloud_metadata: {}
+      - add_host_metadata: {}
   daemonSet:
     podTemplate:
       spec:
         serviceAccountName: filebeat
         automountServiceAccountToken: true
         tolerations:
-        - key: node-role.kubernetes.io/master
-          effect: NoSchedule
+          - key: node-role.kubernetes.io/master
+            effect: NoSchedule
         terminationGracePeriodSeconds: 30
         dnsPolicy: ClusterFirstWithHostNet
         hostNetwork: true # Allows to provide richer host metadata
         containers:
-        - name: filebeat
-          securityContext:
-            runAsUser: 0
-            # If using Red Hat OpenShift uncomment this:
-            #privileged: true
-          volumeMounts:
-          - name: varlogcontainers
-            mountPath: /var/log/containers
-          - name: varlogpods
-            mountPath: /var/log/pods
-          - name: varlibdockercontainers
-            mountPath: /var/lib/docker/containers
-          env:
-            - name: NODE_NAME
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
+          - name: filebeat
+            securityContext:
+              runAsUser: 0
+              # If using Red Hat OpenShift uncomment this:
+              #privileged: true
+            volumeMounts:
+              - name: varlogcontainers
+                mountPath: /var/log/containers
+              - name: varlogpods
+                mountPath: /var/log/pods
+              - name: varlibdockercontainers
+                mountPath: /var/lib/docker/containers
+            env:
+              - name: NODE_NAME
+                valueFrom:
+                  fieldRef:
+                    fieldPath: spec.nodeName
         volumes:
-        - name: varlogcontainers
-          hostPath:
-            path: /var/log/containers
-        - name: varlogpods
-          hostPath:
-            path: /var/log/pods
-        - name: varlibdockercontainers
-          hostPath:
-            path: /var/lib/docker/containers
+          - name: varlogcontainers
+            hostPath:
+              path: /var/log/containers
+          - name: varlogpods
+            hostPath:
+              path: /var/log/pods
+          - name: varlibdockercontainers
+            hostPath:
+              path: /var/lib/docker/containers

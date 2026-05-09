@@ -1,8 +1,8 @@
 # Setup Sandbox and Production Keycloak Realms
 
-* Status: accepted
-* Deciders: @jam01, @rmccright-ms3
-* Date: 2020-11
+- Status: accepted
+- Deciders: @jam01, @rmccright-ms3
+- Date: 2020-11
 
 ## Context and Problem Statement
 
@@ -10,15 +10,15 @@ Keycloak enables separation of sets of users, groups, roles, etc. through Realms
 
 ## Decision Drivers <!-- optional -->
 
-* Must reflect best practice configuration
-* Segregate production from non-production workloads as much as possible
-* Satisfy 'common' enterprise requirements
+- Must reflect best practice configuration
+- Segregate production from non-production workloads as much as possible
+- Satisfy 'common' enterprise requirements
 
 ## Considered Options
 
-* Leave single Master realm
-* Create one production realm
-* Create sandbox and production realms
+- Leave single Master realm
+- Create one production realm
+- Create sandbox and production realms
 
 ## Decision Outcome
 
@@ -26,13 +26,13 @@ We'll create sandbox and production keycloak realms. Given the existing inclusio
 
 ### Positive Consequences <!-- optional -->
 
-* Simple, easy to understand
-* Enables identity and access management separation
+- Simple, easy to understand
+- Enables identity and access management separation
 
 ### Negative Consequences <!-- optional -->
 
-* May be unnecessary for some organizations
+- May be unnecessary for some organizations
 
 ## Links <!-- optional -->
 
-* [Keycloak Concetps](https://www.keycloak.org/docs/latest/server_admin/#core-concepts-and-terms)
+- [Keycloak Concetps](https://www.keycloak.org/docs/latest/server_admin/#core-concepts-and-terms)

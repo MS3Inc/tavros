@@ -10,7 +10,7 @@ spec:
     branch: main
   secretRef:
     name: tavros-git-creds
-  url: 'http://gitea-http.gitea.svc.cluster.local:3000/tavros/platform'
+  url: "http://gitea-http.gitea.svc.cluster.local:3000/tavros/platform"
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1beta1
 kind: Kustomization

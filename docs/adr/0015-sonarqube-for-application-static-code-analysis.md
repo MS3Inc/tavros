@@ -1,8 +1,8 @@
 # Sonarqube for Application Static Code Analysis
 
-* Status: accepted
-* Deciders: @jam01
-* Date: 2020-10
+- Status: accepted
+- Deciders: @jam01
+- Date: 2020-10
 
 ## Context and Problem Statement
 
@@ -14,4 +14,4 @@ We'll use Sonarqube for application static code analysis. As part of our effort 
 
 ## Links <!-- optional -->
 
-* [Sonarqube](https://www.sonarqube.org/)
+- [Sonarqube](https://www.sonarqube.org/)

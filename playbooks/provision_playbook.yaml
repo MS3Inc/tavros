@@ -3,154 +3,154 @@
   connection: local
   gather_facts: no
   tasks:
-  - include_tasks: tasks/pre-flight.yaml
+    - include_tasks: tasks/pre-flight.yaml
 
-  - name: kOps
-    include_role:
-      name: ms3_inc.tavros.kops
-    when: kops.enabled
-    vars:
-      cluster_state: present
-    tags: [ kops ]
+    - name: kOps
+      include_role:
+        name: ms3_inc.tavros.kops
+      when: kops.enabled
+      vars:
+        cluster_state: present
+      tags: [kops]
 
-  - name: aks
-    include_role:
-      name: ms3_inc.tavros.aks
-    when: aks.enabled
-    vars:
-      cluster_state: present
-    tags: [ aks ]
+    - name: aks
+      include_role:
+        name: ms3_inc.tavros.aks
+      when: aks.enabled
+      vars:
+        cluster_state: present
+      tags: [aks]
 
-  - name: Install and Configure Components
-    block:
-      - name: Flux GitOps Toolkit
-        include_role:
-          name: ms3_inc.tavros.fluxtoolkit
-        tags: [ fluxtoolkit ]
+    - name: Install and Configure Components
+      block:
+        - name: Flux GitOps Toolkit
+          include_role:
+            name: ms3_inc.tavros.fluxtoolkit
+          tags: [fluxtoolkit]
 
-      - name: sealed-secrets
-        include_role:
-          name: ms3_inc.tavros.sealed_secrets
-        tags: [ sealed_secrets ]
+        - name: sealed-secrets
+          include_role:
+            name: ms3_inc.tavros.sealed_secrets
+          tags: [sealed_secrets]
 
-      - name: PostgreSQL
-        include_role:
-          name: ms3_inc.tavros.postgresql
-        tags: [ postgresql ]
+        - name: PostgreSQL
+          include_role:
+            name: ms3_inc.tavros.postgresql
+          tags: [postgresql]
 
-      - name: Kuma
-        include_role:
-          name: ms3_inc.tavros.kuma
-        when: kuma.enabled
-        tags: [ kuma ]
+        - name: Kuma
+          include_role:
+            name: ms3_inc.tavros.kuma
+          when: kuma.enabled
+          tags: [kuma]
 
-      - name: cert-manager
-        include_role:
-          name: ms3_inc.tavros.cert_manager
-        when: cert_manager.enabled
-        tags: [ cert_manager ]
+        - name: cert-manager
+          include_role:
+            name: ms3_inc.tavros.cert_manager
+          when: cert_manager.enabled
+          tags: [cert_manager]
 
-      - name: Kong
-        include_role:
-          name: ms3_inc.tavros.kong
-        tags: [ kong ]
+        - name: Kong
+          include_role:
+            name: ms3_inc.tavros.kong
+          tags: [kong]
 
-      - name: Kong DNS
-        include_role:
-          name: ms3_inc.tavros.kong_dns
-        vars:
-          cluster_state: present
-        tags: [ kong_dns ]
+        - name: Kong DNS
+          include_role:
+            name: ms3_inc.tavros.kong_dns
+          vars:
+            cluster_state: present
+          tags: [kong_dns]
 
-      - name: Keycloak
-        include_role:
-          name: ms3_inc.tavros.keycloak
-        when: keycloak.enabled
-        tags: [ keycloak ]
+        - name: Keycloak
+          include_role:
+            name: ms3_inc.tavros.keycloak
+          when: keycloak.enabled
+          tags: [keycloak]
 
-      - name: Kong EE SSO
-        include_role:
-          name: ms3_inc.tavros.kong_ee_sso
-        when: keycloak.enabled
-        tags: [ kong_ee_sso ]
+        - name: Kong EE SSO
+          include_role:
+            name: ms3_inc.tavros.kong_ee_sso
+          when: keycloak.enabled
+          tags: [kong_ee_sso]
 
-      - name: Nexus
-        include_role:
-          name: ms3_inc.tavros.nexus
-        when: nexus.enabled
-        tags: [ nexus ]
+        - name: Nexus
+          include_role:
+            name: ms3_inc.tavros.nexus
+          when: nexus.enabled
+          tags: [nexus]
 
-      - name: Elastic Cloud
-        include_role:
-          name: ms3_inc.tavros.elastic_cloud
-        when: elastic_cloud.enabled
-        tags: [ elastic_cloud ]
+        - name: Elastic Cloud
+          include_role:
+            name: ms3_inc.tavros.elastic_cloud
+          when: elastic_cloud.enabled
+          tags: [elastic_cloud]
 
-      - name: Jaeger
-        include_role:
-          name: ms3_inc.tavros.jaeger
-        when: jaeger.enabled and not elastic_cloud.ee.enabled
-        tags: [ jaeger ]
+        - name: Jaeger
+          include_role:
+            name: ms3_inc.tavros.jaeger
+          when: jaeger.enabled and not elastic_cloud.ee.enabled
+          tags: [jaeger]
 
-      - name: Gitea
-        include_role:
-          name: ms3_inc.tavros.gitea
-        when: gitea.enabled
-        tags: [ gitea ]
+        - name: Gitea
+          include_role:
+            name: ms3_inc.tavros.gitea
+          when: gitea.enabled
+          tags: [gitea]
 
-      - name: Jenkins
-        include_role:
-          name: ms3_inc.tavros.jenkins
-        when: jenkins.enabled
-        tags: [ jenkins ]
+        - name: Jenkins
+          include_role:
+            name: ms3_inc.tavros.jenkins
+          when: jenkins.enabled
+          tags: [jenkins]
 
-      - name: Namespace
-        include_role:
-          name: ms3_inc.tavros.namespace
-        tags: [ namespace ]
+        - name: Namespace
+          include_role:
+            name: ms3_inc.tavros.namespace
+          tags: [namespace]
 
-      - name: Flux GitOps Toolkit Sync
-        include_role:
-          name: ms3_inc.tavros.fluxtoolkit_sync
-        when: gitea.enabled
-        tags: [ fluxtoolkit_sync ]
+        - name: Flux GitOps Toolkit Sync
+          include_role:
+            name: ms3_inc.tavros.fluxtoolkit_sync
+          when: gitea.enabled
+          tags: [fluxtoolkit_sync]
 
-    always:
-      - name: Store Tavros Vars Locally
-        copy:
-          content: >
-                     {{
-                      { 'all': { 'vars': vars | dict2items | selectattr("key", "in", components) | list | items2dict } } | to_nice_yaml(indent=2)
-                     }}
-          dest: /tmp/{{ cluster_fqdn }}_vars.yaml
-        vars:
-          components:
-          - 'kops'
-          - 'aks'
-          - 'flux'
-          - 'cluster_fqdn'
-          - 'cluster_admin_email'
-          - 'kubernetes_cluster'
-          - 'kong'
-          - 'kuma'
-          - 'namespaces'
-          - 'keycloak'
-          - 'nexus'
-          - 'postgresql'
-          - 'elastic_cloud'
-          - 'cert_manager'
-          - 'gitea'
-          - 'jaeger'
-          - 'jenkins'
+      always:
+        - name: Store Tavros Vars Locally
+          copy:
+            content: >
+              {{
+               { 'all': { 'vars': vars | dict2items | selectattr("key", "in", components) | list | items2dict } } | to_nice_yaml(indent=2)
+              }}
+            dest: /tmp/{{ cluster_fqdn }}_vars.yaml
+          vars:
+            components:
+              - "kops"
+              - "aks"
+              - "flux"
+              - "cluster_fqdn"
+              - "cluster_admin_email"
+              - "kubernetes_cluster"
+              - "kong"
+              - "kuma"
+              - "namespaces"
+              - "keycloak"
+              - "nexus"
+              - "postgresql"
+              - "elastic_cloud"
+              - "cert_manager"
+              - "gitea"
+              - "jaeger"
+              - "jenkins"
 
-      - include_role:
-          name: ms3_inc.tavros.kops
-          tasks_from: tavros_config_backup
-        tags: [ requires_cluster]
-        when: ('dry-run' not in ansible_run_tags) and kops.enabled
+        - include_role:
+            name: ms3_inc.tavros.kops
+            tasks_from: tavros_config_backup
+          tags: [requires_cluster]
+          when: ('dry-run' not in ansible_run_tags) and kops.enabled
 
-      - include_role:
-          name: ms3_inc.tavros.aks
-          tasks_from: tavros_config_backup
-        tags: [ requires_cluster]
-        when: ('dry-run' not in ansible_run_tags) and aks.enabled
+        - include_role:
+            name: ms3_inc.tavros.aks
+            tasks_from: tavros_config_backup
+          tags: [requires_cluster]
+          when: ('dry-run' not in ansible_run_tags) and aks.enabled

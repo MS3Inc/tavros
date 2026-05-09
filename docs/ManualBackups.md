@@ -17,7 +17,6 @@ kubectl delete pod pgtesting -n postgresql
 
 To test a database where tables have been removed, take DROP commands from backup.sql and copy them into file called drop.sql and run that file separately. You may need to scale down gitea and kong in order to run without errors.
 
-
 ```
 kubectl scale statefulsets gitea -n gitea --replicas=0
 
@@ -27,7 +26,6 @@ kubectl exec -i pgtesting -n postgresql -- bash -c "psql -U postgres -h tavros-p
 
 kubectl scale statefulsets gitea -n gitea --replicas=1
 ```
-
 
 #### Restore Postgres
 
@@ -44,6 +42,7 @@ kubectl exec -i pgtesting -n postgresql -- bash -c "psql -U postgres -h tavros-p
 Set up backup task following the instructions in the reference article. Recommended backup location should be /nexus-data/backups.
 
 Once task completes run these commands:
+
 ```
 NEXUS_POD=$(kubectl get pods -n nexus -o jsonpath="{.items[0].metadata.name}")
 # copy blobs to local directory
@@ -59,6 +58,7 @@ Reference: https://help.sonatype.com/repomanager3/planning-your-implementation/b
 #### Restore Nexus
 
 Scale down nexus/stop nexus:
+
 ```
 kubectl scale --replicas=0 deployment/tavros-nexus-repository-manager -n nexus
 ```

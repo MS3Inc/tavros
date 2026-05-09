@@ -1,8 +1,8 @@
 # OpenTracing for In-Process Tracing API
 
-* Status: accepted
-* Deciders: @jam01
-* Date: 2020-08
+- Status: accepted
+- Deciders: @jam01
+- Date: 2020-08
 
 ## Context and Problem Statement
 
@@ -10,12 +10,12 @@ Which in-process tracing API should we use, OpenTracing or the new project OpenT
 
 ## Decision Drivers <!-- optional -->
 
-* Existing library integrations
+- Existing library integrations
 
 ## Considered Options
 
-* OpenTracing
-* OpenTelemetry
+- OpenTracing
+- OpenTelemetry
 
 ## Decision Outcome
 
@@ -23,9 +23,9 @@ We'll use OpenTracing for in-process tracing API. Having contributed to the Open
 
 ### Negative Consequences <!-- optional -->
 
-* Will need to migrate to OpenTelemetry as it eventually deprecates OpenTracing
+- Will need to migrate to OpenTelemetry as it eventually deprecates OpenTracing
 
 ## Links <!-- optional -->
 
-* [OpenTracing](https://opentracing.io/)
-* [OpenTelemetry](https://opentelemetry.io/)
+- [OpenTracing](https://opentracing.io/)
+- [OpenTelemetry](https://opentelemetry.io/)

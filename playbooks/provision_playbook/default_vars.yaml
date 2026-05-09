@@ -1,93 +1,93 @@
 ---
 all:
   vars:
-    cluster_name: ''
-    cluster_fqdn: ''
-    cluster_admin_email: ''
+    cluster_name: ""
+    cluster_fqdn: ""
+    cluster_admin_email: ""
     kubernetes_cluster:
-      cloud_provider: 'aws'
+      cloud_provider: "aws"
       dns_zone: "{{ cluster_fqdn }}"
       keycloak:
         realm: prod
     aks:
       enabled: false
-      name: ''
+      name: ""
       node_count: 2
-      node_size: 'Standard_A4m_v2'
-      resource_group: ''
-      storage_account_name: ''
-      subscription_id: ''
+      node_size: "Standard_A4m_v2"
+      resource_group: ""
+      storage_account_name: ""
+      subscription_id: ""
     kops:
       enabled: false
       master_count: 3
-      master_size: 't2.large'
-      master_zones: 'us-east-1a,us-east-1b'
+      master_size: "t2.large"
+      master_zones: "us-east-1a,us-east-1b"
       node_count: 2
-      node_size: 't2.xlarge'
-      node_zones: 'us-east-1a,us-east-1b'
+      node_size: "t2.xlarge"
+      node_zones: "us-east-1a,us-east-1b"
       state_bucket: "{{ cluster_fqdn }}-tavros"
       state_bucket_region: "us-east-1"
     kong:
       enabled: true
-      default_ingress_class: 'prod'
+      default_ingress_class: "prod"
       ee_creds:
         - license: ""
           name: default
       instances:
-      - name: 'sandbox-kong'
-        hybrid: false
-        ingress_class: 'sandbox'
-        kuma_mesh_name: 'sandbox'
-        ee:
-          enabled: true
-          creds: 'default'
-          keycloak:
-            realm: 'sandbox'
-      - name: 'prod-kong'
-        hybrid: false
-        ingress_class: 'prod'
-        kuma_mesh_name: 'prod'
-        ee:
-          enabled: true
-          creds: 'default'
-          keycloak:
-            realm: 'prod'
+        - name: "sandbox-kong"
+          hybrid: false
+          ingress_class: "sandbox"
+          kuma_mesh_name: "sandbox"
+          ee:
+            enabled: true
+            creds: "default"
+            keycloak:
+              realm: "sandbox"
+        - name: "prod-kong"
+          hybrid: false
+          ingress_class: "prod"
+          kuma_mesh_name: "prod"
+          ee:
+            enabled: true
+            creds: "default"
+            keycloak:
+              realm: "prod"
     kuma:
       enabled: true
       meshes:
-      - name: 'sandbox'
-        mtls:
-          enabled: true
-        traffictrace:
-          enabled: true
-      - name: 'prod'
-        mtls:
-          enabled: true
-        traffictrace:
-          enabled: true
+        - name: "sandbox"
+          mtls:
+            enabled: true
+          traffictrace:
+            enabled: true
+        - name: "prod"
+          mtls:
+            enabled: true
+          traffictrace:
+            enabled: true
     namespaces:
-    - name: 'dev'
-      kuma_mesh_name: 'sandbox'
-    - name: 'test'
-      kuma_mesh_name: 'sandbox'
-    - name: 'prod'
-      kuma_mesh_name: 'prod'
+      - name: "dev"
+        kuma_mesh_name: "sandbox"
+      - name: "test"
+        kuma_mesh_name: "sandbox"
+      - name: "prod"
+        kuma_mesh_name: "prod"
     keycloak:
       enabled: true
       realms:
-      - name: sandbox
-      - name: prod
+        - name: sandbox
+        - name: prod
     postgresql: {}
     cert_manager:
       enabled: true
     gitea:
       enabled: true
       keycloak:
-        realm: 'prod'
+        realm: "prod"
     nexus:
       enabled: true
       keycloak:
-        realm: 'prod'
+        realm: "prod"
     elastic_cloud:
       ee:
         enabled: false
@@ -95,9 +95,9 @@ all:
     jaeger:
       enabled: true
       keycloak:
-        realm: 'prod'
+        realm: "prod"
     jenkins:
       enabled: true
       keycloak:
-        realm: 'prod'
+        realm: "prod"
     flux: {}

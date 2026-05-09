@@ -27,9 +27,9 @@ spec:
     fullnameOverride: gitea
     gitea:
       admin:
-        username: 'gitea_admin'
-        password: 'placeholder16'
-        email: 'ops@example.com'
+        username: "gitea_admin"
+        password: "placeholder16"
+        email: "ops@example.com"
 
       config:
         service:
@@ -43,21 +43,20 @@ spec:
           ENABLE_OPENID_SIGNUP: false
 
         server:
-          ROOT_URL: 'https://code.tavros.example.com/'
-          SSH_DOMAIN: 'code.tavros.example.com'
+          ROOT_URL: "https://code.tavros.example.com/"
+          SSH_DOMAIN: "code.tavros.example.com"
 
         database:
           DB_TYPE: postgres
-          HOST: 'tavros-postgresql.postgresql.svc.cluster.local:5432'
-          NAME: 'gitea'
-          USER: 'gitea'
-          PASSWD: 'placeholder8'
+          HOST: "tavros-postgresql.postgresql.svc.cluster.local:5432"
+          NAME: "gitea"
+          USER: "gitea"
+          PASSWD: "placeholder8"
 
         security:
-          PASSWORD_COMPLEXITY: 'off'
+          PASSWORD_COMPLEXITY: "off"
 
       database:
         builtIn:
           postgresql:
             enabled: false
-

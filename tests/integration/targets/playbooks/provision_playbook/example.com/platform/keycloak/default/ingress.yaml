@@ -6,22 +6,22 @@ metadata:
   annotations:
     cert-manager.io/cluster-issuer: tavros
     kubernetes.io/ingress.class: prod
-    konghq.com/strip-path: 'true'
+    konghq.com/strip-path: "true"
     konghq.com/protocols: https
-    konghq.com/https-redirect-status-code: '302'
+    konghq.com/https-redirect-status-code: "302"
 spec:
   rules:
-  - host: auth.tavros.example.com
-    http:
-      paths:
-      - path: /
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: keycloak-discovery
-            port:
-              number: 8080
+    - host: auth.tavros.example.com
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: keycloak-discovery
+                port:
+                  number: 8080
   tls:
-  - hosts:
-    - auth.tavros.example.com
-    secretName: auth-ingress-cert
+    - hosts:
+        - auth.tavros.example.com
+      secretName: auth-ingress-cert

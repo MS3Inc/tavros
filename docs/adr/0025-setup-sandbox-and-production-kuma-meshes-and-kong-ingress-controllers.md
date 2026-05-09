@@ -1,8 +1,8 @@
 # Setup Sandbox and Production Kuma Meshes and Kong Ingress Controllers
 
-* Status: accepted
-* Deciders: @jam01, @rmccright-ms3
-* Date: 2020-11
+- Status: accepted
+- Deciders: @jam01, @rmccright-ms3
+- Date: 2020-11
 
 ## Context and Problem Statement
 
@@ -10,16 +10,16 @@ What should be our default service mesh and application environments look like? 
 
 ## Decision Drivers <!-- optional -->
 
-* Must reflect best practice configuration
-* Segregate production from non-production workloads as much as possible
-* Satisfy 'common' enterprise requirements
-* Cost
+- Must reflect best practice configuration
+- Segregate production from non-production workloads as much as possible
+- Satisfy 'common' enterprise requirements
+- Cost
 
 ## Considered Options
 
-* One dev, one test, and one production environment, all segregated through Kuma meshes
-* Dev and test environments separated by kuma meshes in one cluster, production in another
-* Dev and test environments in one 'sandbox' kuma mesh, production in a 'production' mesh
+- One dev, one test, and one production environment, all segregated through Kuma meshes
+- Dev and test environments separated by kuma meshes in one cluster, production in another
+- Dev and test environments in one 'sandbox' kuma mesh, production in a 'production' mesh
 
 ## Decision Outcome
 
@@ -27,15 +27,15 @@ We'll setup a Sandbox and Production Kuma mesh, sandbox will have a dev and test
 
 ### Positive Consequences <!-- optional -->
 
-* Reduced cost of extra load balancer
-* Reduced complexity of dedicated cluster
+- Reduced cost of extra load balancer
+- Reduced complexity of dedicated cluster
 
 ### Negative Consequences <!-- optional -->
 
-* Learning curve of service mesh mutual TLS enforcement
-* Sandboxed environments can still communicate with each other
+- Learning curve of service mesh mutual TLS enforcement
+- Sandboxed environments can still communicate with each other
 
 ## Links <!-- optional -->
 
-* [Kuma mTLS](https://kuma.io/docs/1.0.3/policies/mutual-tls/#usage-of-builtin-ca)
-* [Kuma Gateway](https://kuma.io/docs/1.0.3/documentation/dps-and-data-model/#gateway)
+- [Kuma mTLS](https://kuma.io/docs/1.0.3/policies/mutual-tls/#usage-of-builtin-ca)
+- [Kuma Gateway](https://kuma.io/docs/1.0.3/documentation/dps-and-data-model/#gateway)

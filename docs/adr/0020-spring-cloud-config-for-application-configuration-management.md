@@ -1,8 +1,8 @@
 # Spring Cloud Config for Application Configuration Management
 
-* Status: accepted
-* Deciders: @jam01
-* Date: 2020-11
+- Status: accepted
+- Deciders: @jam01
+- Date: 2020-11
 
 ## Context and Problem Statement
 
@@ -10,12 +10,12 @@ In a solid continuous delivery configuration an enterprise needs to manage appli
 
 ## Decision Drivers <!-- optional -->
 
-* Flexible backend support
-* Easy integration with Camel and Spring Boot
+- Flexible backend support
+- Easy integration with Camel and Spring Boot
 
 ## Considered Options
 
-* Spring Cloud Config
+- Spring Cloud Config
 
 ## Decision Outcome
 
@@ -23,8 +23,8 @@ We'll use spring cloud config as our application configuration manager. Spring c
 
 ### Positive Consequences <!-- optional -->
 
-* Simple integration to Spring Boot
+- Simple integration to Spring Boot
 
 ## Links <!-- optional -->
 
-* [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/reference/html/)
+- [Spring Cloud Config](https://cloud.spring.io/spring-cloud-config/reference/html/)

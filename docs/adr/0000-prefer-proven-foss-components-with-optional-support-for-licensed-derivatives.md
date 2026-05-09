@@ -1,8 +1,8 @@
 # Prefer Proven FOSS Components with Optional Support for Licensed Derivatives
 
-* Status: accepted
-* Deciders: @k2merlinsix, @jam01
-* Date: 2020-08
+- Status: accepted
+- Deciders: @k2merlinsix, @jam01
+- Date: 2020-08
 
 ## Context and Problem Statement
 
@@ -10,8 +10,8 @@ Should we include licensed or non-FOSS components in the Tavros platform for a g
 
 ## Decision Drivers <!-- optional -->
 
-* Total cost of ownership
-* Providing the necessary features for a competitive product
+- Total cost of ownership
+- Providing the necessary features for a competitive product
 
 ## Decision Outcome
 
@@ -21,4 +21,4 @@ Ultimately total cost of ownership will be the deciding factor for our customers
 
 ### Negative Consequences <!-- optional -->
 
-* High number of components to configure and integrate
+- High number of components to configure and integrate

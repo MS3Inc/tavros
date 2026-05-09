@@ -6,7 +6,7 @@ metadata:
   namespace: kuma-system
 spec:
   selectors:
-  - match:
-      kuma.io/service: '*'
+    - match:
+        kuma.io/service: "*"
   conf:
     backend: jaeger-collector

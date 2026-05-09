@@ -11,12 +11,12 @@ spec:
       - 1.1.1.1
       - 8.8.8.8
   containers:
-  - name: tavros-tools
-    image: ghcr.io/ms3inc/tavros-buildtools
-    securityContext:
-      privileged: false
-    tty: true
-    command: ['cat']
+    - name: tavros-tools
+      image: ghcr.io/ms3inc/tavros-buildtools
+      securityContext:
+        privileged: false
+      tty: true
+      command: ["cat"]
   resources:
     limits:
       cpu: "1"

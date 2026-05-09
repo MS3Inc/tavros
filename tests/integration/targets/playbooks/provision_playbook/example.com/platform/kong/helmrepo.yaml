@@ -6,4 +6,3 @@ metadata:
 spec:
   interval: 30m
   url: https://charts.konghq.com
-  

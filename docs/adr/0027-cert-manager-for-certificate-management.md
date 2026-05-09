@@ -1,8 +1,8 @@
 # cert-manager for Certificate Management
 
-* Status: accepted
-* Deciders: @jam01
-* Date: 2020-11
+- Status: accepted
+- Deciders: @jam01
+- Date: 2020-11
 
 ## Context and Problem Statement
 
@@ -10,12 +10,12 @@ The platform will required TLS certificates to signed by well known CAs. What to
 
 ## Decision Drivers <!-- optional -->
 
-* Automation, including rotation before expiration
-* Cost
+- Automation, including rotation before expiration
+- Cost
 
 ## Considered Options
 
-* cert-manager
+- cert-manager
 
 ## Decision Outcome
 
@@ -23,15 +23,15 @@ We'll use cert-manager as our certificate manager. cert-manager is the best know
 
 ### Positive Consequences <!-- optional -->
 
-* Automatic generation and re-generation
+- Automatic generation and re-generation
 
 ### Negative Consequences <!-- optional -->
 
-* Let's Encrypt limit of 50 certificates per week
+- Let's Encrypt limit of 50 certificates per week
 
 ## Links <!-- optional -->
 
-* [cert-manager](https://cert-manager.io/)
-* [Securing Ingress Resources](https://cert-manager.io/docs/usage/ingress/)
-* [ACME Issuers](https://cert-manager.io/docs/configuration/acme/#creating-a-basic-acme-issuer)
-* [Let's Encrypt Docs](https://letsencrypt.org/docs/)
+- [cert-manager](https://cert-manager.io/)
+- [Securing Ingress Resources](https://cert-manager.io/docs/usage/ingress/)
+- [ACME Issuers](https://cert-manager.io/docs/configuration/acme/#creating-a-basic-acme-issuer)
+- [Let's Encrypt Docs](https://letsencrypt.org/docs/)

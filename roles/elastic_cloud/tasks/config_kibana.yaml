@@ -3,10 +3,10 @@
   copy:
     src: kibana-objects.ndjson
     dest: /tmp/kibana-objects.ndjson
-  tags: [ elastic_cloud ]
+  tags: [elastic_cloud]
 
 - name: Install Kibana Integrations' Assets
-  tags: [ requires_cluster, elastic_cloud ]
+  tags: [requires_cluster, elastic_cloud]
   when: ('dry-run' not in ansible_run_tags)
   uri:
     url: https://kibana.{{ cluster_fqdn }}/api/fleet/epm/packages/{{ item }}
@@ -29,7 +29,7 @@
   no_log: True
 
 - name: Import Kibana Objects
-  tags: [ requires_cluster, elastic_cloud ]
+  tags: [requires_cluster, elastic_cloud]
   when: ('dry-run' not in ansible_run_tags)
   shell: |
     curl --insecure --fail -X POST https://kibana.{{ cluster_fqdn }}/api/saved_objects/_import?createNewCopies=false \

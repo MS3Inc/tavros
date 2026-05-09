@@ -24,14 +24,14 @@ spec:
     realmRoles:
       - "offline_access"
     clientRoles:
-# Begin elastic-cloud ANSIBLE MANAGED BLOCK
+      # Begin elastic-cloud ANSIBLE MANAGED BLOCK
       elastic-cloud:
         - admin
-# End elastic-cloud ANSIBLE MANAGED BLOCK
-# Begin prod-kong Kong ANSIBLE MANAGED BLOCK
+      # End elastic-cloud ANSIBLE MANAGED BLOCK
+      # Begin prod-kong Kong ANSIBLE MANAGED BLOCK
       prod-kong:
         - super-admin
-# End prod-kong Kong ANSIBLE MANAGED BLOCK
+      # End prod-kong Kong ANSIBLE MANAGED BLOCK
       account:
         - "manage-account"
         - "view-profile"

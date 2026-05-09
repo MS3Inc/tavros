@@ -8,7 +8,7 @@ metadata:
 spec:
   realmSelector:
     matchLabels:
-        realm: sandbox
+      realm: sandbox
   client:
     clientId: sandbox-kong
     secret: placeholder14
@@ -16,7 +16,7 @@ spec:
     protocol: openid-connect
     rootUrl: https://admin.sandbox-kong.tavros.enterprise-example.com
     redirectUris:
-    - "https://admin.sandbox-kong.tavros.enterprise-example.com/*"
+      - "https://admin.sandbox-kong.tavros.enterprise-example.com/*"
     directAccessGrantsEnabled: True
     standardFlowEnabled: True
     enabled: True

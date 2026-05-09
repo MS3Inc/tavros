@@ -29,9 +29,9 @@ spec:
             - name: init-scripts
               mountPath: /tmp/init-scripts
       volumes:
-      - name: init-scripts
-        secret:
-          secretName: tavros-init-scripts
-          defaultMode: 0777
+        - name: init-scripts
+          secret:
+            secretName: tavros-init-scripts
+            defaultMode: 0777
       restartPolicy: OnFailure
   backoffLimit: 8

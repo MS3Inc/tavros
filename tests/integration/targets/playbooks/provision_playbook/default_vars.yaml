@@ -3,76 +3,76 @@
 # THE DIFF IS EXPLICITLY ADDING PASSWORDS SO THEY'RE NOT GENERATED IN ORDER TO ASSERT THE RESULT
 all:
   vars:
-    cluster_fqdn: ''
-    cluster_admin_email: ''
+    cluster_fqdn: ""
+    cluster_admin_email: ""
     kubernetes_cluster:
-      cloud_provider: 'aws'
+      cloud_provider: "aws"
       dns_zone: "{{ cluster_fqdn }}"
       keycloak:
-        client_secret: 'placeholder22'
+        client_secret: "placeholder22"
         realm: prod
     aks:
       enabled: false
     kops:
       enabled: true
       master_count: 3
-      master_size: 't2.large'
-      master_zones: 'us-east-1a,us-east-1b'
+      master_size: "t2.large"
+      master_zones: "us-east-1a,us-east-1b"
       node_count: 2
-      node_size: 't2.xlarge'
-      node_zones: 'us-east-1a,us-east-1b'
+      node_size: "t2.xlarge"
+      node_zones: "us-east-1a,us-east-1b"
       state_bucket: "{{ cluster_fqdn }}-tavros"
       state_bucket_region: "us-east-1"
     kong:
       enabled: true
-      default_ingress_class: 'prod'
+      default_ingress_class: "prod"
       ee_creds: []
       instances:
-      - name: 'sandbox-kong'
-        hybrid: false
-        ingress_class: 'sandbox'
-        kuma_mesh_name: 'sandbox'
-        pg:
-          password: placeholder1
-        ee:
-          enabled: false
-      - name: 'prod-kong'
-        hybrid: true
-        ingress_class: 'prod'
-        kuma_mesh_name: 'prod'
-        pg:
-          password: placeholder2
-        ee:
-          enabled: false
+        - name: "sandbox-kong"
+          hybrid: false
+          ingress_class: "sandbox"
+          kuma_mesh_name: "sandbox"
+          pg:
+            password: placeholder1
+          ee:
+            enabled: false
+        - name: "prod-kong"
+          hybrid: true
+          ingress_class: "prod"
+          kuma_mesh_name: "prod"
+          pg:
+            password: placeholder2
+          ee:
+            enabled: false
     kuma:
       enabled: true
       meshes:
-      - name: 'sandbox'
-        mtls:
-          enabled: true
-        traffictrace:
-          enabled: true
-      - name: 'prod'
-        mtls:
-          enabled: true
-        traffictrace:
-          enabled: true
+        - name: "sandbox"
+          mtls:
+            enabled: true
+          traffictrace:
+            enabled: true
+        - name: "prod"
+          mtls:
+            enabled: true
+          traffictrace:
+            enabled: true
     namespaces:
-    - name: 'dev'
-      kuma_mesh_name: 'sandbox'
-    - name: 'test'
-      kuma_mesh_name: 'sandbox'
-    - name: 'prod'
-      kuma_mesh_name: 'prod'
+      - name: "dev"
+        kuma_mesh_name: "sandbox"
+      - name: "test"
+        kuma_mesh_name: "sandbox"
+      - name: "prod"
+        kuma_mesh_name: "prod"
     keycloak:
       enabled: true
       pg:
         password: placeholder3
       realms:
-      - name: sandbox
-        admin_password: placeholder4
-      - name: prod
-        admin_password: placeholder5
+        - name: sandbox
+          admin_password: placeholder4
+        - name: prod
+          admin_password: placeholder5
     postgresql:
       password: placeholder6
       postgres_password: placeholder7
@@ -84,12 +84,12 @@ all:
       pg:
         password: placeholder8
       keycloak:
-        realm: 'prod'
+        realm: "prod"
         client_secret: placeholder17
     nexus:
       enabled: true
       keycloak:
-        realm: 'prod'
+        realm: "prod"
         client_secret: placeholder10
     elastic_cloud:
       ee:
@@ -98,17 +98,17 @@ all:
     jaeger:
       enabled: true
       keycloak:
-        realm: 'prod'
+        realm: "prod"
         client_secret: placeholder15
       es:
-        password: 'placeholder21'
+        password: "placeholder21"
     jenkins:
       enabled: true
       keycloak:
-        realm: 'prod'
-        password: 'placeholder19'
+        realm: "prod"
+        password: "placeholder19"
       gitea:
-        password: 'placeholder20'
+        password: "placeholder20"
     flux:
       gitea:
         password: placeholder18
