@@ -52,7 +52,7 @@ metadata:
   namespace: elastic-system
 spec:
   type: heartbeat
-  version: 7.13.4
+  version: 8.15.3
   elasticsearchRef:
     name: tavros
   config:
@@ -90,7 +90,7 @@ metadata:
   namespace: elastic-system
 spec:
   type: heartbeat
-  version: 7.13.4
+  version: 8.15.3
   elasticsearchRef:
     name: tavros
   config:
@@ -128,7 +128,7 @@ metadata:
   namespace: elastic-system
 spec:
   type: heartbeat
-  version: 7.13.4
+  version: 8.15.3
   elasticsearchRef:
     name: tavros
   config:
