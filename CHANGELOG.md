@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `phase2`: Removed the deprecated `validation: client` field from every `flux-kustomization.j2` (the field was removed in `kustomize.toolkit.fluxcd.io/v1` GA; manifests are now validated server-side).
 - `phase2`: `requirements.txt` — `ansible` requirement loosened from `==4.7.0` to `>=9.0,<11.0` (brings ansible-core ≥2.16). `boto` (Python 2 SDK, EOL) removed. `requests[security]` extra dropped (the extra was removed in `requests` 2.26).
 - `phase2`: `galaxy.yml` collection ranges brought current — `amazon.aws >=8.0.0,<10.0.0`, `community.aws >=8.0.0,<10.0.0`, `community.general >=9.0.0,<11.0.0`, `azure.azcollection >=2.7.0,<4.0.0`. Added `community.crypto >=2.0.0` (already used transitively by the kops role's `community.crypto.openssh_keypair`).
+- `phase3`: Nexus chart `nexus-repository-manager` bumped from `29.1.0` (Nexus 3.32.0) to `64.2.0` (Nexus 3.64.0). The Sonatype `helm3-charts` repo does not currently ship a chart matching the latest Nexus 3.84+; tracking that requires migrating to a different chart source in a future phase.
 
 ### Removed
 
