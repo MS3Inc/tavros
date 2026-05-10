@@ -8,7 +8,7 @@ metadata:
 data:
   address: {{ flux.alerts.slack.address | b64encode }}
 ---
-apiVersion: notification.toolkit.fluxcd.io/v1beta1
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Provider
 metadata:
   name: slack
@@ -19,7 +19,7 @@ spec:
   secretRef:
     name: slack-url
 ---
-apiVersion: notification.toolkit.fluxcd.io/v1beta1
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
 kind: Alert
 metadata:
   name: on-call-webapp

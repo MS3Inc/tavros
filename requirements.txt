@@ -1,9 +1,8 @@
-ansible==4.7.0
+ansible>=9.0,<11.0
 botocore
-boto
 boto3
 kubernetes==31.0.0
 
 packaging
-requests[security]
+requests
 xmltodict
