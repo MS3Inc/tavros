@@ -1,0 +1,18 @@
+---
+profile: moderate
+
+exclude_paths:
+  - .git/
+  - .github/
+  - docs/modernization/
+  - tests/integration/targets/playbooks/provision_playbook/
+
+skip_list:
+  - role-name              # roles use snake_case names per project convention
+  - var-naming[no-role-prefix]
+
+warn_list:
+  - command-instead-of-shell  # legitimate uses must be flagged with `# noqa: command-instead-of-shell`
+  - experimental
+  - jinja[spacing]
+  - schema[meta]

@@ -2,29 +2,30 @@ name: Tavros Tag CI
 on:
   push:
     tags: [v*]
+permissions:
+  contents: read
+  packages: write
 jobs:
   tavros-ci:
     runs-on: ubuntu-latest
     steps:
-      - name: Login to  ghcr.io
-        env:
-          REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
-        run: podman login --username git --password $REGISTRY_PSW $IMAGE
+      - name: Login to ghcr.io
+        run: podman login --username "${{ github.actor }}" --password "${{ secrets.GITHUB_TOKEN }}" ghcr.io
       - name: Push Versioned ghcr.io/ms3inc/tavros-buildtools
         shell: bash
         env:
-          REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
           IMAGE: ghcr.io/ms3inc/tavros-buildtools
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          podman pull $IMAGE:latest
-          podman tag $IMAGE:latest $IMAGE:${{ GITHUB_REF#refs/tags/ }}
-          podman push $IMAGE:${{ GITHUB_REF#refs/tags/ }}
+          podman pull "$IMAGE:latest"
+          podman tag "$IMAGE:latest" "$IMAGE:$REF_NAME"
+          podman push "$IMAGE:$REF_NAME"
       - name: Push Versioned ghcr.io/ms3inc/tavros-collection
         shell: bash
         env:
-          REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
           IMAGE: ghcr.io/ms3inc/tavros-collection
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          podman pull $IMAGE:latest
-          podman tag $IMAGE:latest $IMAGE:${{ GITHUB_REF#refs/tags/ }}
-          podman push $IMAGE:${{ GITHUB_REF#refs/tags/ }}
+          podman pull "$IMAGE:latest"
+          podman tag "$IMAGE:latest" "$IMAGE:$REF_NAME"
+          podman push "$IMAGE:$REF_NAME"

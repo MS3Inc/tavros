@@ -2,17 +2,20 @@ name: Tavros CI
 on:
   push:
     branches: [main]
+permissions:
+  contents: read
+  packages: write
 jobs:
   tavros-ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.0
       - name: Configure containers storage
         run: |
           sudo apt-get install fuse-overlayfs
           mkdir -vp ~/.config/containers
           printf "[storage.options]\nmount_program=\"/usr/bin/fuse-overlayfs\"" > ~/.config/containers/storage.conf
-      - uses: dorny/paths-filter@v2
+      - uses: dorny/paths-filter@d1c1ffe0248fe513906c8e24db8ea791d46f8590 # v3.0.2
         id: filter
         with:
           filters: |
@@ -30,13 +33,11 @@ jobs:
         run: |
           buildah pull --policy missing ghcr.io/ms3inc/tavros-buildtools:latest
           container=$(buildah from --pull-never ghcr.io/ms3inc/tavros-buildtools:latest)
-          buildah run -v $PWD:$PWD $container bash -c "cd $PWD && make install test && rm -rf /tmp/*"
-          buildah config --label name=tavros-collection $container
-          buildah commit --rm $container ghcr.io/ms3inc/tavros-collection:latest
+          buildah run -v "$PWD:$PWD" "$container" bash -c "cd $PWD && make install test && rm -rf /tmp/*"
+          buildah config --label name=tavros-collection "$container"
+          buildah commit --rm "$container" ghcr.io/ms3inc/tavros-collection:latest
       - name: Login to ghcr.io
-        env:
-          REGISTRY_PSW: ${{ secrets.JAM01_PAT }}
-        run: podman login --username git --password $REGISTRY_PSW ghcr.io/ms3inc
+        run: podman login --username "${{ github.actor }}" --password "${{ secrets.GITHUB_TOKEN }}" ghcr.io
       - name: Push tavros-buildtools:latest image
         if: steps.filter.outputs.buildtools == 'true'
         run: podman push ghcr.io/ms3inc/tavros-buildtools:latest
