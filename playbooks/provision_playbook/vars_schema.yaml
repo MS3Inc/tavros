@@ -24,11 +24,14 @@ properties:
     properties:
       enabled:
         type: boolean
-      master_count:
-        type: integer
-      master_size:
+      networking:
         type: string
-      master_zones:
+        description: kOps CNI selection (e.g. cilium, calico). Default cilium.
+      control_plane_count:
+        type: integer
+      control_plane_size:
+        type: string
+      control_plane_zones:
         type: string
       node_count:
         type: integer

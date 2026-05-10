@@ -4,7 +4,7 @@ set -o nounset
 set -o errexit
 set -o pipefail
 
-KUBECTL_VERSION=1.21.0
+KUBECTL_VERSION=1.30.0
 
 # https://github.com/fluxcd/kustomize-controller/blob/v0.41.2/go.mod#L34
 # https://github.com/kubernetes-sigs/kustomize/blob/kustomize/v3.9.4/kustomize/go.mod#L11
@@ -12,7 +12,7 @@ FLUX_VERSION=0.41.2
 KUSTOMIZE_VERSION=3.9.4
 
 KUBESEAL_VERSION=0.15.0
-KOPS_VERSION=1.21.0
+KOPS_VERSION=1.30.0
 YQ_VERSION=4.6.3
 DECK_VERSION=1.5.1
 

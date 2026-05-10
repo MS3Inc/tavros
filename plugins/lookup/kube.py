@@ -40,7 +40,7 @@ DOCUMENTATION = """
       kubeconfig:
         description:
         - Path to an existing Kubernetes config file. If not provided, and no other connection
-          options are provided, the openshift client will attempt to load the default
+          options are provided, the kubernetes client will attempt to load the default
           configuration file from I(~/.kube/config.json). Can also be specified via K8S_AUTH_KUBECONFIG environment
           variable.
 """

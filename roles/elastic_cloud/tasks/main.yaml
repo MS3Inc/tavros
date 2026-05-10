@@ -169,7 +169,7 @@
 - name: Add RBAC Role Mapping for Keycloak
   tags: [requires_cluster, non_idempotent, elastic_cloud]
   when: ('dry-run' not in ansible_run_tags) and elastic_cloud.ee.enabled
-  community.kubernetes.k8s_exec:
+  kubernetes.core.k8s_exec:
     kubeconfig: "~/.kube/config"
     namespace: elastic-system
     pod: "tavros-es-default-0"

@@ -32,15 +32,15 @@
 
     kops create cluster {{ cluster_fqdn }} \
       --cloud={{ kubernetes_cluster.cloud_provider }} \
-      --master-count={{ kops.master_count }} \
-      --master-size={{ kops.master_size }} \
-      --master-zones={{ kops.master_zones }} \
+      --control-plane-count={{ kops.control_plane_count }} \
+      --control-plane-size={{ kops.control_plane_size }} \
+      --control-plane-zones={{ kops.control_plane_zones }} \
       --node-count={{ kops.node_count }} \
       --node-size={{ kops.node_size }} \
       --zones={{ kops.node_zones }} \
       --container-runtime containerd \
       --topology private \
-      --networking weave \
+      --networking {{ kops.networking | default('cilium') }} \
       --dns-zone={{ kubernetes_cluster.dns_zone }} \
       --bastion \
       --authorization RBAC \
