@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `phase2`: `requirements.txt` — `ansible` requirement loosened from `==4.7.0` to `>=9.0,<11.0` (brings ansible-core ≥2.16). `boto` (Python 2 SDK, EOL) removed. `requests[security]` extra dropped (the extra was removed in `requests` 2.26).
 - `phase2`: `galaxy.yml` collection ranges brought current — `amazon.aws >=8.0.0,<10.0.0`, `community.aws >=8.0.0,<10.0.0`, `community.general >=9.0.0,<11.0.0`, `azure.azcollection >=2.7.0,<4.0.0`. Added `community.crypto >=2.0.0` (already used transitively by the kops role's `community.crypto.openssh_keypair`).
 - `phase3`: Nexus chart `nexus-repository-manager` bumped from `29.1.0` (Nexus 3.32.0) to `64.2.0` (Nexus 3.64.0). The Sonatype `helm3-charts` repo does not currently ship a chart matching the latest Nexus 3.84+; tracking that requires migrating to a different chart source in a future phase.
+- `phase3`: Jenkins core image bumped from `jenkins/jenkins:2.416-jdk11` to `jenkins/jenkins:2.452.3-lts-jdk17`. **Java requirement bumped from 11 to 17** (required by Jenkins 2.426+). The `jenkins-operator` itself (currently `0.8.0-beta.2`) and the pinned plugin set in `roles/jenkins/files/jenkins.yaml` are intentionally left alone in this commit; plugin compatibility against 2.452 LTS should be re-validated in a follow-up before upgrading the operator.
 
 ### Removed
 
