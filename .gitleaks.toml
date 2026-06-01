@@ -1,0 +1,26 @@
+# Gitleaks configuration for Tavros.
+#
+# Extends the upstream default ruleset and adds allowlists for known
+# false positives so the CI secret scan stays signal-rich. Real secrets
+# must never be committed; the entries below are template expressions and
+# integration-test fixtures that contain only placeholder values.
+title = "Tavros gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Tavros allowlisted paths and patterns (known false positives)"
+
+paths = [
+  # Integration-test fixtures are rendered example manifests whose Secret
+  # objects carry base64-encoded placeholder values, e.g.
+  # base64("placeholder2") == "cGxhY2Vob2xkZXIy". Not real credentials.
+  '''tests/integration/.*''',
+]
+
+regexes = [
+  # Jinja template expressions used in `curl -u elastic:{{ ... }}` calls in
+  # the elastic_cloud role. The "secret" is a template variable, not a value.
+  '''elastic:\{\{''',
+]
