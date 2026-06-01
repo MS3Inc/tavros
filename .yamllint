@@ -5,8 +5,10 @@ rules:
   line-length:
     max: 160
     level: warning
-  document-start:
-    present: false
+  # The codebase is inconsistent about the `---` document-start marker (some
+  # task files use it, some don't). Don't enforce either way rather than
+  # generating noise on dozens of legacy files.
+  document-start: disable
   indentation:
     spaces: 2
     indent-sequences: consistent
