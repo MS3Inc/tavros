@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.0
-      - uses: ansible/ansible-lint@7e5a44e75ef89d8c4181e4c3eef7155bbcfa3587 # v25.1.3
+      - uses: ansible/ansible-lint@49ded6a7e4f3acf6b1eb4b3aa2796d84b5faa63a # v25.1.3
         with:
           args: ""
           setup_python: "true"
