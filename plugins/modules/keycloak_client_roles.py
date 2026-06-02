@@ -9,15 +9,13 @@ short_description: An extension to Ansible's keycloak_client specific to Client 
 
 description:
     - The keycloak_client module does not allow for specifying client roles. This module extends
-    that module with the ability to add client roles and client service account roles.
-
+      that module with the ability to add client roles and client service account roles.
     - This module also extends Ansible's KeycloakAPI class to re-use its token and general client
-    functionality.
-
+      functionality.
     - See
-    https://github.com/ansible-collections/community.general/blob/1.3.1/plugins/modules/identity/keycloak/keycloak_client.py
-    and
-    https://github.com/ansible-collections/community.general/blob/1.3.1/plugins/module_utils/identity/keycloak/keycloak.py
+      https://github.com/ansible-collections/community.general/blob/1.3.1/plugins/modules/identity/keycloak/keycloak_client.py
+      and
+      https://github.com/ansible-collections/community.general/blob/1.3.1/plugins/module_utils/identity/keycloak/keycloak.py
 
 options:
     realm:
@@ -53,7 +51,7 @@ options:
                 description:
                     - the desired client's service account client roles
                     - the dict keys are the desired client role's clientId and the value is a list of dicts
-                    that must have a 'name' key the desired client role name.
+                      that must have a 'name' key the desired client role name.
                 type: dict
 '''
 
