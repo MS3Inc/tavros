@@ -74,7 +74,7 @@
 - name: Wait for Nexus
   tags: [requires_cluster, nexus]
   when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s_info:
+  kubernetes.core.k8s_info:
     kubeconfig: "~/.kube/config"
     kind: Pod
     label_selectors:
@@ -87,10 +87,10 @@
 - name: Retreive admin.password
   tags: [requires_cluster, nexus]
   when: ('dry-run' not in ansible_run_tags)
-  community.kubernetes.k8s_exec:
+  kubernetes.core.k8s_exec:
     kubeconfig: "~/.kube/config"
     namespace: nexus
-    pod: "{{ lookup('community.kubernetes.k8s', kubeconfig='~/.kube/config', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
+    pod: "{{ lookup('kubernetes.core.k8s', kubeconfig='~/.kube/config', kind='Pod', namespace='nexus', label_selector=nexus_pod_name).metadata.name }}"
     command: |
       cat nexus-data/admin.password
   vars:

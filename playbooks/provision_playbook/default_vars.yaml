@@ -19,11 +19,12 @@ all:
       subscription_id: ""
     kops:
       enabled: false
-      master_count: 3
-      master_size: "t2.large"
-      master_zones: "us-east-1a,us-east-1b"
+      networking: "cilium"
+      control_plane_count: 3
+      control_plane_size: "t3.large"
+      control_plane_zones: "us-east-1a,us-east-1b"
       node_count: 2
-      node_size: "t2.xlarge"
+      node_size: "t3.xlarge"
       node_zones: "us-east-1a,us-east-1b"
       state_bucket: "{{ cluster_fqdn }}-tavros"
       state_bucket_region: "us-east-1"

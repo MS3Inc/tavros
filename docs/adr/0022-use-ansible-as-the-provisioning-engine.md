@@ -34,5 +34,5 @@ We'll use Ansible as the provisioning engine. Ansible modules, variable handling
 ## Links <!-- optional -->
 
 - [Ansible](https://www.ansible.com/)
-- [Kubernetes Ansible](https://docs.ansible.com/ansible/latest/collections/community/kubernetes/k8s_module.html)
+- [Kubernetes Ansible](https://docs.ansible.com/ansible/latest/collections/kubernetes/core/k8s_module.html)
 - [Ansible Operator SDK](https://sdk.operatorframework.io/docs/building-operators/ansible/tutorial/)

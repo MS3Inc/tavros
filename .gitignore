@@ -3,3 +3,7 @@ ms3_inc-tavros-*.tar.gz
 .idea/
 
 .vscode/
+
+# Local ansible-lint / ansible-galaxy working dirs
+.ansible/
+.cache/
