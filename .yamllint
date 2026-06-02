@@ -1,0 +1,35 @@
+---
+extends: default
+
+rules:
+  line-length:
+    max: 160
+    level: warning
+  # The codebase is inconsistent about the `---` document-start marker (some
+  # task files use it, some don't). Don't enforce either way rather than
+  # generating noise on dozens of legacy files.
+  document-start: disable
+  indentation:
+    spaces: 2
+    indent-sequences: consistent
+  truthy:
+    allowed-values: ["true", "false", "yes", "no", "on", "off"]
+    check-keys: false
+  comments:
+    min-spaces-from-content: 1
+  comments-indentation: disable
+  octal-values:
+    forbid-implicit-octal: false
+    forbid-explicit-octal: false
+  braces:
+    max-spaces-inside: 1
+
+# tests/integration/targets/ contains auto-generated reference fixtures and
+# upstream-vendored manifests (Helm chart output, operator bundles); we don't
+# enforce style on them. docs/modernization/ is local-only Claude artifacts.
+ignore: |
+  .git/
+  docs/modernization/
+  tests/integration/targets/
+  roles/jaeger/files/operator/operator.yaml
+  roles/jenkins/files/operator/all-in-one.yaml

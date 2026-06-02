@@ -1,5 +1,5 @@
 ![alt text](https://www.ms3-inc.com/wp-content/uploads/2021/02/b.png)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/Kong/kong/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 # Tavros
 

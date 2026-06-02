@@ -2,7 +2,7 @@
 # Generate custom tavros yaml
 
 # Exit if no argumetns were passed
-if [ -z $1 ]; then
+if [ -z "${1:-}" ]; then
     exit
 fi
 
