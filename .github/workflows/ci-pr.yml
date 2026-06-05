@@ -20,7 +20,7 @@ jobs:
     # job level) so the job reports SUCCESS (green check) and never blocks a
     # merge, while the steps still run and surface their output as warnings.
     steps:
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.0
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v4.3.0
       - name: Build tavros-buildtools:latest image
         continue-on-error: true
         env:
