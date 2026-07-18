@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `phase0`: `SECURITY.md`, `CONTRIBUTING.md`, `CODEOWNERS`, and this `CHANGELOG.md`.
 - `phase1`: New `kops.networking` variable (default `cilium`) so users can override the CNI without editing role tasks.
 - `phase2`: New `requirements.yml` mirroring `galaxy.yml` collection deps so contributors can run `ansible-galaxy collection install --force-with-deps -r requirements.yml`.
+- `phase3`: README "Supported Platform Components" table updated to reflect the versions provisioned after phases 0–3, with added rows for Kubernetes (1.32), kOps (1.30), Cilium, cert-manager, PostgreSQL, and Gitea. Footnotes added clarifying that Keycloak is pinned to the legacy 19.0.3 operator pending the Keycloak 26 migration, and that SonarQube is an intended component (ADR-0015) not yet automated by a role.
 
 ### Changed
 
