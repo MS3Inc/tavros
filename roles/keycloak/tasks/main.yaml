@@ -121,7 +121,7 @@
     name: tavros
     namespace: keycloak
   register: keycloak_def
-  # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
+  # https://github.com/keycloak/keycloak-operator/blob/19.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
   until: ('status' in keycloak_def.resources[0]) and (keycloak_def.resources[0].status.ready)
   retries: 30
   delay: 30
@@ -137,7 +137,7 @@
     name: kubernetes
     namespace: keycloak
   register: keycloak_def
-  # https://github.com/keycloak/keycloak-operator/blob/11.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
+  # https://github.com/keycloak/keycloak-operator/blob/19.0.3/deploy/crds/keycloak.org_keycloaks_crd.yaml#L175
   until: ('status' in keycloak_def.resources[0]) and (keycloak_def.resources[0].status.ready)
   retries: 30
   delay: 30

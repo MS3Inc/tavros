@@ -6,7 +6,7 @@ metadata:
   namespace: elastic-system
 spec:
   type: metricbeat
-  version: 7.13.4
+  version: 8.15.3
   elasticsearchRef:
     name: tavros
   kibanaRef:

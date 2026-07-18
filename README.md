@@ -15,19 +15,31 @@ The provision playbook provisions a Kubernetes cluster and configures Tavros's p
 
 ## Supported Platform Components
 
-| Concern                          | Component                | Version |
-| -------------------------------- | ------------------------ | ------- |
-| Platform GitOps                  | Flux v2                  | 0.10.0  |
-| Platform GitOps                  | Sealed Secrets           | 0.17.5  |
-| API Gateway and Manager          | Kong                     | 3.0.0   |
-| API Portal                       | Kong Enterprise Edition  | 3.0.0   |
-| Service Mesh                     | Kuma                     | 1.2.0   |
-| Identity and Access Management   | Keycloak                 | 19.0.2  |
-| Artifact Management              | Nexus Repository Manager | 3.28.1  |
-| Continuous Delivery              | Jenkins                  | 2.416   |
-| Observability                    | Elastic Cloud            | 7.13.4  |
-| Observability                    | Jaeger                   | 1.47.0  |
-| Static Code Qualitative Analysis | Sonarqube                | 8.5     |
+Versions below reflect what the Ansible collection provisions as of the modernization phases 0–3. Where a component is installed via a Helm chart, the chart version is noted in parentheses next to the product version.
+
+| Concern                          | Component                | Version               |
+| -------------------------------- | ------------------------ | --------------------- |
+| Container Orchestration          | Kubernetes               | 1.32                  |
+| Cluster Provisioning             | kOps                     | 1.30                  |
+| Cluster Networking (CNI)         | Cilium                   | kOps-managed          |
+| Platform GitOps                  | Flux v2                  | 2.4.0                 |
+| Secret Management                | Sealed Secrets           | 0.27.0                |
+| Certificate Management           | cert-manager             | 1.11.0                |
+| API Gateway and Manager          | Kong                     | 3.9 (chart 2.52.0)    |
+| API Portal                       | Kong Enterprise Edition  | 3.9.1.1               |
+| Service Mesh                     | Kuma                     | 2.13.5                |
+| Identity and Access Management   | Keycloak                 | 19.0.3 [^keycloak]    |
+| Default Database                 | PostgreSQL               | Bitnami chart 10.3.17 |
+| Git Server                       | Gitea                    | chart 2.2.4           |
+| Artifact Management              | Nexus Repository Manager | 3.64.0 (chart 64.2.0) |
+| Continuous Delivery              | Jenkins                  | 2.452.3 LTS (JDK 17)  |
+| Observability                    | Elastic Cloud            | 8.15.3                |
+| Observability                    | Jaeger                   | 1.62.0                |
+| Static Code Qualitative Analysis | SonarQube                | Planned [^sonarqube]  |
+
+[^keycloak]: Pinned to the last stable release of the legacy `keycloak.org/v1alpha1` operator lineage. The migration to Keycloak 26 (the Quarkus-based `k8s.keycloak.org/v2alpha1` operator) is planned for a dedicated follow-up phase; see [`roles/keycloak/MIGRATION-26.md`](roles/keycloak/MIGRATION-26.md).
+
+[^sonarqube]: SonarQube is an intended platform component (see [ADR-0015](docs/adr/0015-sonarqube-for-application-static-code-analysis.md)) but is not yet automated by a role in the provision playbook.
 
 ## Roadmap
 

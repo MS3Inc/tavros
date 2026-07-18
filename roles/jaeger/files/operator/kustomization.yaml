@@ -3,4 +3,4 @@ kind: Kustomization
 namespace: jaeger
 resources:
   - ns.yaml
-  - operator.yaml
+  - https://github.com/jaegertracing/jaeger-operator/releases/download/v1.62.0/jaeger-operator.yaml
