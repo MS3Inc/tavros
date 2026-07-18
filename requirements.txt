@@ -2,7 +2,7 @@ ansible==14.0.0
 botocore
 boto
 boto3
-kubernetes==36.0.2
+kubernetes==36.0.3
 
 packaging
 requests[security]
