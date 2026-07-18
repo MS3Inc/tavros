@@ -1,7 +1,7 @@
-ansible>=9.0,<11.0
+ansible==14.2.0
 botocore
 boto3
-kubernetes==31.0.0
+kubernetes==36.0.3
 
 packaging
 requests
