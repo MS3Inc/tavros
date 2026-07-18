@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `phase0`: Dependabot configuration covering GitHub Actions, pip, and Docker base images.
 - `phase0`: `SECURITY.md`, `CONTRIBUTING.md`, `CODEOWNERS`, and this `CHANGELOG.md`.
 - `phase1`: New `kops.networking` variable (default `cilium`) so users can override the CNI without editing role tasks.
+- `phase2`: New `requirements.yml` mirroring `galaxy.yml` collection deps so contributors can run `ansible-galaxy collection install --force-with-deps -r requirements.yml`.
 
 ### Changed
 
@@ -26,6 +27,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `phase1`: Default kOps node sizes bumped from `t2.large`/`t2.xlarge` to `t3.large`/`t3.xlarge` (current-generation burstable family).
 - `phase1`: Collection dependency `community.kubernetes ==1.2.0` replaced with `kubernetes.core >=5.0.0,<6.0.0`. All role/plugin references updated. The `community.kubernetes` collection was renamed and retired upstream.
 - `phase1`: `KUBECTL_VERSION` and `KOPS_VERSION` bumped to `1.30.0` in `buildtools-build.sh`.
+- `phase2`: Tooling versions in `buildtools-build.sh` brought current — `KUBECTL_VERSION=1.32.0`, `FLUX_VERSION=2.4.0`, `KUSTOMIZE_VERSION=5.4.0`, `KUBESEAL_VERSION=0.27.0`, `YQ_VERSION=4.44.6`, `DECK_VERSION=1.40.0`. (`KOPS_VERSION` stays at `1.30.0` for now to track the K8s minor.)
+- `phase2`: kubectl download URL switched from the deprecated `storage.googleapis.com/kubernetes-release/...` redirect to the canonical `dl.k8s.io/release/...`.
+- `phase2`: kubeseal download switched to the new tarball-based release artifact (`kubeseal-${VER}-linux-amd64.tar.gz`); the legacy single-binary URL no longer exists for 0.27+.
+- `phase2`: `flux install --version` bumped from `v0.41.2` to `v2.4.0` in `roles/fluxtoolkit`.
+- `phase2`: Sealed Secrets controller manifest pin bumped from `v0.17.5` to `v0.27.0`.
+- `phase2`: All Flux Toolkit CRD API versions migrated to GA — `kustomize.toolkit.fluxcd.io/v1`, `source.toolkit.fluxcd.io/v1`, `helm.toolkit.fluxcd.io/v2`, and `notification.toolkit.fluxcd.io/v1beta3` (still beta upstream). 25 files patched across `roles/`.
+- `phase2`: Removed the deprecated `validation: client` field from every `flux-kustomization.j2` (the field was removed in `kustomize.toolkit.fluxcd.io/v1` GA; manifests are now validated server-side).
+- `phase2`: `requirements.txt` — `ansible` requirement loosened from `==4.7.0` to `>=9.0,<11.0` (brings ansible-core ≥2.16). `boto` (Python 2 SDK, EOL) removed. `requests[security]` extra dropped (the extra was removed in `requests` 2.26).
+- `phase2`: `galaxy.yml` collection ranges brought current — `amazon.aws >=8.0.0,<10.0.0`, `community.aws >=8.0.0,<10.0.0`, `community.general >=9.0.0,<11.0.0`, `azure.azcollection >=2.7.0,<4.0.0`. Added `community.crypto >=2.0.0` (already used transitively by the kops role's `community.crypto.openssh_keypair`).
 
 ### Removed
 
@@ -42,3 +52,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `phase1`: Existing inventory files using `kops.master_count`, `kops.master_size`, `kops.master_zones` must be migrated to the `control_plane_*` names.
 - `phase1`: Any out-of-tree role overrides referencing `community.kubernetes.*` modules or lookups must be updated to `kubernetes.core.*`.
 - `phase1`: kOps clusters created on Tavros 0.6.x with Weave will continue to run, but new clusters default to Cilium. To preserve Weave on a new cluster, set `kops.networking: weave` (note: Weave Net is unmaintained).
+- `phase2`: Flux Toolkit CRDs in any out-of-tree role overrides must be updated to the GA API versions. Existing installations will need a `flux install --version=v2.4.0 --upgrade` (or equivalent) before the new manifests are reconciled.
+- `phase2`: `validation: client` on Kustomization CRs is silently ignored by Flux 2 GA but kept in this release's git history; remove it from any custom manifests when migrating.

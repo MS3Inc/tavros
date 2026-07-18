@@ -1,4 +1,4 @@
-apiVersion: helm.toolkit.fluxcd.io/v2beta1
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: tavros-{{ item[0].name }}{{'-cp' if (item[0].hybrid) and (item[1].role == 'control_plane') }}{{'-dp' if (item[0].hybrid) and (item[1].role == 'data_plane') }}

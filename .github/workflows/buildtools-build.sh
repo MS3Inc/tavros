@@ -4,17 +4,15 @@ set -o nounset
 set -o errexit
 set -o pipefail
 
-KUBECTL_VERSION=1.30.0
+KUBECTL_VERSION=1.32.0
 
-# https://github.com/fluxcd/kustomize-controller/blob/v0.41.2/go.mod#L34
-# https://github.com/kubernetes-sigs/kustomize/blob/kustomize/v3.9.4/kustomize/go.mod#L11
-FLUX_VERSION=0.41.2
-KUSTOMIZE_VERSION=3.9.4
+FLUX_VERSION=2.4.0
+KUSTOMIZE_VERSION=5.4.0
 
-KUBESEAL_VERSION=0.15.0
+KUBESEAL_VERSION=0.27.0
 KOPS_VERSION=1.30.0
-YQ_VERSION=4.6.3
-DECK_VERSION=1.5.1
+YQ_VERSION=4.44.6
+DECK_VERSION=1.40.0
 
 function dnf_install {
   local packages=${1}
@@ -69,7 +67,7 @@ podman stop installer
 podman rm installer
 
 printf "\nInstalling other tools...\n"
-curl -sSL "https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /tmp/kubectl
+curl -sSL "https://dl.k8s.io/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl" -o /tmp/kubectl
 chmod u+x /tmp/kubectl
 buildah copy "$container" "/tmp/kubectl" /usr/local/bin/
 
@@ -77,8 +75,8 @@ curl -sSL0 "https://github.com/kubernetes-sigs/kustomize/releases/download/kusto
 chmod +x /tmp/kustomize
 buildah copy "$container" "/tmp/kustomize" /usr/local/bin/
 
-curl -sSL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-linux-amd64" -o /tmp/kubeseal
-chmod u+x /tmp/kubeseal
+curl -sSL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz" | tar -zx -C /tmp/
+chmod +x /tmp/kubeseal
 buildah copy "$container" "/tmp/kubeseal" /usr/local/bin/
 
 curl -sSL0 "https://github.com/fluxcd/flux2/releases/download/v${FLUX_VERSION}/flux_${FLUX_VERSION}_linux_amd64.tar.gz" | tar -zx -C /tmp/

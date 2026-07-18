@@ -1,0 +1,17 @@
+---
+# Ansible collections required by ms3_inc.tavros.
+# Mirrors the dependency ranges declared in galaxy.yml so users can run:
+#   ansible-galaxy collection install --force-with-deps -r requirements.yml
+collections:
+  - name: amazon.aws
+    version: ">=8.0.0,<10.0.0"
+  - name: community.aws
+    version: ">=8.0.0,<10.0.0"
+  - name: kubernetes.core
+    version: ">=5.0.0,<6.0.0"
+  - name: community.general
+    version: ">=9.0.0,<11.0.0"
+  - name: azure.azcollection
+    version: ">=2.7.0,<4.0.0"
+  - name: community.crypto
+    version: ">=2.0.0"
