@@ -1,4 +1,4 @@
-ansible==14.2.0
+ansible==14.3.1
 botocore
 boto3
 kubernetes==36.0.3
