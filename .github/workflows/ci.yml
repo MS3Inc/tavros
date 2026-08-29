@@ -20,13 +20,13 @@ jobs:
     # also lets the build/push steps run even when `make install test` fails, so
     # the buildtools image can be rebuilt and republished with the new toolchain.
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v4.3.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Configure containers storage
         run: |
           sudo apt-get install fuse-overlayfs
           mkdir -vp ~/.config/containers
           printf "[storage.options]\nmount_program=\"/usr/bin/fuse-overlayfs\"" > ~/.config/containers/storage.conf
-      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v3.0.2
+      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
         id: filter
         with:
           filters: |
