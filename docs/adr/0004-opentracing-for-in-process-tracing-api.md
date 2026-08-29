@@ -1,6 +1,6 @@
 # OpenTracing for In-Process Tracing API
 
-- Status: accepted
+- Status: superseded by [ADR-0030](0030-opentelemetry-for-distributed-tracing.md)
 - Deciders: @jam01
 - Date: 2020-08
 
@@ -27,5 +27,8 @@ We'll use OpenTracing for in-process tracing API. Having contributed to the Open
 
 ## Links <!-- optional -->
 
+- Superseded by: [ADR-0030](0030-opentelemetry-for-distributed-tracing.md) — the migration this ADR
+  anticipated under Negative Consequences has happened; Camel/Spring Boot applications now use
+  `camel-opentelemetry-starter`.
 - [OpenTracing](https://opentracing.io/)
 - [OpenTelemetry](https://opentelemetry.io/)

@@ -8,7 +8,7 @@ This log lists the architectural decisions for Tavros.
 - [ADR-0001](0001-apache-camel-as-the-default-integration-framework.md) - Apache Camel as the Default Integration Framework
 - [ADR-0002](0002-spring-boot-as-the-base-application-framework.md) - Spring Boot as the Base Application Framework
 - [ADR-0003](0003-datasonnet-as-the-default-data-transformation-language.md) - DataSonnet as the Default Data Transformation Language
-- [ADR-0004](0004-opentracing-for-in-process-tracing-api.md) - OpenTracing for In-Process Tracing API
+- [ADR-0004](0004-opentracing-for-in-process-tracing-api.md) - OpenTracing for In-Process Tracing API (superseded by [ADR-0030](0030-opentelemetry-for-distributed-tracing.md))
 - [ADR-0005](0005-kubernetes-as-the-computing-platform.md) - Kubernetes as the Computing Platform
 - [ADR-0006](0006-kops-to-provision-a-kubernetes-cluster.md) - Kops to Provision a Kubernetes Cluster
 - [ADR-0007](0007-flux-to-provide-platform-gitops.md) - Flux to Provide Platform GitOps
@@ -34,6 +34,7 @@ This log lists the architectural decisions for Tavros.
 - [ADR-0027](0027-cert-manager-for-certificate-management.md) - cert-manager for Certificate Management
 - [ADR-0028](0028-use-markdown-architectural-decision-records.md) - Use Markdown Architectural Decision Records
 - [ADR-0029](0029-tavros-as-a-single-tenant-platform.md) - Tavros as a Single Tenant Platform
+- [ADR-0030](0030-opentelemetry-for-distributed-tracing.md) - OpenTelemetry for Distributed Tracing
 
 <!-- adrlogstop -->
 
